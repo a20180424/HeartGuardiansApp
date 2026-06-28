@@ -6,7 +6,7 @@
   min-height: 100svh;
   overflow: hidden;
   background:
-    url("/img/Background01.png") center / cover no-repeat,
+    url("../assets/auth/Background01.png") center / cover no-repeat,
     #0b1020;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@
   width: min(70vw, 900px);
   min-height: 46vh;
   padding: clamp(20px, 4vh, 40px);
-  background: url("/img/PanelBackground01.png") center / 100% 100% no-repeat;
+  background: url("../assets/auth/PanelBackground01.png") center / 100% 100% no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
