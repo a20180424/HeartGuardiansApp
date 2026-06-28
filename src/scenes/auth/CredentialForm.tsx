@@ -24,11 +24,12 @@ interface Props {
   submitting: boolean;
   errorMsg: string | null;
   onSubmit: (creds: Credentials, name: string) => void;
+  onBack: () => void;
 }
 
 const GRADES = [1, 2, 3, 4, 5, 6];
 
-export default function CredentialForm({ mode, schools, submitting, errorMsg, onSubmit }: Props) {
+export default function CredentialForm({ mode, schools, submitting, errorMsg, onSubmit, onBack }: Props) {
   const [form, setForm] = useState(initialForm);
   const [name, setName] = useState("");
   const [schoolId, setSchoolId] = useState<string | null>(
@@ -58,70 +59,75 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
   );
 
   return (
-    <div className="auth-form">
-      <div className="auth-form__left">
-        <SchoolPicker schools={schools} value={schoolId} onChange={setSchoolId} />
+    <div className="auth-form-wrap">
+      <button type="button" className="btn ghost auth-back" onClick={onBack}>
+        ← 뒤로
+      </button>
+      <div className="auth-form">
+        <div className="auth-form__left">
+          <SchoolPicker schools={schools} value={schoolId} onChange={setSchoolId} />
 
-        {mode === "signup" && (
-          <label className="field field--name">
-            <span className="field__label">이름</span>
-            <input
-              className="field__input"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="이름"
-              maxLength={20}
-            />
-          </label>
-        )}
+          {mode === "signup" && (
+            <label className="field field--name">
+              <span className="field__label">이름</span>
+              <input
+                className="field__input"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="이름"
+                maxLength={20}
+              />
+            </label>
+          )}
 
-        <div className="grade-row">
-          <span className="field__label">학년</span>
-          <div className="grade-row__btns">
-            {GRADES.map((g) => (
-              <button
-                key={g}
-                type="button"
-                className={`grade-btn${form.grade === g ? " is-active" : ""}`}
-                onClick={() => setForm(setGrade(form, g))}
-              >
-                {g}
-              </button>
-            ))}
+          <div className="grade-row">
+            <span className="field__label">학년</span>
+            <div className="grade-row__btns">
+              {GRADES.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  className={`grade-btn${form.grade === g ? " is-active" : ""}`}
+                  onClick={() => setForm(setGrade(form, g))}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="num-row">
-          {numField("class", "반", form.class)}
-          {numField("number", "번호", form.number)}
+          <div className="num-row">
+            {numField("class", "반", form.class)}
+            {numField("number", "번호", form.number)}
+            <button
+              type="button"
+              className={`field field--num${form.active === "pin" ? " is-active" : ""}`}
+              onClick={() => setForm(setActive(form, "pin"))}
+            >
+              <span className="field__label">비밀번호</span>
+              <PinDots length={form.pin.length} />
+            </button>
+          </div>
+
+          {errorMsg && <p className="auth-error">{errorMsg}</p>}
+
           <button
             type="button"
-            className={`field field--num${form.active === "pin" ? " is-active" : ""}`}
-            onClick={() => setForm(setActive(form, "pin"))}
+            className="btn auth-submit"
+            disabled={!canSubmit}
+            onClick={() => schoolId && onSubmit(toCredentials(form, schoolId), name.trim())}
           >
-            <span className="field__label">비밀번호</span>
-            <PinDots length={form.pin.length} />
+            {submitting ? "잠시만요…" : mode === "login" ? "로그인" : "가입하기"}
           </button>
         </div>
 
-        {errorMsg && <p className="auth-error">{errorMsg}</p>}
-
-        <button
-          type="button"
-          className="btn auth-submit"
-          disabled={!canSubmit}
-          onClick={() => schoolId && onSubmit(toCredentials(form, schoolId), name.trim())}
-        >
-          {submitting ? "잠시만요…" : mode === "login" ? "로그인" : "가입하기"}
-        </button>
-      </div>
-
-      <div className="auth-form__right">
-        <NumberKeypad
-          onDigit={(d) => setForm((s) => applyDigit(s, d))}
-          onBackspace={() => setForm((s) => applyBackspace(s))}
-        />
+        <div className="auth-form__right">
+          <NumberKeypad
+            onDigit={(d) => setForm((s) => applyDigit(s, d))}
+            onBackspace={() => setForm((s) => applyBackspace(s))}
+          />
+        </div>
       </div>
     </div>
   );

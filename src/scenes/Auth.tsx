@@ -139,6 +139,7 @@ export default function Auth() {
             submitting={submitting}
             errorMsg={errorMsg}
             onSubmit={(creds) => handleLogin(creds)}
+            onBack={() => { setErrorMsg(null); setScreen("chooser"); }}
           />
         )}
         {screen === "signup" && (
@@ -148,6 +149,7 @@ export default function Auth() {
             submitting={submitting}
             errorMsg={errorMsg}
             onSubmit={handleSignup}
+            onBack={() => { setErrorMsg(null); setScreen("chooser"); }}
           />
         )}
       </div>

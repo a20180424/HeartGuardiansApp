@@ -72,6 +72,7 @@
   border: none;
   border-radius: 16px;
   box-shadow: 0 5px 0 #0f172a;
+  touch-action: manipulation;
 }
 .keypad__key:active {
   transform: translateY(3px);
@@ -161,6 +162,7 @@
   background: #1e293b;
   border: 2px solid transparent;
   border-radius: 12px;
+  touch-action: manipulation;
 }
 .grade-btn.is-active {
   background: #7c3aed;
@@ -182,6 +184,7 @@
   border: 2px solid transparent;
   border-radius: 14px;
   color: #fff;
+  touch-action: manipulation;
 }
 .field--num.is-active {
   border-color: #93c5fd;
@@ -208,4 +211,17 @@
 .auth-submit:disabled {
   opacity: 0.5;
   box-shadow: none;
+}
+
+.auth-form-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.6vh, 16px);
+}
+.auth-back {
+  align-self: flex-start;
+  font-size: clamp(14px, 2vh, 18px);
+  padding: 8px 16px;
+  border-radius: 999px;
 }
