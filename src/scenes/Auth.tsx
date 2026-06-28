@@ -4,7 +4,7 @@ import Chooser from "./auth/Chooser";
 import CredentialForm from "./auth/CredentialForm";
 import WelcomePanel from "./auth/WelcomePanel";
 import { classifyVerifyError } from "./auth/auth.logic";
-import { getSchools, verify, logout, type School } from "../lib/auth";
+import { getSchools, verify, logout, signup, type School } from "../lib/auth";
 import { getProgress } from "../lib/progress";
 import { setSession, clearSession } from "../lib/session";
 import { credentialStore } from "../lib/api";
@@ -85,6 +85,22 @@ export default function Auth() {
     setScreen("login");
   }
 
+  async function handleSignup(creds: Credentials, name: string) {
+    setSubmitting(true);
+    setErrorMsg(null);
+    try {
+      await signup({ ...creds, name }); // 가입
+      await enter(creds); // 같은 값으로 자동 로그인
+    } catch (err) {
+      setErrorMsg(
+        classifyVerifyError(err) === "auth"
+          ? "이미 등록된 번호이거나 입력이 올바르지 않아요. 선생님께 물어보세요."
+          : "인터넷 연결을 확인해 주세요.",
+      );
+      setSubmitting(false);
+    }
+  }
+
   async function handleLogin(creds: Credentials) {
     setSubmitting(true);
     setErrorMsg(null);
@@ -125,7 +141,15 @@ export default function Auth() {
             onSubmit={(creds) => handleLogin(creds)}
           />
         )}
-        {screen === "signup" && <p className="auth-panel__title">회원가입 (다음 작업)</p>}
+        {screen === "signup" && (
+          <CredentialForm
+            mode="signup"
+            schools={schools}
+            submitting={submitting}
+            errorMsg={errorMsg}
+            onSubmit={handleSignup}
+          />
+        )}
       </div>
     </div>
   );
