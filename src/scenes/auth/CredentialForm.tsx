@@ -1,21 +1,15 @@
-// 학교 + 학년(버튼) + 반/번호/비밀번호(공용 키패드) [+ 이름(signup만, 시스템 키보드)].
+// 학교 + 이름(signup) + 학년/반/번호(드롭다운) + 비밀번호[/확인](시스템 키보드).
 // 서버 호출은 하지 않는다 — 완성된 Credentials를 onSubmit으로 올린다.
 import { useEffect, useState } from "react";
 import type { School } from "../../lib/auth";
 import type { Credentials } from "../../lib/api";
 import {
   initialForm,
-  applyDigit,
-  applyBackspace,
-  setActive,
-  setGrade,
   isComplete,
   toCredentials,
   pickDefaultSchool,
-  type FieldKey,
+  sanitizePin,
 } from "./auth.logic";
-import NumberKeypad from "./NumberKeypad";
-import PinDots from "./PinDots";
 import SchoolPicker from "./SchoolPicker";
 
 interface Props {
@@ -27,7 +21,9 @@ interface Props {
   onBack: () => void;
 }
 
-const GRADES = [1, 2, 3, 4, 5, 6];
+const GRADES = Array.from({ length: 6 }, (_, i) => i + 1); // 1..6
+const CLASSES = Array.from({ length: 10 }, (_, i) => i + 1); // 1..10
+const NUMBERS = Array.from({ length: 30 }, (_, i) => i + 1); // 1..30
 
 export default function CredentialForm({ mode, schools, submitting, errorMsg, onSubmit, onBack }: Props) {
   const [form, setForm] = useState(initialForm);
@@ -44,18 +40,46 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
     }
   }, [schools, schoolId]);
 
-  const nameOk = mode === "login" || name.trim().length > 0;
-  const canSubmit = !submitting && schoolId !== null && isComplete(form) && nameOk;
+  const mismatch =
+    mode === "signup" && form.pinConfirm.length === 4 && form.pin !== form.pinConfirm;
+  const canSubmit = !submitting && schoolId !== null && isComplete(form, mode, name);
 
-  const numField = (key: FieldKey, label: string, value: string) => (
-    <button
-      type="button"
-      className={`field field--num${form.active === key ? " is-active" : ""}`}
-      onClick={() => setForm(setActive(form, key))}
-    >
+  const numSelect = (key: "grade" | "class" | "number", label: string, options: number[]) => (
+    <label className="field field--select">
       <span className="field__label">{label}</span>
-      <span className="field__value">{value || "—"}</span>
-    </button>
+      <select
+        className="field__select"
+        value={form[key] ?? ""}
+        onChange={(e) =>
+          setForm((s) => ({ ...s, [key]: e.target.value === "" ? null : Number(e.target.value) }))
+        }
+      >
+        <option value="" disabled>
+          선택
+        </option>
+        {options.map((n) => (
+          <option key={n} value={n}>
+            {n}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+
+  const pinInput = (key: "pin" | "pinConfirm", label: string, placeholder: string) => (
+    <label className="field field--pin">
+      <span className="field__label">{label}</span>
+      <input
+        className="field__input"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        maxLength={4}
+        value={form[key]}
+        onChange={(e) => setForm((s) => ({ ...s, [key]: sanitizePin(e.target.value) }))}
+        placeholder={placeholder}
+      />
+    </label>
   );
 
   return (
@@ -63,71 +87,44 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
       <button type="button" className="btn ghost auth-back" onClick={onBack}>
         ← 뒤로
       </button>
+
       <div className="auth-form">
-        <div className="auth-form__left">
-          <SchoolPicker schools={schools} value={schoolId} onChange={setSchoolId} />
+        <SchoolPicker schools={schools} value={schoolId} onChange={setSchoolId} />
 
-          {mode === "signup" && (
-            <label className="field field--name">
-              <span className="field__label">이름</span>
-              <input
-                className="field__input"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="이름"
-                maxLength={20}
-              />
-            </label>
-          )}
+        {mode === "signup" && (
+          <label className="field field--name">
+            <span className="field__label">이름</span>
+            <input
+              className="field__input"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="이름"
+              maxLength={20}
+            />
+          </label>
+        )}
 
-          <div className="grade-row">
-            <span className="field__label">학년</span>
-            <div className="grade-row__btns">
-              {GRADES.map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  className={`grade-btn${form.grade === g ? " is-active" : ""}`}
-                  onClick={() => setForm(setGrade(form, g))}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="num-row">
-            {numField("class", "반", form.class)}
-            {numField("number", "번호", form.number)}
-            <button
-              type="button"
-              className={`field field--num${form.active === "pin" ? " is-active" : ""}`}
-              onClick={() => setForm(setActive(form, "pin"))}
-            >
-              <span className="field__label">비밀번호</span>
-              <PinDots length={form.pin.length} />
-            </button>
-          </div>
-
-          {errorMsg && <p className="auth-error">{errorMsg}</p>}
-
-          <button
-            type="button"
-            className="btn auth-submit"
-            disabled={!canSubmit}
-            onClick={() => schoolId && onSubmit(toCredentials(form, schoolId), name.trim())}
-          >
-            {submitting ? "잠시만요…" : mode === "login" ? "로그인" : "가입하기"}
-          </button>
+        <div className="select-row">
+          {numSelect("grade", "학년", GRADES)}
+          {numSelect("class", "반", CLASSES)}
+          {numSelect("number", "번호", NUMBERS)}
         </div>
 
-        <div className="auth-form__right">
-          <NumberKeypad
-            onDigit={(d) => setForm((s) => applyDigit(s, d))}
-            onBackspace={() => setForm((s) => applyBackspace(s))}
-          />
-        </div>
+        {pinInput("pin", "비밀번호", "숫자 4자리")}
+        {mode === "signup" && pinInput("pinConfirm", "비밀번호 확인", "다시 입력")}
+
+        {mismatch && <p className="auth-error">비밀번호가 일치하지 않아요.</p>}
+        {errorMsg && <p className="auth-error">{errorMsg}</p>}
+
+        <button
+          type="button"
+          className="btn auth-submit"
+          disabled={!canSubmit}
+          onClick={() => schoolId && onSubmit(toCredentials(form, schoolId), name.trim())}
+        >
+          {submitting ? "잠시만요…" : mode === "login" ? "로그인" : "가입하기"}
+        </button>
       </div>
     </div>
   );
