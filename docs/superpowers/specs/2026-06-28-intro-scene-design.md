@@ -29,8 +29,10 @@
 ## 레이아웃 & UI
 
 - 풀스크린 컨테이너: `min-height: 100svh`, 높이 `100dvh`, 배경 `#000`.
-- `<video>`: `position: absolute; inset: 0; width/height: 100%; object-fit: cover`.
-  → cover 풀필. 16:9 소스를 16:10 화면에 채우며 좌우 ~70px 크롭 허용(사용자 합의됨).
+- `<video>`: `position: absolute; inset: 0; width/height: 100%; object-fit: contain`.
+  → 영상 전체 표시(레터박스 허용). 16:9 소스를 16:10 화면에 contain하면 위아래 ~40px씩
+  검은 레터박스가 생기지만, 영상에 박혀 있는 UI(좌우 행성·타이틀 날개 등)가 잘리지 않는다.
+  (초기엔 cover로 구현했으나 베이크된 UI가 잘려 보여 contain으로 변경 — 실기기 검증 결과 반영.)
 - `건너뛰기`: 우상단. `env(safe-area-inset-top/right)` 여백 고려. 작은 고스트 버튼 + ⏭ SVG 아이콘.
 - "탭하여 소리 켜기" 힌트: 하단 중앙 작은 pill. 음소거일 때만 표시. 은은한 펄스 애니메이션. 🔇 SVG 아이콘.
 - `시작하기`: 화면 중앙 하단. 크고 둥근 캔디형 버튼(보라 계열) + ▶/로켓 SVG 아이콘. `ended`에서만 표시, 페이드인 + 은은한 idle 바운스.
@@ -78,7 +80,7 @@
 
 - Galaxy Tab A9+(Helio G99)는 1080p H.264 하드웨어 디코딩을 무리 없이 처리. 3.7Mbps 1080p는 부담 없음.
 - 끊김 위험 요인은 소프트웨어 디코딩 fallback(HEVC 등)과 네트워크 로딩인데, 본 건은 H.264 + APK 번들 오프라인 에셋이라 둘 다 해당 없음.
-- `object-fit: cover` 및 업스케일은 GPU 합성이라 재생 부하와 무관.
+- `object-fit: contain` 스케일은 GPU 합성이라 재생 부하와 무관.
 - 유일한 현실적 리스크는 첫 재생 시작 지연 → 대비책은 `+faststart` 재인코딩(선택, 범위 밖).
 - 최종 확인은 실기기(APK) 검증으로 한다.
 
