@@ -1,69 +1,49 @@
 import { describe, it, expect } from "vitest";
 import {
   initialForm,
-  applyDigit,
-  applyBackspace,
-  setActive,
-  setGrade,
+  sanitizePin,
   isComplete,
   toCredentials,
   pickDefaultSchool,
   classifyVerifyError,
+  type FormState,
 } from "./auth.logic";
 import { ApiError } from "../../lib/api";
 import type { School } from "../../lib/auth";
 
+const filled: FormState = { grade: 3, class: 2, number: 12, pin: "1234", pinConfirm: "1234" };
+
 describe("credential form logic", () => {
-  it("initialForm은 class가 active인 빈 폼", () => {
-    expect(initialForm()).toEqual({ grade: null, class: "", number: "", pin: "", active: "class" });
+  it("initialForm은 모든 값이 비어있다", () => {
+    expect(initialForm()).toEqual({
+      grade: null,
+      class: null,
+      number: null,
+      pin: "",
+      pinConfirm: "",
+    });
   });
 
-  it("applyDigit은 active 필드에 숫자를 덧붙인다", () => {
-    const s = applyDigit(initialForm(), "3");
-    expect(s.class).toBe("3");
+  it("sanitizePin은 숫자만 남기고 4자리로 자른다", () => {
+    expect(sanitizePin("12a3b456")).toBe("1234");
+    expect(sanitizePin("")).toBe("");
+    expect(sanitizePin("99")).toBe("99");
   });
 
-  it("active 필드가 최대 길이에 도달하면 다음 필드로 자동 이동한다", () => {
-    let s = initialForm();
-    s = applyDigit(s, "1");
-    s = applyDigit(s, "2"); // class=12 (max 2) → active=number
-    expect(s.class).toBe("12");
-    expect(s.active).toBe("number");
+  it("login isComplete는 학년/반/번호/pin(4)만 채우면 true", () => {
+    expect(isComplete(filled, "login", "")).toBe(true);
+    expect(isComplete({ ...filled, pin: "12" }, "login", "")).toBe(false);
+    expect(isComplete({ ...filled, class: null }, "login", "")).toBe(false);
   });
 
-  it("필드가 가득 차면 더 입력해도 무시한다(pin 4자리)", () => {
-    let s = setActive(initialForm(), "pin");
-    for (const d of ["1", "2", "3", "4", "5"]) s = applyDigit(s, d);
-    expect(s.pin).toBe("1234");
+  it("signup isComplete는 이름과 비밀번호 확인까지 맞아야 true", () => {
+    expect(isComplete(filled, "signup", "이시형")).toBe(true);
+    expect(isComplete(filled, "signup", "  ")).toBe(false); // 이름 공백
+    expect(isComplete({ ...filled, pinConfirm: "0000" }, "signup", "이시형")).toBe(false); // 불일치
   });
 
-  it("applyBackspace는 active 필드의 마지막 글자를 지운다", () => {
-    let s = applyDigit(initialForm(), "3");
-    s = applyBackspace(s);
-    expect(s.class).toBe("");
-  });
-
-  it("active가 비어 있으면 backspace는 이전 필드로 이동한다", () => {
-    let s = setActive(initialForm(), "number");
-    s = applyBackspace(s);
-    expect(s.active).toBe("class");
-  });
-
-  it("setGrade는 학년을 설정한다", () => {
-    expect(setGrade(initialForm(), 4).grade).toBe(4);
-  });
-
-  it("isComplete는 모든 값이 채워졌을 때만 true", () => {
-    let s = setGrade(initialForm(), 3);
-    s = { ...s, class: "2", number: "12", pin: "1234" };
-    expect(isComplete(s)).toBe(true);
-    expect(isComplete({ ...s, pin: "12" })).toBe(false);
-  });
-
-  it("toCredentials는 숫자 필드를 number로 변환한다", () => {
-    let s = setGrade(initialForm(), 3);
-    s = { ...s, class: "2", number: "12", pin: "1234" };
-    expect(toCredentials(s, "school-uuid")).toEqual({
+  it("toCredentials는 폼 값을 그대로 Credentials로 만든다", () => {
+    expect(toCredentials(filled, "school-uuid")).toEqual({
       school_id: "school-uuid",
       grade: 3,
       class: 2,

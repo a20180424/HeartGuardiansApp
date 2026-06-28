@@ -2,62 +2,36 @@
 import { ApiError, type Credentials } from "../../lib/api";
 import type { School } from "../../lib/auth";
 
-export type FieldKey = "class" | "number" | "pin";
-
 export interface FormState {
-  grade: number | null; // 1~6, 버튼으로 선택
-  class: string; // 숫자 키패드 입력(문자열로 누적)
-  number: string;
-  pin: string; // 4자리
-  active: FieldKey; // 키패드가 입력할 현재 필드
+  grade: number | null; // 1~6 (select)
+  class: number | null; // 1~10 (select)
+  number: number | null; // 1~30 (select)
+  pin: string; // 4자리, 시스템 키보드 입력
+  pinConfirm: string; // signup 전용 확인 입력
 }
-
-const ORDER: FieldKey[] = ["class", "number", "pin"];
-export const MAX_LEN: Record<FieldKey, number> = { class: 2, number: 2, pin: 4 };
 
 export function initialForm(): FormState {
-  return { grade: null, class: "", number: "", pin: "", active: "class" };
+  return { grade: null, class: null, number: null, pin: "", pinConfirm: "" };
 }
 
-export function setActive(s: FormState, f: FieldKey): FormState {
-  return { ...s, active: f };
+/** 숫자만 남기고 최대 4자리로 자른다(PIN/확인 입력 정제). */
+export function sanitizePin(raw: string): string {
+  return raw.replace(/\D/g, "").slice(0, 4);
 }
 
-export function setGrade(s: FormState, g: number): FormState {
-  return { ...s, grade: g };
-}
-
-/** active 필드에 숫자 한 자리 추가. 가득 차면 다음 필드로 자동 이동. */
-export function applyDigit(s: FormState, d: string): FormState {
-  const cur = s[s.active];
-  if (cur.length >= MAX_LEN[s.active]) return s; // 가득 참 → 무시
-  const next: FormState = { ...s, [s.active]: cur + d };
-  if (next[s.active].length >= MAX_LEN[s.active]) {
-    const i = ORDER.indexOf(s.active);
-    if (i < ORDER.length - 1) return { ...next, active: ORDER[i + 1] };
-  }
-  return next;
-}
-
-/** active 필드의 마지막 글자 삭제. 비어 있으면 이전 필드로 이동. */
-export function applyBackspace(s: FormState): FormState {
-  const cur = s[s.active];
-  if (cur.length > 0) return { ...s, [s.active]: cur.slice(0, -1) };
-  const i = ORDER.indexOf(s.active);
-  if (i > 0) return { ...s, active: ORDER[i - 1] };
-  return s;
-}
-
-export function isComplete(s: FormState): boolean {
-  return s.grade !== null && s.class !== "" && s.number !== "" && s.pin.length === 4;
+/** 폼 완성 여부. signup이면 이름(공백 아님)과 비밀번호 확인 일치까지 본다. */
+export function isComplete(s: FormState, mode: "login" | "signup", name: string): boolean {
+  const base = s.grade !== null && s.class !== null && s.number !== null && s.pin.length === 4;
+  if (mode === "login") return base;
+  return base && name.trim().length > 0 && s.pin === s.pinConfirm;
 }
 
 export function toCredentials(s: FormState, schoolId: string): Credentials {
   return {
     school_id: schoolId,
     grade: s.grade ?? 0,
-    class: Number(s.class),
-    number: Number(s.number),
+    class: s.class ?? 0,
+    number: s.number ?? 0,
     pin: s.pin,
   };
 }
