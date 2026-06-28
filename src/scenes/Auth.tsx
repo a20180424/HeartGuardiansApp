@@ -116,13 +116,10 @@ export default function Auth() {
     }
   }
 
-  // 내용이 적은 화면(고르기·환영·점검)은 컴팩트 패널, 폼 화면은 넓은 패널.
-  const compact = screen === "checking" || screen === "welcome" || screen === "chooser";
-
   return (
     <div className="auth">
       <img className="auth__banner" src={bannerUrl} alt="하트 가디언즈: 우주 공감 탐험대" />
-      <div className={`auth__panel${compact ? " auth__panel--compact" : ""}`}>
+      <div className="auth__panel">
         {screen === "checking" && <p className="auth-panel__title">잠시만요…</p>}
         {screen === "welcome" && (
           <WelcomePanel

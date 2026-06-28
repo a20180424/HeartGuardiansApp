@@ -27,12 +27,13 @@
 
 /* 패널: PanelBackground01.png을 9-slice(border-image)로 사용.
    코너(반경 ~36px)+글로우(~12px)를 44px 슬라이스로 잡아, 패널을 어떤 비율로 늘려도 코너가 안 깨진다.
-   `fill`이 가운데(네이비 내부)를 콘텐츠 영역에 채운다. border가 글로우를 그리므로 padding은 최소만 둔다. */
+   `fill`이 가운데(네이비 내부)를 콘텐츠 영역에 채운다. border가 글로우를 그리므로 padding은 최소만 둔다.
+   모든 상태(checking/welcome/chooser/login/signup)가 같은 고정 크기를 쓰고, 내용은 가운데 정렬한다. */
 .auth__panel {
   position: relative;
-  /* ── 노브: 패널 크기 ───────────────────────────── */
-  width: min(70vw, 900px);
-  min-height: 46vh;
+  /* ── 노브: 단일 고정 패널 크기 (모든 상태 공통, Task 4에서 DevTools로 확정) ── */
+  width: 600px;
+  height: 460px;
   /* ── 노브: 글로우 테두리 두께(↑면 글로우 두껍게/코너 크게) ── */
   border: 34px solid transparent;
   border-image: url("../assets/auth/PanelBackground01.png") 44 fill / 34px / 0 stretch;
@@ -41,13 +42,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-/* Chooser·Welcome·checking 등 내용이 적은 화면: 패널을 작게(가로 좁힘 + 높이는 내용에 맞춤). */
-.auth__panel--compact {
-  /* ── 노브: 컴팩트 패널 크기 (타이틀 한 줄 들어가게 약간 여유) ── */
-  width: min(50vw, 600px);
-  min-height: 0;
 }
 
 .auth-panel__title {
@@ -74,80 +68,51 @@
   border-radius: 999px;
 }
 
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(8px, 1.4vh, 14px);
-  width: min(38%, 300px);
-}
-.keypad__key {
-  aspect-ratio: 3 / 2;
-  font-size: clamp(22px, 3.4vh, 30px);
-  font-weight: 800;
-  color: #fff;
-  background: #1e293b;
-  border: none;
-  border-radius: 16px;
-  box-shadow: 0 5px 0 #0f172a;
-  touch-action: manipulation;
-}
-.keypad__key:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #0f172a;
-}
-.keypad__key--back {
-  font-size: clamp(20px, 3vh, 26px);
-}
-.keypad__spacer {
-  /* 0 키를 가운데 칸에 두기 위한 빈 칸 */
-}
-
-.pin-dots {
+/* ── 로그인/회원가입 폼 (1단 세로) ── */
+.auth-form-wrap {
+  width: 100%;
   display: flex;
-  gap: 14px;
-  justify-content: center;
+  flex-direction: column;
+  gap: clamp(8px, 1.6vh, 16px);
 }
-.pin-dots__dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid #93c5fd;
-  background: transparent;
-}
-.pin-dots__dot.is-filled {
-  background: #93c5fd;
+.auth-back {
+  align-self: flex-start;
+  font-size: clamp(14px, 2vh, 18px);
+  padding: 8px 16px;
+  border-radius: 999px;
 }
 
 .auth-form {
-  display: flex;
-  gap: clamp(16px, 3vw, 40px);
   width: 100%;
-  align-items: center;
-}
-.auth-form__left {
-  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.8vh, 18px);
+  gap: clamp(8px, 1.4vh, 14px);
+}
+
+/* 학년·반·번호를 한 줄에 균등 분배 */
+.select-row {
+  display: flex;
+  gap: 10px;
+}
+.field--select {
+  flex: 1 1 0;
   min-width: 0;
 }
-.auth-form__right {
-  flex: 0 0 auto;
+
+.field--school,
+.field--name,
+.field--select,
+.field--pin {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
 }
 
 .field__label {
   font-size: clamp(13px, 1.8vh, 16px);
   font-weight: 700;
   opacity: 0.85;
-}
-.field--school,
-.field--name {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  text-align: left;
 }
 .field__select,
 .field__input {
@@ -160,59 +125,6 @@
   color: #fff;
 }
 
-.grade-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-align: left;
-}
-.grade-row__btns {
-  display: flex;
-  gap: 8px;
-}
-.grade-btn {
-  flex: 1 1 0;
-  padding: clamp(8px, 1.6vh, 14px) 0;
-  font-size: clamp(16px, 2.4vh, 22px);
-  font-weight: 800;
-  color: #fff;
-  background: #1e293b;
-  border: 2px solid transparent;
-  border-radius: 12px;
-  touch-action: manipulation;
-}
-.grade-btn.is-active {
-  background: #7c3aed;
-  border-color: #c4b5fd;
-}
-
-.num-row {
-  display: flex;
-  gap: 10px;
-}
-.field--num {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-  padding: clamp(8px, 1.6vh, 14px);
-  background: #0f172a;
-  border: 2px solid transparent;
-  border-radius: 14px;
-  color: #fff;
-  touch-action: manipulation;
-}
-.field--num.is-active {
-  border-color: #93c5fd;
-  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.35);
-}
-.field__value {
-  font-size: clamp(20px, 3vh, 28px);
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
 .auth-error {
   color: #fca5a5;
   font-size: clamp(14px, 2vh, 18px);
@@ -222,23 +134,10 @@
 .auth-submit {
   align-self: center;
   width: min(70%, 360px);
-  font-size: clamp(20px, 3vh, 26px);
+  font-size: clamp(18px, 2.6vh, 24px);
   border-radius: 999px;
 }
 .auth-submit:disabled {
   opacity: 0.5;
   box-shadow: none;
-}
-
-.auth-form-wrap {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(8px, 1.6vh, 16px);
-}
-.auth-back {
-  align-self: flex-start;
-  font-size: clamp(14px, 2vh, 18px);
-  padding: 8px 16px;
-  border-radius: 999px;
 }
