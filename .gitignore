@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Env files — never commit (set vars in the platform dashboard instead).
+# .env.example is kept as documentation.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
