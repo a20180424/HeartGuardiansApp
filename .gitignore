@@ -34,3 +34,13 @@ public/assets/3d/azure_nexus.glb
 
 # Playwright MCP verification artifacts (screenshots, console logs)
 .playwright-mcp/
+
+# Superpowers SDD scratch (ledger, task briefs/reports, review diffs)
+.superpowers/
+
+# Source art staging area — canonical copies live in src/assets/
+mytemp/
+
+# Transient command logs from tooling runs
+build-output.txt
+lint-output.txt
