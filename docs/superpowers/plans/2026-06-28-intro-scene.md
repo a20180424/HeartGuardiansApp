@@ -27,10 +27,12 @@
 `건너뛰기` 시 영상을 마지막 프레임 근처로 보낼 seek 목표(초)를 계산한다. 메타데이터 미로드 등으로 `duration`이 유효하지 않을 때(0/NaN/Infinity) 안전하게 0을 반환해 스펙의 엣지케이스를 흡수한다.
 
 **Files:**
+
 - Create: `src/scenes/intro.logic.ts`
 - Test: `src/scenes/intro.logic.test.ts`
 
 **Interfaces:**
+
 - Consumes: (없음)
 - Produces: `export function skipSeekTarget(duration: number): number`
 
@@ -105,11 +107,13 @@ git commit -m "feat(intro): add skipSeekTarget helper"
 영상 풀스크린 cover 재생, `건너뛰기`/`시작하기` 버튼, 탭하여 소리 켜기, `playing`→`ended` 상태 전환을 구현한다. 만화풍 CSS 버튼 + 인라인 SVG 아이콘.
 
 **Files:**
+
 - Create: `src/scenes/Intro.css`
 - Modify: `src/scenes/Intro.tsx` (전면 교체)
 - (참고) `src/scenes/intro.logic.ts` — Task 1 산출물 사용
 
 **Interfaces:**
+
 - Consumes: `skipSeekTarget(duration: number): number` (Task 1)
 - Produces: `export default function Intro()` — 라우트 `/intro` 컴포넌트 (이미 App.tsx에 연결됨)
 
@@ -364,6 +368,7 @@ Expected: 파일 정리됨(에러 없음).
 Run: `npm run dev` (백그라운드)
 
 Playwright(MCP)로 검증:
+
 1. `http://localhost:5173/#/intro` 로 이동.
 2. `<video>`가 존재하고 `muted` 자동재생 중인지 확인(`paused === false`, `muted === true`). 개발 브라우저는 muted 기준.
 3. "탭하여 소리 켜기" 힌트와 `건너뛰기` 버튼이 보이는지 확인.
