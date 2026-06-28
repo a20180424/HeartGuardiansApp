@@ -79,7 +79,7 @@
   right: 0;
   margin: 0 auto;
   width: fit-content;
-  bottom: calc(235px + env(safe-area-inset-bottom));
+  bottom: calc(205px + env(safe-area-inset-bottom));
   z-index: 3;
   display: inline-flex;
   align-items: center;
