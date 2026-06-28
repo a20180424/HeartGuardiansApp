@@ -6,7 +6,9 @@ export default function Outro() {
     <div className="scene">
       <h1>모험 끝!</h1>
       <div className="video-placeholder">🎬 아웃트로 영상 (자리표시자)</div>
-      <button className="btn" onClick={() => nav("/home")}>홈으로</button>
+      <button className="btn" onClick={() => nav("/home")}>
+        홈으로
+      </button>
     </div>
   );
 }

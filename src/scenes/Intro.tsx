@@ -15,7 +15,9 @@ export default function Intro() {
         onEnded={() => nav("/auth")}
         style={{ width: "80vw", maxWidth: 1100, borderRadius: 16, background: "#000" }}
       />
-      <button className="btn ghost" onClick={() => nav("/auth")}>건너뛰기 ⏭</button>
+      <button className="btn ghost" onClick={() => nav("/auth")}>
+        건너뛰기 ⏭
+      </button>
     </div>
   );
 }

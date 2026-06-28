@@ -1,27 +1,99 @@
-* { box-sizing: border-box; }
-html, body, #root { margin: 0; height: 100%; background: #0b1020; color: #fff;
-  font-family: "Pretendard", system-ui, -apple-system, sans-serif; overflow: hidden; }
-button { font-family: inherit; cursor: pointer; }
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: #0b1020;
+  color: #fff;
+  font-family:
+    "Pretendard",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  overflow: hidden;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
 
 /* 공통 Scene 레이아웃 */
-.scene { width: 100vw; height: 100vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 24px; text-align: center; }
-.scene h1 { font-size: 48px; margin: 0; }
-.scene p { opacity: .8; font-size: 20px; }
-.btn { background: #7c3aed; color: #fff; border: none; border-radius: 14px;
-  padding: 16px 28px; font-size: 22px; box-shadow: 0 6px 0 #5b21b6; }
-.btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #5b21b6; }
-.btn.ghost { background: #1e293b; box-shadow: 0 6px 0 #0f172a; }
+.scene {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  text-align: center;
+}
+.scene h1 {
+  font-size: 48px;
+  margin: 0;
+}
+.scene p {
+  opacity: 0.8;
+  font-size: 20px;
+}
+.btn {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  font-size: 22px;
+  box-shadow: 0 6px 0 #5b21b6;
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #5b21b6;
+}
+.btn.ghost {
+  background: #1e293b;
+  box-shadow: 0 6px 0 #0f172a;
+}
 
 /* 영상 자리표시자 */
-.video-placeholder { width: 70vw; max-width: 900px; aspect-ratio: 16/9;
-  background: repeating-linear-gradient(45deg,#111827,#111827 20px,#0b1020 20px,#0b1020 40px);
-  border: 2px dashed #475569; border-radius: 18px; display: flex; align-items: center;
-  justify-content: center; font-size: 28px; }
+.video-placeholder {
+  width: 70vw;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  background: repeating-linear-gradient(45deg, #111827, #111827 20px, #0b1020 20px, #0b1020 40px);
+  border: 2px dashed #475569;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
 
 /* Home 허브 */
-.planet-grid { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; max-width: 1100px; }
-.planet-card { width: 220px; height: 220px; border-radius: 24px; border: none; color: #fff;
-  font-size: 22px; font-weight: 700; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
-.planet-card .emoji { font-size: 64px; }
+.planet-grid {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1100px;
+}
+.planet-card {
+  width: 220px;
+  height: 220px;
+  border-radius: 24px;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.planet-card .emoji {
+  font-size: 64px;
+}

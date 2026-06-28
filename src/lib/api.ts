@@ -53,7 +53,9 @@ export const credentialStore = {
 };
 
 /** Build the x-* auth headers from the given (or stored) credentials. */
-export function authHeaders(creds: Credentials | null = credentialStore.get()): Record<string, string> {
+export function authHeaders(
+  creds: Credentials | null = credentialStore.get(),
+): Record<string, string> {
   if (!creds) throw new ApiError(401, "No stored credentials", null);
   return {
     "x-school-id": creds.school_id,
