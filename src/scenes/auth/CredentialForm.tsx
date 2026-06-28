@@ -1,6 +1,6 @@
 // 학교 + 학년(버튼) + 반/번호/비밀번호(공용 키패드) [+ 이름(signup만, 시스템 키보드)].
 // 서버 호출은 하지 않는다 — 완성된 Credentials를 onSubmit으로 올린다.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { School } from "../../lib/auth";
 import type { Credentials } from "../../lib/api";
 import {
@@ -34,6 +34,14 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
   const [schoolId, setSchoolId] = useState<string | null>(
     () => pickDefaultSchool(schools, null)?.id ?? null,
   );
+
+  // 학교 목록은 비동기로 도착한다. 아직 미선택이면 기본 학교를 채운다.
+  useEffect(() => {
+    if (schoolId === null) {
+      const def = pickDefaultSchool(schools, null);
+      if (def) setSchoolId(def.id);
+    }
+  }, [schools, schoolId]);
 
   const nameOk = mode === "login" || name.trim().length > 0;
   const canSubmit = !submitting && schoolId !== null && isComplete(form) && nameOk;

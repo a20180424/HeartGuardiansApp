@@ -16,6 +16,11 @@ export default function SchoolPicker({ schools, value, onChange }: Props) {
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
       >
+        {schools.length === 0 && (
+          <option value="" disabled>
+            불러오는 중…
+          </option>
+        )}
         {schools.map((s) => (
           <option key={s.id} value={s.id}>
             {s.name}
