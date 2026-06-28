@@ -89,30 +89,33 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
       </button>
 
       <div className="auth-form">
-        <SchoolPicker schools={schools} value={schoolId} onChange={setSchoolId} />
+        <div className="field-row">
+          <SchoolPicker schools={schools} value={schoolId} onChange={setSchoolId} />
+          {mode === "signup" && (
+            <label className="field field--name">
+              <span className="field__label">이름</span>
+              <input
+                className="field__input"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="이름"
+                maxLength={20}
+              />
+            </label>
+          )}
+        </div>
 
-        {mode === "signup" && (
-          <label className="field field--name">
-            <span className="field__label">이름</span>
-            <input
-              className="field__input"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="이름"
-              maxLength={20}
-            />
-          </label>
-        )}
-
-        <div className="select-row">
+        <div className="field-row">
           {numSelect("grade", "학년", GRADES)}
           {numSelect("class", "반", CLASSES)}
           {numSelect("number", "번호", NUMBERS)}
         </div>
 
-        {pinInput("pin", "비밀번호", "숫자 4자리")}
-        {mode === "signup" && pinInput("pinConfirm", "비밀번호 확인", "다시 입력")}
+        <div className="field-row">
+          {pinInput("pin", "비밀번호", "숫자 4자리")}
+          {mode === "signup" && pinInput("pinConfirm", "비밀번호 확인", "다시 입력")}
+        </div>
 
         {mismatch && <p className="auth-error">비밀번호가 일치하지 않아요.</p>}
         {errorMsg && <p className="auth-error">{errorMsg}</p>}

@@ -14,8 +14,8 @@
   /* 위에서부터 쌓아 패널을 화면 위쪽으로. (1280×800 고정 환경 기준 px)
      ── 노브: 배너+패널 시작 높이(↑면 더 아래로) / 배너↔패널 간격 ── */
   justify-content: flex-start;
-  padding-top: 86px;
-  gap: 48px;
+  padding-top: 44px;
+  gap: 18px;
 }
 
 .auth__banner {
@@ -33,7 +33,7 @@
   position: relative;
   /* ── 노브: 단일 고정 패널 크기 (모든 상태 공통, Task 4에서 DevTools로 확정) ── */
   width: 600px;
-  height: 460px;
+  height: 480px;
   /* ── 노브: 글로우 테두리 두께(↑면 글로우 두껍게/코너 크게) ── */
   border: 34px solid transparent;
   border-image: url("../assets/auth/PanelBackground01.png") 44 fill / 34px / 0 stretch;
@@ -89,12 +89,12 @@
   gap: clamp(8px, 1.4vh, 14px);
 }
 
-/* 학년·반·번호를 한 줄에 균등 분배 */
-.select-row {
+/* 한 줄에 필드 여러 개를 균등 분배(학교+이름 / 학년+반+번호 / 비밀번호+확인). */
+.field-row {
   display: flex;
   gap: 10px;
 }
-.field--select {
+.field-row > .field {
   flex: 1 1 0;
   min-width: 0;
 }
