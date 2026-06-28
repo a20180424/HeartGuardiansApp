@@ -41,7 +41,7 @@
 - `src/scenes/Auth.tsx` — replace stub with the state-machine container.
 
 **Assets:**
-- Copy `mytemp/{Background01,PanelBackground01,TitleBanner}.png` → `public/img/`.
+- Copy `mytemp/{Background01,PanelBackground01,TitleBanner}.png` → `src/assets/auth/` (imported/`url()`-referenced so Vite fingerprints them and they resolve under `base: "./"` in the APK, not just the dev server).
 
 ---
 
@@ -399,7 +399,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 ## Task 3: Assets + Auth shell rendering the chooser
 
 **Files:**
-- Create: `public/img/Background01.png`, `public/img/PanelBackground01.png`, `public/img/TitleBanner.png` (copied)
+- Create: `src/assets/auth/Background01.png`, `src/assets/auth/PanelBackground01.png`, `src/assets/auth/TitleBanner.png` (copied)
 - Create: `src/scenes/Auth.css`
 - Create: `src/scenes/auth/Chooser.tsx`
 - Modify: `src/scenes/Auth.tsx` (replace stub)
@@ -408,15 +408,15 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 - Consumes: nothing from prior tasks (UI only).
 - Produces: `Chooser` component with props `{ onLogin: () => void; onSignup: () => void }`; `Auth` renders the background/banner/panel frame and screen-routes on an internal `screen` state (`"chooser"` only for now).
 
-- [ ] **Step 1: Copy the art assets into public/**
+- [ ] **Step 1: Copy the art assets into src/assets/**
 
 Run:
 ```bash
-mkdir -p public/img
-cp mytemp/Background01.png mytemp/PanelBackground01.png mytemp/TitleBanner.png public/img/
-ls public/img
+mkdir -p src/assets/auth
+cp mytemp/Background01.png mytemp/PanelBackground01.png mytemp/TitleBanner.png src/assets/auth/
+ls src/assets/auth
 ```
-Expected: the three PNGs listed.
+Expected: the three PNGs listed. (They live under `src/` — not `public/` — so Vite processes their URLs and they work under `base: "./"` in the APK WebView.)
 
 - [ ] **Step 2: Write the chooser component**
 
@@ -452,6 +452,7 @@ Replace `src/scenes/Auth.tsx` entirely:
 import { useState } from "react";
 import Chooser from "./auth/Chooser";
 import "./Auth.css";
+import bannerUrl from "../assets/auth/TitleBanner.png";
 
 type Screen = "checking" | "welcome" | "chooser" | "login" | "signup";
 
@@ -460,7 +461,7 @@ export default function Auth() {
 
   return (
     <div className="auth">
-      <img className="auth__banner" src="img/TitleBanner.png" alt="하트 가디언즈: 우주 공감 탐험대" />
+      <img className="auth__banner" src={bannerUrl} alt="하트 가디언즈: 우주 공감 탐험대" />
       <div className="auth__panel">
         {screen === "chooser" && (
           <Chooser onLogin={() => setScreen("login")} onSignup={() => setScreen("signup")} />
@@ -473,7 +474,7 @@ export default function Auth() {
 }
 ```
 
-Note: image `src` is relative (`img/...`) because Vite `base: "./"` and the Capacitor WebView load relative paths.
+Note: the banner is imported (`import bannerUrl from "../assets/auth/TitleBanner.png"`) so Vite fingerprints it and emits a base-relative URL that works in the dev server AND the Capacitor WebView (`base: "./"`). Do not hardcode a `/img/...` path — a leading `/` fails under the APK's `file://` origin.
 
 - [ ] **Step 4: Write the layout CSS**
 
@@ -488,7 +489,7 @@ Create `src/scenes/Auth.css`:
   min-height: 100svh;
   overflow: hidden;
   background:
-    url("/img/Background01.png") center / cover no-repeat,
+    url("../assets/auth/Background01.png") center / cover no-repeat,
     #0b1020;
   display: flex;
   flex-direction: column;
@@ -510,7 +511,7 @@ Create `src/scenes/Auth.css`:
   width: min(70vw, 900px);
   min-height: 46vh;
   padding: clamp(20px, 4vh, 40px);
-  background: url("/img/PanelBackground01.png") center / 100% 100% no-repeat;
+  background: url("../assets/auth/PanelBackground01.png") center / 100% 100% no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -552,7 +553,7 @@ Run: `npm run dev`, open the app, navigate Intro → 시작하기 (or go to `/#/
 - [ ] **Step 7: Commit**
 
 ```bash
-git add public/img src/scenes/Auth.tsx src/scenes/Auth.css src/scenes/auth/Chooser.tsx
+git add src/assets/auth src/scenes/Auth.tsx src/scenes/Auth.css src/scenes/auth/Chooser.tsx
 git commit -m "feat(auth): scaffold Auth scene frame + chooser screen
 
 Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
@@ -1014,6 +1015,7 @@ import { getProgress } from "../lib/progress";
 import { setSession } from "../lib/session";
 import type { Credentials } from "../lib/api";
 import "./Auth.css";
+import bannerUrl from "../assets/auth/TitleBanner.png";
 
 type Screen = "checking" | "welcome" | "chooser" | "login" | "signup";
 
@@ -1056,7 +1058,7 @@ export default function Auth() {
 
   return (
     <div className="auth">
-      <img className="auth__banner" src="img/TitleBanner.png" alt="하트 가디언즈: 우주 공감 탐험대" />
+      <img className="auth__banner" src={bannerUrl} alt="하트 가디언즈: 우주 공감 탐험대" />
       <div className="auth__panel">
         {screen === "chooser" && (
           <Chooser onLogin={() => setScreen("login")} onSignup={() => setScreen("signup")} />
