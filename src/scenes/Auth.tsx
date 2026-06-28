@@ -90,7 +90,10 @@ export default function Auth() {
     setErrorMsg(null);
     try {
       await signup({ ...creds, name }); // 가입
-      await enter(creds); // 같은 값으로 자동 로그인
+      const profile = await verify(creds); // 같은 값으로 자동 로그인(자격증명 저장) + 이름 확인
+      setWelcomeName(profile.name);
+      setSubmitting(false);
+      setScreen("welcome"); // 로그인과 동일하게 welcome을 거쳐 '계속하기'로 Home
     } catch (err) {
       setErrorMsg(
         classifyVerifyError(err) === "auth"
