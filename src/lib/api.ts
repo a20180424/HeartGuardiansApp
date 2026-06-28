@@ -1,51 +1,68 @@
-// Central API client for the HeartGuardians Workers backend.
+// Central API client for the HeartGuardians Workers backend (educational PoC).
 //
-// Design notes (why it looks like this):
-// - The API is ALWAYS a separate origin. On the web the app runs at the Pages
-//   domain; inside the APK the WebView origin is https://localhost (Android) or
-//   capacitor://localhost (iOS). So we never use relative paths — every call goes
-//   to the absolute VITE_API_URL. Web and APK then behave identically.
-// - Auth uses a Bearer token (not cookies), because cross-origin cookies are
-//   painful in a Capacitor WebView. The token is sent in the Authorization header.
-// - Token storage is abstracted so it can be swapped for @capacitor/preferences or
-//   a secure storage plugin later without touching call sites.
+// Auth model (per the API's OpenAPI spec): there is NO session/token. Every
+// protected request carries the student's credentials as headers:
+//   x-school-id, x-grade, x-class, x-number, x-pin
+// We store those credentials locally and attach them on each call.
+//
+// The API is always a separate origin (on the APK the WebView origin is
+// https://localhost / capacitor://localhost), so we always use the absolute
+// VITE_API_URL — never relative paths. Web and APK then behave identically.
 
 const API_BASE: string = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
 if (!API_BASE && import.meta.env.DEV) {
-  // Surface misconfiguration early during development.
   console.warn("[api] VITE_API_URL is not set — API calls will fail. Check your .env files.");
 }
 
-// --- Token storage -----------------------------------------------------------
-// localStorage works in both the browser and the Capacitor WebView and persists
-// across launches. Swap this single object for Capacitor Preferences/secure
-// storage later if stronger guarantees are needed.
-const TOKEN_KEY = "hg.auth.token";
+// --- Credentials (the "auth key") -------------------------------------------
+// Matches VerifyBody in the API spec.
+export interface Credentials {
+  school_id: string;
+  grade: number;
+  class: number;
+  number: number;
+  pin: string;
+}
 
-export const tokenStore = {
-  get(): string | null {
+const CRED_KEY = "hg.credentials";
+
+export const credentialStore = {
+  get(): Credentials | null {
     try {
-      return localStorage.getItem(TOKEN_KEY);
+      const raw = localStorage.getItem(CRED_KEY);
+      return raw ? (JSON.parse(raw) as Credentials) : null;
     } catch {
       return null;
     }
   },
-  set(token: string): void {
+  set(creds: Credentials): void {
     try {
-      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(CRED_KEY, JSON.stringify(creds));
     } catch {
       /* storage unavailable — ignore */
     }
   },
   clear(): void {
     try {
-      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(CRED_KEY);
     } catch {
       /* ignore */
     }
   },
 };
+
+/** Build the x-* auth headers from the given (or stored) credentials. */
+export function authHeaders(creds: Credentials | null = credentialStore.get()): Record<string, string> {
+  if (!creds) throw new ApiError(401, "No stored credentials", null);
+  return {
+    "x-school-id": creds.school_id,
+    "x-grade": String(creds.grade),
+    "x-class": String(creds.class),
+    "x-number": String(creds.number),
+    "x-pin": creds.pin,
+  };
+}
 
 // --- Core request helper -----------------------------------------------------
 export class ApiError extends Error {
@@ -59,23 +76,17 @@ export class ApiError extends Error {
   }
 }
 
-export interface ApiOptions extends Omit<RequestInit, "body"> {
+export interface RequestOptions extends Omit<RequestInit, "body"> {
   /** JSON-serializable request body; sets Content-Type automatically. */
   body?: unknown;
-  /** Skip attaching the Authorization header even if a token exists. */
-  anonymous?: boolean;
 }
 
-export async function api<T = unknown>(path: string, opts: ApiOptions = {}): Promise<T> {
-  const { body, anonymous, headers, ...rest } = opts;
+export async function request<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
+  const { body, headers, ...rest } = opts;
 
   const finalHeaders = new Headers(headers);
   if (body !== undefined && !finalHeaders.has("Content-Type")) {
     finalHeaders.set("Content-Type", "application/json");
-  }
-  if (!anonymous) {
-    const token = tokenStore.get();
-    if (token) finalHeaders.set("Authorization", `Bearer ${token}`);
   }
 
   const res = await fetch(`${API_BASE}${path}`, {
@@ -95,18 +106,13 @@ export async function api<T = unknown>(path: string, opts: ApiOptions = {}): Pro
   }
 
   if (!res.ok) {
+    // The API returns { error: string } on failures.
     const msg =
-      (parsed && typeof parsed === "object" && "message" in parsed
-        ? String((parsed as { message: unknown }).message)
-        : res.statusText) || `Request failed (${res.status})`;
+      parsed && typeof parsed === "object" && "error" in parsed
+        ? String((parsed as { error: unknown }).error)
+        : res.statusText || `Request failed (${res.status})`;
     throw new ApiError(res.status, msg, parsed);
   }
 
   return parsed as T;
 }
-
-// Convenience verbs.
-export const apiGet = <T = unknown>(path: string, opts?: ApiOptions) =>
-  api<T>(path, { ...opts, method: "GET" });
-export const apiPost = <T = unknown>(path: string, body?: unknown, opts?: ApiOptions) =>
-  api<T>(path, { ...opts, method: "POST", body });

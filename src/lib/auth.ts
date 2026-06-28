@@ -1,45 +1,58 @@
-// Auth flow built on the Bearer-token API client.
-// The Workers API implements auth itself (custom), so these endpoints/shapes are
-// placeholders — adjust paths and response fields to match the actual API.
+// Account / credential endpoints (public + profile).
+// See API spec: /api/schools, /api/auth/signup, /api/auth/verify, /api/me
 
-import { apiGet, apiPost, tokenStore } from "./api";
+import { request, authHeaders, credentialStore, type Credentials } from "./api";
 
-export interface AuthUser {
+export interface School {
   id: string;
-  username: string;
+  name: string;
 }
 
-interface AuthResponse {
-  token: string;
-  user: AuthUser;
+export interface Profile {
+  id: string;
+  name: string;
+  grade: number;
+  class: number;
+  number: number;
+  school: School | null;
 }
 
-export async function login(username: string, password: string): Promise<AuthUser> {
-  const res = await apiPost<AuthResponse>("/auth/login", { username, password }, { anonymous: true });
-  tokenStore.set(res.token);
-  return res.user;
+export interface SignupBody extends Credentials {
+  name: string;
 }
 
-export async function signup(username: string, password: string): Promise<AuthUser> {
-  const res = await apiPost<AuthResponse>("/auth/signup", { username, password }, { anonymous: true });
-  tokenStore.set(res.token);
-  return res.user;
+/** Public: list of schools (to populate the signup/login school picker). */
+export function getSchools(): Promise<School[]> {
+  return request<School[]>("/api/schools");
+}
+
+/** Public: register a new student. Does not store credentials by itself. */
+export function signup(body: SignupBody): Promise<unknown> {
+  return request("/api/auth/signup", { method: "POST", body });
+}
+
+/** Public: verify credentials. On success, stores them for subsequent calls. */
+export async function verify(creds: Credentials): Promise<Profile> {
+  const profile = await request<Profile>("/api/auth/verify", { method: "POST", body: creds });
+  credentialStore.set(creds);
+  return profile;
+}
+
+/** Authenticated: current profile (uses stored credentials). */
+export function getProfile(): Promise<Profile> {
+  return request<Profile>("/api/me", { headers: authHeaders() });
+}
+
+/** Authenticated: delete the account, then clear stored credentials. */
+export async function deleteAccount(): Promise<void> {
+  await request("/api/me", { method: "DELETE", headers: authHeaders() });
+  credentialStore.clear();
+}
+
+export function hasCredentials(): boolean {
+  return credentialStore.get() !== null;
 }
 
 export function logout(): void {
-  tokenStore.clear();
-}
-
-export function isLoggedIn(): boolean {
-  return tokenStore.get() !== null;
-}
-
-/** Fetch the current user using the stored token; returns null if unauthenticated. */
-export async function me(): Promise<AuthUser | null> {
-  if (!isLoggedIn()) return null;
-  try {
-    return await apiGet<AuthUser>("/auth/me");
-  } catch {
-    return null;
-  }
+  credentialStore.clear();
 }
