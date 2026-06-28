@@ -101,11 +101,16 @@ export default function Auth() {
     }
   }
 
+  // 로그인 성공 시 바로 Home으로 가지 않고 welcome 화면으로 — 본인 계정을 확인하고
+  // '계속하기'를 누르면 그때 enter()로 세션을 채우고 Home으로 간다(자동로그인 흐름과 동일).
   async function handleLogin(creds: Credentials) {
     setSubmitting(true);
     setErrorMsg(null);
     try {
-      await enter(creds);
+      const profile = await verify(creds); // 성공 시 자격증명 저장(api 레이어)
+      setWelcomeName(profile.name);
+      setSubmitting(false);
+      setScreen("welcome");
     } catch (err) {
       setErrorMsg(
         classifyVerifyError(err) === "auth"
