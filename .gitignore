@@ -31,3 +31,6 @@ dist-ssr
 
 # Temporary 3D test asset (Planet3 3D test only — not used in production)
 public/assets/3d/azure_nexus.glb
+
+# Playwright MCP verification artifacts (screenshots, console logs)
+.playwright-mcp/
