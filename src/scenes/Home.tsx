@@ -15,15 +15,21 @@ export default function Home() {
       <p>다음 행성으로 모험을 떠나자!</p>
       <div className="planet-grid">
         {PLANETS.map((p) => (
-          <button key={p.id} className="planet-card" style={{ background: p.color }}
-            onClick={() => nav(`/planet/${p.id}`)}>
+          <button
+            key={p.id}
+            className="planet-card"
+            style={{ background: p.color }}
+            onClick={() => nav(`/planet/${p.id}`)}
+          >
             <span className="emoji">{p.emoji}</span>
             <span>{p.name}</span>
-            <span style={{ opacity: .8, fontSize: 16 }}>{p.kind}</span>
+            <span style={{ opacity: 0.8, fontSize: 16 }}>{p.kind}</span>
           </button>
         ))}
       </div>
-      <button className="btn ghost" onClick={() => nav("/outro")}>아웃트로 보기 →</button>
+      <button className="btn ghost" onClick={() => nav("/outro")}>
+        아웃트로 보기 →
+      </button>
     </div>
   );
 }

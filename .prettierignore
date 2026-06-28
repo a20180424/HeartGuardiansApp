@@ -1,0 +1,13 @@
+# Build output
+dist
+coverage
+
+# Dependencies
+node_modules
+
+# Native platforms (managed by Capacitor / Gradle, own formatting)
+android
+ios
+
+# Lockfiles & generated
+package-lock.json

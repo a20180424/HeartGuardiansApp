@@ -1,6 +1,12 @@
-export interface Command { cmd: string; value?: string; }
+export interface Command {
+  cmd: string;
+  value?: string;
+}
 
-export interface Choice { text: string; next: string | null; }
+export interface Choice {
+  text: string;
+  next: string | null;
+}
 
 export interface MissionNode {
   id: string;
@@ -10,8 +16,8 @@ export interface MissionNode {
   next?: string | null;
   choices?: Choice[];
   requireAll?: boolean;
-  condition?: string;   // "allExplored"
-  watch?: string;       // 감시할 choice 노드 id
+  condition?: string; // "allExplored"
+  watch?: string; // 감시할 choice 노드 id
   ifTrue?: string;
   ifFalse?: string;
   onEnter?: Command[];
@@ -33,7 +39,7 @@ export interface RunnerView {
   showChoices(
     node: MissionNode,
     exploredSet: Set<number> | null,
-    pick: (idx: number, choice: Choice) => void
+    pick: (idx: number, choice: Choice) => void,
   ): void;
   end(): void;
 }

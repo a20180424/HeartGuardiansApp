@@ -10,14 +10,18 @@ export class DialogueRunner {
   constructor(data: MissionData, view: RunnerView) {
     this.data = data;
     this.view = view;
-    data.nodes.forEach((n) => { this.nodes[n.id] = n; });
+    data.nodes.forEach((n) => {
+      this.nodes[n.id] = n;
+    });
   }
 
   private typeOf(n: MissionNode): "line" | "choice" | "branch" {
     return n.type || (n.choices ? "choice" : "line");
   }
 
-  start() { this.reset(); }
+  start() {
+    this.reset();
+  }
 
   reset() {
     this.explored = {};
@@ -26,15 +30,24 @@ export class DialogueRunner {
   }
 
   private go(id: string | null | undefined) {
-    if (id == null) { this.end(); return; }
+    if (id == null) {
+      this.end();
+      return;
+    }
     this.current = id;
     const node = this.nodes[id];
     this.view.setDebug?.(node);
     this.view.execCommands(node.onEnter, node);
 
     const t = this.typeOf(node);
-    if (t === "branch") { this.evalBranch(node); return; }
-    if (t === "choice") { this.enterChoice(node); return; }
+    if (t === "branch") {
+      this.evalBranch(node);
+      return;
+    }
+    if (t === "choice") {
+      this.enterChoice(node);
+      return;
+    }
     this.typeLine(node);
   }
 
@@ -45,7 +58,8 @@ export class DialogueRunner {
   }
 
   private advance(node: MissionNode) {
-    if (node.next) this.go(node.next); else this.end();
+    if (node.next) this.go(node.next);
+    else this.end();
   }
 
   private evalBranch(node: MissionNode) {
@@ -75,5 +89,7 @@ export class DialogueRunner {
     });
   }
 
-  private end() { this.view.end(); }
+  private end() {
+    this.view.end();
+  }
 }
