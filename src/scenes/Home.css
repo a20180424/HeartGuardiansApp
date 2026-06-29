@@ -226,3 +226,28 @@
   font-size: 18px;
   z-index: 2;
 }
+
+/* 하단 메뉴 버튼 */
+.home-menu {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  display: flex;
+  gap: 16px;
+}
+.home-menu__btn {
+  width: 104px;
+  height: 104px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+.home-menu__btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.home-menu__btn:active {
+  transform: scale(0.95);
+}
