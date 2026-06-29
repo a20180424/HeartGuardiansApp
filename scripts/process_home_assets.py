@@ -1,10 +1,10 @@
 """One-time: trim transparent margins from mytemp/home PNGs and split PlateSet
-into 4 plates, writing results to src/assets/home/. Re-runnable (idempotent)."""
+into 4 plates, writing results to src/scenes/home/assets/. Re-runnable (idempotent)."""
 from pathlib import Path
 from PIL import Image
 
 SRC = Path("mytemp/home")
-DST = Path("src/assets/home")
+DST = Path("src/scenes/home/assets")
 DST.mkdir(parents=True, exist_ok=True)
 
 # Files copied with an alpha-bbox trim (transparent margins removed).

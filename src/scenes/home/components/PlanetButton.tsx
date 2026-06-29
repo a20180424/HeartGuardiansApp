@@ -1,15 +1,15 @@
-import type { PlanetStatus } from "./home.logic";
-import { PLANET_NAMES } from "./home.data";
-import lockUrl from "../../assets/home/Lock.png";
-import rocketUrl from "../../assets/home/RocketButton.png";
-import a1h from "../../assets/home/Alien01_Happy.png";
-import a1s from "../../assets/home/Alien01_Sad.png";
-import a2h from "../../assets/home/Alien02_Happy.png";
-import a2s from "../../assets/home/Alien02_Sad.png";
-import a3h from "../../assets/home/Alien03_Happy.png";
-import a3s from "../../assets/home/Alien03_Sad.png";
-import a4h from "../../assets/home/Alien04_Happy.png";
-import a4s from "../../assets/home/Alien04_Sad.png";
+import type { PlanetStatus } from "../home.logic";
+import { PLANET_NAMES } from "../home.data";
+import lockUrl from "../assets/Lock.png";
+import rocketUrl from "../assets/RocketButton.png";
+import a1h from "../assets/Alien01_Happy.png";
+import a1s from "../assets/Alien01_Sad.png";
+import a2h from "../assets/Alien02_Happy.png";
+import a2s from "../assets/Alien02_Sad.png";
+import a3h from "../assets/Alien03_Happy.png";
+import a3s from "../assets/Alien03_Sad.png";
+import a4h from "../assets/Alien04_Happy.png";
+import a4s from "../assets/Alien04_Sad.png";
 
 const ART: Record<number, { happy: string; sad: string }> = {
   1: { happy: a1h, sad: a1s },

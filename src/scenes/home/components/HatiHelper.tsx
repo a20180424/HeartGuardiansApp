@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { commentFor } from "./home.logic";
-import bubbleUrl from "../../shared/assets/PanelBackground01.png";
+import { commentFor } from "../home.logic";
+import bubbleUrl from "../../../shared/assets/PanelBackground01.png";
 
 const HATI_SRC = "/assets/char/Hati/hati_default.png";
 

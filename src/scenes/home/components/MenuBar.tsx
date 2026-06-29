@@ -1,7 +1,7 @@
-import missionUrl from "../../assets/home/MissionButton.png";
-import gemUrl from "../../assets/home/GemBookButton.png";
-import inventoryUrl from "../../assets/home/InventoryButton.png";
-import historyUrl from "../../assets/home/HistoryButton.png";
+import missionUrl from "../assets/MissionButton.png";
+import gemUrl from "../assets/GemBookButton.png";
+import inventoryUrl from "../assets/InventoryButton.png";
+import historyUrl from "../assets/HistoryButton.png";
 
 export type MenuKey = "mission" | "gem" | "inventory" | "history";
 

@@ -1,6 +1,6 @@
-import { nicknameFor } from "./home.logic";
-import plateUrl from "../../assets/home/PlayerButton.png";
-import maleFace from "../../assets/home/AvatarFace.png";
+import { nicknameFor } from "../home.logic";
+import plateUrl from "../assets/PlayerButton.png";
+import maleFace from "../assets/AvatarFace.png";
 
 // 성별별 얼굴. 현재는 남자만 존재 — 여자 에셋이 생기면 여기에 추가한다.
 const FACES = { male: maleFace, female: maleFace } as const;
