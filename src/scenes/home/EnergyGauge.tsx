@@ -17,9 +17,6 @@ export default function EnergyGauge({ progress }: EnergyGaugeProps) {
         ))}
         <span className="home-energy__percent">{percent}%</span>
       </div>
-      <div className="home-energy__bar">
-        <div className="home-energy__bar-fill" style={{ width: `${percent}%` }} />
-      </div>
     </div>
   );
 }

@@ -24,11 +24,11 @@ describe("planetState", () => {
 describe("nicknameFor", () => {
   it("progress별 별명을 반환한다", () => {
     expect(nicknameFor(0)).toBe("견습 가디언");
-    expect(nicknameFor(4)).toBe("마스터 가디언");
+    expect(nicknameFor(4)).toBe("하트 가디언");
   });
   it("범위를 벗어나면 양 끝으로 clamp", () => {
     expect(nicknameFor(-1)).toBe("견습 가디언");
-    expect(nicknameFor(9)).toBe("마스터 가디언");
+    expect(nicknameFor(9)).toBe("하트 가디언");
   });
 });
 

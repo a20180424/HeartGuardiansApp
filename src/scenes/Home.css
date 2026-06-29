@@ -120,17 +120,6 @@
   font-size: 20px;
   font-weight: 700;
 }
-.home-energy__bar {
-  height: 16px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  overflow: hidden;
-}
-.home-energy__bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ff5fa2, #ff9ec9);
-  transition: width 0.4s ease;
-}
 
 /* 모선 (중앙 상단) — 상하 부유 + 발광 펄스 */
 .home-mothership {
