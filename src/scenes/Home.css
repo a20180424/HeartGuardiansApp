@@ -48,3 +48,36 @@
   align-items: center;
   justify-content: center;
 }
+
+/* 프로필 카드 (좌상단) */
+.home-profile {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: 360px;
+  height: 96px;
+  background-size: 100% 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  box-sizing: border-box;
+}
+.home-profile__face {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+}
+.home-profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.home-profile__level {
+  font-size: 20px;
+  font-weight: 700;
+}
+.home-profile__name {
+  font-size: 18px;
+  opacity: 0.9;
+}
