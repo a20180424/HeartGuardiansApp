@@ -11,17 +11,19 @@ DST.mkdir(parents=True, exist_ok=True)
 TRIM = [
     "PlayerButton.png", "AvatarFace.png", "BannerPlate03.png", "PurposeStart.png",
     "HeartScorePlate.png", "HeartFull.png", "HeartEmpty.png", "HeartConnect.png",
-    "Lock.png", "RocketButton.png", "MissionButton.png", "GemBookButton.png",
-    "InventoryButton.png", "HistoryButton.png", "SpaceshipBackground.png",
+    "Lock.png", "RocketButton.png", "SpaceshipBackground.png",
 ]
 
-# Planet sprites: trim each to its content, then center every one on a single
-# common transparent canvas sized to the largest trimmed sprite. This gives all
-# 8 the same intrinsic size (and aspect ratio) so object-fit:contain scales them
-# identically and centers them consistently, instead of one sprite filling the
-# box while another letterboxes.
+# Icon SETS that must render at a consistent size in a shared CSS box: trim each
+# to its content, then center every one on a single common transparent canvas
+# sized to the largest trimmed member. This gives the whole set the same
+# intrinsic size and aspect ratio, so object-fit:contain scales and centers them
+# identically — instead of one member filling the box while another letterboxes.
 ALIENS = [
     f"Alien{i:02d}_{s}.png" for i in (1, 2, 3, 4) for s in ("Happy", "Sad")
+]
+MENU_BUTTONS = [
+    "MissionButton.png", "GemBookButton.png", "InventoryButton.png", "HistoryButton.png",
 ]
 
 def trim(im: Image.Image) -> Image.Image:
@@ -29,21 +31,23 @@ def trim(im: Image.Image) -> Image.Image:
     bbox = im.split()[3].getbbox()  # bbox of non-transparent pixels
     return im.crop(bbox) if bbox else im
 
+def center_on_common_canvas(names: list[str]) -> None:
+    trimmed = {n: trim(Image.open(SRC / n)) for n in names}
+    cw = max(im.width for im in trimmed.values())
+    ch = max(im.height for im in trimmed.values())
+    for name, im in trimmed.items():
+        out = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))  # transparent
+        out.paste(im, ((cw - im.width) // 2, (ch - im.height) // 2), im)  # centered
+        out.save(DST / name)
+        print(f"{name}: {out.size} (centered on {cw}x{ch})")
+
 for name in TRIM:
     out = trim(Image.open(SRC / name))
     out.save(DST / name)
     print(f"{name}: {out.size}")
 
-trimmed = {n: trim(Image.open(SRC / n)) for n in ALIENS}
-canvas_w = max(im.width for im in trimmed.values())
-canvas_h = max(im.height for im in trimmed.values())
-for name, im in trimmed.items():
-    out = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))  # transparent
-    x = (canvas_w - im.width) // 2
-    y = (canvas_h - im.height) // 2
-    out.paste(im, (x, y), im)  # centered, own alpha as mask
-    out.save(DST / name)
-    print(f"{name}: {out.size} (centered on {canvas_w}x{canvas_h})")
+center_on_common_canvas(ALIENS)
+center_on_common_canvas(MENU_BUTTONS)
 
 # PlateSet.png = 4 plates left→right (green, blue, purple, brown). Split into
 # equal quarters, then alpha-trim each quarter to its plate.
