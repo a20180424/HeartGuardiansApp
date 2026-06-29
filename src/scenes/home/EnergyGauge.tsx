@@ -1,3 +1,4 @@
+import { energyNoteFor } from "./home.logic";
 import plateUrl from "../../assets/home/HeartScorePlate.png";
 import heartFull from "../../assets/home/HeartFull.png";
 import heartEmpty from "../../assets/home/HeartEmpty.png";
@@ -17,6 +18,7 @@ export default function EnergyGauge({ progress }: EnergyGaugeProps) {
         ))}
         <span className="home-energy__percent">{percent}%</span>
       </div>
+      <span className="home-energy__next">{energyNoteFor(progress)}</span>
     </div>
   );
 }

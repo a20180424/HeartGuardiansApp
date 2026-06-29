@@ -1,4 +1,4 @@
-import { NICKNAMES, COMMENTS } from "./home.data";
+import { NICKNAMES, COMMENTS, ENERGY_NOTES } from "./home.data";
 
 export type PlanetStatus = "completed" | "unlocked" | "locked";
 
@@ -21,4 +21,9 @@ export function nicknameFor(progress: number): string {
 /** progress(0~4)에 대응하는 하티 멘트. 범위를 벗어나면 양 끝으로 clamp. */
 export function commentFor(progress: number): string {
   return COMMENTS[clampIndex(progress, COMMENTS.length)];
+}
+
+/** progress(0~4)에 대응하는 에너지 게이지 안내 문구. 범위를 벗어나면 양 끝으로 clamp. */
+export function energyNoteFor(progress: number): string {
+  return ENERGY_NOTES[clampIndex(progress, ENERGY_NOTES.length)];
 }

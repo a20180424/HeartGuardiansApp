@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { planetState, nicknameFor, commentFor } from "./home.logic";
+import { planetState, nicknameFor, commentFor, energyNoteFor } from "./home.logic";
 
 describe("planetState", () => {
   it("progress보다 작거나 같은 행성은 completed", () => {
@@ -39,5 +39,17 @@ describe("commentFor", () => {
   });
   it("범위를 벗어나면 clamp", () => {
     expect(commentFor(99)).toBe(commentFor(4));
+  });
+});
+
+describe("energyNoteFor", () => {
+  it("progress별 안내 문구를 반환한다", () => {
+    expect(energyNoteFor(0)).toBe("다음 행성까지 25% 필요!");
+    expect(energyNoteFor(3)).toBe("그림자 행성 출발!");
+    expect(energyNoteFor(4)).toBe("공감 에너지 완성!");
+  });
+  it("범위를 벗어나면 양 끝으로 clamp", () => {
+    expect(energyNoteFor(-1)).toBe("다음 행성까지 25% 필요!");
+    expect(energyNoteFor(99)).toBe("공감 에너지 완성!");
   });
 });
