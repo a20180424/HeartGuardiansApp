@@ -142,3 +142,87 @@
   0%, 100% { transform: translate(-50%, 0); }
   50% { transform: translate(-50%, -10px); }
 }
+
+/* 행성 버튼 */
+.home-planet {
+  position: relative;
+  width: 260px;
+  height: 280px;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+.home-planet__char {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.home-planet--locked {
+  filter: grayscale(85%) brightness(0.6);
+  opacity: 0.85;
+  cursor: default;
+}
+.home-planet--completed {
+  cursor: default;
+}
+.home-planet--unlocked {
+  cursor: pointer;
+  animation: home-bob-plain 2.4s ease-in-out infinite;
+}
+@keyframes home-bob-plain {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+/* unlocked: 섬 둘레 펄스 헤일로 */
+.home-planet--unlocked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  width: 200px;
+  height: 60px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(120, 200, 255, 0.55), transparent 70%);
+  animation: home-halo 1.8s ease-in-out infinite;
+  z-index: -1;
+}
+@keyframes home-halo {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) scale(0.9); }
+  50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+}
+.home-planet__lock {
+  position: absolute;
+  top: 40px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  z-index: 2;
+}
+.home-planet__star {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  z-index: 2;
+}
+.home-planet__rocket {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 52px;
+  background-size: 100% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 22px;
+  box-sizing: border-box;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  z-index: 2;
+}
