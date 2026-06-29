@@ -251,3 +251,32 @@
 .home-menu__btn:active {
   transform: scale(0.95);
 }
+
+/* 하티 + 말풍선 (우하단) */
+.home-hati {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.home-hati__bubble {
+  width: 360px;
+  height: 132px;
+  border: 28px solid transparent;
+  display: flex;
+  align-items: center;
+}
+.home-hati__text {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.home-hati__robot {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  animation: home-bob-plain 2.8s ease-in-out infinite;
+}
