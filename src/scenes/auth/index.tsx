@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Chooser from "./auth/Chooser";
-import CredentialForm from "./auth/CredentialForm";
-import WelcomePanel from "./auth/WelcomePanel";
-import { classifyVerifyError } from "./auth/auth.logic";
-import { getSchools, verify, logout, signup, type School } from "../lib/auth";
-import { getProgress } from "../lib/progress";
-import { setSession, clearSession } from "../lib/session";
-import { credentialStore } from "../lib/api";
-import type { Credentials } from "../lib/api";
+import Chooser from "./components/Chooser";
+import CredentialForm from "./components/CredentialForm";
+import WelcomePanel from "./components/WelcomePanel";
+import { classifyVerifyError } from "./auth.logic";
+import { getSchools, verify, logout, signup, type School } from "../../lib/auth";
+import { getProgress } from "../../lib/progress";
+import { setSession, clearSession } from "../../lib/session";
+import { credentialStore } from "../../lib/api";
+import type { Credentials } from "../../lib/api";
 import "./Auth.css";
-import bannerUrl from "../assets/auth/TitleBanner.png";
+import bannerUrl from "../../shared/assets/TitleBanner.png";
 
 type Screen = "checking" | "welcome" | "chooser" | "login" | "signup";
 

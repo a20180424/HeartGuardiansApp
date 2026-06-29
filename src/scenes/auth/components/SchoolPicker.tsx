@@ -1,5 +1,5 @@
 // 학교 선택. 학교가 1개여도 항상 표시한다(나중에 학교가 늘어도 UI가 그대로).
-import type { School } from "../../lib/auth";
+import type { School } from "../../../lib/auth";
 
 interface Props {
   schools: School[];

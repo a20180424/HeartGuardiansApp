@@ -1,7 +1,7 @@
-import { energyNoteFor } from "./home.logic";
-import plateUrl from "../../assets/home/HeartScorePlate.png";
-import heartFull from "../../assets/home/HeartFull.png";
-import heartEmpty from "../../assets/home/HeartEmpty.png";
+import { energyNoteFor } from "../home.logic";
+import plateUrl from "../assets/HeartScorePlate.png";
+import heartFull from "../assets/HeartFull.png";
+import heartEmpty from "../assets/HeartEmpty.png";
 
 interface EnergyGaugeProps {
   progress: number;

@@ -1,15 +1,15 @@
 // 학교 + 이름(signup) + 학년/반/번호(드롭다운) + 비밀번호[/확인](시스템 키보드).
 // 서버 호출은 하지 않는다 — 완성된 Credentials를 onSubmit으로 올린다.
 import { useEffect, useState } from "react";
-import type { School } from "../../lib/auth";
-import type { Credentials } from "../../lib/api";
+import type { School } from "../../../lib/auth";
+import type { Credentials } from "../../../lib/api";
 import {
   initialForm,
   isComplete,
   toCredentials,
   pickDefaultSchool,
   sanitizePin,
-} from "./auth.logic";
+} from "../auth.logic";
 import SchoolPicker from "./SchoolPicker";
 
 interface Props {

@@ -7,7 +7,7 @@
   min-height: 100svh;
   overflow: hidden;
   background:
-    url("../assets/home/SpaceshipBackground.png") center / cover no-repeat,
+    url("./assets/SpaceshipBackground.png") center / cover no-repeat,
     #050a18;
   color: #fff;
   user-select: none;

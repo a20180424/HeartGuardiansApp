@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Intro from "./scenes/Intro";
-import Auth from "./scenes/Auth";
-import Home from "./scenes/Home";
+import Intro from "./scenes/intro";
+import Auth from "./scenes/auth";
+import Home from "./scenes/home";
 import Planet1 from "./scenes/Planet1";
 import Planet2 from "./scenes/Planet2";
 import Planet3 from "./scenes/Planet3";
