@@ -64,11 +64,30 @@ src/
   shared/
     components/
       Modal.tsx              (← scenes/home/Modal.tsx, "Generic Modal")
+    assets/
+      TitleBanner.png        (← src/assets/auth/, Auth+Home 공유)
+      PanelBackground01.png  (← src/assets/auth/, Auth.css+HatiHelper 공유)
   lib/                       (그대로: api, auth, progress, session, useFitStage + tests)
   mission/ missions/ engine/ three/             (그대로 — 보류)
   styles/global.css          (그대로)
-  assets/                    (auth/·home/ 빠짐 → hero.png, react.svg, vite.svg 등 잔여)
+  assets/                    (auth/·home/ 빠짐 → hero.png, react.svg, vite.svg 잔여; 미사용)
 ```
+
+### Scene 간 공유 에셋 (실측)
+
+co-locate 전 전체 에셋 사용처를 매핑한 결과 두 파일이 scene 경계를 넘는다:
+
+| 에셋 | 사용처 | 처리 |
+|---|---|---|
+| `TitleBanner.png` | `Auth.tsx` + `Home.tsx` | `shared/assets/` |
+| `PanelBackground01.png` | `Auth.css` + `home/HatiHelper.tsx` | `shared/assets/` |
+| `Background01.png` | `Auth.css` 만 | `scenes/auth/assets/` |
+| `assets/home/*` (SpaceshipBackground 등) | home 만 | `scenes/home/assets/` |
+| `hero.png`/`react.svg`/`vite.svg` | 참조 없음 | 손대지 않음 (잔여) |
+
+공유 2개를 `shared/assets/` 로 빼면 home이 auth 폴더를 넘어다보는 cross-scene
+import가 사라진다. **CSS `url()` 경로도 함께 갱신**해야 한다(Auth.css 2곳,
+Home.css 1곳 — `import` 가 아니라 CSS 상대경로).
 
 - CSS 파일명은 기존(`Intro.css`/`Auth.css`/`Home.css`) 유지, 폴더로만 이동 —
   churn 최소화.
@@ -88,7 +107,14 @@ src/
     (components 는 home 한 단계 아래, assets 는 home 직속 → `../assets/X`)
   - `home/components/*` 가 `home.logic`/`home.data` 참조 시: `../X` 로 한 단계 위
   - `index.tsx` 의 Modal: `./home/Modal` → `../../shared/components/Modal`
+  - 공유 에셋: `../assets/auth/TitleBanner.png` →
+    `../../shared/assets/TitleBanner.png`; HatiHelper 의 PanelBackground01 도
+    `../../shared/assets/PanelBackground01.png`
   - auth 도 동일 패턴 (assets/auth → assets, 부품은 components/ 로)
+- **CSS `url()` 경로 갱신** (import 아님): `Auth.css` 의 Background01 →
+  `./assets/Background01.png`, PanelBackground01 →
+  `../../shared/assets/PanelBackground01.png`; `Home.css` 의 SpaceshipBackground →
+  `./assets/SpaceshipBackground.png`.
 - **`App.tsx`**: `./scenes/Intro|Auth|Home` 3줄은 폴더 resolve(index.tsx)로
   **경로 문자열 그대로 동작.** Planet/Outro 줄은 변경 없음.
 - **`scripts/process_home_assets.py`**: `DST = Path("src/assets/home")` →
