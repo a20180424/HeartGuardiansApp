@@ -10,7 +10,7 @@ import { setSession, clearSession } from "../lib/session";
 import { credentialStore } from "../lib/api";
 import type { Credentials } from "../lib/api";
 import "./Auth.css";
-import bannerUrl from "../assets/auth/TitleBanner.png";
+import bannerUrl from "../shared/assets/TitleBanner.png";
 
 type Screen = "checking" | "welcome" | "chooser" | "login" | "signup";
 

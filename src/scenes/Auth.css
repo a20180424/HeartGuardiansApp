@@ -36,7 +36,7 @@
   height: 480px;
   /* ── 노브: 글로우 테두리 두께(↑면 글로우 두껍게/코너 크게) ── */
   border: 34px solid transparent;
-  border-image: url("../assets/auth/PanelBackground01.png") 44 fill / 34px / 0 stretch;
+  border-image: url("../shared/assets/PanelBackground01.png") 44 fill / 34px / 0 stretch;
   padding: clamp(10px, 2vh, 22px);
   display: flex;
   flex-direction: column;
