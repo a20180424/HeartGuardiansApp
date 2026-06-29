@@ -126,3 +126,19 @@
   background: linear-gradient(90deg, #ff5fa2, #ff9ec9);
   transition: width 0.4s ease;
 }
+
+/* 모선 (중앙 상단) — 상하 부유 + 발광 펄스 */
+.home-mothership {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  width: 320px;
+  height: auto;
+  transform: translateX(-50%);
+  animation: home-bob 3.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(80, 170, 255, 0.55));
+}
+@keyframes home-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -10px); }
+}
