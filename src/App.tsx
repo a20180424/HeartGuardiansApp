@@ -6,7 +6,7 @@ import Planet1 from "./scenes/planet/planet1";
 import Planet2 from "./scenes/planet/planet2";
 import Planet3 from "./scenes/planet/planet3";
 import Planet4 from "./scenes/planet/planet4";
-import Outro from "./scenes/Outro";
+import Outro from "./scenes/outro";
 
 export default function App() {
   return (
