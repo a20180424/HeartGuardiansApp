@@ -11,8 +11,7 @@ DST.mkdir(parents=True, exist_ok=True)
 TRIM = [
     "PlayerButton.png", "AvatarFace.png", "BannerPlate03.png", "PurposeStart.png",
     "HeartScorePlate.png", "HeartFull.png", "HeartEmpty.png", "HeartConnect.png",
-    "Lock.png", "RocketButton.png", "MissionButton.png", "GemBookButton.png",
-    "InventoryButton.png", "HistoryButton.png", "SpaceshipBackground.png",
+    "Lock.png", "RocketButton.png", "SpaceshipBackground.png",
 ]
 
 # Planet sprites: trim each to its content, then center every one on a single
@@ -22,6 +21,15 @@ TRIM = [
 # box while another letterboxes.
 ALIENS = [
     f"Alien{i:02d}_{s}.png" for i in (1, 2, 3, 4) for s in ("Happy", "Sad")
+]
+
+# Menu icons: trim, then resize each to one common size (the largest trimmed
+# member). Unlike the planets we stretch rather than pad — the icons fill their
+# bbox edge to edge with no surrounding scenery, and their aspect ratios are
+# close, so a uniform resize makes them render at an identical size in the
+# square button box without leaving any transparent margin.
+MENU_BUTTONS = [
+    "MissionButton.png", "GemBookButton.png", "InventoryButton.png", "HistoryButton.png",
 ]
 
 def trim(im: Image.Image) -> Image.Image:
@@ -44,6 +52,14 @@ for name, im in trimmed.items():
     out.paste(im, (x, y), im)  # centered, own alpha as mask
     out.save(DST / name)
     print(f"{name}: {out.size} (centered on {canvas_w}x{canvas_h})")
+
+menu = {n: trim(Image.open(SRC / n)) for n in MENU_BUTTONS}
+menu_w = max(im.width for im in menu.values())
+menu_h = max(im.height for im in menu.values())
+for name, im in menu.items():
+    out = im.resize((menu_w, menu_h), Image.LANCZOS)  # stretch to common size
+    out.save(DST / name)
+    print(f"{name}: {out.size} (resized to {menu_w}x{menu_h})")
 
 # PlateSet.png = 4 plates left→right (green, blue, purple, brown). Split into
 # equal quarters, then alpha-trim each quarter to its plate.
