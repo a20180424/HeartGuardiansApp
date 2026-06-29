@@ -2,7 +2,6 @@ import type { PlanetStatus } from "./home.logic";
 import { PLANET_NAMES } from "./home.data";
 import lockUrl from "../../assets/home/Lock.png";
 import rocketUrl from "../../assets/home/RocketButton.png";
-import starUrl from "../../assets/home/PurposeStart.png";
 import a1h from "../../assets/home/Alien01_Happy.png";
 import a1s from "../../assets/home/Alien01_Sad.png";
 import a2h from "../../assets/home/Alien02_Happy.png";
@@ -42,7 +41,6 @@ export default function PlanetButton({ id, status, onPlay }: PlanetButtonProps) 
           탐험 시작!
         </span>
       )}
-      {status === "completed" && <img className="home-planet__star" src={starUrl} alt="" />}
       {status === "locked" && <img className="home-planet__lock" src={lockUrl} alt="잠김" />}
       <img className="home-planet__char" src={img} alt="" />
     </button>

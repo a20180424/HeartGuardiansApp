@@ -193,15 +193,6 @@
   height: 56px;
   z-index: 2;
 }
-.home-planet__star {
-  position: absolute;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 56px;
-  z-index: 2;
-}
 .home-planet__rocket {
   position: absolute;
   top: 6px;
