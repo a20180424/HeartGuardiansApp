@@ -43,3 +43,17 @@ export interface RunnerView {
   ): void;
   end(): void;
 }
+
+export interface MissionTheme {
+  speakers: { hati: { name: string; avatar: string }; lumi: { name: string } };
+  bannerNode: string;
+  drag?: { node: string };
+  bg: { states: Record<string, string>; initial: string; byNode: Record<string, string> };
+  hatiSprites: { char: Record<string, string>; initial: string; byNode: Record<string, string> };
+  lumiSprites: { char: Record<string, string>; initial: string; byNode: Record<string, string> };
+  radar: { states: Record<string, string>; initial: string; byNode: Record<string, string> };
+  badgeColors: string[];
+  choiceIcons: Record<string, { emoji: string; bg: string }>;
+  fx: Record<string, string>;
+  sfx: { byNode: Record<string, string> };
+}

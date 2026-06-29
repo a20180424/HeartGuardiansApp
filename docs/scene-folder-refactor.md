@@ -1,14 +1,16 @@
-# Scene 폴더 구조 리팩터링 (Intro/Auth/Home 완료)
+# Scene 폴더 구조 리팩터링 (전체 완료)
 
-> 상태: **완료 (refactor/scene-folders).** Intro/Auth/Home 3개 scene을
-> `scenes/<scene>/{index.tsx, components/, assets/}` 로 폴더화하고, 공용
-> Modal·공유 에셋을 `shared/` 로 추출했다. Planet 엔진군(mission/missions/
-> engine/three)은 후속 — Planet 본격 구현 때 재검토.
+> 상태: **완료.** 모든 scene이 `scenes/<scene>/` 폴더 구조다.
 >
-> 확정 항목(brainstorming)·세부 설계는
-> [docs/superpowers/specs/2026-06-29-scene-folder-refactor-design.md](superpowers/specs/2026-06-29-scene-folder-refactor-design.md),
-> 실행 계획은
-> [docs/superpowers/plans/2026-06-29-scene-folder-refactor.md](superpowers/plans/2026-06-29-scene-folder-refactor.md).
+> - **1차 (refactor/scene-folders, PR #5):** Intro/Auth/Home →
+>   `scenes/<scene>/{index.tsx, components/, assets/}`, 공용 Modal·공유 에셋을
+>   `shared/` 로 추출.
+> - **2차 (refactor/planet-folders):** Planet 엔진군(mission/missions/engine/
+>   three)을 `scenes/planet/{engine/, player/, planet1~4/}` 로 흡수,
+>   `MissionTheme` 인터페이스를 engine으로 이동, Outro도 `scenes/outro/` 로 폴더화.
+>
+> 설계/계획: `docs/superpowers/specs/2026-06-29-scene-folder-refactor-design.md`,
+> `…/2026-06-30-planet-folder-refactor-design.md` 및 대응 plans.
 > 아래는 착수 전 원본 제안(기록 보존용).
 
 ## 왜

@@ -6,9 +6,8 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { DialogueRunner } from "../engine/runner";
-import type { MissionData, MissionNode, RunnerView, Choice, Command } from "../engine/types";
-import type { MissionTheme } from "../missions/mission01/theme";
-import { useFitStage } from "../lib/useFitStage";
+import type { MissionData, MissionNode, RunnerView, Choice, Command, MissionTheme } from "../engine/types";
+import { useFitStage } from "../../../lib/useFitStage";
 import { AudioManager } from "./audio";
 import "./mission.css";
 

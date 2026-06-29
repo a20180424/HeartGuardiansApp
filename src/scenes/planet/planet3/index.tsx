@@ -1,7 +1,7 @@
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
-import { World } from "../three/World";
+import { World } from "./World";
 
 export default function Planet3() {
   const nav = useNavigate();
