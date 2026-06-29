@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Intro from "./scenes/Intro";
+import Intro from "./scenes/intro";
 import Auth from "./scenes/Auth";
 import Home from "./scenes/Home";
 import Planet1 from "./scenes/Planet1";
