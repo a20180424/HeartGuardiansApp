@@ -81,3 +81,48 @@
   font-size: 18px;
   opacity: 0.9;
 }
+
+/* 공감 에너지 게이지 (우상단) */
+.home-energy {
+  position: absolute;
+  top: 130px;
+  right: 18px;
+  width: 360px;
+  height: 120px;
+  background-size: 100% 100%;
+  padding: 14px 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.home-energy__label {
+  font-size: 18px;
+  font-weight: 700;
+}
+.home-energy__hearts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.home-energy__heart {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+.home-energy__percent {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: 700;
+}
+.home-energy__bar {
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+.home-energy__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5fa2, #ff9ec9);
+  transition: width 0.4s ease;
+}
