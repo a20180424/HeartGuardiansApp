@@ -17,7 +17,7 @@ export default function ProfileCard({ name, progress, gender = "male" }: Profile
       <img className="home-profile__face" src={FACES[gender]} alt="" />
       <div className="home-profile__info">
         <span className="home-profile__level">
-          Lv{progress} {nicknameFor(progress)}
+          Lv{progress + 1} {nicknameFor(progress)}
         </span>
         <span className="home-profile__name">{name}</span>
       </div>

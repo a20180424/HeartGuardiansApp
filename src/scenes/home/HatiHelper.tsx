@@ -29,13 +29,13 @@ export default function HatiHelper({ progress }: HatiHelperProps) {
 
   return (
     <div className="home-hati">
+      <img className="home-hati__robot" src={HATI_SRC} alt="하티" />
       <div
         className="home-hati__bubble"
         style={{ borderImage: `url(${bubbleUrl}) 44 fill / 28px / 0 stretch` }}
       >
         <p className="home-hati__text">{full.slice(0, count)}</p>
       </div>
-      <img className="home-hati__robot" src={HATI_SRC} alt="하티" />
     </div>
   );
 }

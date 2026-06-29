@@ -54,8 +54,8 @@
   position: absolute;
   top: 18px;
   left: 18px;
-  width: 360px;
-  height: 96px;
+  width: 380px;
+  height: 116px;
   /* Plate is intentionally stretched (not border-image 9-slice): fixed-size
      box at the 1280×800 baseline, no corner distortion. */
   background-size: 100% 100%;
@@ -67,8 +67,8 @@
   box-sizing: border-box;
 }
 .home-profile__face {
-  width: 68px;
-  height: 68px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
 }
 .home-profile__info {
@@ -137,7 +137,7 @@
   position: absolute;
   top: 150px;
   left: 50%;
-  width: 320px;
+  width: 230px;
   height: auto;
   transform: translateX(-50%);
   animation: home-bob 3.6s ease-in-out infinite;
@@ -151,8 +151,8 @@
 /* 행성 버튼 */
 .home-planet {
   position: relative;
-  width: 260px;
-  height: 280px;
+  width: 312px;
+  height: 336px;
   border: none;
   background: transparent;
   padding: 0;
@@ -239,11 +239,11 @@
   left: 24px;
   bottom: 20px;
   display: flex;
-  gap: 16px;
+  gap: 26px;
 }
 .home-menu__btn {
-  width: 104px;
-  height: 104px;
+  width: 156px;
+  height: 156px;
   border: none;
   background: transparent;
   padding: 0;
@@ -268,8 +268,8 @@
   gap: 12px;
 }
 .home-hati__bubble {
-  width: 360px;
-  height: 132px;
+  width: 300px;
+  height: 162px;
   border: 28px solid transparent;
   display: flex;
   align-items: center;
@@ -281,8 +281,8 @@
   font-weight: 600;
 }
 .home-hati__robot {
-  width: 120px;
-  height: 120px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   animation: home-bob-plain 2.8s ease-in-out infinite;
 }
@@ -305,6 +305,7 @@
   right: 18px;
   width: 360px;
   height: 96px;
+  background-color: transparent;
   background-size: 100% 100%;
   background-repeat: no-repeat;
   border: none;
@@ -335,8 +336,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 150px;
+  bottom: 210px;
   display: flex;
   justify-content: center;
-  gap: 18px;
+  gap: 10px;
 }
