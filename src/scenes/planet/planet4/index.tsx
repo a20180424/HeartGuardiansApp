@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import MissionPlayer from "../mission/MissionPlayer";
-import { MISSION01_THEME } from "../missions/mission01/theme";
+import MissionPlayer from "../player/MissionPlayer";
+import { MISSION01_THEME } from "../planet1/theme";
 
-export default function Planet1() {
+export default function Planet4() {
   const nav = useNavigate();
   return (
     <MissionPlayer

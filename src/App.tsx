@@ -2,10 +2,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
 import Home from "./scenes/home";
-import Planet1 from "./scenes/Planet1";
-import Planet2 from "./scenes/Planet2";
-import Planet3 from "./scenes/Planet3";
-import Planet4 from "./scenes/Planet4";
+import Planet1 from "./scenes/planet/planet1";
+import Planet2 from "./scenes/planet/planet2";
+import Planet3 from "./scenes/planet/planet3";
+import Planet4 from "./scenes/planet/planet4";
 import Outro from "./scenes/Outro";
 
 export default function App() {
