@@ -1,10 +1,15 @@
-# Scene 폴더 구조 리팩터링 (대기 중)
+# Scene 폴더 구조 리팩터링 (Intro/Auth/Home 완료)
 
-> 상태: **제안 / 미착수.** `feat/home-scene` 머지 후 별도 브랜치
-> (`refactor/scene-folders`)에서 진행한다. 순수 구조 리팩터링이라 기능
-> 브랜치와 섞지 않는다.
+> 상태: **완료 (refactor/scene-folders).** Intro/Auth/Home 3개 scene을
+> `scenes/<scene>/{index.tsx, components/, assets/}` 로 폴더화하고, 공용
+> Modal·공유 에셋을 `shared/` 로 추출했다. Planet 엔진군(mission/missions/
+> engine/three)은 후속 — Planet 본격 구현 때 재검토.
 >
-> 착수 시: brainstorming으로 아래 "확정 필요" 항목을 먼저 결정한 뒤 plan을 짠다.
+> 확정 항목(brainstorming)·세부 설계는
+> [docs/superpowers/specs/2026-06-29-scene-folder-refactor-design.md](superpowers/specs/2026-06-29-scene-folder-refactor-design.md),
+> 실행 계획은
+> [docs/superpowers/plans/2026-06-29-scene-folder-refactor.md](superpowers/plans/2026-06-29-scene-folder-refactor.md).
+> 아래는 착수 전 원본 제안(기록 보존용).
 
 ## 왜
 
