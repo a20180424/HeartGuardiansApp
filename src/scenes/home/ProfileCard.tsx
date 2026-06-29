@@ -1,0 +1,26 @@
+import { nicknameFor } from "./home.logic";
+import plateUrl from "../../assets/home/PlayerButton.png";
+import maleFace from "../../assets/home/AvatarFace.png";
+
+// 성별별 얼굴. 현재는 남자만 존재 — 여자 에셋이 생기면 여기에 추가한다.
+const FACES = { male: maleFace, female: maleFace } as const;
+
+interface ProfileCardProps {
+  name: string;
+  progress: number;
+  gender?: keyof typeof FACES;
+}
+
+export default function ProfileCard({ name, progress, gender = "male" }: ProfileCardProps) {
+  return (
+    <div className="home-profile" style={{ backgroundImage: `url(${plateUrl})` }}>
+      <img className="home-profile__face" src={FACES[gender]} alt="" />
+      <div className="home-profile__info">
+        <span className="home-profile__level">
+          Lv{progress + 1} {nicknameFor(progress)}
+        </span>
+        <span className="home-profile__name">{name}</span>
+      </div>
+    </div>
+  );
+}
