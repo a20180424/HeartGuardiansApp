@@ -120,6 +120,17 @@
   font-size: 20px;
   font-weight: 700;
 }
+/* 플레이트 하단 pill 위에 얹는 안내 텍스트 (위치/크기는 DevTools로 조정). */
+.home-energy__next {
+  position: absolute;
+  left: 96px;
+  bottom: 8px;
+  width: 178px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
 
 /* 모선 (중앙 상단) — 상하 부유 + 발광 펄스 */
 .home-mothership {
