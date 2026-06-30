@@ -1,0 +1,15 @@
+/* Planet1 프롤로그 subscene — 행성 도착 도입부. 배경 + 가운데 시작 버튼. */
+.prologue {
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url("/assets/bg/light-planet-stage1.png") center / cover no-repeat;
+}
+
+.prologue__start {
+  font-size: 32px;
+  padding: 20px 48px;
+}
