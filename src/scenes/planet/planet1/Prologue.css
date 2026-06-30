@@ -1,15 +1,304 @@
-/* Planet1 프롤로그 subscene — 행성 도착 도입부. 배경 + 가운데 시작 버튼. */
+/* Planet1 프롤로그 subscene — 행성 도착 도입부.
+   재사용 단일 화면: 색은 CSS 변수로, 캐릭터/아이콘만 이미지. 행성색은 --planet-* 한 세트.
+   레이아웃 기준 1280×800 CSS px (landscape 고정). 좌표는 절대배치. */
 .prologue {
+  /* 행성색 — planet1: 따뜻한 골드/오렌지. 다른 행성은 이 변수 세트만 교체. */
+  --planet-accent: #ef8b2c;
+  --planet-accent-deep: #c2410c;
+  --planet-panel-bg: #fff7ec;
+  --planet-tab: #ef4444; /* '오늘의 탐험' 탭 — 2단계에서 사용 */
+
+  position: relative;
   width: 100vw;
   height: 100dvh;
   min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   background: url("/assets/bg/light-planet-stage1.png") center / cover no-repeat;
 }
 
+/* ① 타이틀 배너 — 기존 mission1 .prog-title 스타일 복제(위치/크기 동일). */
+.prologue__title {
+  position: absolute;
+  top: 48px;
+  left: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border-radius: 40px;
+  padding: 14px 26px 14px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+  font-size: 26px;
+  color: #1f2937;
+  white-space: nowrap;
+}
+.prologue__title-star {
+  font-size: 30px;
+}
+
+/* ③ 하티 + 말풍선 (좌측 중앙) */
+.prologue__hati {
+  position: absolute;
+  left: 40px;
+  top: 250px;
+  display: flex;
+  align-items: flex-start;
+}
+.prologue__hati-img {
+  width: 230px;
+  height: auto;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.3));
+}
+.prologue__bubble {
+  position: relative;
+  margin-top: 36px;
+  margin-left: -8px;
+  max-width: 270px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 22px 18px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+}
+.prologue__bubble::after {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 40px;
+  border: 10px solid transparent;
+  border-right-color: #fff;
+}
+/* 이름표 — 색 고정(하티 브랜드 그린)이지만 CSS로 구성 */
+.prologue__nametag {
+  position: absolute;
+  top: -16px;
+  left: 18px;
+  background: #3a9d4a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 4px 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.prologue__bubble-text {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #2b2b2b;
+}
+
+/* ②⑤ 공용 정보 패널 (우측) */
+.info-panel {
+  position: absolute;
+  width: 360px;
+  background: var(--planet-panel-bg);
+  border: 3px solid var(--planet-accent);
+  border-radius: 22px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+.info-panel__head {
+  background: var(--planet-accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 22px;
+  text-align: center;
+  padding: 12px 16px;
+  letter-spacing: 0.5px;
+}
+
+/* ② 학습 목표 */
+.prologue__goals {
+  top: 40px;
+  right: 44px;
+}
+.prologue__goal-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.prologue__goal-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #3a2b1a;
+}
+.prologue__goal-star {
+  flex: none;
+}
+
+/* ⑤ 획득 가능한 보상 */
+.prologue__rewards {
+  top: 300px;
+  right: 44px;
+}
+.prologue__reward-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.prologue__reward-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.prologue__reward-icon {
+  flex: none;
+  font-size: 34px;
+  line-height: 1.1;
+}
+.prologue__reward-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.prologue__reward-text strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--planet-accent-deep);
+}
+.prologue__reward-text span {
+  font-size: 14px;
+  line-height: 1.35;
+  color: #5b4a38;
+}
+
+/* ⑥ 오늘의 탐험 패널 (좌하단) */
+.prologue__quest {
+  position: absolute;
+  left: 36px;
+  bottom: 74px;
+  width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--planet-panel-bg);
+  border: 3px solid var(--planet-accent);
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  padding: 22px 24px 20px;
+}
+/* 탭 라벨 — 빨강 대신 행성색 */
+.prologue__quest-tab {
+  position: absolute;
+  top: -18px;
+  left: 26px;
+  background: var(--planet-accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 6px 18px;
+  border-radius: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
+}
+.prologue__quest-mascot {
+  flex: none;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+}
+.prologue__quest-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.prologue__quest-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--planet-accent-deep);
+}
+.prologue__quest-sub {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #5b4a38;
+}
+
+/* ⑦ 시작 버튼 (⑥ 패널 안, 기존 .btn 재사용) */
 .prologue__start {
-  font-size: 32px;
-  padding: 20px 48px;
+  font-size: 26px;
+  padding: 14px 40px;
+}
+
+/* ⑨ 우주선으로 이동 (우하단) */
+.prologue__home {
+  position: absolute;
+  right: 36px;
+  bottom: 86px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: none;
+  border-radius: 40px;
+  padding: 10px 22px 10px 12px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1f2937;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+.prologue__home:active {
+  transform: translateY(2px);
+}
+.prologue__home-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+/* ⑧ 미션 흐름(스텝) 인디케이터 (하단 가로 띠) */
+.prologue__steps {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 54px;
+  margin: 0;
+  padding: 0 24px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(28, 22, 14, 0.55);
+  backdrop-filter: blur(2px);
+}
+.prologue__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+}
+.prologue__step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--planet-accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+}
+.prologue__step-arrow {
+  margin-left: 8px;
+  color: var(--planet-accent);
+  font-size: 18px;
 }

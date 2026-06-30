@@ -38,7 +38,7 @@ export default function Planet1() {
   return (
     <>
       {stage === "prologue" ? (
-        <Prologue onStart={() => goTo("mission1")} />
+        <Prologue onStart={() => goTo("mission1")} onHome={() => nav("/home")} />
       ) : (
         <MissionPlayer
           scenarioUrl="/scenarios/mission01.json"
