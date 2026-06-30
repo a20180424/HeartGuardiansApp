@@ -19,22 +19,33 @@
 /* ① 타이틀 배너 — 기존 mission1 .prog-title 스타일 복제(위치/크기 동일). */
 .prologue__title {
   position: absolute;
-  top: 48px;
-  left: 44px;
+  top: 28px;
+  left: 24px;
   display: flex;
   align-items: center;
   gap: 12px;
   background: #fff;
+  border: 3px solid var(--planet-accent);
   border-radius: 40px;
   padding: 14px 26px 14px 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   font-weight: 800;
-  font-size: 26px;
-  color: #1f2937;
+  font-size: 36px;
+  color: var(--planet-accent-deep);
   white-space: nowrap;
 }
+/* BMJUA는 글리프가 라인박스 위쪽에 치우쳐 그려짐 → line-height를 줄여 광학적 중앙 정렬.
+   남는 미세 오차는 translateY로 보정. */
+.prologue__title-text {
+  line-height: 1;
+  transform: translateY(2px);
+}
+
+/* 입체 별 아이콘 (행성 공통 골드 별) */
 .prologue__title-star {
-  font-size: 30px;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 /* ③ 하티 + 말풍선 (좌측 중앙) */

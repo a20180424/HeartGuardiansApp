@@ -32,8 +32,8 @@ export default function Prologue({
     <div className="prologue">
       {/* ① 타이틀 배너 */}
       <div className="prologue__title">
-        <span className="prologue__title-star">⭐</span>
-        <span>빛의 행성</span>
+        <img className="prologue__title-star" src="/assets/icon/star.png" alt="" />
+        <span className="prologue__title-text">빛의 행성</span>
       </div>
 
       {/* ③ 하티 + 말풍선 */}
