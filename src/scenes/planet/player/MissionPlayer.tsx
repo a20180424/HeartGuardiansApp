@@ -661,13 +661,13 @@ export default function MissionPlayer(props: {
           <span className="dh-arrow">👇</span>
         </div>
 
-        {/* 선택지 카드 위 안내 문구 (있을 때만) */}
-        <div id="choicePrompt" className={vm.choices.length > 0 && vm.choicePrompt ? "show" : ""}>
-          {vm.choicePrompt}
-        </div>
+        {/* 선택지 패널 — 안내 문구 + 카드를 한 배경 박스에 담는다 */}
+        <div id="choicePanel" className={vm.choices.length > 0 ? "show" : ""}>
+          {/* 카드 위 안내 문구 (있을 때만) */}
+          <div id="choicePrompt">{vm.choicePrompt}</div>
 
-        {/* 선택지 카드 */}
-        <div id="choices" className={vm.choices.length > 0 ? "show" : ""}>
+          {/* 선택지 카드 */}
+          <div id="choices">
           {vm.choices.map((c, idx) => {
             const deco = theme.choiceIcons[c.text] || { emoji: "💭", bg: "#eef2f7" };
             const explored = vm.exploredSet?.has(idx);
@@ -704,6 +704,7 @@ export default function MissionPlayer(props: {
               </button>
             );
           })}
+          </div>
         </div>
 
         {/* 공감 카드 (엔딩) */}

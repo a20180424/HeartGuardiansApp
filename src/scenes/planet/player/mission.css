@@ -650,48 +650,51 @@
 }
 
 /* ---------- choice cards ---------- */
-/* 선택지 카드 위 안내 문구 */
-#choicePrompt {
+/* 안내 문구 + 카드를 한 배경 패널에 담아 배경과 무관하게 가독성 확보 */
+#choicePanel {
   position: absolute;
-  top: 150px;
-  left: 560px;
-  right: 70px;
+  top: 162px;
+  left: 530px;
+  right: 44px;
   z-index: 4;
-  text-align: center;
-  font-size: 30px;
-  font-weight: 800;
-  color: #1f2937;
-  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.9);
+  padding: 20px 30px 30px;
+  border-radius: 36px;
+  background: rgba(244, 242, 255, 0.92);
+  border: 3px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 16px 44px rgba(60, 40, 120, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(8px);
   transition:
     opacity 0.25s ease,
     transform 0.25s ease;
   pointer-events: none;
 }
-#choicePrompt.show {
+#choicePanel.show {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
-
+/* 카드 위 안내 문구 (비어 있으면 자리 차지 안 함) */
+#choicePrompt {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: #2a2350;
+}
+#choicePrompt:empty {
+  display: none;
+}
 #choices {
-  position: absolute;
-  top: 196px;
-  left: 560px;
-  right: 70px;
-  z-index: 4;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start;
   gap: 26px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-#choices.show {
-  opacity: 1;
-  pointer-events: auto;
 }
 .card {
   position: relative;
