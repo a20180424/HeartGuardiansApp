@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
-import { MISSION01_THEME } from "./theme";
+import { MISSION01_THEME, MISSION01_DATA } from "./theme";
 import "./Planet1.css";
 
 // Planet1 컨테이너. subscene들을 순서대로 진행한다(내부 상태 머신).
@@ -41,7 +41,7 @@ export default function Planet1() {
         <Prologue onStart={() => goTo("mission1")} onHome={() => nav("/home")} />
       ) : (
         <MissionPlayer
-          scenarioUrl="/scenarios/mission01.json"
+          scenario={MISSION01_DATA}
           theme={MISSION01_THEME}
           onExit={() => nav("/home")}
         />
