@@ -71,8 +71,23 @@
     { "id": "m2_q4_correct_sola", "type": "line", "speaker": "sola", "text": "고마워.", "next": "m2_q4_correct_hati" },
     { "id": "m2_q4_correct_hati", "type": "line", "speaker": "hati", "text": "좋아! 친구는 지금 속상한 마음이 커. 함께 있어주는 것만으로도 큰 힘이 될 수 있어.", "next": "m2_end1" },
 
-    { "id": "m2_end1", "type": "line", "speaker": "hati", "text": "대원들 덕분에 행성에 따듯한 온기가 돌기 시작했어. 하지만 빛의 행성에 빛이 완전히 돌아온 건 아니야.", "next": "m2_end2" },
-    { "id": "m2_end2", "type": "line", "speaker": "hati", "text": "겨울 속 가장 깊은 곳에서 마지막 질문이 떠올랐어.", "next": "m2_end3" },
-    { "id": "m2_end3", "type": "line", "speaker": "hati", "text": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?", "next": null }
+    {
+      "id": "m2_end1", "type": "line", "speaker": "hati",
+      "text": "대원들 덕분에 행성에 따듯한 온기가 돌기 시작했어. 하지만 빛의 행성에 빛이 완전히 돌아온 건 아니야.",
+      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" } ],
+      "next": "m2_end2"
+    },
+    {
+      "id": "m2_end2", "type": "line", "speaker": "hati",
+      "text": "겨울 속 가장 깊은 곳에서 마지막 질문이 떠올랐어.",
+      "onComplete": [ { "cmd": "fx", "value": "fx_empathy_card" } ],
+      "next": "m2_end3"
+    },
+    {
+      "id": "m2_end3", "type": "line", "speaker": "hati",
+      "text": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
+      "onEnter": [ { "cmd": "fx", "value": "fx_light_return" } ],
+      "next": null
+    }
   ]
 }

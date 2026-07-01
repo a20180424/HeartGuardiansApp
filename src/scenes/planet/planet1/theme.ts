@@ -167,6 +167,7 @@ const SOLA_SPRITES: SpriteSet = {
     m2_q4_wrongA_sola: "sad2",
     m2_q4_wrongB_sola: "sad",
     m2_q4_correct_sola: "thankful",
+    m2_end1: "thankful", // 엔딩: 공감 거울 회복 후광과 함께 밝은 표정 유지
   },
 };
 
@@ -255,8 +256,12 @@ export const MISSION02_THEME: MissionTheme = {
     "장난감을 고칠 방법을 찾아본다": { emoji: "🔧", bg: "#dbeafe" },
     "옆에 가서 함께 있어 준다": { emoji: "🫂", bg: "#dcfce7" },
   },
-  // 엔딩 연출(공감 거울 회복 FX)은 아직 미정 — 시나리오에 fx 커맨드가 없어 비어 있다.
-  fx: {},
+  // 엔딩 연출(mission1과 동일 구성): 공감 거울 회복 후광 → 공감 카드 → 빛 복귀+"다음 미션으로" 버튼.
+  fx: {
+    fx_mirror_wake: "signalRecover",
+    fx_empathy_card: "empathyCard",
+    fx_light_return: "lightReturn",
+  },
   sfx: {
     byNode: {
       m2_q1_wrong_angry: "wrong",
