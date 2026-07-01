@@ -67,6 +67,7 @@ export default function MissionPlayer(props: {
   scenario: MissionData;
   theme: MissionTheme;
   onExit: () => void;
+  currentStep?: number; // 진행 스테퍼에서 이 미션이 몇 번째인지(1~3). 기본 1.
 }) {
   const { scenario, theme } = props;
   const [, force] = useReducer((x) => x + 1, 0);
@@ -510,8 +511,21 @@ export default function MissionPlayer(props: {
   };
 
   const many = vm.choices.length >= 4;
-  const m1cls = vm.progress === "done" ? "done" : "active";
-  const m2cls = vm.progress === "done" ? "active" : "locked";
+  // 진행 스테퍼: 현재 미션 단계(step) 기준으로 각 노드 상태를 계산.
+  // 이전 단계=done, 현재=진행중(active)/완료 시 done, 다음 단계=현재 완료 시 active.
+  const step = props.currentStep ?? 1;
+  const missionDone = vm.progress === "done";
+  const stepCls = (i: number) =>
+    i < step
+      ? "done"
+      : i === step
+        ? missionDone
+          ? "done"
+          : "active"
+        : i === step + 1 && missionDone
+          ? "active"
+          : "locked";
+  const connFilled = (i: number) => i < step || (i === step && missionDone); // step i 뒤 커넥터
 
   return (
     <div id="viewport">
@@ -526,7 +540,7 @@ export default function MissionPlayer(props: {
             <span>탐험 진행도</span>
           </div>
           <div className="stepper">
-            <div className={`pnode ${m1cls}`} id="mission1">
+            <div className={`pnode ${stepCls(1)}`} id="mission1">
               <div className="circle">
                 <span className="num">1</span>
               </div>
@@ -536,8 +550,8 @@ export default function MissionPlayer(props: {
                 탐색기
               </div>
             </div>
-            <div className={`connector${vm.progress === "done" ? " filled" : ""}`} id="conn1" />
-            <div className={`pnode ${m2cls}`} id="mission2">
+            <div className={`connector${connFilled(1) ? " filled" : ""}`} id="conn1" />
+            <div className={`pnode ${stepCls(2)}`} id="mission2">
               <div className="circle">
                 <span className="num">2</span>
               </div>
@@ -547,8 +561,8 @@ export default function MissionPlayer(props: {
                 깨우기
               </div>
             </div>
-            <div className="connector" id="conn2" />
-            <div className="pnode locked" id="mission3">
+            <div className={`connector${connFilled(2) ? " filled" : ""}`} id="conn2" />
+            <div className={`pnode ${stepCls(3)}`} id="mission3">
               <div className="circle">
                 <span className="num">3</span>
               </div>

@@ -47,6 +47,7 @@ export default function Planet1() {
         <MissionPlayer
           scenario={MISSION01_DATA}
           theme={MISSION01_THEME}
+          currentStep={1}
           onExit={() => goTo("mission2")}
         />
       )}
@@ -55,6 +56,7 @@ export default function Planet1() {
         <MissionPlayer
           scenario={MISSION02_DATA}
           theme={MISSION02_THEME}
+          currentStep={2}
           onExit={() => nav("/home")}
         />
       )}
