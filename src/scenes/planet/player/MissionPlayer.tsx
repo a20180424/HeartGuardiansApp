@@ -63,11 +63,11 @@ function fallbackCopy(text: string, onDone: () => void) {
 }
 
 export default function MissionPlayer(props: {
-  scenarioUrl: string;
+  scenario: MissionData;
   theme: MissionTheme;
   onExit: () => void;
 }) {
-  const { scenarioUrl, theme } = props;
+  const { scenario, theme } = props;
   const [, force] = useReducer((x) => x + 1, 0);
   const stageRef = useRef<HTMLDivElement>(null);
   useFitStage(stageRef);
@@ -353,14 +353,9 @@ export default function MissionPlayer(props: {
       },
     };
 
-    fetch(scenarioUrl, { cache: "no-store" })
-      .then((r) => r.json())
-      .then((data: MissionData) => {
-        if (!alive) return;
-        const runner = new DialogueRunner(data, view);
-        (window as unknown as { __runner: DialogueRunner }).__runner = runner;
-        runner.start();
-      });
+    const runner = new DialogueRunner(scenario, view);
+    (window as unknown as { __runner: DialogueRunner }).__runner = runner;
+    runner.start();
 
     return () => {
       alive = false;
@@ -368,7 +363,7 @@ export default function MissionPlayer(props: {
       window.clearTimeout(timers.auto);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scenarioUrl]);
+  }, [scenario]);
 
   // 배경 이미지 미리 로드 — 엔딩(m1_end3)에서 stage2로 교체될 때 깜빡임 방지.
   useEffect(() => {

@@ -1,4 +1,9 @@
-import type { MissionTheme } from "../engine/types";
+import type { MissionData, MissionTheme } from "../engine/types";
+import missionData from "./mission01.json";
+
+// 시나리오 콘텐츠(대사·선택지·분기 그래프). 런타임 fetch 대신 빌드 타임 import로
+// 타입 검증·파일 존재 보장. JSON 추론 타입은 union(type/next 등)과 안 맞아 단언한다.
+export const MISSION01_DATA = missionData as unknown as MissionData;
 
 const A = "/assets";
 
