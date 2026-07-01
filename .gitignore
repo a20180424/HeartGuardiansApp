@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Unity가 이미지 반입 시 만드는 사이드카 파일 — 이 프로젝트엔 불필요.
+*.meta
+
 # Env files — never commit (set vars in the platform dashboard instead).
 # .env.example is kept as documentation.
 .env
