@@ -51,20 +51,20 @@
 /* ③ 하티 + 말풍선 (좌측 중앙) */
 .prologue__hati {
   position: absolute;
-  left: 40px;
-  top: 250px;
+  left: -50px;
+  top: 140px;
   display: flex;
   align-items: flex-start;
 }
 .prologue__hati-img {
-  width: 230px;
+  width: 400px;
   height: auto;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.3));
 }
 .prologue__bubble {
   position: relative;
-  margin-top: 36px;
-  margin-left: -8px;
+  margin-top: 66px;
+  margin-left: -78px;
   max-width: 270px;
   background: #fff;
   border-radius: 20px;
@@ -94,7 +94,7 @@
 }
 .prologue__bubble-text {
   margin: 0;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1.5;
   color: #2b2b2b;
@@ -111,12 +111,20 @@
   overflow: hidden;
 }
 .info-panel__head {
-  background: var(--planet-accent);
+  /* 행성색 위에 위쪽 하이라이트 + 아래쪽 음영 → 광택 있는 입체 헤더 (색은 테마 변수 유지) */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0) 45%,
+      rgba(0, 0, 0, 0.12)
+    ),
+    var(--planet-accent);
   color: #fff;
   font-weight: 800;
-  font-size: 22px;
-  text-align: center;
-  padding: 12px 16px;
+  font-size: 32px;
+  text-align: left;
+  padding: 8px 10px;
   letter-spacing: 0.5px;
 }
 
@@ -124,6 +132,10 @@
 .prologue__goals {
   top: 40px;
   right: 44px;
+  /* 외곽선(둥근 모서리 따름) + 기존 드롭섀도 */
+  box-shadow:
+    0 0 0 2px #fff7ec,
+    0 6px 18px rgba(0, 0, 0, 0.18);
 }
 .prologue__goal-list {
   list-style: none;
@@ -132,6 +144,8 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
 }
 .prologue__goal-list li {
   display: flex;
@@ -149,6 +163,10 @@
 .prologue__rewards {
   top: 300px;
   right: 44px;
+  /* 외곽선(둥근 모서리 따름) + 기존 드롭섀도 — 학습 목표 패널과 동일 */
+  box-shadow:
+    0 0 0 2px #fff7ec,
+    0 6px 18px rgba(0, 0, 0, 0.18);
 }
 .prologue__reward-list {
   list-style: none;
@@ -266,8 +284,8 @@
   transform: translateY(2px);
 }
 .prologue__home-icon {
-  width: 48px;
-  height: 48px;
+  width: 78px;
+  height: 58px;
   object-fit: contain;
 }
 
