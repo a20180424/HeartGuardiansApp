@@ -343,8 +343,8 @@
   border-bottom: 0;
 }
 
-/* ---------- Lumi (right) ---------- */
-#lumiWrap {
+/* ---------- Friend (right) ---------- */
+#friendWrap {
   position: absolute;
   right: 120px;
   bottom: 30px;
@@ -354,11 +354,11 @@
   align-items: center;
   transition: opacity 0.4s ease;
 }
-#lumiWrap.hide {
+#friendWrap.hide {
   opacity: 0;
   visibility: hidden;
 }
-#lumi {
+#friend {
   height: 660px;
   max-height: 660px;
   filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.4));
@@ -369,10 +369,10 @@
 
 /* 루미 후광(회복 시) — 캐릭터 실루엣을 따라가는 다중 drop-shadow(맥동) +
    뒤쪽 방사형 오라 레이어. 후광 이미지 자체엔 빛이 없고 CSS로만 입힌다. */
-#lumiWrap.glow #lumi {
-  animation: lumiHalo 2.2s ease-in-out infinite;
+#friendWrap.glow #friend {
+  animation: friendHalo 2.2s ease-in-out infinite;
 }
-@keyframes lumiHalo {
+@keyframes friendHalo {
   0%,
   100% {
     filter: drop-shadow(0 0 20px rgba(255, 238, 170, 0.85))
@@ -385,7 +385,7 @@
       drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
   }
 }
-#lumiWrap.glow::before {
+#friendWrap.glow::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -404,9 +404,9 @@
     rgba(255, 200, 92, 0) 72%
   );
   filter: blur(6px);
-  animation: lumiAura 2.2s ease-in-out infinite;
+  animation: friendAura 2.2s ease-in-out infinite;
 }
-@keyframes lumiAura {
+@keyframes friendAura {
   0%,
   100% {
     opacity: 0.7;
@@ -417,7 +417,7 @@
     transform: translate(-50%, -50%) scale(1.08);
   }
 }
-@keyframes lumiPop {
+@keyframes friendPop {
   0% {
     transform: scale(0.96);
   }
@@ -428,8 +428,8 @@
     transform: scale(1);
   }
 }
-#lumi.pop {
-  animation: lumiPop 0.4s ease;
+#friend.pop {
+  animation: friendPop 0.4s ease;
 }
 
 /* ---------- speech bubbles ---------- */
@@ -456,11 +456,11 @@
   opacity: 1;
   transform: translateY(0) scale(1);
 }
-#lumiBubble {
+#friendBubble {
   right: 470px;
   bottom: 470px;
 }
-#lumiBubble::after {
+#friendBubble::after {
   content: "";
   position: absolute;
   right: -22px;

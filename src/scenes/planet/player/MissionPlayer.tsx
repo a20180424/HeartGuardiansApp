@@ -15,18 +15,19 @@ type Spark = { id: number; left: number; top: number; ch: string; delay: number;
 
 interface VM {
   mode: "idle" | "typing" | "await" | "choices" | "end";
-  bubbleKind: "none" | "hatiBox" | "hatiBubble" | "lumiBubble";
+  bubbleKind: "none" | "hatiBox" | "hatiBubble" | "friendBubble";
   text: string;
   intro: boolean;
   choices: Choice[];
   exploredSet: Set<number> | null;
   pick: ((i: number, c: Choice) => void) | null;
-  lumi: string;
+  friendId: string; // 화면에 보이는 현재 친구 id(가장 최근에 말한 친구)
+  friend: string; // 그 친구의 현재 스프라이트 키
   hati: string;
   radar: string;
   radarPulse: boolean;
   bg: string;
-  lumiGlow: boolean;
+  friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
   progress: "start" | "done";
@@ -84,12 +85,13 @@ export default function MissionPlayer(props: {
     choices: [],
     exploredSet: null,
     pick: null,
-    lumi: theme.lumiSprites.initial,
+    friendId: theme.initialFriend,
+    friend: theme.friends[theme.initialFriend].initial,
     hati: theme.hatiSprites.initial,
     radar: theme.radar.initial,
     radarPulse: false,
     bg: theme.bg.initial,
-    lumiGlow: false,
+    friendGlow: false,
     bright: false,
     empathy: false,
     progress: "start",
@@ -162,7 +164,7 @@ export default function MissionPlayer(props: {
     };
 
     const RADAR_ORDER = ["p25", "p50", "p75", "p100", "active"];
-    const setSprite = (kind: "lumi" | "hati" | "radar", state?: string) => {
+    const setSprite = (kind: "friend" | "hati" | "radar", state?: string) => {
       if (!state) return;
       if (kind === "radar") {
         if (state === vm.radar) return;
@@ -174,13 +176,18 @@ export default function MissionPlayer(props: {
           vm.radarPulse = false;
           render();
         }, 1100);
-      } else if (kind === "lumi") vm.lumi = state;
+      } else if (kind === "friend") vm.friend = state;
       else vm.hati = state;
       render();
     };
 
     const updateScene = (node: MissionNode) => {
-      setSprite("lumi", theme.lumiSprites.byNode[node.id]);
+      // 친구 line이면 화면의 활성 친구를 전환하고, 새 친구면 스프라이트를 그 친구 기본값으로 리셋.
+      if (node.speaker && node.speaker !== "hati" && node.speaker !== vm.friendId) {
+        vm.friendId = node.speaker;
+        vm.friend = theme.friends[vm.friendId]?.initial ?? vm.friend;
+      }
+      setSprite("friend", theme.friends[vm.friendId]?.byNode[node.id]);
       setSprite("hati", theme.hatiSprites.byNode[node.id]);
       setSprite("radar", theme.radar.byNode[node.id]);
       const bg = theme.bg.byNode[node.id];
@@ -200,8 +207,8 @@ export default function MissionPlayer(props: {
           break;
         case "signalRecover":
           audio.play("recover");
-          vm.lumi = "recovered";
-          vm.lumiGlow = true;
+          // 스프라이트 교체는 노드의 byNode 매핑이 담당. 여기선 후광만 켠다(친구 무관).
+          vm.friendGlow = true;
           sparkleBurst();
           render();
           break;
@@ -266,12 +273,13 @@ export default function MissionPlayer(props: {
           choices: [],
           exploredSet: null,
           pick: null,
-          lumi: theme.lumiSprites.initial,
+          friendId: theme.initialFriend,
+          friend: theme.friends[theme.initialFriend].initial,
           hati: theme.hatiSprites.initial,
           radar: theme.radar.initial,
           radarPulse: false,
           bg: theme.bg.initial,
-          lumiGlow: false,
+          friendGlow: false,
           bright: false,
           empathy: false,
           progress: "start",
@@ -309,7 +317,7 @@ export default function MissionPlayer(props: {
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
           const isHati = node.speaker === "hati";
           const introHati = isHati && node.id === theme.bannerNode;
-          vm.bubbleKind = introHati ? "hatiBubble" : isHati ? "hatiBox" : "lumiBubble";
+          vm.bubbleKind = introHati ? "hatiBubble" : isHati ? "hatiBox" : "friendBubble";
           render();
           typeInto(node.text || "", () => {
             vm.mode = "await";
@@ -565,13 +573,13 @@ export default function MissionPlayer(props: {
         <div id="titleBanner" className={vm.intro ? "show" : ""}>
           <div className="tb-badge">
             <span className="tb-star">★</span>
-            <span className="tb-pill">미션 1</span>
+            <span className="tb-pill">{theme.banner.pill}</span>
             <span className="tb-star">★</span>
           </div>
-          <div className="tb-title">마음 신호 탐색기</div>
+          <div className="tb-title">{theme.banner.title}</div>
           <div className="tb-ribbon">
             <span className="tb-spark">✦</span>
-            <span>친구의 마음을 찾아라!</span>
+            <span>{theme.banner.ribbon}</span>
             <span className="tb-spark">✦</span>
           </div>
         </div>
@@ -585,17 +593,22 @@ export default function MissionPlayer(props: {
           <span>{vm.bubbleKind === "hatiBubble" ? vm.text : ""}</span>
         </div>
 
-        {/* 루미 */}
-        <div id="lumiWrap" className={`${vm.intro ? "hide" : ""}${vm.lumiGlow ? " glow" : ""}`}>
-          <img id="lumi" className="pop" src={theme.lumiSprites.char[vm.lumi]} alt="루미" />
+        {/* 친구(현재 화면의 친구) */}
+        <div id="friendWrap" className={`${vm.intro ? "hide" : ""}${vm.friendGlow ? " glow" : ""}`}>
+          <img
+            id="friend"
+            className="pop"
+            src={theme.friends[vm.friendId].char[vm.friend]}
+            alt={theme.speakers[vm.friendId]?.name ?? "친구"}
+          />
         </div>
 
-        {/* 루미 말풍선 */}
-        <div id="lumiBubble" className={`bubble${vm.bubbleKind === "lumiBubble" ? " show" : ""}`}>
-          <span>{vm.bubbleKind === "lumiBubble" ? vm.text : ""}</span>
+        {/* 친구 말풍선 */}
+        <div id="friendBubble" className={`bubble${vm.bubbleKind === "friendBubble" ? " show" : ""}`}>
+          <span>{vm.bubbleKind === "friendBubble" ? vm.text : ""}</span>
         </div>
 
-        {/* 드래그 드롭 타깃: 루미의 빈 말풍선 (q4 드래그 전용) */}
+        {/* 드래그 드롭 타깃: 친구의 빈 말풍선 (q4 드래그 전용) */}
         <div id="dropZone" ref={dropZoneRef} className={vm.dzShow ? "show" : ""}>
           <div className="dz-heart">♡</div>
           <div className="dz-hint">여기에 놓아요</div>
@@ -653,7 +666,7 @@ export default function MissionPlayer(props: {
         <div id="hatiBox" className={vm.bubbleKind === "hatiBox" ? "show" : ""}>
           <img id="hatiAvatar" className="pop" src={theme.hatiSprites.char[vm.hati]} alt="하티" />
           <div>
-            <div id="hatiName">{theme.speakers.hati.name}</div>
+            <div id="hatiName">{theme.speakers.hati?.name ?? "하티"}</div>
             <div id="hatiText">{vm.bubbleKind === "hatiBox" ? vm.text : ""}</div>
           </div>
         </div>
