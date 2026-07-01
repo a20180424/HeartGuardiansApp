@@ -19,6 +19,7 @@ interface VM {
   text: string;
   intro: boolean;
   choices: Choice[];
+  choicePrompt: string; // 선택지 카드 위 안내 문구(없으면 "")
   exploredSet: Set<number> | null;
   pick: ((i: number, c: Choice) => void) | null;
   friendId: string; // 화면에 보이는 현재 친구 id(가장 최근에 말한 친구)
@@ -86,6 +87,7 @@ export default function MissionPlayer(props: {
     text: "",
     intro: false,
     choices: [],
+    choicePrompt: "",
     exploredSet: null,
     pick: null,
     friendId: theme.initialFriend,
@@ -287,6 +289,7 @@ export default function MissionPlayer(props: {
           text: "",
           intro: false,
           choices: [],
+          choicePrompt: "",
           exploredSet: null,
           pick: null,
           friendId: theme.initialFriend,
@@ -330,6 +333,7 @@ export default function MissionPlayer(props: {
           timers.resolve = resolve;
           updateScene(node);
           vm.choices = [];
+          vm.choicePrompt = "";
           vm.pick = null;
           vm.dragNode = false;
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
@@ -357,6 +361,7 @@ export default function MissionPlayer(props: {
         // (인트로 말풍선/루미 말풍선만 감추고, hatiBox는 그대로 둔다).
         if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
         vm.choices = node.choices || [];
+        vm.choicePrompt = node.prompt || ""; // 카드 위 안내 문구(있을 때만)
         vm.exploredSet = exploredSet;
         // 드래그 노드(q4): 카드를 루미 빈 말풍선(#dropZone)으로 끌어 답한다. 탭도 선택 fallback.
         vm.dragNode = !!(theme.drag && node.id === theme.drag.node);
@@ -654,6 +659,11 @@ export default function MissionPlayer(props: {
         <div id="dropHint" className={vm.dzShow ? "show" : ""}>
           <span>여기에 놓아요</span>
           <span className="dh-arrow">👇</span>
+        </div>
+
+        {/* 선택지 카드 위 안내 문구 (있을 때만) */}
+        <div id="choicePrompt" className={vm.choices.length > 0 && vm.choicePrompt ? "show" : ""}>
+          {vm.choicePrompt}
         </div>
 
         {/* 선택지 카드 */}

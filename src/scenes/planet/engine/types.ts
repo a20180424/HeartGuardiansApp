@@ -18,6 +18,8 @@ export interface MissionNode {
   hold?: boolean;
   next?: string | null;
   choices?: Choice[];
+  // 선택지 카드 위에 띄우는 짧은 안내 문구(선택). 없으면 표시하지 않는다.
+  prompt?: string;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id

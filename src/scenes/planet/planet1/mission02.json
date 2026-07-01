@@ -10,6 +10,7 @@
     { "id": "m2_q1_prompt", "type": "line", "speaker": "hati", "text": "대원들, 친구의 마음 신호를 탐색해 보자.", "next": "m2_q1_choice" },
     {
       "id": "m2_q1_choice", "type": "choice",
+      "prompt": "라라의 마음은 어떨까?",
       "choices": [
         { "text": "화남", "next": "m2_q1_wrong_angry" },
         { "text": "속상함", "next": "m2_q1_wrong_upset" },
@@ -24,6 +25,7 @@
     { "id": "m2_q2_prompt", "type": "line", "speaker": "hati", "text": "내 생각보다 친구 마음에 먼저 집중해 보자.", "next": "m2_q2_choice" },
     {
       "id": "m2_q2_choice", "type": "choice",
+      "prompt": "어떤 말을 먼저 해줄까?",
       "choices": [
         { "text": "같이 화해할 방법을 생각해보자", "next": "m2_q2_wrongA_lala" },
         { "text": "금방 다시 친해질 거야", "next": "m2_q2_wrongB_lala" },
@@ -43,6 +45,7 @@
     { "id": "m2_q3_prompt", "type": "line", "speaker": "hati", "text": "대원들, 친구의 마음 신호를 탐색해 보자. 솔라의 마음은 어떨까?", "next": "m2_q3_choice" },
     {
       "id": "m2_q3_choice", "type": "choice",
+      "prompt": "솔라의 마음은 어떨까?",
       "choices": [
         { "text": "속상함", "next": "m2_q3_correct" },
         { "text": "화남", "next": "m2_q3_wrong_angry" },
@@ -57,6 +60,7 @@
     { "id": "m2_q4_prompt", "type": "line", "speaker": "hati", "text": "내 생각보다 친구 마음에 먼저 집중해 보자. 어떤 행동이 더 도움이 될까?", "next": "m2_q4_choice" },
     {
       "id": "m2_q4_choice", "type": "choice",
+      "prompt": "어떤 행동이 더 도움이 될까?",
       "choices": [
         { "text": "왜 그렇게 소중했는지 이야기를 들어준다", "next": "m2_q4_wrongA_sola" },
         { "text": "장난감을 고칠 방법을 찾아본다", "next": "m2_q4_wrongB_sola" },
