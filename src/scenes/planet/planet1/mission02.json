@@ -5,7 +5,7 @@
   "nodes": [
     { "id": "m2_intro", "type": "line", "speaker": "hati", "text": "공감 거울이 얼음 속에 갇혀 버렸어. 친구들의 마음에 맞는 말과 행동을 찾으면 거울을 깨울 수 있어!", "next": "m2_lala_intro" },
 
-    { "id": "m2_lala_intro", "type": "line", "speaker": "lala", "text": "친한 친구랑 싸웠어... 다시 예전처럼 친해질 수 있을까?", "next": "m2_q1_prompt" },
+    { "id": "m2_lala_intro", "type": "line", "speaker": "lala", "text": "친한 친구랑 싸웠어... 다시 예전처럼 친해질 수 있을까?", "hold": true, "next": "m2_q1_prompt" },
 
     { "id": "m2_q1_prompt", "type": "line", "speaker": "hati", "text": "대원들, 친구의 마음 신호를 탐색해 보자.", "next": "m2_q1_choice" },
     {
@@ -38,7 +38,7 @@
     { "id": "m2_q2_correct_lala", "type": "line", "speaker": "lala", "text": "응. 계속 그 생각이 나.", "next": "m2_q2_correct_hati" },
     { "id": "m2_q2_correct_hati", "type": "line", "speaker": "hati", "text": "좋아! 친구의 걱정되는 마음을 먼저 알아주었구나. 공감은 감정을 먼저 이해하는 것에서 시작해.", "next": "m2_sola_intro" },
 
-    { "id": "m2_sola_intro", "type": "line", "speaker": "sola", "text": "내가 아끼던 장난감이 망가졌어...", "next": "m2_q3_prompt" },
+    { "id": "m2_sola_intro", "type": "line", "speaker": "sola", "text": "내가 아끼던 장난감이 망가졌어...", "hold": true, "next": "m2_q3_prompt" },
 
     { "id": "m2_q3_prompt", "type": "line", "speaker": "hati", "text": "대원들, 친구의 마음 신호를 탐색해 보자. 솔라의 마음은 어떨까?", "next": "m2_q3_choice" },
     {
@@ -69,7 +69,7 @@
     { "id": "m2_q4_wrongB_hati", "type": "line", "speaker": "hati", "text": "고쳐주려는 마음은 정말 따듯해. 하지만 솔라는 아직 속상한 마음을 다 표현하지 못했어. 마음을 먼저 알아준 뒤에 도와주면 더 좋아.", "next": "m2_q4_retry" },
     { "id": "m2_q4_retry", "type": "line", "speaker": "hati", "text": "다시 선택해봐", "next": "m2_q4_choice" },
     { "id": "m2_q4_correct_sola", "type": "line", "speaker": "sola", "text": "고마워.", "next": "m2_q4_correct_hati" },
-    { "id": "m2_q4_correct_hati", "type": "line", "speaker": "hati", "text": "좋아! 친구는 지금 속상한 마음이 커. 함께 있어주는 것만으로도 큰 힘이 될 수 있어.", "next": "m2_end1" },
+    { "id": "m2_q4_correct_hati", "type": "line", "speaker": "hati", "text": "좋아! 친구는 지금 속상한 마음이 커. 함께 있어주는 것만으로도 큰 힘이 될 수 있어.", "hold": false, "next": "m2_end1" },
 
     {
       "id": "m2_end1", "type": "line", "speaker": "hati",

@@ -23,6 +23,7 @@ interface VM {
   pick: ((i: number, c: Choice) => void) | null;
   friendId: string; // 화면에 보이는 현재 친구 id(가장 최근에 말한 친구)
   friend: string; // 그 친구의 현재 스프라이트 키
+  heldText: string; // hold로 계속 띄워두는 친구 대사(비어 있으면 유지 없음)
   hati: string;
   radar: string;
   radarPulse: boolean;
@@ -88,6 +89,7 @@ export default function MissionPlayer(props: {
     pick: null,
     friendId: theme.initialFriend,
     friend: theme.friends[theme.initialFriend].initial,
+    heldText: "",
     hati: theme.hatiSprites.initial,
     radar: theme.radar.initial,
     radarPulse: false,
@@ -187,7 +189,11 @@ export default function MissionPlayer(props: {
       if (node.speaker && node.speaker !== "hati" && node.speaker !== vm.friendId) {
         vm.friendId = node.speaker;
         vm.friend = theme.friends[vm.friendId]?.initial ?? vm.friend;
+        vm.heldText = ""; // 다른 친구 등장 → 이전 친구의 유지 대사 비움
       }
+      // hold:true → 이 대사를 계속 띄워둠(하티 라인·선택 화면 통과). hold:false → 유지 해제.
+      if (node.hold === true && node.text) vm.heldText = node.text;
+      else if (node.hold === false) vm.heldText = "";
       setSprite("friend", theme.friends[vm.friendId]?.byNode[node.id]);
       setSprite("hati", theme.hatiSprites.byNode[node.id]);
       setSprite("radar", theme.radar.byNode[node.id]);
@@ -276,6 +282,7 @@ export default function MissionPlayer(props: {
           pick: null,
           friendId: theme.initialFriend,
           friend: theme.friends[theme.initialFriend].initial,
+          heldText: "",
           hati: theme.hatiSprites.initial,
           radar: theme.radar.initial,
           radarPulse: false,
@@ -511,6 +518,8 @@ export default function MissionPlayer(props: {
   };
 
   const many = vm.choices.length >= 4;
+  // 친구 말풍선: 지금 친구가 말하는 중이면 그 대사, 아니면 hold로 유지 중인 대사(heldText).
+  const friendBubbleText = vm.bubbleKind === "friendBubble" ? vm.text : vm.heldText;
   // 진행 스테퍼: 현재 미션 단계(step) 기준으로 각 노드 상태를 계산.
   // 이전 단계=done, 현재=진행중(active)/완료 시 done, 다음 단계=현재 완료 시 active.
   const step = props.currentStep ?? 1;
@@ -617,9 +626,9 @@ export default function MissionPlayer(props: {
           />
         </div>
 
-        {/* 친구 말풍선 */}
-        <div id="friendBubble" className={`bubble${vm.bubbleKind === "friendBubble" ? " show" : ""}`}>
-          <span>{vm.bubbleKind === "friendBubble" ? vm.text : ""}</span>
+        {/* 친구 말풍선 — 현재 대사 또는 hold로 유지 중인 대사 */}
+        <div id="friendBubble" className={`bubble${friendBubbleText ? " show" : ""}`}>
+          <span>{friendBubbleText}</span>
         </div>
 
         {/* 드래그 드롭 타깃: 친구의 빈 말풍선 (q4 드래그 전용) */}

@@ -13,6 +13,9 @@ export interface MissionNode {
   type?: "line" | "choice" | "branch";
   speaker?: string; // "hati" | 친구 id(예: "lumi" | "lala" | "sola")
   text?: string;
+  // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).
+  // true=이 대사를 유지, false=유지 중이던 대사를 비움. 다음 친구가 말하면 자동 교체.
+  hold?: boolean;
   next?: string | null;
   choices?: Choice[];
   requireAll?: boolean;
