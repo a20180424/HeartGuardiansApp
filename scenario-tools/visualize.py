@@ -76,6 +76,10 @@ def node_mermaid(n):
         rows.append(f"<span class='say'>“{esc(trunc(n['text'], 28))}”</span>")
 
     meta = []                                        # ④ 메타
+    if n.get("hold") is True:
+        meta.append("📌 hold 유지")
+    elif n.get("hold") is False:
+        meta.append("📌 hold 해제")
     if n.get("repromptText"):
         meta.append(f"↻ {esc(trunc(n['repromptText'], 20))}")
     if n.get("onEnter"):

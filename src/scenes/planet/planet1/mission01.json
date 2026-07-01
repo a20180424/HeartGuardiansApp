@@ -16,6 +16,7 @@
       "type": "line",
       "speaker": "lumi",
       "text": "오늘은 놀기 싫어",
+      "hold": true,
       "next": "m1_q1_prompt"
     },
 
@@ -102,6 +103,7 @@
       "type": "line",
       "speaker": "lumi",
       "text": "사실 감기에 걸려서 너무 힘들어",
+      "hold": true,
       "next": "m1_q3_prompt"
     },
 
@@ -174,6 +176,7 @@
       "type": "line",
       "speaker": "hati",
       "text": "맞아! 공감은 친구의 마음을 알고 끝나는 것이 아니라, 그 마음을 이해해주는거야.",
+      "hold": false,
       "onComplete": [{ "cmd": "fx", "value": "fx_ending_1" }],
       "next": "m1_end_recover"
     },

@@ -119,7 +119,7 @@ export default function MissionPlayer(props: {
     resolve?: () => void;
   }>({}).current;
   const sparkId = useRef(0);
-  const dropZoneRef = useRef<HTMLDivElement>(null);
+  const friendWrapRef = useRef<HTMLDivElement>(null); // q4 드래그 드롭 타깃 = 친구 캐릭터
   // q4 드래그 상태(원본 view.js _enableCardDrag 이식). 한 번에 한 장만 드래그.
   const dnd = useRef<{
     active: boolean;
@@ -456,14 +456,14 @@ export default function MissionPlayer(props: {
   // ---------- q4 카드 드래그 (원본 view.js _enableCardDrag 이식) ----------
   // 스테이지가 CSS scale 되므로 포인터 델타를 scale로 나눠 손가락 아래로 카드를 이동.
   // move/up은 window에 붙인다(React 위임 + 카드가 커서 밑에서 이동하는 문제, 포인터가
-  // 카드 밖으로 나가는 문제 회피). #dropZone(마진 44px) 위에서 놓으면 선택, 거의 안
-  // 움직인 탭도 선택, 그 외엔 snapback.
+  // 카드 밖으로 나가는 문제 회피). 친구 캐릭터(마진 24px) 위에서 놓으면 선택("친구에게
+  // 말을 건네는" 맥락), 거의 안 움직인 탭도 선택, 그 외엔 snapback.
   const stageScale = () => (stageRef.current?.getBoundingClientRect().width || 1920) / 1920 || 1;
-  const overDropZoneXY = (x: number, y: number) => {
-    const dz = dropZoneRef.current;
-    if (!dz) return false;
-    const r = dz.getBoundingClientRect();
-    const m = 44;
+  const overFriend = (x: number, y: number) => {
+    const el = friendWrapRef.current;
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    const m = 24;
     return x >= r.left - m && x <= r.right + m && y >= r.top - m && y <= r.bottom + m;
   };
   const onCardDown = (e: ReactPointerEvent<HTMLButtonElement>, idx: number, choice: Choice) => {
@@ -488,7 +488,7 @@ export default function MissionPlayer(props: {
         dy = (ev.clientY - dnd.startY) / dnd.scale;
       dnd.moved = Math.max(dnd.moved, Math.hypot(ev.clientX - dnd.startX, ev.clientY - dnd.startY));
       dnd.card.style.transform = `translate(${dx}px, ${dy}px) scale(1.06)`;
-      dropZoneRef.current?.classList.toggle("over", overDropZoneXY(ev.clientX, ev.clientY));
+      friendWrapRef.current?.classList.toggle("over", overFriend(ev.clientX, ev.clientY));
     };
     const up = (ev: PointerEvent) => {
       if (!dnd.active) return;
@@ -499,13 +499,15 @@ export default function MissionPlayer(props: {
       const card2 = dnd.card;
       dnd.card = null;
       if (!card2) return;
-      const over = overDropZoneXY(ev.clientX, ev.clientY);
+      const over = overFriend(ev.clientX, ev.clientY);
       const accept = (over || dnd.moved < 8) && vm.mode === "choices";
-      dropZoneRef.current?.classList.remove("over");
+      friendWrapRef.current?.classList.remove("over");
       if (accept) {
         vm.mode = "idle";
         audio.play("drop");
-        dropZoneRef.current?.classList.add("filled");
+        // 친구가 카드를 받는 반응(짧은 팝). 240ms 뒤 애니 클래스 제거.
+        friendWrapRef.current?.classList.add("catching");
+        window.setTimeout(() => friendWrapRef.current?.classList.remove("catching"), 400);
         card2.classList.add("landing");
         card2.style.transform = (card2.style.transform || "") + " scale(.32)";
         card2.style.opacity = "0";
@@ -629,8 +631,12 @@ export default function MissionPlayer(props: {
           <span>{vm.bubbleKind === "hatiBubble" ? vm.text : ""}</span>
         </div>
 
-        {/* 친구(현재 화면의 친구) */}
-        <div id="friendWrap" className={`${vm.intro ? "hide" : ""}${vm.friendGlow ? " glow" : ""}`}>
+        {/* 친구(현재 화면의 친구) — q4에선 드롭 타깃(droppable) */}
+        <div
+          id="friendWrap"
+          ref={friendWrapRef}
+          className={`${vm.intro ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+        >
           <img
             id="friend"
             className="pop"
@@ -644,10 +650,10 @@ export default function MissionPlayer(props: {
           <span>{friendBubbleText}</span>
         </div>
 
-        {/* 드래그 드롭 타깃: 친구의 빈 말풍선 (q4 드래그 전용) */}
-        <div id="dropZone" ref={dropZoneRef} className={vm.dzShow ? "show" : ""}>
-          <div className="dz-heart">♡</div>
-          <div className="dz-hint">여기에 놓아요</div>
+        {/* q4 드래그 힌트: 친구에게 카드를 가져다 놓으라는 안내(친구 위에 떠 있음) */}
+        <div id="dropHint" className={vm.dzShow ? "show" : ""}>
+          <span>여기에 놓아요</span>
+          <span className="dh-arrow">👇</span>
         </div>
 
         {/* 선택지 카드 */}
