@@ -15,18 +15,22 @@ type Spark = { id: number; left: number; top: number; ch: string; delay: number;
 
 interface VM {
   mode: "idle" | "typing" | "await" | "choices" | "end";
-  bubbleKind: "none" | "hatiBox" | "hatiBubble" | "lumiBubble";
+  bubbleKind: "none" | "hatiBox" | "hatiBubble" | "friendBubble";
   text: string;
   intro: boolean;
   choices: Choice[];
+  choicePrompt: string; // 선택지 카드 위 안내 문구(없으면 "")
   exploredSet: Set<number> | null;
   pick: ((i: number, c: Choice) => void) | null;
-  lumi: string;
+  friendId: string; // 화면에 보이는 현재 친구 id(가장 최근에 말한 친구)
+  friend: string; // 그 친구의 현재 스프라이트 키
+  heldText: string; // hold로 계속 띄워두는 친구 대사(비어 있으면 유지 없음)
+  heldSprite: string; // 그 유지 대사와 짝이 되는 표정(복귀 시 함께 되돌린다)
   hati: string;
   radar: string;
   radarPulse: boolean;
   bg: string;
-  lumiGlow: boolean;
+  friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
   progress: "start" | "done";
@@ -66,6 +70,7 @@ export default function MissionPlayer(props: {
   scenario: MissionData;
   theme: MissionTheme;
   onExit: () => void;
+  currentStep?: number; // 진행 스테퍼에서 이 미션이 몇 번째인지(1~3). 기본 1.
 }) {
   const { scenario, theme } = props;
   const [, force] = useReducer((x) => x + 1, 0);
@@ -82,14 +87,18 @@ export default function MissionPlayer(props: {
     text: "",
     intro: false,
     choices: [],
+    choicePrompt: "",
     exploredSet: null,
     pick: null,
-    lumi: theme.lumiSprites.initial,
+    friendId: theme.initialFriend,
+    friend: theme.friends[theme.initialFriend].initial,
+    heldText: "",
+    heldSprite: "",
     hati: theme.hatiSprites.initial,
     radar: theme.radar.initial,
     radarPulse: false,
     bg: theme.bg.initial,
-    lumiGlow: false,
+    friendGlow: false,
     bright: false,
     empathy: false,
     progress: "start",
@@ -112,7 +121,7 @@ export default function MissionPlayer(props: {
     resolve?: () => void;
   }>({}).current;
   const sparkId = useRef(0);
-  const dropZoneRef = useRef<HTMLDivElement>(null);
+  const friendWrapRef = useRef<HTMLDivElement>(null); // q4 드래그 드롭 타깃 = 친구 캐릭터
   // q4 드래그 상태(원본 view.js _enableCardDrag 이식). 한 번에 한 장만 드래그.
   const dnd = useRef<{
     active: boolean;
@@ -162,7 +171,7 @@ export default function MissionPlayer(props: {
     };
 
     const RADAR_ORDER = ["p25", "p50", "p75", "p100", "active"];
-    const setSprite = (kind: "lumi" | "hati" | "radar", state?: string) => {
+    const setSprite = (kind: "friend" | "hati" | "radar", state?: string) => {
       if (!state) return;
       if (kind === "radar") {
         if (state === vm.radar) return;
@@ -174,13 +183,29 @@ export default function MissionPlayer(props: {
           vm.radarPulse = false;
           render();
         }, 1100);
-      } else if (kind === "lumi") vm.lumi = state;
+      } else if (kind === "friend") vm.friend = state;
       else vm.hati = state;
       render();
     };
 
     const updateScene = (node: MissionNode) => {
-      setSprite("lumi", theme.lumiSprites.byNode[node.id]);
+      // 친구 line이면 화면의 활성 친구를 전환하고, 새 친구면 스프라이트를 그 친구 기본값으로 리셋.
+      if (node.speaker && node.speaker !== "hati" && node.speaker !== vm.friendId) {
+        vm.friendId = node.speaker;
+        vm.friend = theme.friends[vm.friendId]?.initial ?? vm.friend;
+        vm.heldText = ""; // 다른 친구 등장 → 이전 친구의 유지 대사/표정 비움
+        vm.heldSprite = "";
+      }
+      // hold:true → 이 대사(와 그때의 표정)를 계속 유지. hold:false → 유지 해제.
+      if (node.hold === true && node.text) {
+        vm.heldText = node.text;
+        vm.heldSprite =
+          theme.friends[vm.friendId]?.byNode[node.id] ?? theme.friends[vm.friendId]?.initial ?? vm.friend;
+      } else if (node.hold === false) {
+        vm.heldText = "";
+        vm.heldSprite = "";
+      }
+      setSprite("friend", theme.friends[vm.friendId]?.byNode[node.id]);
       setSprite("hati", theme.hatiSprites.byNode[node.id]);
       setSprite("radar", theme.radar.byNode[node.id]);
       const bg = theme.bg.byNode[node.id];
@@ -200,8 +225,8 @@ export default function MissionPlayer(props: {
           break;
         case "signalRecover":
           audio.play("recover");
-          vm.lumi = "recovered";
-          vm.lumiGlow = true;
+          // 스프라이트 교체는 노드의 byNode 매핑이 담당. 여기선 후광만 켠다(친구 무관).
+          vm.friendGlow = true;
           sparkleBurst();
           render();
           break;
@@ -264,14 +289,18 @@ export default function MissionPlayer(props: {
           text: "",
           intro: false,
           choices: [],
+          choicePrompt: "",
           exploredSet: null,
           pick: null,
-          lumi: theme.lumiSprites.initial,
+          friendId: theme.initialFriend,
+          friend: theme.friends[theme.initialFriend].initial,
+          heldText: "",
+          heldSprite: "",
           hati: theme.hatiSprites.initial,
           radar: theme.radar.initial,
           radarPulse: false,
           bg: theme.bg.initial,
-          lumiGlow: false,
+          friendGlow: false,
           bright: false,
           empathy: false,
           progress: "start",
@@ -304,12 +333,13 @@ export default function MissionPlayer(props: {
           timers.resolve = resolve;
           updateScene(node);
           vm.choices = [];
+          vm.choicePrompt = "";
           vm.pick = null;
           vm.dragNode = false;
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
           const isHati = node.speaker === "hati";
           const introHati = isHati && node.id === theme.bannerNode;
-          vm.bubbleKind = introHati ? "hatiBubble" : isHati ? "hatiBox" : "lumiBubble";
+          vm.bubbleKind = introHati ? "hatiBubble" : isHati ? "hatiBox" : "friendBubble";
           render();
           typeInto(node.text || "", () => {
             vm.mode = "await";
@@ -331,6 +361,7 @@ export default function MissionPlayer(props: {
         // (인트로 말풍선/루미 말풍선만 감추고, hatiBox는 그대로 둔다).
         if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
         vm.choices = node.choices || [];
+        vm.choicePrompt = node.prompt || ""; // 카드 위 안내 문구(있을 때만)
         vm.exploredSet = exploredSet;
         // 드래그 노드(q4): 카드를 루미 빈 말풍선(#dropZone)으로 끌어 답한다. 탭도 선택 fallback.
         vm.dragNode = !!(theme.drag && node.id === theme.drag.node);
@@ -430,14 +461,14 @@ export default function MissionPlayer(props: {
   // ---------- q4 카드 드래그 (원본 view.js _enableCardDrag 이식) ----------
   // 스테이지가 CSS scale 되므로 포인터 델타를 scale로 나눠 손가락 아래로 카드를 이동.
   // move/up은 window에 붙인다(React 위임 + 카드가 커서 밑에서 이동하는 문제, 포인터가
-  // 카드 밖으로 나가는 문제 회피). #dropZone(마진 44px) 위에서 놓으면 선택, 거의 안
-  // 움직인 탭도 선택, 그 외엔 snapback.
+  // 카드 밖으로 나가는 문제 회피). 친구 캐릭터(마진 24px) 위에서 놓으면 선택("친구에게
+  // 말을 건네는" 맥락), 거의 안 움직인 탭도 선택, 그 외엔 snapback.
   const stageScale = () => (stageRef.current?.getBoundingClientRect().width || 1920) / 1920 || 1;
-  const overDropZoneXY = (x: number, y: number) => {
-    const dz = dropZoneRef.current;
-    if (!dz) return false;
-    const r = dz.getBoundingClientRect();
-    const m = 44;
+  const overFriend = (x: number, y: number) => {
+    const el = friendWrapRef.current;
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    const m = 24;
     return x >= r.left - m && x <= r.right + m && y >= r.top - m && y <= r.bottom + m;
   };
   const onCardDown = (e: ReactPointerEvent<HTMLButtonElement>, idx: number, choice: Choice) => {
@@ -462,7 +493,7 @@ export default function MissionPlayer(props: {
         dy = (ev.clientY - dnd.startY) / dnd.scale;
       dnd.moved = Math.max(dnd.moved, Math.hypot(ev.clientX - dnd.startX, ev.clientY - dnd.startY));
       dnd.card.style.transform = `translate(${dx}px, ${dy}px) scale(1.06)`;
-      dropZoneRef.current?.classList.toggle("over", overDropZoneXY(ev.clientX, ev.clientY));
+      friendWrapRef.current?.classList.toggle("over", overFriend(ev.clientX, ev.clientY));
     };
     const up = (ev: PointerEvent) => {
       if (!dnd.active) return;
@@ -473,13 +504,15 @@ export default function MissionPlayer(props: {
       const card2 = dnd.card;
       dnd.card = null;
       if (!card2) return;
-      const over = overDropZoneXY(ev.clientX, ev.clientY);
+      const over = overFriend(ev.clientX, ev.clientY);
       const accept = (over || dnd.moved < 8) && vm.mode === "choices";
-      dropZoneRef.current?.classList.remove("over");
+      friendWrapRef.current?.classList.remove("over");
       if (accept) {
         vm.mode = "idle";
         audio.play("drop");
-        dropZoneRef.current?.classList.add("filled");
+        // 친구가 카드를 받는 반응(짧은 팝). 240ms 뒤 애니 클래스 제거.
+        friendWrapRef.current?.classList.add("catching");
+        window.setTimeout(() => friendWrapRef.current?.classList.remove("catching"), 400);
         card2.classList.add("landing");
         card2.style.transform = (card2.style.transform || "") + " scale(.32)";
         card2.style.opacity = "0";
@@ -502,8 +535,26 @@ export default function MissionPlayer(props: {
   };
 
   const many = vm.choices.length >= 4;
-  const m1cls = vm.progress === "done" ? "done" : "active";
-  const m2cls = vm.progress === "done" ? "active" : "locked";
+  // 친구 말풍선/표정: 지금 친구가 말하는 중이면 그 대사·표정, 아니면 hold로 유지 중인
+  // 대사(heldText)와 그 짝 표정(heldSprite)으로 함께 되돌린다.
+  const reverting = vm.bubbleKind !== "friendBubble" && !!vm.heldText;
+  const friendBubbleText = reverting ? vm.heldText : vm.bubbleKind === "friendBubble" ? vm.text : "";
+  const friendSprite = reverting && vm.heldSprite ? vm.heldSprite : vm.friend;
+  // 진행 스테퍼: 현재 미션 단계(step) 기준으로 각 노드 상태를 계산.
+  // 이전 단계=done, 현재=진행중(active)/완료 시 done, 다음 단계=현재 완료 시 active.
+  const step = props.currentStep ?? 1;
+  const missionDone = vm.progress === "done";
+  const stepCls = (i: number) =>
+    i < step
+      ? "done"
+      : i === step
+        ? missionDone
+          ? "done"
+          : "active"
+        : i === step + 1 && missionDone
+          ? "active"
+          : "locked";
+  const connFilled = (i: number) => i < step || (i === step && missionDone); // step i 뒤 커넥터
 
   return (
     <div id="viewport">
@@ -518,7 +569,7 @@ export default function MissionPlayer(props: {
             <span>탐험 진행도</span>
           </div>
           <div className="stepper">
-            <div className={`pnode ${m1cls}`} id="mission1">
+            <div className={`pnode ${stepCls(1)}`} id="mission1">
               <div className="circle">
                 <span className="num">1</span>
               </div>
@@ -528,8 +579,8 @@ export default function MissionPlayer(props: {
                 탐색기
               </div>
             </div>
-            <div className={`connector${vm.progress === "done" ? " filled" : ""}`} id="conn1" />
-            <div className={`pnode ${m2cls}`} id="mission2">
+            <div className={`connector${connFilled(1) ? " filled" : ""}`} id="conn1" />
+            <div className={`pnode ${stepCls(2)}`} id="mission2">
               <div className="circle">
                 <span className="num">2</span>
               </div>
@@ -539,8 +590,8 @@ export default function MissionPlayer(props: {
                 깨우기
               </div>
             </div>
-            <div className="connector" id="conn2" />
-            <div className="pnode locked" id="mission3">
+            <div className={`connector${connFilled(2) ? " filled" : ""}`} id="conn2" />
+            <div className={`pnode ${stepCls(3)}`} id="mission3">
               <div className="circle">
                 <span className="num">3</span>
               </div>
@@ -565,13 +616,13 @@ export default function MissionPlayer(props: {
         <div id="titleBanner" className={vm.intro ? "show" : ""}>
           <div className="tb-badge">
             <span className="tb-star">★</span>
-            <span className="tb-pill">미션 1</span>
+            <span className="tb-pill">{theme.banner.pill}</span>
             <span className="tb-star">★</span>
           </div>
-          <div className="tb-title">마음 신호 탐색기</div>
+          <div className="tb-title">{theme.banner.title}</div>
           <div className="tb-ribbon">
             <span className="tb-spark">✦</span>
-            <span>친구의 마음을 찾아라!</span>
+            <span>{theme.banner.ribbon}</span>
             <span className="tb-spark">✦</span>
           </div>
         </div>
@@ -585,24 +636,38 @@ export default function MissionPlayer(props: {
           <span>{vm.bubbleKind === "hatiBubble" ? vm.text : ""}</span>
         </div>
 
-        {/* 루미 */}
-        <div id="lumiWrap" className={`${vm.intro ? "hide" : ""}${vm.lumiGlow ? " glow" : ""}`}>
-          <img id="lumi" className="pop" src={theme.lumiSprites.char[vm.lumi]} alt="루미" />
+        {/* 친구(현재 화면의 친구) — q4에선 드롭 타깃(droppable) */}
+        <div
+          id="friendWrap"
+          ref={friendWrapRef}
+          className={`${vm.intro ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+        >
+          <img
+            id="friend"
+            className="pop"
+            src={theme.friends[vm.friendId].char[friendSprite]}
+            alt={theme.speakers[vm.friendId]?.name ?? "친구"}
+          />
         </div>
 
-        {/* 루미 말풍선 */}
-        <div id="lumiBubble" className={`bubble${vm.bubbleKind === "lumiBubble" ? " show" : ""}`}>
-          <span>{vm.bubbleKind === "lumiBubble" ? vm.text : ""}</span>
+        {/* 친구 말풍선 — 현재 대사 또는 hold로 유지 중인 대사 */}
+        <div id="friendBubble" className={`bubble${friendBubbleText ? " show" : ""}`}>
+          <span>{friendBubbleText}</span>
         </div>
 
-        {/* 드래그 드롭 타깃: 루미의 빈 말풍선 (q4 드래그 전용) */}
-        <div id="dropZone" ref={dropZoneRef} className={vm.dzShow ? "show" : ""}>
-          <div className="dz-heart">♡</div>
-          <div className="dz-hint">여기에 놓아요</div>
+        {/* q4 드래그 힌트: 친구에게 카드를 가져다 놓으라는 안내(친구 위에 떠 있음) */}
+        <div id="dropHint" className={vm.dzShow ? "show" : ""}>
+          <span>여기에 놓아요</span>
+          <span className="dh-arrow">👇</span>
         </div>
 
-        {/* 선택지 카드 */}
-        <div id="choices" className={vm.choices.length > 0 ? "show" : ""}>
+        {/* 선택지 패널 — 안내 문구 + 카드를 한 배경 박스에 담는다 */}
+        <div id="choicePanel" className={vm.choices.length > 0 ? "show" : ""}>
+          {/* 카드 위 안내 문구 (있을 때만) */}
+          <div id="choicePrompt">{vm.choicePrompt}</div>
+
+          {/* 선택지 카드 */}
+          <div id="choices">
           {vm.choices.map((c, idx) => {
             const deco = theme.choiceIcons[c.text] || { emoji: "💭", bg: "#eef2f7" };
             const explored = vm.exploredSet?.has(idx);
@@ -639,6 +704,7 @@ export default function MissionPlayer(props: {
               </button>
             );
           })}
+          </div>
         </div>
 
         {/* 공감 카드 (엔딩) */}
@@ -653,7 +719,7 @@ export default function MissionPlayer(props: {
         <div id="hatiBox" className={vm.bubbleKind === "hatiBox" ? "show" : ""}>
           <img id="hatiAvatar" className="pop" src={theme.hatiSprites.char[vm.hati]} alt="하티" />
           <div>
-            <div id="hatiName">{theme.speakers.hati.name}</div>
+            <div id="hatiName">{theme.speakers.hati?.name ?? "하티"}</div>
             <div id="hatiText">{vm.bubbleKind === "hatiBox" ? vm.text : ""}</div>
           </div>
         </div>

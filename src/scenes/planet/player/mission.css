@@ -343,8 +343,8 @@
   border-bottom: 0;
 }
 
-/* ---------- Lumi (right) ---------- */
-#lumiWrap {
+/* ---------- Friend (right) ---------- */
+#friendWrap {
   position: absolute;
   right: 120px;
   bottom: 30px;
@@ -354,11 +354,11 @@
   align-items: center;
   transition: opacity 0.4s ease;
 }
-#lumiWrap.hide {
+#friendWrap.hide {
   opacity: 0;
   visibility: hidden;
 }
-#lumi {
+#friend {
   height: 660px;
   max-height: 660px;
   filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.4));
@@ -369,10 +369,10 @@
 
 /* 루미 후광(회복 시) — 캐릭터 실루엣을 따라가는 다중 drop-shadow(맥동) +
    뒤쪽 방사형 오라 레이어. 후광 이미지 자체엔 빛이 없고 CSS로만 입힌다. */
-#lumiWrap.glow #lumi {
-  animation: lumiHalo 2.2s ease-in-out infinite;
+#friendWrap.glow #friend {
+  animation: friendHalo 2.2s ease-in-out infinite;
 }
-@keyframes lumiHalo {
+@keyframes friendHalo {
   0%,
   100% {
     filter: drop-shadow(0 0 20px rgba(255, 238, 170, 0.85))
@@ -385,7 +385,7 @@
       drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
   }
 }
-#lumiWrap.glow::before {
+#friendWrap.glow::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -404,9 +404,9 @@
     rgba(255, 200, 92, 0) 72%
   );
   filter: blur(6px);
-  animation: lumiAura 2.2s ease-in-out infinite;
+  animation: friendAura 2.2s ease-in-out infinite;
 }
-@keyframes lumiAura {
+@keyframes friendAura {
   0%,
   100% {
     opacity: 0.7;
@@ -417,7 +417,7 @@
     transform: translate(-50%, -50%) scale(1.08);
   }
 }
-@keyframes lumiPop {
+@keyframes friendPop {
   0% {
     transform: scale(0.96);
   }
@@ -428,8 +428,8 @@
     transform: scale(1);
   }
 }
-#lumi.pop {
-  animation: lumiPop 0.4s ease;
+#friend.pop {
+  animation: friendPop 0.4s ease;
 }
 
 /* ---------- speech bubbles ---------- */
@@ -456,11 +456,11 @@
   opacity: 1;
   transform: translateY(0) scale(1);
 }
-#lumiBubble {
+#friendBubble {
   right: 470px;
   bottom: 470px;
 }
-#lumiBubble::after {
+#friendBubble::after {
   content: "";
   position: absolute;
   right: -22px;
@@ -471,72 +471,77 @@
 }
 
 /* ---------- drag drop target: Lumi's empty bubble (q4 drag interaction only) ---------- */
-#dropZone {
-  position: absolute;
-  right: 470px;
-  bottom: 250px;
-  z-index: 4;
-  width: 380px;
-  min-height: 220px;
-  border-radius: 30px;
-  background: rgba(250, 248, 255, 0.45);
-  border: 4px dashed #b794f6;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
-  transition:
-    transform 0.15s ease,
-    border-color 0.15s ease,
-    background 0.15s ease;
+/* ---------- q4 드래그: 친구 캐릭터를 드롭 타깃으로 ---------- */
+/* 드래그 노드 진입 시 친구가 '받을 준비' 상태로 은은히 빛난다. */
+#friendWrap.droppable #friend {
+  animation: dropReady 1.4s ease-in-out infinite;
+  cursor: pointer;
 }
-#dropZone.show {
+@keyframes dropReady {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.45))
+      drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(124, 58, 237, 0.8)) drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  }
+}
+/* 카드가 친구 위에 있을 때 — 더 강한 하이라이트 + 살짝 확대 */
+#friendWrap.over #friend {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 40px rgba(124, 58, 237, 0.95)) drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  animation: none;
+}
+/* 카드를 받은 순간 팝 */
+#friendWrap.catching #friend {
+  animation: friendCatch 0.4s ease;
+}
+@keyframes friendCatch {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 드롭 힌트 — 친구 위에 떠서 '여기에 놓아요' 안내 */
+#dropHint {
+  position: absolute;
+  right: 280px;
+  bottom: 660px;
+  z-index: 5;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.94);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+  animation: hintBob 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+#dropHint.show {
   display: flex;
 }
-#dropZone.over {
-  transform: scale(1.07);
-  border-color: #7c3aed;
-  background: rgba(237, 233, 254, 0.9);
+#dropHint .dh-arrow {
+  font-size: 26px;
 }
-#dropZone.filled {
-  border-style: solid;
-  border-color: #16a34a;
-  background: rgba(220, 252, 231, 0.92);
-}
-#dropZone .dz-heart {
-  font-size: 92px;
-  line-height: 1;
-  color: #cdbaf2;
-  transition: color 0.15s ease;
-}
-#dropZone.over .dz-heart {
-  color: #9b6ef0;
-}
-#dropZone.filled .dz-heart {
-  color: #16a34a;
-}
-#dropZone .dz-hint {
-  font-size: 22px;
-  font-weight: 800;
-  color: #8a6fc0;
-}
-#dropZone.filled .dz-hint {
-  color: #16a34a;
-}
-/* small tail pointing right toward Lumi */
-#dropZone::after {
-  content: "";
-  position: absolute;
-  right: -20px;
-  bottom: 56px;
-  border: 18px solid transparent;
-  border-left-color: #b794f6;
-  border-right: 0;
-}
-#dropZone.filled::after {
-  border-left-color: #16a34a;
+@keyframes hintBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
 }
 
 /* card drag states (q4) */
@@ -645,24 +650,51 @@
 }
 
 /* ---------- choice cards ---------- */
-#choices {
+/* 안내 문구 + 카드를 한 배경 패널에 담아 배경과 무관하게 가독성 확보 */
+#choicePanel {
   position: absolute;
-  top: 196px;
-  left: 560px;
-  right: 70px;
+  top: 162px;
+  left: 530px;
+  right: 44px;
   z-index: 4;
+  padding: 20px 30px 30px;
+  border-radius: 36px;
+  background: rgba(244, 242, 255, 0.92);
+  border: 3px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 16px 44px rgba(60, 40, 120, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: none;
+}
+#choicePanel.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+/* 카드 위 안내 문구 (비어 있으면 자리 차지 안 함) */
+#choicePrompt {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: #2a2350;
+}
+#choicePrompt:empty {
+  display: none;
+}
+#choices {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start;
   gap: 26px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-#choices.show {
-  opacity: 1;
-  pointer-events: auto;
 }
 .card {
   position: relative;
