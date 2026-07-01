@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import { MISSION01_THEME, MISSION01_DATA, MISSION02_THEME, MISSION02_DATA } from "./theme";
@@ -10,11 +10,22 @@ import "./Planet1.css";
 // 현재 구현: prologue, mission1, mission2.
 type Stage = "prologue" | "mission1" | "mission2";
 
+const STAGES: Stage[] = ["prologue", "mission1", "mission2"];
 const FADE_MS = 160;
 
 export default function Planet1() {
   const nav = useNavigate();
-  const [stage, setStage] = useState<Stage>("prologue");
+  const [params] = useSearchParams();
+
+  // 개발용 단축키: #/planet/1?stage=mission2 로 특정 subscene부터 시작.
+  // import.meta.env.DEV 가드 → 프로덕션 빌드(APK)에선 항상 prologue.
+  const wanted = params.get("stage");
+  const initialStage: Stage =
+    import.meta.env.DEV && wanted && (STAGES as string[]).includes(wanted)
+      ? (wanted as Stage)
+      : "prologue";
+
+  const [stage, setStage] = useState<Stage>(initialStage);
   const [fading, setFading] = useState(false);
 
   // 전환 시 배경 깜빡임 방지: 두 미션 배경을 미리 캐시에 올려둔다.
