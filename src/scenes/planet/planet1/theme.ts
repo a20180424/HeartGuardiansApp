@@ -171,11 +171,23 @@ const SOLA_SPRITES: SpriteSet = {
   },
 };
 
+// mission2 특별 파트(공감 거울)에서 재등장하는 루미. mission1 에셋 재사용.
+const M2_LUMI_SPRITES: SpriteSet = {
+  char: {
+    sad: `${A}/char/Lumi/lumi_sad.png`,
+    confused: `${A}/char/Lumi/lumi_confused.png`,
+    happy: `${A}/char/Lumi/lumi_happy.png`,
+  },
+  initial: "sad",
+  byNode: {},
+};
+
 export const MISSION02_THEME: MissionTheme = {
   speakers: {
     hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` },
     lala: { name: "라라" },
     sola: { name: "솔라" },
+    lumi: { name: "루미" },
   },
   banner: {
     pill: "미션 2",
@@ -222,7 +234,7 @@ export const MISSION02_THEME: MissionTheme = {
       m2_end3: "celebrating",
     },
   },
-  friends: { lala: LALA_SPRITES, sola: SOLA_SPRITES },
+  friends: { lala: LALA_SPRITES, sola: SOLA_SPRITES, lumi: M2_LUMI_SPRITES },
   radar: {
     states: {
       p25: `${A}/device/radar_25.png`,
@@ -277,5 +289,20 @@ export const MISSION02_THEME: MissionTheme = {
       m2_q4_wrongB_hati: "wrong",
       m2_q4_correct_hati: "correct",
     },
+  },
+  // 공감 거울 특별 파트: 화면 A(2거울)/B(1거울)는 서로 다른 프레임 이미지, 거울 안쪽 씬 배경.
+  // 아트는 후속 교체 예정 — 현재는 플레이스홀더 경로. onError 가드로 파일 부재에도 동작.
+  mirror: {
+    frameA: `${A}/ui/mirror_frame_a.png`,
+    frameB: `${A}/ui/mirror_frame_b.png`,
+    scenes: {
+      stadium: `${A}/bg/mirror/stadium.png`,
+      study: `${A}/bg/mirror/study.png`,
+      alone_room: `${A}/bg/mirror/alone_room.png`,
+    },
+  },
+  gaugeIcons: {
+    run: { emoji: "🏃", color: "#3b82f6" },
+    meditate: { emoji: "🧘", color: "#22c55e" },
   },
 };

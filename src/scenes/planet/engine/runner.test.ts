@@ -74,6 +74,12 @@ function makeFakeView(onEnd: () => void) {
       // 비동기로 풀어 깊은 동기재귀 방지
       Promise.resolve().then(() => pick(idx, node.choices![idx]));
     },
+    showMirrors(_node, done) {
+      done();
+    },
+    showGauge(_node, done) {
+      done();
+    },
     end() {
       onEnd();
     },

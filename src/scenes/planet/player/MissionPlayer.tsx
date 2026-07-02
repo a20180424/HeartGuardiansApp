@@ -377,6 +377,12 @@ export default function MissionPlayer(props: {
         render();
         audio.play("pop");
       },
+      showMirrors(_node, done) {
+        done();
+      },
+      showGauge(_node, done) {
+        done();
+      },
       end() {
         vm.mode = "end";
         vm.ended = true;

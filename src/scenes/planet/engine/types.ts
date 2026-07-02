@@ -8,9 +8,31 @@ export interface Choice {
   next: string | null;
 }
 
+export interface MirrorTarget {
+  friend: string; // theme.friends 키 (예: "lumi" | "lala")
+  title: string; // 거울 위 뱃지 타이틀 (예: "루미의 마음")
+  scene: string; // theme.mirror.scenes 키 (거울 안쪽 배경)
+  line: string; // 거울 안 친구 말풍선
+  onDrop: string; // 카드 드롭 후 친구 반응 대사
+}
+
+export interface MirrorReveal {
+  prompt: string; // 터치 유도 하티 대사(하단 바)
+  friend: string; // 터치 대상 거울의 friend
+  line: string; // 터치 후 드러나는 속마음 말풍선
+}
+
+export interface GaugeOption {
+  icon: string; // theme.gaugeIcons 키 (예: "run" | "meditate")
+  title: string; // "계속 다가가기"
+  desc: string; // "용기를 내서 다가가 보자."
+  correct: boolean; // 정답 여부
+  onPick: string; // 100% 도달 시 친구 반응 대사
+}
+
 export interface MissionNode {
   id: string;
-  type?: "line" | "choice" | "branch";
+  type?: "line" | "choice" | "branch" | "mirrors" | "gauge";
   speaker?: string; // "hati" | 친구 id(예: "lumi" | "lala" | "sola")
   text?: string;
   // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).
@@ -27,6 +49,16 @@ export interface MissionNode {
   ifFalse?: string;
   onEnter?: Command[];
   onComplete?: Command[];
+  // type: "mirrors" (화면 A) 전용
+  banner?: string;
+  card?: string;
+  targets?: MirrorTarget[];
+  reveal?: MirrorReveal;
+  // type: "gauge" (화면 B) 전용
+  header?: string; // 선택 패널 제목 ("어떻게 도와줄래?")
+  lead?: string; // 게이지 등장 전 하티 도입 대사
+  scene?: string; // 거울 안쪽 배경 키
+  options?: GaugeOption[];
 }
 
 export interface MissionData {
@@ -46,6 +78,8 @@ export interface RunnerView {
     exploredSet: Set<number> | null,
     pick: (idx: number, choice: Choice) => void,
   ): void;
+  showMirrors(node: MissionNode, done: () => void): void;
+  showGauge(node: MissionNode, done: () => void): void;
   end(): void;
 }
 
@@ -74,4 +108,7 @@ export interface MissionTheme {
   choiceIcons: Record<string, { emoji: string; bg: string }>;
   fx: Record<string, string>;
   sfx: { byNode: Record<string, string> };
+  // 공감 거울 특별 파트(화면 A/B) 에셋. 없으면 해당 미션엔 특별 파트가 없다.
+  mirror?: { frameA: string; frameB: string; scenes: Record<string, string> };
+  gaugeIcons?: Record<string, { emoji: string; color: string }>;
 }
