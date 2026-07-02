@@ -60,7 +60,7 @@ export default function MirrorStage(p: MirrorStageProps) {
       <div className="ms-banner">
         <span className="ms-pill">특별 미션</span>
         <h2 className="ms-title">{p.banner}</h2>
-        <p className="ms-sub">친구의 마음을 이해하고, 따뜻한 말을 전해 보세요!</p>
+        <p className="ms-sub">친구의 마음을 이해하고, 따뜻한 말을 전해 봐!</p>
       </div>
 
       {p.stage === "mirrors" && (
@@ -133,7 +133,10 @@ export default function MirrorStage(p: MirrorStageProps) {
 
       <div className="ms-guidebar">
         <img className="ms-hati" src="/assets/char/Hati/hati_explaining.png" alt="하티" onError={hideOnError} />
-        <p className="ms-guidetext">{p.prompt}</p>
+        <div className="ms-guide-body">
+          <div className="ms-guide-name">하티</div>
+          <p className="ms-guidetext">{p.prompt}</p>
+        </div>
         {p.stage === "mirrors" && p.card && (
           <button
             className="ms-card"

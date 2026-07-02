@@ -209,7 +209,7 @@ export const MISSION02_THEME: MissionTheme = {
       m2_intro: "stage2",
       m2_secret_intro1: "mirror2",
       m2_secret_intro2: "mirror3",
-      m2_secret_intro4: "secret2",
+      m2_mirror_ab: "secret2",
       m2_end3: "stage3",
     },
   },

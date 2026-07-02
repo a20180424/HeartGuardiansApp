@@ -40,6 +40,7 @@ interface VM {
   radarPulse: boolean;
   bg: string;
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
+  lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -135,6 +136,7 @@ export default function MissionPlayer(props: {
     radarPulse: false,
     bg: theme.bg.initial,
     hideFriend: false,
+    lesson: null,
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -270,6 +272,7 @@ export default function MissionPlayer(props: {
       const bg = theme.bg.byNode[node.id];
       if (bg) vm.bg = bg; // 배경 교체(sparse, 지정 노드까지 유지)
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
+      vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -361,6 +364,7 @@ export default function MissionPlayer(props: {
           radarPulse: false,
           bg: theme.bg.initial,
           hideFriend: false,
+          lesson: null,
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -411,9 +415,16 @@ export default function MissionPlayer(props: {
           vm.pick = null;
           vm.dragNode = false;
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
+          vm.lesson = node.lesson || null; // 교훈 배너 노드면 배너를 띄우고 하티 박스는 숨긴다
           const isHati = node.speaker === "hati";
           const introHati = isHati && node.id === theme.bannerNode;
-          vm.bubbleKind = introHati ? "hatiBubble" : isHati ? "hatiBox" : "friendBubble";
+          vm.bubbleKind = node.lesson
+            ? "none"
+            : introHati
+              ? "hatiBubble"
+              : isHati
+                ? "hatiBox"
+                : "friendBubble";
           render();
           typeInto(node.text || "", () => {
             vm.mode = "await";
@@ -1012,6 +1023,24 @@ export default function MissionPlayer(props: {
             onMirrorTouch={onMirrorTouch}
             onGaugeDown={onGaugeDown}
           />
+        )}
+
+        {/* 교훈 배너(금색 오너먼트) — lesson 노드에서 표시 */}
+        {vm.lesson && (
+          <div id="lessonBanner" className="show">
+            <img
+              className="lb-star"
+              src="/assets/ui/star_gold.png"
+              alt=""
+              onError={(e) => {
+                e.currentTarget.style.visibility = "hidden";
+              }}
+            />
+            <div className="lb-text">
+              <div className="lb-title">{vm.lesson.title}</div>
+              <div className="lb-sub">{vm.lesson.sub}</div>
+            </div>
+          </div>
         )}
 
         {/* 공감 카드 (엔딩) */}

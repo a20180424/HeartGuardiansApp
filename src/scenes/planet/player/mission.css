@@ -302,6 +302,65 @@
   font-size: 24px;
 }
 
+/* ---------- 교훈 배너(금색 오너먼트) — 공감 거울의 비밀 등 ---------- */
+#lessonBanner {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  width: 1520px;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  padding: 34px 70px;
+  background: linear-gradient(180deg, #10214a 0%, #0a1430 100%);
+  border: 3px solid #d9ad4e;
+  border-radius: 30px;
+  box-shadow:
+    0 0 0 6px rgba(217, 173, 78, 0.16),
+    0 20px 46px rgba(0, 0, 0, 0.55),
+    inset 0 0 70px rgba(90, 120, 220, 0.12);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-12px) scale(0.97);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+#lessonBanner.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+.lb-star {
+  width: 148px;
+  height: 148px;
+  flex: none;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+.lb-text {
+  flex: 1;
+  text-align: center;
+}
+.lb-title {
+  font-size: 66px;
+  font-weight: 900;
+  color: #f4c94b;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.5),
+    0 0 26px rgba(244, 201, 75, 0.35);
+  margin-bottom: 12px;
+}
+.lb-sub {
+  font-size: 46px;
+  font-weight: 800;
+  color: #eaf1ff;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
   position: absolute;
@@ -1139,27 +1198,48 @@
   min-width: 48px;
   text-align: right;
 }
+/* 일반 하티 박스(#hatiBox)와 동일한 룩 — 미션 전반과 일관성 유지 */
 .ms-guidebar {
   position: absolute;
   left: 40px;
   right: 40px;
-  bottom: 24px;
-  min-height: 96px;
+  bottom: 40px;
+  min-height: 186px;
   display: flex;
   align-items: center;
-  gap: 18px;
-  background: rgba(8, 16, 38, 0.85);
-  border: 2px solid #b4863b55;
-  border-radius: 20px;
-  padding: 12px 20px;
+  gap: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 34px;
+  padding: 26px 48px 26px 200px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 .ms-hati {
-  height: 84px;
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #5b8def;
+  background: #0c1740;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+.ms-guide-body {
+  flex: 1;
+}
+.ms-guide-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #2f6fe0;
+  margin-bottom: 4px;
 }
 .ms-guidetext {
-  flex: 1;
-  font-size: 24px;
-  color: #eaf2ff;
+  font-size: 36px;
+  font-weight: 700;
+  color: #222b3d;
+  line-height: 1.45;
 }
 .ms-card {
   border: none;

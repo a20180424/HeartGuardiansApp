@@ -43,6 +43,8 @@ export interface MissionNode {
   hold?: boolean;
   // 이 노드에서 화면의 친구 캐릭터 레이어를 숨긴다(친구 없이 하티만 말하는 전환 구간용).
   hideFriend?: boolean;
+  // 교훈 배너(금색 오너먼트 배너)로 이 미션의 교훈을 표시한다. 있으면 하티 박스 대신 배너를 띄운다.
+  lesson?: { title: string; sub: string };
   next?: string | null;
   choices?: Choice[];
   // 선택지 카드 위에 띄우는 짧은 안내 문구(선택). 없으면 표시하지 않는다.
