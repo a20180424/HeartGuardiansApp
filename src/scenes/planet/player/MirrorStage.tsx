@@ -10,7 +10,6 @@ import type { MissionTheme } from "../engine/types";
 export type MirrorVM = {
   friend: string;
   title: string;
-  scene: string;
   line: string;
   bubble: string;
   done: boolean;
@@ -32,7 +31,6 @@ export interface MirrorStageProps {
   revealFriend: string;
   // gauge (화면 B)
   friend: string;
-  scene: string;
   friendLine: string;
   header: string;
   options: GaugeVM[];
@@ -81,9 +79,6 @@ export default function MirrorStage(p: MirrorStageProps) {
                 onClick={() => p.onMirrorTouch(i)}
               >
                 <img className="ms-frame" src={t.mirror?.frameA} alt="" onError={hideOnError} />
-                {tg.scene && t.mirror?.scenes[tg.scene] && (
-                  <img className="ms-scene" src={t.mirror.scenes[tg.scene]} alt="" onError={hideOnError} />
-                )}
                 <img className="ms-char" src={tg.charImage || friendSrc(t, tg.friend)} alt={tg.title} />
                 {!p.hideBubbles && <div className="ms-bubble">{tg.bubble}</div>}
               </div>
@@ -96,9 +91,6 @@ export default function MirrorStage(p: MirrorStageProps) {
         <div className="ms-gaugeWrap">
           <div className="ms-mirror single active">
             <img className="ms-frame" src={t.mirror?.frameB} alt="" onError={hideOnError} />
-            {p.scene && t.mirror?.scenes[p.scene] && (
-              <img className="ms-scene" src={t.mirror.scenes[p.scene]} alt="" onError={hideOnError} />
-            )}
             <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
             {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
           </div>

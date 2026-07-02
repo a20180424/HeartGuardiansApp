@@ -11,7 +11,6 @@ export interface Choice {
 export interface MirrorTarget {
   friend: string; // theme.friends 키 (예: "lumi" | "lala")
   title: string; // 거울 위 뱃지 타이틀 (예: "루미의 마음")
-  scene: string; // theme.mirror.scenes 키 (거울 안쪽 배경)
   line: string; // 거울 안 친구 말풍선
   onDrop: string; // 카드 드롭 후 친구 반응 대사
   charImage?: string; // 거울 안 캐릭터 이미지 경로(지정 시 friend 스프라이트 대신 사용)
@@ -69,7 +68,6 @@ export interface MissionNode {
   // type: "gauge" (화면 B) 전용
   header?: string; // 선택 패널 제목 ("어떻게 도와줄래?")
   lead?: string; // 게이지 등장 전 하티 도입 대사
-  scene?: string; // 거울 안쪽 배경 키
   options?: GaugeOption[];
 }
 
@@ -123,6 +121,6 @@ export interface MissionTheme {
   fx: Record<string, string>;
   sfx: { byNode: Record<string, string> };
   // 공감 거울 특별 파트(화면 A/B) 에셋. 없으면 해당 미션엔 특별 파트가 없다.
-  mirror?: { frameA: string; frameB: string; scenes: Record<string, string> };
+  mirror?: { frameA: string; frameB: string };
   gaugeIcons?: Record<string, { emoji: string; color: string }>;
 }

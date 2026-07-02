@@ -304,16 +304,10 @@ export const MISSION02_THEME: MissionTheme = {
       m2_q4_correct_hati: "correct",
     },
   },
-  // 공감 거울 특별 파트: 화면 A(2거울)/B(1거울)는 서로 다른 프레임 이미지, 거울 안쪽 씬 배경.
-  // 아트는 후속 교체 예정 — 현재는 플레이스홀더 경로. onError 가드로 파일 부재에도 동작.
+  // 공감 거울 특별 파트: 화면 A(2거울)/B(1거울)는 서로 다른 프레임 이미지.
   mirror: {
     frameA: `${A}/ui/mirror_frame_a.png`,
     frameB: `${A}/ui/mirror_frame_b.png`,
-    scenes: {
-      stadium: `${A}/bg/mirror/stadium.png`,
-      study: `${A}/bg/mirror/study.png`,
-      alone_room: `${A}/bg/mirror/alone_room.png`,
-    },
   },
   gaugeIcons: {
     run: { emoji: "🏃", color: "#3b82f6" },

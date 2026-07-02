@@ -63,7 +63,6 @@ interface VM {
   sTargets: {
     friend: string;
     title: string;
-    scene: string;
     line: string;
     onDrop: string;
     bubble: string;
@@ -76,7 +75,6 @@ interface VM {
   sRevealFriend: string;
   // gauge
   sFriend: string;
-  sScene: string;
   sFriendLine: string;
   sHeader: string;
   sOptions: { icon: string; title: string; desc: string; fill: number }[];
@@ -161,7 +159,6 @@ export default function MissionPlayer(props: {
     sRevealPhase: "none",
     sRevealFriend: "",
     sFriend: "",
-    sScene: "",
     sFriendLine: "",
     sHeader: "",
     sOptions: [],
@@ -395,7 +392,6 @@ export default function MissionPlayer(props: {
           sRevealPhase: "none",
           sRevealFriend: "",
           sFriend: "",
-          sScene: "",
           sFriendLine: "",
           sHeader: "",
           sOptions: [],
@@ -486,7 +482,6 @@ export default function MissionPlayer(props: {
         vm.sTargets = (node.targets || []).map((t) => ({
           friend: t.friend,
           title: t.title,
-          scene: t.scene,
           line: t.line,
           onDrop: t.onDrop,
           bubble: t.line,
@@ -511,7 +506,6 @@ export default function MissionPlayer(props: {
         vm.sHideBubbles = !!node.hideBubbles;
         vm.sBanner = node.banner || "";
         vm.sFriend = node.speaker && node.speaker !== "hati" ? node.speaker : "lumi";
-        vm.sScene = node.scene || "";
         vm.sFriendLine = node.text || "";
         vm.sHeader = node.header || "";
         vm.sPrompt = node.lead || ""; // 먼저 도입 대사
@@ -1027,7 +1021,6 @@ export default function MissionPlayer(props: {
             revealPhase={vm.sRevealPhase}
             revealFriend={vm.sRevealFriend}
             friend={vm.sFriend}
-            scene={vm.sScene}
             friendLine={vm.sFriendLine}
             header={vm.sHeader}
             options={vm.sOptions}
