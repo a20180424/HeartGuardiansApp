@@ -1085,8 +1085,73 @@
   width: 480px;
   height: 480px;
 }
+/* 지금 카드를 놓아야 하는 거울 — 숨쉬는 듯한 빛 + 위아래로 통통 튀는 강조 */
 .ms-mirror.active {
-  outline: 4px solid rgba(120, 200, 255, 0.7);
+  animation: msActivePulse 1.3s ease-in-out infinite;
+}
+/* 거울 뒤에서 도는 빛무리(스포트라이트 느낌) */
+.ms-mirror.active::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(127, 220, 255, 0.9),
+    rgba(127, 220, 255, 0) 30%,
+    rgba(127, 220, 255, 0.9) 55%,
+    rgba(127, 220, 255, 0) 85%,
+    rgba(127, 220, 255, 0.9)
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px));
+  animation: msSpin 4s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+/* "여기예요!" 안내 라벨(거울 아래에서 통통) */
+.ms-mirror.active::after {
+  content: "여기예요!";
+  position: absolute;
+  left: 50%;
+  bottom: -58px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #ffe9b0, #f4c94b);
+  color: #4a3400;
+  font-weight: 900;
+  font-size: 26px;
+  padding: 8px 24px;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  animation: msLabelBob 1s ease-in-out infinite;
+  z-index: 4;
+  pointer-events: none;
+}
+@keyframes msActivePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(120, 200, 255, 0.5);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 64px 10px rgba(150, 220, 255, 0.95);
+  }
+}
+@keyframes msSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes msLabelBob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(5px);
+  }
 }
 .ms-mirror.touchable {
   cursor: pointer;
@@ -1246,17 +1311,29 @@
   color: #222b3d;
   line-height: 1.45;
 }
+/* 카드를 화면 중앙에 고정하는 홀더. 카드 자체 transform 은 드래그 전용이라
+   중앙 정렬은 홀더가 담당(둘이 섞이지 않게). */
+.ms-card-holder {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
 .ms-card {
   border: none;
   background: linear-gradient(#eafbe7, #c8f0c0);
   color: #14532d;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   border-radius: 20px;
-  padding: 16px 22px;
+  padding: 18px 28px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   cursor: grab;
   touch-action: none;
+  white-space: pre-line; /* card 텍스트의 \n 을 줄바꿈으로 표시 */
+  text-align: center;
+  line-height: 1.35;
 }
 .ms-card.dragging {
   z-index: 60;

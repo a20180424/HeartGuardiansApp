@@ -84,7 +84,7 @@
       "hideBubbles": true,
       "banner": "공감 거울의 비밀",
       "prompt": "친구에게 전하고 싶은 말을 드래그해서 거울 속 친구에게 전해봐!",
-      "card": "괜찮아! 다음에 잘 하면 돼!",
+      "card": "괜찮아!\n다음에 잘 하면 돼!",
       "targets": [
         { "friend": "lumi", "title": "루미의 마음", "line": "축구 경기에서 져서 아쉬워.", "onDrop": "응 고마워.", "charImage": "/assets/char/mirror/lumi1.png", "onDropImage": "/assets/char/mirror/lumi2.png" },
         { "friend": "lala", "title": "라라의 마음", "line": "시험 점수가 안 나와서 속상해.", "onDrop": "그런데 아직 속상해.", "charImage": "/assets/char/mirror/lala1.png", "onDropImage": "/assets/char/mirror/lala2.png" }

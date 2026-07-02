@@ -128,7 +128,12 @@ export default function MirrorStage(p: MirrorStageProps) {
           <div className="ms-guide-name">하티</div>
           <p className="ms-guidetext">{p.prompt}</p>
         </div>
-        {p.stage === "mirrors" && p.card && (
+      </div>
+
+      {/* 드래그 카드 — 화면 중앙에 두어 좌/우 어느 거울로도 대칭 드래그. 홀더가 중앙에
+          고정하고, 카드 자체 transform 은 드래그에만 쓰이므로 서로 간섭하지 않는다. */}
+      {p.stage === "mirrors" && p.card && (
+        <div className="ms-card-holder">
           <button
             className="ms-card"
             ref={p.cardRef}
@@ -140,8 +145,8 @@ export default function MirrorStage(p: MirrorStageProps) {
           >
             {p.card}
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
