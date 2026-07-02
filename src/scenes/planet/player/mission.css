@@ -226,7 +226,7 @@
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
   position: absolute;
-  top: 232px;
+  top: 90px;
   left: 712px;
   width: 700px;
   z-index: 6;
@@ -530,7 +530,7 @@
   transform: translateY(0) scale(1);
 }
 #friendBubble {
-  right: 470px;
+  right: 600px;
   bottom: 470px;
 }
 #friendBubble::after {
@@ -729,6 +729,8 @@
   top: 162px;
   left: 530px;
   right: 44px;
+  width: fit-content; /* 카드 개수만큼만 배경이 감싸도록(넓게 늘어나지 않게) */
+  margin: 0 auto; /* left~right 영역 안에서 가운데 정렬(카드 위치 유지) */
   z-index: 4;
   padding: 20px 30px 30px;
   border-radius: 36px;
