@@ -6,9 +6,18 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { DialogueRunner } from "../engine/runner";
-import type { MissionData, MissionNode, RunnerView, Choice, Command, MissionTheme } from "../engine/types";
+import type {
+  MissionData,
+  MissionNode,
+  RunnerView,
+  Choice,
+  Command,
+  MissionTheme,
+  MirrorReveal,
+} from "../engine/types";
 import { useFitStage } from "../../../lib/useFitStage";
 import { AudioManager } from "./audio";
+import MirrorStage from "./MirrorStage";
 import "./mission.css";
 
 type Spark = { id: number; left: number; top: number; ch: string; delay: number; size: number };
@@ -41,6 +50,30 @@ interface VM {
   muted: boolean;
   dragNode: boolean;
   dzShow: boolean;
+  // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge)
+  stage: "none" | "mirrors" | "gauge";
+  sBanner: string;
+  sPrompt: string;
+  // mirrors
+  sCard: string;
+  sTargets: {
+    friend: string;
+    title: string;
+    scene: string;
+    line: string;
+    onDrop: string;
+    bubble: string;
+    done: boolean;
+  }[];
+  sActive: number;
+  sRevealPhase: "none" | "await" | "done";
+  sRevealFriend: string;
+  // gauge
+  sFriend: string;
+  sScene: string;
+  sFriendLine: string;
+  sHeader: string;
+  sOptions: { icon: string; title: string; desc: string; fill: number }[];
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -109,6 +142,19 @@ export default function MissionPlayer(props: {
     muted: audioRef.current.muted,
     dragNode: false,
     dzShow: false,
+    stage: "none",
+    sBanner: "",
+    sPrompt: "",
+    sCard: "",
+    sTargets: [],
+    sActive: -1,
+    sRevealPhase: "none",
+    sRevealFriend: "",
+    sFriend: "",
+    sScene: "",
+    sFriendLine: "",
+    sHeader: "",
+    sOptions: [],
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -143,6 +189,15 @@ export default function MissionPlayer(props: {
     idx: -1,
     choice: null,
   }).current;
+
+  // 공감 거울 특별 파트: view 메서드(useEffect 내부)가 채우고 컴포넌트 본문 핸들러가 읽는 공유 상태.
+  const msCardRef = useRef<HTMLButtonElement>(null);
+  const msMirrorRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ms = useRef<{
+    done?: () => void;
+    reveal?: MirrorReveal | null;
+    node?: MissionNode;
+  }>({}).current;
 
   useEffect(() => {
     let alive = true;
@@ -310,6 +365,19 @@ export default function MissionPlayer(props: {
           sparks: [],
           dragNode: false,
           dzShow: false,
+          stage: "none",
+          sBanner: "",
+          sPrompt: "",
+          sCard: "",
+          sTargets: [],
+          sActive: -1,
+          sRevealPhase: "none",
+          sRevealFriend: "",
+          sFriend: "",
+          sScene: "",
+          sFriendLine: "",
+          sHeader: "",
+          sOptions: [],
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -377,11 +445,61 @@ export default function MissionPlayer(props: {
         render();
         audio.play("pop");
       },
-      showMirrors(_node, done) {
-        done();
+      showMirrors(node, done) {
+        updateScene(node); // 배경/레이더/HUD 유지
+        vm.stage = "mirrors";
+        vm.mode = "idle";
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.sBanner = node.banner || "";
+        vm.sPrompt = node.prompt || "";
+        vm.sCard = node.card || "";
+        vm.sTargets = (node.targets || []).map((t) => ({
+          friend: t.friend,
+          title: t.title,
+          scene: t.scene,
+          line: t.line,
+          onDrop: t.onDrop,
+          bubble: t.line,
+          done: false,
+        }));
+        vm.sActive = vm.sTargets.length ? 0 : -1; // 순서 고정: 첫 타깃(루미)부터
+        vm.sRevealPhase = "none";
+        vm.sRevealFriend = node.reveal?.friend || "";
+        ms.done = done;
+        ms.reveal = node.reveal || null;
+        render();
+        audio.play("pop");
       },
-      showGauge(_node, done) {
-        done();
+      showGauge(node, done) {
+        updateScene(node);
+        vm.stage = "gauge";
+        vm.mode = "idle";
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.sBanner = node.banner || "";
+        vm.sFriend = node.speaker && node.speaker !== "hati" ? node.speaker : "lumi";
+        vm.sScene = node.scene || "";
+        vm.sFriendLine = node.text || "";
+        vm.sHeader = node.header || "";
+        vm.sPrompt = node.lead || ""; // 먼저 도입 대사
+        vm.sOptions = (node.options || []).map((o) => ({
+          icon: o.icon,
+          title: o.title,
+          desc: o.desc,
+          fill: 0,
+        }));
+        ms.done = done;
+        ms.node = node;
+        render();
+        audio.play("pop");
+        // 2.2초 뒤 하티바를 드래그 안내로 교체(게이지는 계속 조작 가능)
+        window.setTimeout(() => {
+          if (vm.stage === "gauge") {
+            vm.sPrompt = node.prompt || "";
+            render();
+          }
+        }, 2200);
       },
       end() {
         vm.mode = "end";
@@ -534,6 +652,152 @@ export default function MissionPlayer(props: {
         card2.style.transform = "";
         window.setTimeout(() => card2.classList.remove("snapback"), 240);
       }
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  };
+
+  // ---------- 화면 A: 이중 타깃 카드 드래그(순서 고정) + 라라 터치 reveal ----------
+  const overMirror = (idx: number, x: number, y: number) => {
+    const el = msMirrorRefs.current[idx];
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    const m = 12;
+    return x >= r.left - m && x <= r.right + m && y >= r.top - m && y <= r.bottom + m;
+  };
+
+  const finishMirrors = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.stage = "none";
+    force();
+    done?.();
+  };
+
+  const onMirrorAllDropped = () => {
+    const r = ms.reveal;
+    if (r) {
+      vm.sPrompt = r.prompt; // 하티: "…라라를 터치…"
+      vm.sRevealPhase = "await";
+      force();
+      audio.play("stage");
+    } else {
+      finishMirrors();
+    }
+  };
+
+  const onMirrorCardDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (vm.stage !== "mirrors" || vm.sActive < 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const card = e.currentTarget;
+    const scale = stageScale();
+    const startX = e.clientX,
+      startY = e.clientY;
+    const active = vm.sActive;
+    card.classList.add("dragging");
+    audio.play("pop");
+    const move = (ev: PointerEvent) => {
+      const dx = (ev.clientX - startX) / scale,
+        dy = (ev.clientY - startY) / scale;
+      card.style.transform = `translate(${dx}px, ${dy}px) scale(1.06)`;
+      msMirrorRefs.current[active]?.classList.toggle("over", overMirror(active, ev.clientX, ev.clientY));
+    };
+    const up = (ev: PointerEvent) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      msMirrorRefs.current[active]?.classList.remove("over");
+      const dropped = overMirror(active, ev.clientX, ev.clientY);
+      if (dropped && vm.stage === "mirrors") {
+        audio.play("drop");
+        vm.sTargets[active].bubble = vm.sTargets[active].onDrop; // 친구 반응으로 교체
+        vm.sTargets[active].done = true;
+        card.classList.remove("dragging");
+        card.style.transform = "";
+        const nextIdx = vm.sTargets.findIndex((t) => !t.done);
+        vm.sActive = nextIdx;
+        if (nextIdx < 0) {
+          vm.sCard = ""; // 카드 소진
+          force();
+          onMirrorAllDropped();
+        } else {
+          force();
+        }
+      } else {
+        audio.play("whoosh");
+        card.classList.remove("dragging");
+        card.classList.add("snapback");
+        card.style.transform = "";
+        window.setTimeout(() => card.classList.remove("snapback"), 240);
+      }
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  };
+
+  const onMirrorTouch = (idx: number) => {
+    if (vm.stage !== "mirrors" || vm.sRevealPhase !== "await") return;
+    const r = ms.reveal;
+    if (!r || vm.sTargets[idx].friend !== r.friend) return; // 지정 거울만
+    vm.sTargets[idx].bubble = r.line; // 속마음으로 교체
+    vm.sRevealPhase = "done";
+    audio.play("reveal");
+    force();
+    window.setTimeout(finishMirrors, 1600);
+  };
+
+  // ---------- 화면 B: 게이지 드래그(0→100%) 선택 + 오답 리셋/정답 진행 ----------
+  const commitGauge = (idx: number) => {
+    const node = ms.node;
+    const opt = node?.options?.[idx];
+    if (!opt) return;
+    vm.sFriendLine = opt.onPick; // 루미 반응 말풍선
+    force();
+    if (opt.correct) {
+      audio.play("correct");
+      window.setTimeout(() => {
+        const done = ms.done;
+        ms.done = undefined;
+        vm.stage = "none";
+        force();
+        done?.();
+      }, 1800);
+    } else {
+      audio.play("wrong");
+      window.setTimeout(() => {
+        if (vm.stage !== "gauge") return;
+        vm.sOptions = vm.sOptions.map((o) => ({ ...o, fill: 0 })); // 게이지 리셋
+        vm.sFriendLine = node?.text || vm.sFriendLine; // 원래 대사로 복귀
+        force();
+      }, 1800);
+    }
+  };
+
+  const onGaugeDown = (e: ReactPointerEvent<HTMLDivElement>, idx: number) => {
+    if (vm.stage !== "gauge") return;
+    e.preventDefault();
+    e.stopPropagation();
+    const optEl = e.currentTarget;
+    const track = optEl.querySelector(".ms-bar-track") as HTMLElement | null;
+    const setFrom = (clientX: number) => {
+      const r = (track ?? optEl).getBoundingClientRect();
+      const pct = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
+      vm.sOptions[idx].fill = pct;
+      force();
+      return pct;
+    };
+    audio.play("pop");
+    setFrom(e.clientX);
+    const move = (ev: PointerEvent) => setFrom(ev.clientX);
+    const up = (ev: PointerEvent) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      const pct = setFrom(ev.clientX);
+      if (pct >= 100) commitGauge(idx);
     };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
@@ -712,6 +976,31 @@ export default function MissionPlayer(props: {
           })}
           </div>
         </div>
+
+        {/* 공감 거울 특별 파트 (화면 A: mirrors / 화면 B: gauge) */}
+        {vm.stage !== "none" && (
+          <MirrorStage
+            stage={vm.stage}
+            theme={theme}
+            banner={vm.sBanner}
+            prompt={vm.sPrompt}
+            card={vm.sCard}
+            targets={vm.sTargets}
+            activeTarget={vm.sActive}
+            revealPhase={vm.sRevealPhase}
+            revealFriend={vm.sRevealFriend}
+            friend={vm.sFriend}
+            scene={vm.sScene}
+            friendLine={vm.sFriendLine}
+            header={vm.sHeader}
+            options={vm.sOptions}
+            cardRef={msCardRef}
+            mirrorRefs={msMirrorRefs}
+            onCardDown={onMirrorCardDown}
+            onMirrorTouch={onMirrorTouch}
+            onGaugeDown={onGaugeDown}
+          />
+        )}
 
         {/* 공감 카드 (엔딩) */}
         <img
