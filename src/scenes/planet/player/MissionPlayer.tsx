@@ -39,6 +39,7 @@ interface VM {
   radar: string;
   radarPulse: boolean;
   bg: string;
+  hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -131,6 +132,7 @@ export default function MissionPlayer(props: {
     radar: theme.radar.initial,
     radarPulse: false,
     bg: theme.bg.initial,
+    hideFriend: false,
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -265,6 +267,7 @@ export default function MissionPlayer(props: {
       setSprite("radar", theme.radar.byNode[node.id]);
       const bg = theme.bg.byNode[node.id];
       if (bg) vm.bg = bg; // 배경 교체(sparse, 지정 노드까지 유지)
+      vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -355,6 +358,7 @@ export default function MissionPlayer(props: {
           radar: theme.radar.initial,
           radarPulse: false,
           bg: theme.bg.initial,
+          hideFriend: false,
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -874,13 +878,15 @@ export default function MissionPlayer(props: {
           </div>
         </div>
 
-        {/* 레이더 */}
-        <img
-          id="radar"
-          className={vm.radarPulse ? "pulse" : ""}
-          src={theme.radar.states[vm.radar]}
-          alt="마음 신호 탐색기"
-        />
+        {/* 레이더 (미션별로 끌 수 있음 — showRadar !== false 일 때만) */}
+        {theme.showRadar !== false && (
+          <img
+            id="radar"
+            className={vm.radarPulse ? "pulse" : ""}
+            src={theme.radar.states[vm.radar]}
+            alt="마음 신호 탐색기"
+          />
+        )}
 
         {/* 인트로 타이틀 배너 */}
         <div id="titleBanner" className={vm.intro ? "show" : ""}>
@@ -910,7 +916,7 @@ export default function MissionPlayer(props: {
         <div
           id="friendWrap"
           ref={friendWrapRef}
-          className={`${vm.intro || vm.stage !== "none" ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+          className={`${vm.intro || vm.stage !== "none" || vm.hideFriend ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
         >
           <img
             id="friend"

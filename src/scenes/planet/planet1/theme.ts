@@ -200,9 +200,16 @@ export const MISSION02_THEME: MissionTheme = {
     states: {
       stage2: `${A}/bg/light-planet-stage2-bg.png`,
       stage3: `${A}/bg/light-planet-stage3.png`,
+      mirror2: `${A}/bg/empathy-mirror-stage2.png`,
+      mirror3: `${A}/bg/empathy-mirror-stage3.png`,
     },
     initial: "stage2",
-    byNode: { m2_intro: "stage2", m2_end3: "stage3" },
+    byNode: {
+      m2_intro: "stage2",
+      m2_secret_intro1: "mirror2",
+      m2_secret_intro2: "mirror3",
+      m2_end3: "stage3",
+    },
   },
   hatiSprites: {
     char: HATI_CHAR,
@@ -255,6 +262,7 @@ export const MISSION02_THEME: MissionTheme = {
       m2_end1: "active",
     },
   },
+  showRadar: false, // 미션2(공감 거울)에선 마음 신호 탐색기 HUD를 쓰지 않는다
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
   choiceIcons: {
     걱정됨: { emoji: "😟", bg: "#e0f2fe" },

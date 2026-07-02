@@ -38,6 +38,8 @@ export interface MissionNode {
   // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).
   // true=이 대사를 유지, false=유지 중이던 대사를 비움. 다음 친구가 말하면 자동 교체.
   hold?: boolean;
+  // 이 노드에서 화면의 친구 캐릭터 레이어를 숨긴다(친구 없이 하티만 말하는 전환 구간용).
+  hideFriend?: boolean;
   next?: string | null;
   choices?: Choice[];
   // 선택지 카드 위에 띄우는 짧은 안내 문구(선택). 없으면 표시하지 않는다.
@@ -104,6 +106,8 @@ export interface MissionTheme {
   // 아무도 말하기 전(인트로) 기본으로 잡아둘 친구 id.
   initialFriend: string;
   radar: { states: Record<string, string>; initial: string; byNode: Record<string, string> };
+  // 레이더 HUD("마음 신호 탐색기") 표시 여부. 생략 시 표시(true). 미션2처럼 안 쓰는 미션은 false.
+  showRadar?: boolean;
   badgeColors: string[];
   choiceIcons: Record<string, { emoji: string; bg: string }>;
   fx: Record<string, string>;
