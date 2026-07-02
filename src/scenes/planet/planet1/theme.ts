@@ -171,11 +171,23 @@ const SOLA_SPRITES: SpriteSet = {
   },
 };
 
+// mission2 특별 파트(공감 거울)에서 재등장하는 루미. mission1 에셋 재사용.
+const M2_LUMI_SPRITES: SpriteSet = {
+  char: {
+    sad: `${A}/char/Lumi/lumi_sad.png`,
+    confused: `${A}/char/Lumi/lumi_confused.png`,
+    happy: `${A}/char/Lumi/lumi_happy.png`,
+  },
+  initial: "sad",
+  byNode: {},
+};
+
 export const MISSION02_THEME: MissionTheme = {
   speakers: {
     hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` },
     lala: { name: "라라" },
     sola: { name: "솔라" },
+    lumi: { name: "루미" },
   },
   banner: {
     pill: "미션 2",
@@ -188,9 +200,23 @@ export const MISSION02_THEME: MissionTheme = {
     states: {
       stage2: `${A}/bg/light-planet-stage2-bg.png`,
       stage3: `${A}/bg/light-planet-stage3.png`,
+      mirror1: `${A}/bg/empathy-mirror-stage1.png`,
+      mirror2: `${A}/bg/empathy-mirror-stage2.png`,
+      mirror3: `${A}/bg/empathy-mirror-stage3.png`,
+      mirror4: `${A}/bg/empathy-mirror-stage4.png`,
+      secret1: `${A}/bg/empathy-mirror-secret-1.png`,
+      secret2: `${A}/bg/empathy-mirror-secret-2.png`,
     },
-    initial: "stage2",
-    byNode: { m2_intro: "stage2", m2_end3: "stage3" },
+    initial: "mirror1",
+    byNode: {
+      m2_intro: "mirror1",
+      m2_secret_intro1: "mirror2",
+      m2_secret_intro2: "mirror3",
+      m2_mirror_ab: "secret2",
+      m2_lumi_gauge: "secret1",
+      m2_secret_wake: "mirror4",
+      m2_end1: "stage3",
+    },
   },
   hatiSprites: {
     char: HATI_CHAR,
@@ -222,7 +248,7 @@ export const MISSION02_THEME: MissionTheme = {
       m2_end3: "celebrating",
     },
   },
-  friends: { lala: LALA_SPRITES, sola: SOLA_SPRITES },
+  friends: { lala: LALA_SPRITES, sola: SOLA_SPRITES, lumi: M2_LUMI_SPRITES },
   radar: {
     states: {
       p25: `${A}/device/radar_25.png`,
@@ -243,6 +269,7 @@ export const MISSION02_THEME: MissionTheme = {
       m2_end1: "active",
     },
   },
+  showRadar: false, // 미션2(공감 거울)에선 마음 신호 탐색기 HUD를 쓰지 않는다
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
   choiceIcons: {
     걱정됨: { emoji: "😟", bg: "#e0f2fe" },
@@ -260,6 +287,7 @@ export const MISSION02_THEME: MissionTheme = {
   fx: {
     fx_mirror_wake: "signalRecover",
     fx_empathy_card: "empathyCard",
+    fx_empathy_card_hide: "empathyCardHide",
     fx_light_return: "lightReturn",
   },
   sfx: {
@@ -277,5 +305,9 @@ export const MISSION02_THEME: MissionTheme = {
       m2_q4_wrongB_hati: "wrong",
       m2_q4_correct_hati: "correct",
     },
+  },
+  gaugeIcons: {
+    run: { emoji: "🏃", color: "#3b82f6" },
+    meditate: { emoji: "🧘", color: "#22c55e" },
   },
 };

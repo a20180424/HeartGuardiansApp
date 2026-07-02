@@ -6,9 +6,18 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { DialogueRunner } from "../engine/runner";
-import type { MissionData, MissionNode, RunnerView, Choice, Command, MissionTheme } from "../engine/types";
+import type {
+  MissionData,
+  MissionNode,
+  RunnerView,
+  Choice,
+  Command,
+  MissionTheme,
+  MirrorReveal,
+} from "../engine/types";
 import { useFitStage } from "../../../lib/useFitStage";
 import { AudioManager } from "./audio";
+import MirrorStage from "./MirrorStage";
 import "./mission.css";
 
 type Spark = { id: number; left: number; top: number; ch: string; delay: number; size: number };
@@ -30,6 +39,9 @@ interface VM {
   radar: string;
   radarPulse: boolean;
   bg: string;
+  hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
+  lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
+  sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -41,6 +53,31 @@ interface VM {
   muted: boolean;
   dragNode: boolean;
   dzShow: boolean;
+  // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge)
+  stage: "none" | "mirrors" | "gauge";
+  sHideBubbles: boolean; // 거울/게이지 캐릭터 말풍선 숨김(대사가 이미지에 포함된 경우)
+  sBanner: string;
+  sPrompt: string;
+  // mirrors
+  sCard: string;
+  sTargets: {
+    friend: string;
+    title: string;
+    line: string;
+    onDrop: string;
+    bubble: string;
+    done: boolean;
+    charImage: string;
+    dropImage: string;
+  }[];
+  sActive: number;
+  sRevealPhase: "none" | "await" | "done";
+  sRevealFriend: string;
+  // gauge
+  sFriend: string;
+  sFriendLine: string;
+  sHeader: string;
+  sOptions: { icon: string; title: string; desc: string; fill: number }[];
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -98,6 +135,9 @@ export default function MissionPlayer(props: {
     radar: theme.radar.initial,
     radarPulse: false,
     bg: theme.bg.initial,
+    hideFriend: false,
+    lesson: null,
+    sideImage: "",
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -109,6 +149,19 @@ export default function MissionPlayer(props: {
     muted: audioRef.current.muted,
     dragNode: false,
     dzShow: false,
+    stage: "none",
+    sHideBubbles: false,
+    sBanner: "",
+    sPrompt: "",
+    sCard: "",
+    sTargets: [],
+    sActive: -1,
+    sRevealPhase: "none",
+    sRevealFriend: "",
+    sFriend: "",
+    sFriendLine: "",
+    sHeader: "",
+    sOptions: [],
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -143,6 +196,15 @@ export default function MissionPlayer(props: {
     idx: -1,
     choice: null,
   }).current;
+
+  // 공감 거울 특별 파트: view 메서드(useEffect 내부)가 채우고 컴포넌트 본문 핸들러가 읽는 공유 상태.
+  const msCardRef = useRef<HTMLButtonElement>(null);
+  const msMirrorRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ms = useRef<{
+    done?: () => void;
+    reveal?: MirrorReveal | null;
+    node?: MissionNode;
+  }>({}).current;
 
   useEffect(() => {
     let alive = true;
@@ -210,6 +272,9 @@ export default function MissionPlayer(props: {
       setSprite("radar", theme.radar.byNode[node.id]);
       const bg = theme.bg.byNode[node.id];
       if (bg) vm.bg = bg; // 배경 교체(sparse, 지정 노드까지 유지)
+      vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
+      vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
+      vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -234,6 +299,10 @@ export default function MissionPlayer(props: {
           audio.play("reveal");
           vm.empathy = true;
           sparkleBurst();
+          render();
+          break;
+        case "empathyCardHide":
+          vm.empathy = false;
           render();
           break;
         case "lightReturn":
@@ -300,6 +369,9 @@ export default function MissionPlayer(props: {
           radar: theme.radar.initial,
           radarPulse: false,
           bg: theme.bg.initial,
+          hideFriend: false,
+          lesson: null,
+          sideImage: "",
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -310,6 +382,19 @@ export default function MissionPlayer(props: {
           sparks: [],
           dragNode: false,
           dzShow: false,
+          stage: "none",
+          sHideBubbles: false,
+          sBanner: "",
+          sPrompt: "",
+          sCard: "",
+          sTargets: [],
+          sActive: -1,
+          sRevealPhase: "none",
+          sRevealFriend: "",
+          sFriend: "",
+          sFriendLine: "",
+          sHeader: "",
+          sOptions: [],
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -337,9 +422,16 @@ export default function MissionPlayer(props: {
           vm.pick = null;
           vm.dragNode = false;
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
+          vm.lesson = node.lesson || null; // 교훈 배너 노드면 배너를 띄우고 하티 박스는 숨긴다
           const isHati = node.speaker === "hati";
           const introHati = isHati && node.id === theme.bannerNode;
-          vm.bubbleKind = introHati ? "hatiBubble" : isHati ? "hatiBox" : "friendBubble";
+          vm.bubbleKind = node.lesson
+            ? "none"
+            : introHati
+              ? "hatiBubble"
+              : isHati
+                ? "hatiBox"
+                : "friendBubble";
           render();
           typeInto(node.text || "", () => {
             vm.mode = "await";
@@ -376,6 +468,64 @@ export default function MissionPlayer(props: {
         };
         render();
         audio.play("pop");
+      },
+      showMirrors(node, done) {
+        updateScene(node); // 배경/레이더/HUD 유지
+        vm.stage = "mirrors";
+        vm.mode = "idle";
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.sHideBubbles = !!node.hideBubbles;
+        vm.sBanner = node.banner || "";
+        vm.sPrompt = node.prompt || "";
+        vm.sCard = node.card || "";
+        vm.sTargets = (node.targets || []).map((t) => ({
+          friend: t.friend,
+          title: t.title,
+          line: t.line,
+          onDrop: t.onDrop,
+          bubble: t.line,
+          done: false,
+          charImage: t.charImage || "",
+          dropImage: t.onDropImage || "",
+        }));
+        vm.sActive = vm.sTargets.length ? 0 : -1; // 순서 고정: 첫 타깃(루미)부터
+        vm.sRevealPhase = "none";
+        vm.sRevealFriend = node.reveal?.friend || "";
+        ms.done = done;
+        ms.reveal = node.reveal || null;
+        render();
+        audio.play("pop");
+      },
+      showGauge(node, done) {
+        updateScene(node);
+        vm.stage = "gauge";
+        vm.mode = "idle";
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.sHideBubbles = !!node.hideBubbles;
+        vm.sBanner = node.banner || "";
+        vm.sFriend = node.speaker && node.speaker !== "hati" ? node.speaker : "lumi";
+        vm.sFriendLine = node.text || "";
+        vm.sHeader = node.header || "";
+        vm.sPrompt = node.lead || ""; // 먼저 도입 대사
+        vm.sOptions = (node.options || []).map((o) => ({
+          icon: o.icon,
+          title: o.title,
+          desc: o.desc,
+          fill: 0,
+        }));
+        ms.done = done;
+        ms.node = node;
+        render();
+        audio.play("pop");
+        // 2.2초 뒤 하티바를 드래그 안내로 교체(게이지는 계속 조작 가능)
+        window.setTimeout(() => {
+          if (vm.stage === "gauge") {
+            vm.sPrompt = node.prompt || "";
+            render();
+          }
+        }, 2200);
       },
       end() {
         vm.mode = "end";
@@ -534,6 +684,154 @@ export default function MissionPlayer(props: {
     window.addEventListener("pointercancel", up);
   };
 
+  // ---------- 화면 A: 이중 타깃 카드 드래그(순서 고정) + 라라 터치 reveal ----------
+  const overMirror = (idx: number, x: number, y: number) => {
+    const el = msMirrorRefs.current[idx];
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    const m = 12;
+    return x >= r.left - m && x <= r.right + m && y >= r.top - m && y <= r.bottom + m;
+  };
+
+  const finishMirrors = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.stage = "none";
+    force();
+    done?.();
+  };
+
+  const onMirrorAllDropped = () => {
+    const r = ms.reveal;
+    if (r) {
+      vm.sPrompt = r.prompt; // 하티: "…라라를 터치…"
+      vm.sRevealPhase = "await";
+      force();
+      audio.play("stage");
+    } else {
+      finishMirrors();
+    }
+  };
+
+  const onMirrorCardDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (vm.stage !== "mirrors" || vm.sActive < 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const card = e.currentTarget;
+    const scale = stageScale();
+    const startX = e.clientX,
+      startY = e.clientY;
+    const active = vm.sActive;
+    card.classList.add("dragging");
+    audio.play("pop");
+    const move = (ev: PointerEvent) => {
+      const dx = (ev.clientX - startX) / scale,
+        dy = (ev.clientY - startY) / scale;
+      card.style.transform = `translate(${dx}px, ${dy}px) scale(1.06)`;
+      msMirrorRefs.current[active]?.classList.toggle("over", overMirror(active, ev.clientX, ev.clientY));
+    };
+    const up = (ev: PointerEvent) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      msMirrorRefs.current[active]?.classList.remove("over");
+      const dropped = overMirror(active, ev.clientX, ev.clientY);
+      if (dropped && vm.stage === "mirrors") {
+        audio.play("drop");
+        vm.sTargets[active].bubble = vm.sTargets[active].onDrop; // 친구 반응으로 교체
+        if (vm.sTargets[active].dropImage) vm.sTargets[active].charImage = vm.sTargets[active].dropImage; // 캐릭터 이미지도 교체
+        vm.sTargets[active].done = true;
+        card.classList.remove("dragging");
+        card.style.transform = "";
+        const nextIdx = vm.sTargets.findIndex((t) => !t.done);
+        vm.sActive = nextIdx;
+        if (nextIdx < 0) {
+          vm.sCard = ""; // 카드 소진
+          force();
+          onMirrorAllDropped();
+        } else {
+          force();
+        }
+      } else {
+        audio.play("whoosh");
+        card.classList.remove("dragging");
+        card.classList.add("snapback");
+        card.style.transform = "";
+        window.setTimeout(() => card.classList.remove("snapback"), 240);
+      }
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  };
+
+  const onMirrorTouch = (idx: number) => {
+    if (vm.stage !== "mirrors" || vm.sRevealPhase !== "await") return;
+    const r = ms.reveal;
+    if (!r || vm.sTargets[idx].friend !== r.friend) return; // 지정 거울만
+    vm.sTargets[idx].bubble = r.line; // 속마음으로 교체
+    if (r.image) vm.sTargets[idx].charImage = r.image; // 속마음 공개 이미지로 교체
+    vm.sRevealPhase = "done";
+    audio.play("reveal");
+    force();
+    window.setTimeout(finishMirrors, 1600);
+  };
+
+  // ---------- 화면 B: 게이지 드래그(0→100%) 선택 + 오답 리셋/정답 진행 ----------
+  const commitGauge = (idx: number) => {
+    const node = ms.node;
+    const opt = node?.options?.[idx];
+    if (!opt) return;
+    vm.sFriendLine = opt.onPick; // 루미 반응 말풍선
+    force();
+    if (opt.correct) {
+      audio.play("correct");
+      window.setTimeout(() => {
+        const done = ms.done;
+        ms.done = undefined;
+        vm.stage = "none";
+        force();
+        done?.();
+      }, 1800);
+    } else {
+      audio.play("wrong");
+      window.setTimeout(() => {
+        if (vm.stage !== "gauge") return;
+        vm.sOptions = vm.sOptions.map((o) => ({ ...o, fill: 0 })); // 게이지 리셋
+        vm.sFriendLine = node?.text || vm.sFriendLine; // 원래 대사로 복귀
+        force();
+      }, 1800);
+    }
+  };
+
+  const onGaugeDown = (e: ReactPointerEvent<HTMLDivElement>, idx: number) => {
+    if (vm.stage !== "gauge") return;
+    e.preventDefault();
+    e.stopPropagation();
+    const optEl = e.currentTarget;
+    const track = optEl.querySelector(".ms-bar-track") as HTMLElement | null;
+    const setFrom = (clientX: number) => {
+      const r = (track ?? optEl).getBoundingClientRect();
+      const pct = Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100));
+      vm.sOptions[idx].fill = pct;
+      force();
+      return pct;
+    };
+    audio.play("pop");
+    setFrom(e.clientX);
+    const move = (ev: PointerEvent) => setFrom(ev.clientX);
+    const up = (ev: PointerEvent) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      const pct = setFrom(ev.clientX);
+      if (pct >= 100) commitGauge(idx);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  };
+
   const many = vm.choices.length >= 4;
   // 친구 말풍선/표정: 지금 친구가 말하는 중이면 그 대사·표정, 아니면 hold로 유지 중인
   // 대사(heldText)와 그 짝 표정(heldSprite)으로 함께 되돌린다.
@@ -604,13 +902,15 @@ export default function MissionPlayer(props: {
           </div>
         </div>
 
-        {/* 레이더 */}
-        <img
-          id="radar"
-          className={vm.radarPulse ? "pulse" : ""}
-          src={theme.radar.states[vm.radar]}
-          alt="마음 신호 탐색기"
-        />
+        {/* 레이더 (미션별로 끌 수 있음 — showRadar !== false 일 때만) */}
+        {theme.showRadar !== false && (
+          <img
+            id="radar"
+            className={vm.radarPulse ? "pulse" : ""}
+            src={theme.radar.states[vm.radar]}
+            alt="마음 신호 탐색기"
+          />
+        )}
 
         {/* 인트로 타이틀 배너 */}
         <div id="titleBanner" className={vm.intro ? "show" : ""}>
@@ -640,7 +940,7 @@ export default function MissionPlayer(props: {
         <div
           id="friendWrap"
           ref={friendWrapRef}
-          className={`${vm.intro ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+          className={`${vm.intro || vm.stage !== "none" || vm.hideFriend ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
         >
           <img
             id="friend"
@@ -651,7 +951,7 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 친구 말풍선 — 현재 대사 또는 hold로 유지 중인 대사 */}
-        <div id="friendBubble" className={`bubble${friendBubbleText ? " show" : ""}`}>
+        <div id="friendBubble" className={`bubble${friendBubbleText && vm.stage === "none" ? " show" : ""}`}>
           <span>{friendBubbleText}</span>
         </div>
 
@@ -706,6 +1006,61 @@ export default function MissionPlayer(props: {
           })}
           </div>
         </div>
+
+        {/* 공감 거울 특별 파트 (화면 A: mirrors / 화면 B: gauge) */}
+        {vm.stage !== "none" && (
+          <MirrorStage
+            stage={vm.stage}
+            theme={theme}
+            hideBubbles={vm.sHideBubbles}
+            banner={vm.sBanner}
+            prompt={vm.sPrompt}
+            card={vm.sCard}
+            targets={vm.sTargets}
+            activeTarget={vm.sActive}
+            revealPhase={vm.sRevealPhase}
+            revealFriend={vm.sRevealFriend}
+            friend={vm.sFriend}
+            friendLine={vm.sFriendLine}
+            header={vm.sHeader}
+            options={vm.sOptions}
+            cardRef={msCardRef}
+            mirrorRefs={msMirrorRefs}
+            onCardDown={onMirrorCardDown}
+            onMirrorTouch={onMirrorTouch}
+            onGaugeDown={onGaugeDown}
+          />
+        )}
+
+        {/* 교훈 배너(금색 오너먼트) — lesson 노드에서 표시 */}
+        {vm.lesson && (
+          <div id="lessonBanner" className="show">
+            <img
+              className="lb-star"
+              src="/assets/ui/star_gold.png"
+              alt=""
+              onError={(e) => {
+                e.currentTarget.style.visibility = "hidden";
+              }}
+            />
+            <div className="lb-text">
+              <div className="lb-title">{vm.lesson.title}</div>
+              <div className="lb-sub">{vm.lesson.sub}</div>
+            </div>
+          </div>
+        )}
+
+        {/* 우측 가운데 장식 이미지(노드 sideImage) */}
+        {vm.sideImage && (
+          <img
+            id="sideImage"
+            src={vm.sideImage}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        )}
 
         {/* 공감 카드 (엔딩) */}
         <img

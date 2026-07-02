@@ -73,22 +73,67 @@
     { "id": "m2_q4_wrongB_hati", "type": "line", "speaker": "hati", "text": "고쳐주려는 마음은 정말 따듯해. 하지만 솔라는 아직 속상한 마음을 다 표현하지 못했어. 마음을 먼저 알아준 뒤에 도와주면 더 좋아.", "next": "m2_q4_retry" },
     { "id": "m2_q4_retry", "type": "line", "speaker": "hati", "text": "다시 선택해봐", "next": "m2_q4_choice" },
     { "id": "m2_q4_correct_sola", "type": "line", "speaker": "sola", "text": "고마워.", "next": "m2_q4_correct_hati" },
-    { "id": "m2_q4_correct_hati", "type": "line", "speaker": "hati", "text": "좋아! 친구는 지금 속상한 마음이 커. 함께 있어주는 것만으로도 큰 힘이 될 수 있어.", "hold": false, "next": "m2_end1" },
+    { "id": "m2_q4_correct_hati", "type": "line", "speaker": "hati", "text": "좋아! 친구는 지금 속상한 마음이 커. 함께 있어주는 것만으로도 큰 힘이 될 수 있어.", "hold": false, "next": "m2_secret_intro1" },
+
+    { "id": "m2_secret_intro1", "type": "line", "speaker": "hati", "hideFriend": true, "text": "좋아, 이제 공감은 좋은 말이나 행동을 하는 것이 아니라 상대방에게 필요한 말과 행동을 선택하는 것이라는 걸 알게 되었어.", "next": "m2_secret_intro2" },
+    { "id": "m2_secret_intro2", "type": "line", "speaker": "hati", "hideFriend": true, "text": "앗, 공감 거울이 깨어나려고 해! 하지만 아직 완전히 깨어나지는 않았어.", "next": "m2_secret_intro3" },
+    { "id": "m2_secret_intro3", "type": "line", "speaker": "hati", "hideFriend": true, "text": "거울 속에 숨겨진 마지막 비밀을 알아내야 해!", "next": "m2_mirror_ab" },
 
     {
-      "id": "m2_end1", "type": "line", "speaker": "hati",
+      "id": "m2_mirror_ab", "type": "mirrors",
+      "hideBubbles": true,
+      "banner": "공감 거울의 비밀",
+      "prompt": "친구에게 전하고 싶은 말을 드래그해서 거울 속 친구에게 전해봐!",
+      "card": "괜찮아!\n다음에 잘 하면 돼!",
+      "targets": [
+        { "friend": "lumi", "title": "루미의 마음", "line": "축구 경기에서 져서 아쉬워.", "onDrop": "응 고마워.", "charImage": "/assets/char/mirror/lumi1.png", "onDropImage": "/assets/char/mirror/lumi2.png" },
+        { "friend": "lala", "title": "라라의 마음", "line": "시험 점수가 안 나와서 속상해.", "onDrop": "그런데 아직 속상해.", "charImage": "/assets/char/mirror/lala1.png", "onDropImage": "/assets/char/mirror/lala2.png" }
+      ],
+      "reveal": {
+        "prompt": "똑같은 응원의 말을 건넸는데, 왜 라라의 거울은 빛나지 않을까? 거울 속 라라를 터치해서 진짜 속마음을 알아보자.",
+        "friend": "lala",
+        "line": "응원해 준 건 고맙지만, 내 속상한 마음을 먼저 알아주길 바랐어.",
+        "image": "/assets/char/mirror/lala3.png"
+      },
+      "next": "m2_mirror_lesson"
+    },
+
+    { "id": "m2_mirror_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "", "lesson": { "title": "공감 거울의 비밀", "sub": "상대방이 원하는 위로의 말은 다를 수 있다." }, "next": "m2_lumi_gauge" },
+
+    {
+      "id": "m2_lumi_gauge", "type": "gauge",
+      "banner": "공감 거울의 비밀",
+      "speaker": "lumi",
+      "text": "지금은 혼자 있고 싶어.",
+      "lead": "속상한 친구를 어떻게 도와줄 수 있을까? 먼저 계속 다가가 볼까?",
+      "header": "어떻게 도와줄래?",
+      "prompt": "진행도 100%가 되도록 드래그해봐!",
+      "options": [
+        { "icon": "run", "title": "계속 다가가기", "desc": "용기를 내서 다가가 보자.", "correct": false, "onPick": "걱정해 주는 건 좋지만, 지금은 내 감정을 정리할 혼자만의 시간이 필요해." },
+        { "icon": "meditate", "title": "기다려주기", "desc": "조금 기다려주며 지켜보자.", "correct": true, "onPick": "기다려줘서 고마워. 지금은 내 감정을 정리할 혼자만의 시간이 필요해." }
+      ],
+      "next": "m2_gauge_lesson"
+    },
+
+    { "id": "m2_gauge_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "", "lesson": { "title": "공감 거울의 비밀", "sub": "내가 생각하는 방식보다 상대방이 원하는 방식으로 배려해주는 것이 진짜 공감이다." }, "next": "m2_secret_wake" },
+
+    { "id": "m2_secret_wake", "type": "line", "speaker": "hati", "hideFriend": true, "text": "공감 거울이 깨어났어!", "next": "m2_secret_lesson" },
+    { "id": "m2_secret_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.", "onEnter": [ { "cmd": "fx", "value": "fx_empathy_card" } ], "next": "m2_end1" },
+
+    {
+      "id": "m2_end1", "type": "line", "speaker": "hati", "hideFriend": true,
       "text": "대원들 덕분에 행성에 따듯한 온기가 돌기 시작했어. 하지만 빛의 행성에 빛이 완전히 돌아온 건 아니야.",
-      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" } ],
+      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" }, { "cmd": "fx", "value": "fx_empathy_card_hide" } ],
       "next": "m2_end2"
     },
     {
-      "id": "m2_end2", "type": "line", "speaker": "hati",
+      "id": "m2_end2", "type": "line", "speaker": "hati", "hideFriend": true,
       "text": "겨울 속 가장 깊은 곳에서 마지막 질문이 떠올랐어.",
-      "onComplete": [ { "cmd": "fx", "value": "fx_empathy_card" } ],
+      "sideImage": "/assets/ui/empathy-mirror3.png",
       "next": "m2_end3"
     },
     {
-      "id": "m2_end3", "type": "line", "speaker": "hati",
+      "id": "m2_end3", "type": "line", "speaker": "hati", "hideFriend": true,
       "text": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
       "onEnter": [ { "cmd": "fx", "value": "fx_light_return" } ],
       "next": null
