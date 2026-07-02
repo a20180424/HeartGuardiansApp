@@ -88,7 +88,7 @@ export default function MirrorStage(p: MirrorStageProps) {
 
       {p.stage === "gauge" && (
         <div className="ms-gaugeWrap">
-          <div className="ms-mirror single active">
+          <div className="ms-mirror single">
             <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
             {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
           </div>

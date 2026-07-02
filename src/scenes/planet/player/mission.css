@@ -1084,6 +1084,8 @@
 .ms-mirror.single {
   width: 480px;
   height: 480px;
+  margin-left: 370px; /* 이 값을 키우면 거울이 오른쪽으로 이동 → 게이지(flex:1)가 그만큼 줄어듦 */
+  margin-top: 150px; /* 거울 전체(후광+캐릭터+말풍선)를 아래로 내림 */
 }
 /* 지금 카드를 놓아야 하는 거울 — 숨쉬는 듯한 빛 + 위아래로 통통 튀는 강조 */
 .ms-mirror.active {
@@ -1206,12 +1208,18 @@
 }
 .ms-gauge {
   flex: 1;
+  margin-top: 260px; /* 게이지 패널만 아래로 내림(값 ↑ = 더 아래로) */
 }
 .ms-gauge-head {
+  width: fit-content; /* 글씨 영역만큼만 배경 */
+  margin: 0 auto 12px; /* 가운데 정렬 */
   text-align: center;
   font-size: 30px;
   color: #ffe9b0;
-  margin-bottom: 12px;
+  padding: 10px 20px;
+  background: rgba(8, 16, 38, 0.55);
+  border: 1px solid rgba(180, 134, 59, 0.35);
+  border-radius: 16px;
 }
 .ms-opt {
   display: flex;
