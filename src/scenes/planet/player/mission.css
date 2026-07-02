@@ -1101,15 +1101,6 @@
     box-shadow: 0 0 70px rgba(180, 220, 255, 0.8);
   }
 }
-.ms-frame {
-  position: absolute;
-  inset: -6%;
-  width: 112%;
-  height: 112%;
-  object-fit: contain;
-  z-index: 2;
-  pointer-events: none;
-}
 .ms-char {
   position: absolute;
   bottom: 6%;

@@ -78,7 +78,6 @@ export default function MirrorStage(p: MirrorStageProps) {
                 }}
                 onClick={() => p.onMirrorTouch(i)}
               >
-                <img className="ms-frame" src={t.mirror?.frameA} alt="" onError={hideOnError} />
                 <img className="ms-char" src={tg.charImage || friendSrc(t, tg.friend)} alt={tg.title} />
                 {!p.hideBubbles && <div className="ms-bubble">{tg.bubble}</div>}
               </div>
@@ -90,7 +89,6 @@ export default function MirrorStage(p: MirrorStageProps) {
       {p.stage === "gauge" && (
         <div className="ms-gaugeWrap">
           <div className="ms-mirror single active">
-            <img className="ms-frame" src={t.mirror?.frameB} alt="" onError={hideOnError} />
             <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
             {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
           </div>

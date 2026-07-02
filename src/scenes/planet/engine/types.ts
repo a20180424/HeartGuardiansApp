@@ -120,7 +120,5 @@ export interface MissionTheme {
   choiceIcons: Record<string, { emoji: string; bg: string }>;
   fx: Record<string, string>;
   sfx: { byNode: Record<string, string> };
-  // 공감 거울 특별 파트(화면 A/B) 에셋. 없으면 해당 미션엔 특별 파트가 없다.
-  mirror?: { frameA: string; frameB: string };
   gaugeIcons?: Record<string, { emoji: string; color: string }>;
 }
