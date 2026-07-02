@@ -41,6 +41,7 @@ interface VM {
   bg: string;
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
+  sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -137,6 +138,7 @@ export default function MissionPlayer(props: {
     bg: theme.bg.initial,
     hideFriend: false,
     lesson: null,
+    sideImage: "",
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -273,6 +275,7 @@ export default function MissionPlayer(props: {
       if (bg) vm.bg = bg; // 배경 교체(sparse, 지정 노드까지 유지)
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
       vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
+      vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -297,6 +300,10 @@ export default function MissionPlayer(props: {
           audio.play("reveal");
           vm.empathy = true;
           sparkleBurst();
+          render();
+          break;
+        case "empathyCardHide":
+          vm.empathy = false;
           render();
           break;
         case "lightReturn":
@@ -365,6 +372,7 @@ export default function MissionPlayer(props: {
           bg: theme.bg.initial,
           hideFriend: false,
           lesson: null,
+          sideImage: "",
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -1041,6 +1049,18 @@ export default function MissionPlayer(props: {
               <div className="lb-sub">{vm.lesson.sub}</div>
             </div>
           </div>
+        )}
+
+        {/* 우측 가운데 장식 이미지(노드 sideImage) */}
+        {vm.sideImage && (
+          <img
+            id="sideImage"
+            src={vm.sideImage}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
         )}
 
         {/* 공감 카드 (엔딩) */}

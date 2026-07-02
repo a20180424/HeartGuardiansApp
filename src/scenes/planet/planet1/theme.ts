@@ -202,6 +202,7 @@ export const MISSION02_THEME: MissionTheme = {
       stage3: `${A}/bg/light-planet-stage3.png`,
       mirror2: `${A}/bg/empathy-mirror-stage2.png`,
       mirror3: `${A}/bg/empathy-mirror-stage3.png`,
+      mirror4: `${A}/bg/empathy-mirror-stage4.png`,
       secret2: `${A}/bg/empathy-mirror-secret-2.png`,
     },
     initial: "stage2",
@@ -210,7 +211,8 @@ export const MISSION02_THEME: MissionTheme = {
       m2_secret_intro1: "mirror2",
       m2_secret_intro2: "mirror3",
       m2_mirror_ab: "secret2",
-      m2_end3: "stage3",
+      m2_secret_wake: "mirror4",
+      m2_end1: "stage3",
     },
   },
   hatiSprites: {
@@ -282,6 +284,7 @@ export const MISSION02_THEME: MissionTheme = {
   fx: {
     fx_mirror_wake: "signalRecover",
     fx_empathy_card: "empathyCard",
+    fx_empathy_card_hide: "empathyCardHide",
     fx_light_return: "lightReturn",
   },
   sfx: {

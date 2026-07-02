@@ -116,23 +116,23 @@
 
     { "id": "m2_gauge_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "", "lesson": { "title": "공감 거울의 비밀", "sub": "내가 생각하는 방식보다 상대방이 원하는 방식으로 배려해주는 것이 진짜 공감이다." }, "next": "m2_secret_wake" },
 
-    { "id": "m2_secret_wake", "type": "line", "speaker": "hati", "text": "공감 거울이 깨어났어!", "next": "m2_secret_lesson" },
-    { "id": "m2_secret_lesson", "type": "line", "speaker": "hati", "text": "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.", "next": "m2_end1" },
+    { "id": "m2_secret_wake", "type": "line", "speaker": "hati", "hideFriend": true, "text": "공감 거울이 깨어났어!", "next": "m2_secret_lesson" },
+    { "id": "m2_secret_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.", "onEnter": [ { "cmd": "fx", "value": "fx_empathy_card" } ], "next": "m2_end1" },
 
     {
-      "id": "m2_end1", "type": "line", "speaker": "hati",
+      "id": "m2_end1", "type": "line", "speaker": "hati", "hideFriend": true,
       "text": "대원들 덕분에 행성에 따듯한 온기가 돌기 시작했어. 하지만 빛의 행성에 빛이 완전히 돌아온 건 아니야.",
-      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" } ],
+      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" }, { "cmd": "fx", "value": "fx_empathy_card_hide" } ],
       "next": "m2_end2"
     },
     {
-      "id": "m2_end2", "type": "line", "speaker": "hati",
+      "id": "m2_end2", "type": "line", "speaker": "hati", "hideFriend": true,
       "text": "겨울 속 가장 깊은 곳에서 마지막 질문이 떠올랐어.",
-      "onComplete": [ { "cmd": "fx", "value": "fx_empathy_card" } ],
+      "sideImage": "/assets/ui/empathy-mirror3.png",
       "next": "m2_end3"
     },
     {
-      "id": "m2_end3", "type": "line", "speaker": "hati",
+      "id": "m2_end3", "type": "line", "speaker": "hati", "hideFriend": true,
       "text": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
       "onEnter": [ { "cmd": "fx", "value": "fx_light_return" } ],
       "next": null

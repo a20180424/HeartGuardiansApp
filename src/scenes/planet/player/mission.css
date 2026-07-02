@@ -361,6 +361,20 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
+/* ---------- 우측 가운데 장식 이미지(노드 sideImage) ---------- */
+#sideImage {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 80%;
+  width: auto;
+  object-fit: contain;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.45));
+}
+
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
   position: absolute;
