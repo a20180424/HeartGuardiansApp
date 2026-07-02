@@ -14,12 +14,15 @@ export interface MirrorTarget {
   scene: string; // theme.mirror.scenes 키 (거울 안쪽 배경)
   line: string; // 거울 안 친구 말풍선
   onDrop: string; // 카드 드롭 후 친구 반응 대사
+  charImage?: string; // 거울 안 캐릭터 이미지 경로(지정 시 friend 스프라이트 대신 사용)
+  onDropImage?: string; // 카드 드롭 후 교체할 캐릭터 이미지(없으면 charImage 유지)
 }
 
 export interface MirrorReveal {
   prompt: string; // 터치 유도 하티 대사(하단 바)
   friend: string; // 터치 대상 거울의 friend
   line: string; // 터치 후 드러나는 속마음 말풍선
+  image?: string; // 터치(속마음 공개) 후 교체할 캐릭터 이미지
 }
 
 export interface GaugeOption {

@@ -14,6 +14,7 @@ export type MirrorVM = {
   line: string;
   bubble: string;
   done: boolean;
+  charImage: string; // 거울 안 캐릭터 이미지(지정 시 friend 스프라이트 대신 사용, "" 이면 스프라이트)
 };
 export type GaugeVM = { icon: string; title: string; desc: string; fill: number };
 
@@ -82,7 +83,7 @@ export default function MirrorStage(p: MirrorStageProps) {
                 {tg.scene && t.mirror?.scenes[tg.scene] && (
                   <img className="ms-scene" src={t.mirror.scenes[tg.scene]} alt="" onError={hideOnError} />
                 )}
-                <img className="ms-char" src={friendSrc(t, tg.friend)} alt={tg.title} />
+                <img className="ms-char" src={tg.charImage || friendSrc(t, tg.friend)} alt={tg.title} />
                 <div className="ms-bubble">{tg.bubble}</div>
               </div>
             </div>

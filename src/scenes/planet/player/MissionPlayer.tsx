@@ -65,6 +65,8 @@ interface VM {
     onDrop: string;
     bubble: string;
     done: boolean;
+    charImage: string;
+    dropImage: string;
   }[];
   sActive: number;
   sRevealPhase: "none" | "await" | "done";
@@ -466,6 +468,8 @@ export default function MissionPlayer(props: {
           onDrop: t.onDrop,
           bubble: t.line,
           done: false,
+          charImage: t.charImage || "",
+          dropImage: t.onDropImage || "",
         }));
         vm.sActive = vm.sTargets.length ? 0 : -1; // 순서 고정: 첫 타깃(루미)부터
         vm.sRevealPhase = "none";
@@ -717,6 +721,7 @@ export default function MissionPlayer(props: {
       if (dropped && vm.stage === "mirrors") {
         audio.play("drop");
         vm.sTargets[active].bubble = vm.sTargets[active].onDrop; // 친구 반응으로 교체
+        if (vm.sTargets[active].dropImage) vm.sTargets[active].charImage = vm.sTargets[active].dropImage; // 캐릭터 이미지도 교체
         vm.sTargets[active].done = true;
         card.classList.remove("dragging");
         card.style.transform = "";
@@ -747,6 +752,7 @@ export default function MissionPlayer(props: {
     const r = ms.reveal;
     if (!r || vm.sTargets[idx].friend !== r.friend) return; // 지정 거울만
     vm.sTargets[idx].bubble = r.line; // 속마음으로 교체
+    if (r.image) vm.sTargets[idx].charImage = r.image; // 속마음 공개 이미지로 교체
     vm.sRevealPhase = "done";
     audio.play("reveal");
     force();

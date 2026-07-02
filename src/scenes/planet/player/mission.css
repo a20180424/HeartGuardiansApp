@@ -1047,6 +1047,10 @@
   height: 60%;
   z-index: 1;
 }
+/* 화면 A(2거울): 거울 안 캐릭터를 가로·세로 2배 크게(높이 60%→120%, 너비 auto라 비율 유지) */
+.mstage.mirrors .ms-char {
+  height: 120%;
+}
 .ms-bubble {
   position: absolute;
   top: 30%;
