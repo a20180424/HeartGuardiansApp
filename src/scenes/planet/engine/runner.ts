@@ -48,6 +48,14 @@ export class DialogueRunner {
       this.enterChoice(node);
       return;
     }
+    if (t === "mirrors") {
+      this.view.showMirrors(node, () => this.advance(node));
+      return;
+    }
+    if (t === "gauge") {
+      this.view.showGauge(node, () => this.advance(node));
+      return;
+    }
     this.typeLine(node);
   }
 

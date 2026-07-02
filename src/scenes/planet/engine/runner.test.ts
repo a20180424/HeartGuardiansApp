@@ -100,4 +100,43 @@ describe("DialogueRunner", () => {
       runner.start();
     });
   });
+
+  it("mirrors/gauge 노드는 view 메서드를 호출하고 done 시 next 로 진행한다", async () => {
+    const seq: string[] = [];
+    const md: MissionData = {
+      id: "t2",
+      title: "t2",
+      start: "mir",
+      nodes: [
+        { id: "mir", type: "mirrors", next: "gau" },
+        { id: "gau", type: "gauge", next: "fin" },
+        { id: "fin", type: "line", speaker: "hati", text: "끝", next: null },
+      ],
+    };
+    await new Promise<void>((resolve) => {
+      const view: RunnerView = {
+        reset() {},
+        execCommands() {},
+        showLine(node: MissionNode, onTyped: () => void) {
+          seq.push("line:" + node.id);
+          onTyped();
+          return Promise.resolve();
+        },
+        showChoices() {},
+        showMirrors(node: MissionNode, done: () => void) {
+          seq.push("mirrors:" + node.id);
+          Promise.resolve().then(done);
+        },
+        showGauge(node: MissionNode, done: () => void) {
+          seq.push("gauge:" + node.id);
+          Promise.resolve().then(done);
+        },
+        end() {
+          expect(seq).toEqual(["mirrors:mir", "gauge:gau", "line:fin"]);
+          resolve();
+        },
+      };
+      new DialogueRunner(md, view).start();
+    });
+  });
 });
