@@ -910,7 +910,7 @@ export default function MissionPlayer(props: {
         <div
           id="friendWrap"
           ref={friendWrapRef}
-          className={`${vm.intro ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+          className={`${vm.intro || vm.stage !== "none" ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
         >
           <img
             id="friend"
@@ -921,7 +921,7 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 친구 말풍선 — 현재 대사 또는 hold로 유지 중인 대사 */}
-        <div id="friendBubble" className={`bubble${friendBubbleText ? " show" : ""}`}>
+        <div id="friendBubble" className={`bubble${friendBubbleText && vm.stage === "none" ? " show" : ""}`}>
           <span>{friendBubbleText}</span>
         </div>
 
