@@ -65,6 +65,14 @@ def node_mermaid(n):
         rows.append(f"<b class='hd-branch'>◆ 분기 · {esc(n.get('condition', '?'))}</b>")
         if n.get("watch"):
             rows.append(f"<span class='meta'>watch: {esc(n['watch'])}</span>")
+    elif ntype == "mirrors":                         # 공감 거울: 카드 드래그(이중 타깃)
+        rows.append(f"<b class='hd-mirror'>🪞 거울 드래그 · {len(n.get('targets') or [])}타깃</b>")
+        if n.get("banner"):
+            rows.append(f"<span class='meta'>배너: {esc(trunc(n['banner'], 20))}</span>")
+    elif ntype == "gauge":                           # 공감 거울: 진행도 게이지 선택
+        rows.append(f"<b class='hd-gauge'>🎚 게이지 선택 · {len(n.get('options') or [])}개</b>")
+        if n.get("banner"):
+            rows.append(f"<span class='meta'>배너: {esc(trunc(n['banner'], 20))}</span>")
     else:
         spk = esc(n.get("speaker", "?"))
         head = f"<b class='hd-{spk}'>💬 {spk}</b>"
@@ -74,12 +82,33 @@ def node_mermaid(n):
 
     if n.get("text"):                                # ③ 대사
         rows.append(f"<span class='say'>“{esc(trunc(n['text'], 28))}”</span>")
+    if ntype == "mirrors" and n.get("prompt"):       # 거울: 안내 문구
+        rows.append(f"<span class='say'>“{esc(trunc(n['prompt'], 28))}”</span>")
 
     meta = []                                        # ④ 메타
     if n.get("hold") is True:
         meta.append("📌 hold 유지")
     elif n.get("hold") is False:
         meta.append("📌 hold 해제")
+    if ntype == "mirrors":                           # 드래그 카드 · 타깃별 반응 · reveal
+        if n.get("card"):
+            meta.append(f"🃏 카드: {esc(trunc(n['card'], 18))}")
+        for t in (n.get("targets") or []):
+            meta.append(
+                f"🎯 {esc(t.get('friend', '?'))}: "
+                f"{esc(trunc(t.get('line', ''), 12))} → {esc(trunc(t.get('onDrop', ''), 12))}"
+            )
+        rv = n.get("reveal")
+        if rv:
+            meta.append(f"👁 터치 {esc(rv.get('friend', '?'))}: {esc(trunc(rv.get('line', ''), 18))}")
+    if ntype == "gauge":                             # 게이지 선택지(정답/오답)
+        if n.get("lead"):
+            meta.append(f"🗣 도입: {esc(trunc(n['lead'], 18))}")
+        for o in (n.get("options") or []):
+            mark = "✅" if o.get("correct") else "❌"
+            meta.append(
+                f"{mark} {esc(trunc(o.get('title', ''), 10))} → {esc(trunc(o.get('onPick', ''), 12))}"
+            )
     if n.get("repromptText"):
         meta.append(f"↻ {esc(trunc(n['repromptText'], 20))}")
     if n.get("onEnter"):
@@ -94,6 +123,8 @@ def node_mermaid(n):
         return f'  {nid}{{{{"{label}"}}}}'   # 육각형 = 선택
     if ntype == "branch":
         return f'  {nid}{{"{label}"}}'       # 마름모 = 분기
+    if ntype in ("mirrors", "gauge"):
+        return f'  {nid}(["{label}"])'       # 스타디움 = 공감 거울 특수 상호작용
     return f'  {nid}["{label}"]'             # 사각형 = 대사
 
 
@@ -126,6 +157,8 @@ def scenario_mermaid(data):
         "  classDef branchNode fill:#efe6ff,stroke:#8250df,stroke-width:2px,color:#3b1f78;",
         "  classDef startNode  fill:#bfe3ff,stroke:#1f6feb,stroke-width:2px;",
         "  classDef endNode    fill:#ffd6d6,stroke:#cf222e,stroke-width:2px;",
+        "  classDef mirrorNode fill:#e6f6ff,stroke:#0969da,stroke-width:2px,color:#053a63;",
+        "  classDef gaugeNode  fill:#eaffea,stroke:#1a7f37,stroke-width:2px,color:#053f1e;",
     ]
     for n in nodes:
         nid = n["id"]
@@ -136,6 +169,10 @@ def scenario_mermaid(data):
             cls = "choiceNode"
         elif ntype == "branch":
             cls = "branchNode"
+        elif ntype == "mirrors":
+            cls = "mirrorNode"
+        elif ntype == "gauge":
+            cls = "gaugeNode"
         elif ntype == "line" and n.get("next") in (None, ""):
             cls = "endNode"
         else:
@@ -159,7 +196,8 @@ HTML_TMPL = """<!doctype html>
   h2{{font-size:14px;margin:0 0 10px;color:#1f6feb}}
   /* 노드 내부 단 구조 */
   .nid{{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:#8b949e;letter-spacing:.2px}}
-  .hd-hati{{color:#1f6feb}} .hd-lumi{{color:#1a7f37}} .hd-choice{{color:#9a6700}} .hd-branch{{color:#8250df}}
+  .hd-hati{{color:#1f6feb}} .hd-lumi{{color:#1a7f37}} .hd-lala{{color:#bf3989}} .hd-sola{{color:#9a6700}} .hd-choice{{color:#9a6700}} .hd-branch{{color:#8250df}}
+  .hd-mirror{{color:#0969da}} .hd-gauge{{color:#1a7f37}}
   .emo{{color:#8250df;font-size:11px}}
   .say{{font-size:13px}}
   .meta{{font-size:10px;color:#6e7781}}
