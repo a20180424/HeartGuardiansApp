@@ -81,6 +81,7 @@
 
     {
       "id": "m2_mirror_ab", "type": "mirrors",
+      "hideBubbles": true,
       "banner": "공감 거울의 비밀",
       "prompt": "친구에게 전하고 싶은 말을 드래그해서 거울 속 친구에게 전해봐!",
       "card": "괜찮아! 다음에 잘 하면 돼!",

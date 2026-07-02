@@ -63,6 +63,9 @@ export interface MissionNode {
   card?: string;
   targets?: MirrorTarget[];
   reveal?: MirrorReveal;
+  // 거울/게이지 캐릭터 말풍선을 숨긴다(대사가 캐릭터 이미지에 포함된 경우).
+  // 대사 데이터(line/onDrop/reveal.line)는 그대로 두어 나중에 쉽게 다시 켤 수 있다.
+  hideBubbles?: boolean;
   // type: "gauge" (화면 B) 전용
   header?: string; // 선택 패널 제목 ("어떻게 도와줄래?")
   lead?: string; // 게이지 등장 전 하티 도입 대사

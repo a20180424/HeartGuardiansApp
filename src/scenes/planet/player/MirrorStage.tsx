@@ -21,6 +21,7 @@ export type GaugeVM = { icon: string; title: string; desc: string; fill: number 
 export interface MirrorStageProps {
   stage: "mirrors" | "gauge";
   theme: MissionTheme;
+  hideBubbles: boolean; // 캐릭터 말풍선 숨김(대사가 캐릭터 이미지에 포함된 경우)
   banner: string;
   prompt: string;
   // mirrors (화면 A)
@@ -84,7 +85,7 @@ export default function MirrorStage(p: MirrorStageProps) {
                   <img className="ms-scene" src={t.mirror.scenes[tg.scene]} alt="" onError={hideOnError} />
                 )}
                 <img className="ms-char" src={tg.charImage || friendSrc(t, tg.friend)} alt={tg.title} />
-                <div className="ms-bubble">{tg.bubble}</div>
+                {!p.hideBubbles && <div className="ms-bubble">{tg.bubble}</div>}
               </div>
             </div>
           ))}
@@ -99,7 +100,7 @@ export default function MirrorStage(p: MirrorStageProps) {
               <img className="ms-scene" src={t.mirror.scenes[p.scene]} alt="" onError={hideOnError} />
             )}
             <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
-            <div className="ms-bubble">{p.friendLine}</div>
+            {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
           </div>
 
           <div className="ms-gauge">

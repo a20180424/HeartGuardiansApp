@@ -55,6 +55,7 @@ interface VM {
   dzShow: boolean;
   // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge)
   stage: "none" | "mirrors" | "gauge";
+  sHideBubbles: boolean; // 거울/게이지 캐릭터 말풍선 숨김(대사가 이미지에 포함된 경우)
   sBanner: string;
   sPrompt: string;
   // mirrors
@@ -151,6 +152,7 @@ export default function MissionPlayer(props: {
     dragNode: false,
     dzShow: false,
     stage: "none",
+    sHideBubbles: false,
     sBanner: "",
     sPrompt: "",
     sCard: "",
@@ -384,6 +386,7 @@ export default function MissionPlayer(props: {
           dragNode: false,
           dzShow: false,
           stage: "none",
+          sHideBubbles: false,
           sBanner: "",
           sPrompt: "",
           sCard: "",
@@ -476,6 +479,7 @@ export default function MissionPlayer(props: {
         vm.mode = "idle";
         vm.bubbleKind = "none";
         vm.choices = [];
+        vm.sHideBubbles = !!node.hideBubbles;
         vm.sBanner = node.banner || "";
         vm.sPrompt = node.prompt || "";
         vm.sCard = node.card || "";
@@ -504,6 +508,7 @@ export default function MissionPlayer(props: {
         vm.mode = "idle";
         vm.bubbleKind = "none";
         vm.choices = [];
+        vm.sHideBubbles = !!node.hideBubbles;
         vm.sBanner = node.banner || "";
         vm.sFriend = node.speaker && node.speaker !== "hati" ? node.speaker : "lumi";
         vm.sScene = node.scene || "";
@@ -1013,6 +1018,7 @@ export default function MissionPlayer(props: {
           <MirrorStage
             stage={vm.stage}
             theme={theme}
+            hideBubbles={vm.sHideBubbles}
             banner={vm.sBanner}
             prompt={vm.sPrompt}
             card={vm.sCard}
