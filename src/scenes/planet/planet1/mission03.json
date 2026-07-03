@@ -106,8 +106,16 @@
       "hideFriend": true,
       "text": "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
       "cards": [
-        "/assets/ui/light-planet-empathy-card.png",
-        "/assets/ui/light-planet-empathy-card.png"
+        {
+          "image": "/assets/ui/light-planet-empathy-card.png",
+          "top": "공감은 사람들의 마음을 이어주는 힘이다.",
+          "bottom": "공감은 서로의 마음을 이해하고 연결해 주는 소중한 힘이예요."
+        },
+        {
+          "image": "/assets/ui/light-planet-empathy-card.png",
+          "top": "공감이 있으면 서로를 이해하고 행복하게 지낼 수 있다.",
+          "bottom": "공감은 신뢰와 배려를 키워주고, 함께 웃으며 지낼 수 있게 해요."
+        }
       ],
       "next": "m3_complete"
     },

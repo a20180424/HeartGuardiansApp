@@ -45,7 +45,7 @@ interface VM {
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
   stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
-  cards: string[]; // 화면 가운데 가로로 나란히 띄우는 카드들(node.cards, 없으면 [])
+  cards: { image: string; top?: string; bottom?: string }[]; // 가운데 가로 카드들(node.cards)
   mirrorImage: string; // 우측 하단 공감 거울 이미지(node.mirrorImage, 없으면 "")
   completeBanner: string; // 화면 가운데 "미션 완료!" 배너 문구(node.completeBanner, 없으면 "")
   friendGlow: boolean;
@@ -1171,18 +1171,21 @@ export default function MissionPlayer(props: {
           </div>
         )}
 
-        {/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준 */}
+        {/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준. 상/하단 텍스트 오버레이 */}
         {vm.cards.length > 0 && (
           <div id="cardStage">
-            {vm.cards.map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt=""
-                onError={(e) => {
-                  e.currentTarget.style.visibility = "hidden";
-                }}
-              />
+            {vm.cards.map((c, i) => (
+              <div className="card-item" key={i}>
+                <img
+                  src={c.image}
+                  alt=""
+                  onError={(e) => {
+                    e.currentTarget.style.visibility = "hidden";
+                  }}
+                />
+                {c.top && <div className="card-text card-top">{c.top}</div>}
+                {c.bottom && <div className="card-text card-bottom">{c.bottom}</div>}
+              </div>
             ))}
           </div>
         )}
