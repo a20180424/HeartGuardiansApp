@@ -86,7 +86,7 @@
         { "before": "/assets/char/Luna/luna_unheard1.png", "after": "/assets/char/Luna/luna_heard1.png" },
         { "before": "/assets/char/Luna/luna_unheard2.png", "after": "/assets/char/Luna/luna_heard2.png" }
       ],
-      "threshold": 0.95,
+      "threshold": 0.97,
       "next": "m3_end"
     },
 

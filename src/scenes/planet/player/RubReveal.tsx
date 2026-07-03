@@ -8,12 +8,11 @@ const LENS = 0.3; // 거울 폭 대비 렌즈 반경 비율
 export default function RubReveal(props: {
   pairs: Pair[];
   mirrorImage: string;
-  text: string;
   threshold: number;
   stageRef: React.RefObject<HTMLDivElement | null>;
   onDone: () => void;
 }) {
-  const { pairs, mirrorImage, text, threshold, stageRef, onDone } = props;
+  const { pairs, mirrorImage, threshold, stageRef, onDone } = props;
   const mirrorRef = useRef<HTMLImageElement>(null);
   const canvasRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const grids = useRef<{ marks: Uint8Array; done: boolean }[]>([]);
@@ -165,14 +164,6 @@ export default function RubReveal(props: {
         alt="공감 거울"
         onPointerDown={onMirrorDown}
       />
-
-      <div className="rr-guide">
-        <img className="rr-guide-avatar" src="/assets/char/Hati/hati_thinking.png" alt="하티" />
-        <div>
-          <div className="rr-guide-name">하티</div>
-          <div className="rr-guide-text">{text}</div>
-        </div>
-      </div>
 
       <div className="rr-sparks" aria-hidden="true">
         {Array.from({ length: 6 }).map((_, i) => (

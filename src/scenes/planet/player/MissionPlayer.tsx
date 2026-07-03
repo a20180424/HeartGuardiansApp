@@ -85,7 +85,6 @@ interface VM {
   // reveal(긁어서 드러내기)
   rPairs: { before: string; after: string }[];
   rMirror: string;
-  rText: string;
   rThreshold: number;
   debug: string;
   debugId: string;
@@ -178,7 +177,6 @@ export default function MissionPlayer(props: {
     sOptions: [],
     rPairs: [],
     rMirror: "",
-    rText: "",
     rThreshold: 0.85,
     debug: "",
     debugId: "",
@@ -421,7 +419,6 @@ export default function MissionPlayer(props: {
           sOptions: [],
           rPairs: [],
           rMirror: "",
-          rText: "",
           rThreshold: 0.85,
           debug: "",
           debugId: "",
@@ -562,13 +559,13 @@ export default function MissionPlayer(props: {
         updateScene(node);
         vm.stage = "reveal";
         vm.mode = "idle";
-        vm.bubbleKind = "none";
+        vm.bubbleKind = "hatiBox"; // 가이드 대사는 일반 하티 박스(#hatiBox)를 재사용
+        vm.text = node.text || "";
         vm.choices = [];
         vm.tapHint = ""; // 이전 라인 노드의 탭 힌트 잔류 방지
         vm.mirrorImage = ""; // 정적 #mirrorTool 숨김(거울은 RubReveal 이 드래그용으로 렌더)
         vm.rPairs = node.pairs || [];
         vm.rMirror = node.mirrorImage || "";
-        vm.rText = node.text || "";
         vm.rThreshold = node.threshold ?? 0.85;
         ms.done = done;
         render();
@@ -1112,7 +1109,6 @@ export default function MissionPlayer(props: {
           <RubReveal
             pairs={vm.rPairs}
             mirrorImage={vm.rMirror}
-            text={vm.rText}
             threshold={vm.rThreshold}
             stageRef={stageRef}
             onDone={finishReveal}
