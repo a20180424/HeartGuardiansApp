@@ -429,8 +429,8 @@
 }
 #imageStack img {
   display: block;
-  max-height: 66%;
-  max-width: 46%;
+  width: 46%; /* reveal(.rr-slot)과 동일 고정 폭 → m2→m3 전환 시 어긋남 방지 */
+  height: auto;
   object-fit: contain;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
