@@ -511,34 +511,45 @@
 .rr-mirror:active {
   cursor: grabbing;
 }
+/* 가이드 바 — 일반 하티 박스(#hatiBox)와 동일 사이즈/룩 */
 .rr-guide {
   position: absolute;
-  left: 40px;
+  left: 60px;
   bottom: 40px;
   z-index: 7;
+  width: 1040px;
+  min-height: 186px;
   display: flex;
   align-items: center;
-  gap: 20px;
-  max-width: 58%;
+  padding: 26px 48px 26px 200px;
+  border-radius: 34px;
   background: rgba(255, 255, 255, 0.96);
-  border-radius: 30px;
-  padding: 20px 34px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 .rr-guide-avatar {
-  width: 96px;
-  height: 96px;
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #5b8def;
+  background: #0c1740;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 .rr-guide-name {
-  color: #6a5cff;
+  font-size: 22px;
   font-weight: 800;
-  font-size: 24px;
+  color: #2f6fe0;
+  margin-bottom: 4px;
 }
 .rr-guide-text {
-  font-size: 32px;
-  font-weight: 800;
-  color: #2a2350;
+  font-size: 36px;
+  font-weight: 700;
+  color: #222b3d;
+  line-height: 1.45;
 }
 
 /* 등장 연출: 팝인 + 글로우 펄스 */

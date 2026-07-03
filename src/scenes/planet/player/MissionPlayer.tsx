@@ -565,6 +565,7 @@ export default function MissionPlayer(props: {
         vm.bubbleKind = "none";
         vm.choices = [];
         vm.tapHint = ""; // 이전 라인 노드의 탭 힌트 잔류 방지
+        vm.mirrorImage = ""; // 정적 #mirrorTool 숨김(거울은 RubReveal 이 드래그용으로 렌더)
         vm.rPairs = node.pairs || [];
         vm.rMirror = node.mirrorImage || "";
         vm.rText = node.text || "";
