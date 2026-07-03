@@ -58,6 +58,8 @@ export interface MissionNode {
   mirrorImage?: string;
   // 이 line 노드에서 자동 진행(2초 후 자동 넘김)을 끈다. 탭으로만 다음으로 넘어간다.
   noAuto?: boolean;
+  // 화면 가운데에 "미션 완료!" 같은 완료 배너를 띄운다(문구 지정). 지정한 노드에서만 표시.
+  completeBanner?: string;
   // type: "reveal" 전용 — 긁어서 드러내기 이미지 쌍(before=위 캔버스, after=아래 img)과 완료 임계값.
   pairs?: { before: string; after: string }[];
   threshold?: number;

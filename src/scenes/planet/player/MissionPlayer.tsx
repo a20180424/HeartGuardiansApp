@@ -46,6 +46,7 @@ interface VM {
   choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
   stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
   mirrorImage: string; // 우측 하단 공감 거울 이미지(node.mirrorImage, 없으면 "")
+  completeBanner: string; // 화면 가운데 "미션 완료!" 배너 문구(node.completeBanner, 없으면 "")
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -151,6 +152,7 @@ export default function MissionPlayer(props: {
     choiceImage: "",
     stackImages: [],
     mirrorImage: "",
+    completeBanner: "",
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -294,6 +296,7 @@ export default function MissionPlayer(props: {
       vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
       vm.stackImages = node.images || []; // 화면 가운데 세로 스택 이미지들(node.images)
       vm.mirrorImage = node.mirrorImage || ""; // 우측 하단 공감 거울(node.mirrorImage)
+      vm.completeBanner = node.completeBanner || ""; // 가운데 완료 배너(node.completeBanner)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -394,6 +397,7 @@ export default function MissionPlayer(props: {
           choiceImage: "",
           stackImages: [],
           mirrorImage: "",
+          completeBanner: "",
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -1173,6 +1177,25 @@ export default function MissionPlayer(props: {
               e.currentTarget.style.visibility = "hidden";
             }}
           />
+        )}
+
+        {/* 미션 완료 배너(노드 completeBanner) — 금색 오너먼트 플라크 */}
+        {vm.completeBanner && (
+          <div id="completeBanner">
+            <img
+              className="cb-star"
+              src="/assets/ui/star_gold.png"
+              alt=""
+              onError={(e) => {
+                e.currentTarget.style.visibility = "hidden";
+              }}
+            />
+            <div className="cb-plaque">
+              <span className="cb-spark">✦</span>
+              <span className="cb-text">{vm.completeBanner}</span>
+              <span className="cb-spark">✦</span>
+            </div>
+          </div>
         )}
 
         {/* 우측 가운데 장식 이미지(노드 sideImage) */}

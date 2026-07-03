@@ -442,8 +442,9 @@ export const MISSION03_THEME: MissionTheme = {
     initial: "main",
     byNode: {
       m3_intro: "main",
-      m3_video: "black", // 동영상 구간부터 까만 화면. 이후 노드에서 배경을 다시 켜지 않아
-      // 마지막 노드(m3_end) 직전까지 계속 까만 화면으로 유지된다(sparse 유지).
+      m3_video: "black", // 동영상 구간부터 까만 화면(reveal 까지 유지)
+      m3_card: "main", // 공감 카드 등장: m3_intro 배경 다시
+      m3_complete: "stage4", // "드디어 빛이 돌아왔어"부터 엔딩 배경
       m3_end: "stage4",
     },
   },
@@ -452,6 +453,8 @@ export const MISSION03_THEME: MissionTheme = {
     initial: "thinking",
     byNode: {
       m3_intro: "explaining",
+      m3_lesson: "proud",
+      m3_complete: "cheering",
       m3_end: "celebrating",
     },
   },
@@ -471,6 +474,8 @@ export const MISSION03_THEME: MissionTheme = {
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
   choiceIcons: M3_CHOICE_ICONS,
   fx: {
+    fx_empathy_card: "empathyCard",
+    fx_empathy_card_hide: "empathyCardHide",
     fx_light_return: "lightReturn",
   },
   sfx: { byNode: {} },

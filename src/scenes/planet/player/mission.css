@@ -379,6 +379,72 @@
   filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.45));
 }
 
+/* ---------- 미션 완료 배너(노드 completeBanner) ----------
+   첨부 레퍼런스 느낌의 금색 오너먼트 플라크(추후 이미지로 교체 가능). */
+#completeBanner {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  animation: cbPop 0.5s ease-out;
+}
+.cb-star {
+  width: 132px;
+  height: 132px;
+  object-fit: contain;
+  margin-bottom: -36px; /* 플라크 위로 살짝 겹침 */
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+  position: relative;
+  z-index: 1;
+}
+.cb-plaque {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 36px 92px;
+  border-radius: 28px;
+  background: linear-gradient(165deg, #4a3a1e, #221a0c);
+  border: 6px solid #e9c65a;
+  box-shadow:
+    inset 0 0 0 3px #7a5b22,
+    inset 0 3px 22px rgba(0, 0, 0, 0.6),
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 72px rgba(255, 205, 110, 0.45);
+}
+.cb-text {
+  font-size: 96px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #ffe08a;
+  text-shadow:
+    0 3px 0 #b8842a,
+    0 6px 2px #7a5518,
+    0 9px 16px rgba(0, 0, 0, 0.55);
+}
+.cb-spark {
+  font-size: 46px;
+  color: #ffd970;
+  text-shadow: 0 0 16px rgba(255, 215, 120, 0.9);
+}
+@keyframes cbPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 /* ---------- 화면 가운데 큰 이미지(노드 image) ----------
    이미지(위) + 선택지 버튼(아래) 세로 스택. 크기/위치 1차안(추후 조정). */
 #choiceImage {

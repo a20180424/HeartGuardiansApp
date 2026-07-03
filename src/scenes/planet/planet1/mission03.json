@@ -87,6 +87,34 @@
         { "before": "/assets/char/Luna/luna_unheard2.png", "after": "/assets/char/Luna/luna_heard2.png" }
       ],
       "threshold": 0.97,
+      "next": "m3_lesson"
+    },
+
+    {
+      "id": "m3_lesson",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
+      "images": ["/assets/char/Luna/luna_heard1.png", "/assets/char/Luna/luna_heard2.png"],
+      "next": "m3_card"
+    },
+    {
+      "id": "m3_card",
+      "type": "line",
+      "hideFriend": true,
+      "text": "",
+      "onEnter": [{ "cmd": "fx", "value": "fx_empathy_card" }],
+      "next": "m3_complete"
+    },
+    {
+      "id": "m3_complete",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "드디어 사라진 빛이 돌아왔어!",
+      "completeBanner": "미션 완료!",
+      "onEnter": [{ "cmd": "fx", "value": "fx_empathy_card_hide" }],
       "next": "m3_end"
     },
 
