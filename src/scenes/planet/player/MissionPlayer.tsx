@@ -490,18 +490,7 @@ export default function MissionPlayer(props: {
       },
       showChoices(node, exploredSet, pick) {
         updateScene(node);
-        vm.mode = "choices";
         vm.tapHint = "";
-        // 선택 노드가 직접 하티 대사(speaker/text)를 가지면 하티박스로 표시
-        // (별도 prompt 라인 없이 선택 화면에서 바로 대사 노출). 아니면 직전 하티박스
-        // 멘트를 유지한다(인트로 말풍선/친구 말풍선만 감춤).
-        if (node.speaker === "hati" && node.text) {
-          vm.text = node.text;
-          vm.bubbleKind = "hatiBox";
-        } else if (vm.bubbleKind !== "hatiBox") {
-          vm.bubbleKind = "none";
-        }
-        vm.choices = node.choices || [];
         vm.choicePrompt = node.prompt || ""; // 카드 위 안내 문구(있을 때만)
         vm.exploredSet = exploredSet;
         // 드래그 노드(q4): 카드를 루미 빈 말풍선(#dropZone)으로 끌어 답한다. 탭도 선택 fallback.
@@ -515,8 +504,27 @@ export default function MissionPlayer(props: {
           render();
           pick(idx, choice);
         };
-        render();
-        audio.play("pop");
+
+        // 선택지 카드 노출(팝) — 하티 대사 타이핑 후 또는 즉시.
+        const showCards = () => {
+          vm.mode = "choices";
+          vm.choices = node.choices || [];
+          render();
+          audio.play("pop");
+        };
+
+        if (node.speaker === "hati" && node.text) {
+          // 선택 노드가 직접 하티 대사를 가지면 라인처럼 타자기로 먼저 노출 →
+          // 타이핑이 끝난 뒤에 선택지 카드를 보여준다(탭하면 타이핑 즉시 완료).
+          vm.bubbleKind = "hatiBox";
+          vm.choices = []; // 타이핑 동안 선택지 숨김
+          render();
+          typeInto(node.text, showCards);
+        } else {
+          // 직전 하티박스 멘트를 유지(인트로 말풍선/친구 말풍선만 감춤). 즉시 선택지 표시.
+          if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
+          showCards();
+        }
       },
       showMirrors(node, done) {
         updateScene(node); // 배경/레이더/HUD 유지
