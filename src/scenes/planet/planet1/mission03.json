@@ -135,6 +135,7 @@
       "speaker": "hati",
       "hideFriend": true,
       "text": "축하해! 대원은 이제 첫 번째 공감 원석인 이해의 사파이어를 얻었어! 이 원석은 다른 사람의 마음을 이해하려는 힘을 담고 있단다.",
+      "cards": [{ "image": "/assets/ui/planet1-reward-card.png" }],
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
     }
