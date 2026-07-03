@@ -96,6 +96,11 @@ def node_mermaid(n):
         meta.append("📌 hold 해제")
     if n.get("image"):                               # 화면 가운데 이미지(선택 등)
         meta.append(f"🖼 {esc(os.path.basename(n['image']))}")
+    if n.get("images"):                              # 화면 가운데 세로 스택 이미지들
+        meta.append(f"🖼×{len(n['images'])} " + ", ".join(
+            esc(os.path.basename(s)) for s in n["images"]))
+    if n.get("mirrorImage"):                         # 우측 하단 공감 거울
+        meta.append(f"🪞 {esc(os.path.basename(n['mirrorImage']))}")
     if ntype == "video" and n.get("holdAfter"):      # 재생 후 정지 시간
         meta.append(f"⏸ 재생 후 {n['holdAfter']}ms")
     if ntype == "mirrors":                           # 드래그 카드 · 타깃별 반응 · reveal

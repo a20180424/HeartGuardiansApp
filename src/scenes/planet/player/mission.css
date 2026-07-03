@@ -409,6 +409,52 @@
   opacity: 1;
 }
 
+/* 화면 가운데 세로 스택 이미지(노드 images) — 여러 장을 작게 위아래로, 각 장 가장자리 페더 */
+#imageStack {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  padding: 96px 40px 40px; /* 상단 스테퍼 아래로 */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#imageStack.show {
+  opacity: 1;
+}
+#imageStack img {
+  display: block;
+  max-height: 34%;
+  max-width: 74%;
+  object-fit: contain;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* 우측 하단 공감 거울(노드 mirrorImage) */
+#mirrorTool {
+  position: absolute;
+  right: 48px;
+  bottom: 40px;
+  height: 44%;
+  width: auto;
+  object-fit: contain;
+  z-index: 6;
+  pointer-events: none;
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+}
+
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
   position: absolute;

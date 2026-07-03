@@ -43,6 +43,8 @@ interface VM {
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
+  stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
+  mirrorImage: string; // 우측 하단 공감 거울 이미지(node.mirrorImage, 없으면 "")
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -142,6 +144,8 @@ export default function MissionPlayer(props: {
     lesson: null,
     sideImage: "",
     choiceImage: "",
+    stackImages: [],
+    mirrorImage: "",
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -280,6 +284,8 @@ export default function MissionPlayer(props: {
       vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
       vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
       vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
+      vm.stackImages = node.images || []; // 화면 가운데 세로 스택 이미지들(node.images)
+      vm.mirrorImage = node.mirrorImage || ""; // 우측 하단 공감 거울(node.mirrorImage)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -378,6 +384,8 @@ export default function MissionPlayer(props: {
           lesson: null,
           sideImage: "",
           choiceImage: "",
+          stackImages: [],
+          mirrorImage: "",
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -1083,6 +1091,34 @@ export default function MissionPlayer(props: {
             className="show"
             src={vm.choiceImage}
             alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        )}
+
+        {/* 화면 가운데 세로 스택 이미지(노드 images) — 여러 장을 작게 위아래로 */}
+        {vm.stackImages.length > 0 && (
+          <div id="imageStack" className="show">
+            {vm.stackImages.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt=""
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* 우측 하단 공감 거울(노드 mirrorImage) */}
+        {vm.mirrorImage && (
+          <img
+            id="mirrorTool"
+            src={vm.mirrorImage}
+            alt="공감 거울"
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";
             }}

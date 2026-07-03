@@ -52,6 +52,10 @@ export interface MissionNode {
   prompt?: string;
   // 이 노드에서 화면 가운데에 크게 띄우는 이미지 경로(선택 노드 등). 지정한 노드에서만 표시.
   image?: string;
+  // 화면 가운데에 여러 장을 세로로 쌓아 표시(각 장은 작게). 지정한 노드에서만 표시.
+  images?: string[];
+  // 화면 우측 하단에 띄우는 공감 거울 이미지 경로. 지정한 노드에서만 표시.
+  mirrorImage?: string;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id

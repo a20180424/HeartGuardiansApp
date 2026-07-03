@@ -49,14 +49,43 @@
       "hideFriend": true,
       "image": "/assets/char/Luna/luna_unheard2.png",
       "choices": [
-        { "text": "슬픔", "next": "m3_end" },
-        { "text": "화남", "next": "m3_end" },
-        { "text": "걱정", "next": "m3_end" },
-        { "text": "외로움", "next": "m3_end" },
-        { "text": "관심없음", "next": "m3_end" },
-        { "text": "혼란스러움", "next": "m3_end" },
-        { "text": "지침", "next": "m3_end" }
+        { "text": "슬픔", "next": "m3_mirror1" },
+        { "text": "화남", "next": "m3_mirror1" },
+        { "text": "걱정", "next": "m3_mirror1" },
+        { "text": "외로움", "next": "m3_mirror1" },
+        { "text": "관심없음", "next": "m3_mirror1" },
+        { "text": "혼란스러움", "next": "m3_mirror1" },
+        { "text": "지침", "next": "m3_mirror1" }
       ]
+    },
+
+    {
+      "id": "m3_mirror1",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "대원! 공감 없는 이 세상에서 행복할 수 있을까요?",
+      "images": ["/assets/char/Luna/luna_unheard1.png", "/assets/char/Luna/luna_unheard2.png"],
+      "next": "m3_mirror2"
+    },
+    {
+      "id": "m3_mirror2",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "공감 거울을 이용하여 루나의 마음을 이해해보자!",
+      "images": ["/assets/char/Luna/luna_unheard1.png", "/assets/char/Luna/luna_unheard2.png"],
+      "next": "m3_mirror3"
+    },
+    {
+      "id": "m3_mirror3",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "공감 거울을 터치해서 이 차가운 화면 위로 슥슥 문질러봐!",
+      "images": ["/assets/char/Luna/luna_unheard1.png", "/assets/char/Luna/luna_unheard2.png"],
+      "mirrorImage": "/assets/ui/empathy-mirror2.png",
+      "next": "m3_end"
     },
 
     {
