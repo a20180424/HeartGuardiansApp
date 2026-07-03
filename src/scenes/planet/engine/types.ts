@@ -34,7 +34,7 @@ export interface GaugeOption {
 
 export interface MissionNode {
   id: string;
-  type?: "line" | "choice" | "branch" | "mirrors" | "gauge";
+  type?: "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal";
   speaker?: string; // "hati" | 친구 id(예: "lumi" | "lala" | "sola")
   text?: string;
   // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).
@@ -58,6 +58,9 @@ export interface MissionNode {
   mirrorImage?: string;
   // 이 line 노드에서 자동 진행(2초 후 자동 넘김)을 끈다. 탭으로만 다음으로 넘어간다.
   noAuto?: boolean;
+  // type: "reveal" 전용 — 긁어서 드러내기 이미지 쌍(before=위 캔버스, after=아래 img)과 완료 임계값.
+  pairs?: { before: string; after: string }[];
+  threshold?: number;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id
@@ -98,6 +101,7 @@ export interface RunnerView {
   ): void;
   showMirrors(node: MissionNode, done: () => void): void;
   showGauge(node: MissionNode, done: () => void): void;
+  showReveal(node: MissionNode, done: () => void): void;
   end(): void;
 }
 
