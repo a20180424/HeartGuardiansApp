@@ -89,6 +89,7 @@ interface VM {
   rMirror: string;
   rThreshold: number;
   videoSrc: string; // type:"video" 재생 중인 동영상 경로(없으면 "")
+  videoStarted: boolean; // '재생 시작' 버튼을 눌러 재생을 시작했는지(버튼 숨김용)
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -184,6 +185,7 @@ export default function MissionPlayer(props: {
     rMirror: "",
     rThreshold: 0.85,
     videoSrc: "",
+    videoStarted: false,
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -196,6 +198,7 @@ export default function MissionPlayer(props: {
     resolve?: () => void;
   }>({}).current;
   const sparkId = useRef(0);
+  const videoRef = useRef<HTMLVideoElement>(null); // type:"video" 재생 엘리먼트(탭 재생 폴백용)
   const friendWrapRef = useRef<HTMLDivElement>(null); // q4 드래그 드롭 타깃 = 친구 캐릭터
   // q4 드래그 상태(원본 view.js _enableCardDrag 이식). 한 번에 한 장만 드래그.
   const dnd = useRef<{
@@ -431,6 +434,7 @@ export default function MissionPlayer(props: {
           rMirror: "",
           rThreshold: 0.85,
           videoSrc: "",
+          videoStarted: false,
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -595,6 +599,7 @@ export default function MissionPlayer(props: {
         vm.choices = [];
         vm.tapHint = "";
         vm.videoSrc = node.src || "";
+        vm.videoStarted = false;
         ms.done = done;
         ms.node = node; // holdAfter 참조용
         render();
@@ -638,6 +643,8 @@ export default function MissionPlayer(props: {
   }, [audio]);
 
   const onStageClick = () => {
+    // 동영상 중 화면 탭은 무시(재생은 '재생 시작' 버튼으로만, 건너뛰기 없음).
+    if (vm.videoSrc) return;
     if (vm.mode === "typing") timers.finish?.();
     else if (vm.mode === "await") {
       audio.play("tap");
@@ -793,6 +800,12 @@ export default function MissionPlayer(props: {
   const onVideoEnded = () => {
     const hold = ms.node?.holdAfter ?? 0;
     window.setTimeout(finishVideo, hold);
+  };
+  // '재생 시작' 버튼: 사용자 제스처로 재생 시작 → 버튼 숨김.
+  const startVideo = () => {
+    videoRef.current?.play().catch(() => {});
+    vm.videoStarted = true;
+    force();
   };
 
   const onMirrorAllDropped = () => {
@@ -1204,18 +1217,22 @@ export default function MissionPlayer(props: {
           </div>
         )}
 
-        {/* 동영상(노드 video) — 까만 화면 위 가운데 크게 재생. 건너뛰기/컨트롤 없음 */}
+        {/* 동영상(노드 video) — 까만 화면 위 가운데 크게. 자동재생하지 않고 '재생 시작'
+            버튼(사용자 제스처)으로만 재생 → 자동재생 정책과 무관, hang 없음. */}
         {vm.videoSrc && (
           <video
             id="missionVideo"
+            ref={videoRef}
             src={vm.videoSrc}
-            autoPlay
             playsInline
+            preload="auto"
             onEnded={onVideoEnded}
-            onCanPlay={(e) => {
-              e.currentTarget.play().catch(() => {});
-            }}
           />
+        )}
+        {vm.videoSrc && !vm.videoStarted && (
+          <button id="videoPlayBtn" onClick={startVideo}>
+            <span className="vpb-icon">▶</span> 재생 시작
+          </button>
         )}
 
         {/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준. 상/하단 텍스트 오버레이 */}
