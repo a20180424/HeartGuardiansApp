@@ -1000,8 +1000,15 @@ export default function MissionPlayer(props: {
                       } // 드래그 카드: 합성 클릭 무시(선택은 pointerup에서)
                     : (e) => {
                         e.stopPropagation();
+                        if (vm.mode !== "choices") return;
                         audio.play("select");
-                        vm.pick?.(idx, c);
+                        // 선택 반응(pop)을 잠깐 보여준 뒤 다음 노드로 진행 → 원상태로 돌아오는 게 보인다.
+                        // React가 카드 DOM을 재사용하므로 제거→reflow→추가로 매번 애니메이션을 재시작.
+                        const el = e.currentTarget;
+                        el.classList.remove("picked");
+                        void el.offsetWidth;
+                        el.classList.add("picked");
+                        window.setTimeout(() => vm.pick?.(idx, c), 200);
                       }
                 }
                 onPointerDown={dragCard ? (e) => onCardDown(e, idx, c) : undefined}
