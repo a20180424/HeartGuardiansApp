@@ -17,20 +17,14 @@
       "src": "/video/Planet1_Mission3.mp4",
       "holdAfter": 800,
       "hideFriend": true,
-      "next": "m3_q1_prompt"
+      "next": "m3_q1_choice"
     },
 
     {
-      "id": "m3_q1_prompt",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "text": "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
-      "next": "m3_q1_choice"
-    },
-    {
       "id": "m3_q1_choice",
       "type": "choice",
+      "speaker": "hati",
+      "text": "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
       "hideFriend": true,
       "image": "/assets/char/Luna/luna_unheard1.png",
       "choices": [

@@ -488,9 +488,15 @@ export default function MissionPlayer(props: {
         updateScene(node);
         vm.mode = "choices";
         vm.tapHint = "";
-        // 원본 view.js와 동일: 선택지 화면에서도 직전 하티박스 멘트를 유지한다
-        // (인트로 말풍선/루미 말풍선만 감추고, hatiBox는 그대로 둔다).
-        if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
+        // 선택 노드가 직접 하티 대사(speaker/text)를 가지면 하티박스로 표시
+        // (별도 prompt 라인 없이 선택 화면에서 바로 대사 노출). 아니면 직전 하티박스
+        // 멘트를 유지한다(인트로 말풍선/친구 말풍선만 감춤).
+        if (node.speaker === "hati" && node.text) {
+          vm.text = node.text;
+          vm.bubbleKind = "hatiBox";
+        } else if (vm.bubbleKind !== "hatiBox") {
+          vm.bubbleKind = "none";
+        }
         vm.choices = node.choices || [];
         vm.choicePrompt = node.prompt || ""; // 카드 위 안내 문구(있을 때만)
         vm.exploredSet = exploredSet;
