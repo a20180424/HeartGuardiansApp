@@ -105,7 +105,10 @@
       "speaker": "hati",
       "hideFriend": true,
       "text": "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
-      "onEnter": [{ "cmd": "fx", "value": "fx_empathy_card" }],
+      "cards": [
+        "/assets/ui/light-planet-empathy-card.png",
+        "/assets/ui/light-planet-empathy-card.png"
+      ],
       "next": "m3_complete"
     },
     {
@@ -115,7 +118,6 @@
       "hideFriend": true,
       "text": "드디어 사라진 빛이 돌아왔어!",
       "completeBanner": "미션 완료!",
-      "onEnter": [{ "cmd": "fx", "value": "fx_empathy_card_hide" }],
       "next": "m3_end"
     },
 

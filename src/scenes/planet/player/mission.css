@@ -475,6 +475,40 @@
   opacity: 1;
 }
 
+/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준, 페더 없음 + 등장 애니 */
+#cardStage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 96px 40px 40px;
+  pointer-events: none;
+}
+#cardStage img {
+  height: 58%;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
+  animation: cardIn 0.5s ease-out both;
+}
+#cardStage img:nth-child(2) {
+  animation-delay: 0.12s;
+}
+@keyframes cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* 화면 가운데 이미지(노드 images) — 여러 장을 가로로 나란히, 각 장 가장자리 페더 */
 #imageStack {
   position: absolute;

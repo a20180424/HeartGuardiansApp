@@ -54,6 +54,8 @@ export interface MissionNode {
   image?: string;
   // 화면 가운데에 여러 장을 세로로 쌓아 표시(각 장은 작게). 지정한 노드에서만 표시.
   images?: string[];
+  // 화면 가운데에 카드 이미지를 가로로 나란히 표시(높이 기준, 페더 없음). 지정한 노드에서만.
+  cards?: string[];
   // 화면 우측 하단에 띄우는 공감 거울 이미지 경로. 지정한 노드에서만 표시.
   mirrorImage?: string;
   // 이 line 노드에서 자동 진행(2초 후 자동 넘김)을 끈다. 탭으로만 다음으로 넘어간다.

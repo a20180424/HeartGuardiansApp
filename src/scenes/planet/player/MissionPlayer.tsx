@@ -45,6 +45,7 @@ interface VM {
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
   stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
+  cards: string[]; // 화면 가운데 가로로 나란히 띄우는 카드들(node.cards, 없으면 [])
   mirrorImage: string; // 우측 하단 공감 거울 이미지(node.mirrorImage, 없으면 "")
   completeBanner: string; // 화면 가운데 "미션 완료!" 배너 문구(node.completeBanner, 없으면 "")
   friendGlow: boolean;
@@ -151,6 +152,7 @@ export default function MissionPlayer(props: {
     sideImage: "",
     choiceImage: "",
     stackImages: [],
+    cards: [],
     mirrorImage: "",
     completeBanner: "",
     friendGlow: false,
@@ -295,6 +297,7 @@ export default function MissionPlayer(props: {
       vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
       vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
       vm.stackImages = node.images || []; // 화면 가운데 세로 스택 이미지들(node.images)
+      vm.cards = node.cards || []; // 화면 가운데 가로 카드들(node.cards)
       vm.mirrorImage = node.mirrorImage || ""; // 우측 하단 공감 거울(node.mirrorImage)
       vm.completeBanner = node.completeBanner || ""; // 가운데 완료 배너(node.completeBanner)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
@@ -396,6 +399,7 @@ export default function MissionPlayer(props: {
           sideImage: "",
           choiceImage: "",
           stackImages: [],
+          cards: [],
           mirrorImage: "",
           completeBanner: "",
           friendGlow: false,
@@ -1155,6 +1159,22 @@ export default function MissionPlayer(props: {
         {vm.stackImages.length > 0 && (
           <div id="imageStack" className="show">
             {vm.stackImages.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt=""
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준 */}
+        {vm.cards.length > 0 && (
+          <div id="cardStage">
+            {vm.cards.map((src, i) => (
               <img
                 key={i}
                 src={src}
