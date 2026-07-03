@@ -24,9 +24,13 @@ export default function Planet1() {
   const nav = useNavigate();
   const [params] = useSearchParams();
 
-  // 개발용 단축키: #/planet/1?stage=mission2 로 특정 subscene부터 시작.
+  // 개발용 단축키: 특정 subscene부터 시작.
+  //   #/planet/1?stage=mission3  (풀네임)
+  //   #/planet/1?m=3             (짧은 별칭: 숫자만, m=0 은 prologue)
   // import.meta.env.DEV 가드 → 프로덕션 빌드(APK)에선 항상 prologue.
-  const wanted = params.get("stage");
+  const m = params.get("m"); // "3" → "mission3", "0" → "prologue"
+  const wanted =
+    params.get("stage") ?? (m ? (m === "0" ? "prologue" : `mission${m}`) : null);
   const initialStage: Stage =
     import.meta.env.DEV && wanted && (STAGES as string[]).includes(wanted)
       ? (wanted as Stage)
