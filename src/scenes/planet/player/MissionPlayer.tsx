@@ -18,6 +18,7 @@ import type {
 import { useFitStage } from "../../../lib/useFitStage";
 import { AudioManager } from "./audio";
 import MirrorStage from "./MirrorStage";
+import RubReveal from "./RubReveal";
 import "./mission.css";
 
 type Spark = { id: number; left: number; top: number; ch: string; delay: number; size: number };
@@ -56,8 +57,8 @@ interface VM {
   muted: boolean;
   dragNode: boolean;
   dzShow: boolean;
-  // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge)
-  stage: "none" | "mirrors" | "gauge";
+  // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge / reveal: 긁어서 드러내기)
+  stage: "none" | "mirrors" | "gauge" | "reveal";
   sHideBubbles: boolean; // 거울/게이지 캐릭터 말풍선 숨김(대사가 이미지에 포함된 경우)
   sBanner: string;
   sPrompt: string;
@@ -81,6 +82,11 @@ interface VM {
   sFriendLine: string;
   sHeader: string;
   sOptions: { icon: string; title: string; desc: string; fill: number }[];
+  // reveal(긁어서 드러내기)
+  rPairs: { before: string; after: string }[];
+  rMirror: string;
+  rText: string;
+  rThreshold: number;
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -170,6 +176,10 @@ export default function MissionPlayer(props: {
     sFriendLine: "",
     sHeader: "",
     sOptions: [],
+    rPairs: [],
+    rMirror: "",
+    rText: "",
+    rThreshold: 0.85,
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -409,6 +419,10 @@ export default function MissionPlayer(props: {
           sFriendLine: "",
           sHeader: "",
           sOptions: [],
+          rPairs: [],
+          rMirror: "",
+          rText: "",
+          rThreshold: 0.85,
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -543,6 +557,20 @@ export default function MissionPlayer(props: {
             render();
           }
         }, 2200);
+      },
+      showReveal(node, done) {
+        updateScene(node);
+        vm.stage = "reveal";
+        vm.mode = "idle";
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.rPairs = node.pairs || [];
+        vm.rMirror = node.mirrorImage || "";
+        vm.rText = node.text || "";
+        vm.rThreshold = node.threshold ?? 0.85;
+        ms.done = done;
+        render();
+        audio.play("pop");
       },
       end() {
         vm.mode = "end";
@@ -712,6 +740,14 @@ export default function MissionPlayer(props: {
   };
 
   const finishMirrors = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.stage = "none";
+    force();
+    done?.();
+  };
+
+  const finishReveal = () => {
     const done = ms.done;
     ms.done = undefined;
     vm.stage = "none";
@@ -1045,7 +1081,7 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 공감 거울 특별 파트 (화면 A: mirrors / 화면 B: gauge) */}
-        {vm.stage !== "none" && (
+        {(vm.stage === "mirrors" || vm.stage === "gauge") && (
           <MirrorStage
             stage={vm.stage}
             theme={theme}
@@ -1066,6 +1102,18 @@ export default function MissionPlayer(props: {
             onCardDown={onMirrorCardDown}
             onMirrorTouch={onMirrorTouch}
             onGaugeDown={onGaugeDown}
+          />
+        )}
+
+        {/* 공감 거울 긁어서 드러내기 (reveal) */}
+        {vm.stage === "reveal" && (
+          <RubReveal
+            pairs={vm.rPairs}
+            mirrorImage={vm.rMirror}
+            text={vm.rText}
+            threshold={vm.rThreshold}
+            stageRef={stageRef}
+            onDone={finishReveal}
           />
         )}
 

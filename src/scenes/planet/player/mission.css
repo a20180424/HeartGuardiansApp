@@ -455,6 +455,196 @@
   filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
 }
 
+/* ---------- reveal (공감 거울 긁어서 드러내기) ---------- */
+#rubStage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+#rubImages {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 96px 40px 40px;
+}
+.rr-slot {
+  position: relative;
+  width: 46%;
+  aspect-ratio: 1672 / 941;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+.rr-after,
+.rr-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+}
+.rr-canvas {
+  touch-action: none;
+}
+.rr-mirror {
+  position: absolute;
+  right: 48px;
+  bottom: 40px;
+  height: 29%;
+  width: auto;
+  object-fit: contain;
+  z-index: 6;
+  cursor: grab;
+  touch-action: none;
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+}
+.rr-mirror:active {
+  cursor: grabbing;
+}
+.rr-guide {
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 58%;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 30px;
+  padding: 20px 34px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+.rr-guide-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+}
+.rr-guide-name {
+  color: #6a5cff;
+  font-weight: 800;
+  font-size: 24px;
+}
+.rr-guide-text {
+  font-size: 32px;
+  font-weight: 800;
+  color: #2a2350;
+}
+
+/* 등장 연출: 팝인 + 글로우 펄스 */
+#rubStage.rr-enter .rr-mirror {
+  animation:
+    rrMirrorIn 0.5s ease-out,
+    rrGlow 1.2s ease-in-out 0.2s;
+}
+@keyframes rrMirrorIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes rrGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 26px rgba(190, 160, 255, 0.95))
+      drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+  }
+}
+/* 완료 시 강한 반짝 */
+.rr-mirror.rr-mirror-done {
+  animation: rrDoneGlow 0.7s ease-in-out;
+}
+@keyframes rrDoneGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 40px rgba(255, 240, 180, 1))
+      drop-shadow(0 0 70px rgba(255, 220, 130, 0.8));
+  }
+}
+/* 등장 반짝이 파티클(거울 초기 위치 근처) */
+.rr-sparks {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  width: 380px;
+  height: 380px;
+  z-index: 6;
+  pointer-events: none;
+}
+.rr-spark {
+  position: absolute;
+  font-size: 34px;
+  color: #ffe9a8;
+  opacity: 0;
+  animation: rrSpark 1s ease-out forwards;
+}
+.rr-spark.s0 {
+  left: 12%;
+  top: 18%;
+  animation-delay: 0.05s;
+}
+.rr-spark.s1 {
+  left: 62%;
+  top: 8%;
+  animation-delay: 0.18s;
+}
+.rr-spark.s2 {
+  left: 82%;
+  top: 46%;
+  animation-delay: 0.3s;
+}
+.rr-spark.s3 {
+  left: 24%;
+  top: 64%;
+  animation-delay: 0.12s;
+}
+.rr-spark.s4 {
+  left: 54%;
+  top: 74%;
+  animation-delay: 0.24s;
+}
+.rr-spark.s5 {
+  left: 38%;
+  top: 34%;
+  animation-delay: 0.4s;
+}
+@keyframes rrSpark {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-32px) scale(1.1);
+  }
+}
+
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
   position: absolute;
