@@ -1,0 +1,137 @@
+{
+  "id": "mission03",
+  "title": "공감 없는 세상",
+  "start": "m3_intro",
+  "nodes": [
+    {
+      "id": "m3_intro",
+      "type": "line",
+      "speaker": "hati",
+      "text": "루나가 걱정돼. 루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!",
+      "next": "m3_video"
+    },
+
+    {
+      "id": "m3_video",
+      "type": "video",
+      "src": "/video/Planet1_Mission3.mp4",
+      "holdAfter": 800,
+      "hideFriend": true,
+      "next": "m3_q1_choice"
+    },
+
+    {
+      "id": "m3_q1_choice",
+      "type": "choice",
+      "speaker": "hati",
+      "text": "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
+      "hideFriend": true,
+      "image": "/assets/char/Luna/luna_unheard1.png",
+      "choices": [
+        { "text": "슬픔", "next": "m3_q2_choice" },
+        { "text": "화남", "next": "m3_q2_choice" },
+        { "text": "걱정", "next": "m3_q2_choice" },
+        { "text": "외로움", "next": "m3_q2_choice" },
+        { "text": "관심없음", "next": "m3_q2_choice" },
+        { "text": "혼란스러움", "next": "m3_q2_choice" },
+        { "text": "지침", "next": "m3_q2_choice" }
+      ]
+    },
+    {
+      "id": "m3_q2_choice",
+      "type": "choice",
+      "hideFriend": true,
+      "image": "/assets/char/Luna/luna_unheard2.png",
+      "choices": [
+        { "text": "슬픔", "next": "m3_mirror1" },
+        { "text": "화남", "next": "m3_mirror1" },
+        { "text": "걱정", "next": "m3_mirror1" },
+        { "text": "외로움", "next": "m3_mirror1" },
+        { "text": "관심없음", "next": "m3_mirror1" },
+        { "text": "혼란스러움", "next": "m3_mirror1" },
+        { "text": "지침", "next": "m3_mirror1" }
+      ]
+    },
+
+    {
+      "id": "m3_mirror1",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "대원! 공감 없는 이 세상에서 행복할 수 있을까요?",
+      "images": ["/assets/char/Luna/luna_unheard1.png", "/assets/char/Luna/luna_unheard2.png"],
+      "next": "m3_mirror2"
+    },
+    {
+      "id": "m3_mirror2",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "공감 거울을 이용하여 루나의 마음을 이해해보자!",
+      "images": ["/assets/char/Luna/luna_unheard1.png", "/assets/char/Luna/luna_unheard2.png"],
+      "next": "m3_mirror3"
+    },
+    {
+      "id": "m3_mirror3",
+      "type": "reveal",
+      "text": "공감 거울을 터치해서 이 차가운 화면 위로 슥슥 문질러봐!",
+      "mirrorImage": "/assets/ui/empathy-mirror2.png",
+      "pairs": [
+        { "before": "/assets/char/Luna/luna_unheard1.png", "after": "/assets/char/Luna/luna_heard1.png" },
+        { "before": "/assets/char/Luna/luna_unheard2.png", "after": "/assets/char/Luna/luna_heard2.png" }
+      ],
+      "threshold": 0.97,
+      "next": "m3_lesson"
+    },
+
+    {
+      "id": "m3_lesson",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "루나의 마음을 완전히 공감 했구나!!!",
+      "images": ["/assets/char/Luna/luna_heard1.png", "/assets/char/Luna/luna_heard2.png"],
+      "next": "m3_card"
+    },
+    {
+      "id": "m3_card",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
+      "cards": [
+        {
+          "image": "/assets/ui/light-planet-empathy-card.png",
+          "top": "공감은 사람들의 마음을 이어주는 힘이다.",
+          "bottom": "공감은 서로의 마음을 이해하고 연결해 주는 소중한 힘이예요."
+        },
+        {
+          "image": "/assets/ui/light-planet-empathy-card.png",
+          "top": "공감이 있으면 서로를 이해하고 행복하게 지낼 수 있다.",
+          "bottom": "공감은 신뢰와 배려를 키워주고, 함께 웃으며 지낼 수 있게 해요."
+        }
+      ],
+      "next": "m3_complete"
+    },
+    {
+      "id": "m3_complete",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "드디어 사라진 빛이 돌아왔어!",
+      "completeBanner": "미션 완료!",
+      "next": "m3_end"
+    },
+
+    {
+      "id": "m3_end",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "축하해! 대원은 이제 첫 번째 공감 원석인 이해의 사파이어를 얻었어! 이 원석은 다른 사람의 마음을 이해하려는 힘을 담고 있단다.",
+      "cards": [{ "image": "/assets/ui/planet1-reward-card.png" }],
+      "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
+      "next": null
+    }
+  ]
+}

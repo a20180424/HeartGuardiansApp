@@ -18,6 +18,7 @@ import type {
 import { useFitStage } from "../../../lib/useFitStage";
 import { AudioManager } from "./audio";
 import MirrorStage from "./MirrorStage";
+import RubReveal from "./RubReveal";
 import "./mission.css";
 
 type Spark = { id: number; left: number; top: number; ch: string; delay: number; size: number };
@@ -42,6 +43,11 @@ interface VM {
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
+  choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
+  stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
+  cards: { image: string; top?: string; bottom?: string }[]; // 가운데 가로 카드들(node.cards)
+  mirrorImage: string; // 우측 하단 공감 거울 이미지(node.mirrorImage, 없으면 "")
+  completeBanner: string; // 화면 가운데 "미션 완료!" 배너 문구(node.completeBanner, 없으면 "")
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -53,8 +59,8 @@ interface VM {
   muted: boolean;
   dragNode: boolean;
   dzShow: boolean;
-  // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge)
-  stage: "none" | "mirrors" | "gauge";
+  // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge / reveal: 긁어서 드러내기)
+  stage: "none" | "mirrors" | "gauge" | "reveal";
   sHideBubbles: boolean; // 거울/게이지 캐릭터 말풍선 숨김(대사가 이미지에 포함된 경우)
   sBanner: string;
   sPrompt: string;
@@ -78,6 +84,12 @@ interface VM {
   sFriendLine: string;
   sHeader: string;
   sOptions: { icon: string; title: string; desc: string; fill: number }[];
+  // reveal(긁어서 드러내기)
+  rPairs: { before: string; after: string }[];
+  rMirror: string;
+  rThreshold: number;
+  videoSrc: string; // type:"video" 재생 중인 동영상 경로(없으면 "")
+  videoStarted: boolean; // '재생 시작' 버튼을 눌러 재생을 시작했는지(버튼 숨김용)
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -108,6 +120,8 @@ export default function MissionPlayer(props: {
   theme: MissionTheme;
   onExit: () => void;
   currentStep?: number; // 진행 스테퍼에서 이 미션이 몇 번째인지(1~3). 기본 1.
+  // 엔딩 완료 버튼 커스터마이즈(마지막 미션 등). 없으면 기본 "다음 미션으로".
+  finish?: { label: string; icon?: string };
 }) {
   const { scenario, theme } = props;
   const [, force] = useReducer((x) => x + 1, 0);
@@ -138,6 +152,11 @@ export default function MissionPlayer(props: {
     hideFriend: false,
     lesson: null,
     sideImage: "",
+    choiceImage: "",
+    stackImages: [],
+    cards: [],
+    mirrorImage: "",
+    completeBanner: "",
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -162,6 +181,11 @@ export default function MissionPlayer(props: {
     sFriendLine: "",
     sHeader: "",
     sOptions: [],
+    rPairs: [],
+    rMirror: "",
+    rThreshold: 0.85,
+    videoSrc: "",
+    videoStarted: false,
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -174,6 +198,7 @@ export default function MissionPlayer(props: {
     resolve?: () => void;
   }>({}).current;
   const sparkId = useRef(0);
+  const videoRef = useRef<HTMLVideoElement>(null); // type:"video" 재생 엘리먼트(탭 재생 폴백용)
   const friendWrapRef = useRef<HTMLDivElement>(null); // q4 드래그 드롭 타깃 = 친구 캐릭터
   // q4 드래그 상태(원본 view.js _enableCardDrag 이식). 한 번에 한 장만 드래그.
   const dnd = useRef<{
@@ -275,6 +300,11 @@ export default function MissionPlayer(props: {
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
       vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
       vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
+      vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
+      vm.stackImages = node.images || []; // 화면 가운데 세로 스택 이미지들(node.images)
+      vm.cards = node.cards || []; // 화면 가운데 가로 카드들(node.cards)
+      vm.mirrorImage = node.mirrorImage || ""; // 우측 하단 공감 거울(node.mirrorImage)
+      vm.completeBanner = node.completeBanner || ""; // 가운데 완료 배너(node.completeBanner)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -372,6 +402,11 @@ export default function MissionPlayer(props: {
           hideFriend: false,
           lesson: null,
           sideImage: "",
+          choiceImage: "",
+          stackImages: [],
+          cards: [],
+          mirrorImage: "",
+          completeBanner: "",
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -395,6 +430,11 @@ export default function MissionPlayer(props: {
           sFriendLine: "",
           sHeader: "",
           sOptions: [],
+          rPairs: [],
+          rMirror: "",
+          rThreshold: 0.85,
+          videoSrc: "",
+          videoStarted: false,
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -439,20 +479,18 @@ export default function MissionPlayer(props: {
             vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
             render();
             window.clearTimeout(timers.auto);
-            timers.auto = window.setTimeout(() => {
-              if (vm.mode === "await") advanceLine();
-            }, 2000);
+            // noAuto 노드는 자동 진행을 끄고 탭(또는 상호작용)으로만 넘어간다.
+            if (!node.noAuto) {
+              timers.auto = window.setTimeout(() => {
+                if (vm.mode === "await") advanceLine();
+              }, 2000);
+            }
           });
         });
       },
       showChoices(node, exploredSet, pick) {
         updateScene(node);
-        vm.mode = "choices";
         vm.tapHint = "";
-        // 원본 view.js와 동일: 선택지 화면에서도 직전 하티박스 멘트를 유지한다
-        // (인트로 말풍선/루미 말풍선만 감추고, hatiBox는 그대로 둔다).
-        if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
-        vm.choices = node.choices || [];
         vm.choicePrompt = node.prompt || ""; // 카드 위 안내 문구(있을 때만)
         vm.exploredSet = exploredSet;
         // 드래그 노드(q4): 카드를 루미 빈 말풍선(#dropZone)으로 끌어 답한다. 탭도 선택 fallback.
@@ -466,8 +504,27 @@ export default function MissionPlayer(props: {
           render();
           pick(idx, choice);
         };
-        render();
-        audio.play("pop");
+
+        // 선택지 카드 노출(팝) — 하티 대사 타이핑 후 또는 즉시.
+        const showCards = () => {
+          vm.mode = "choices";
+          vm.choices = node.choices || [];
+          render();
+          audio.play("pop");
+        };
+
+        if (node.speaker === "hati" && node.text) {
+          // 선택 노드가 직접 하티 대사를 가지면 라인처럼 타자기로 먼저 노출 →
+          // 타이핑이 끝난 뒤에 선택지 카드를 보여준다(탭하면 타이핑 즉시 완료).
+          vm.bubbleKind = "hatiBox";
+          vm.choices = []; // 타이핑 동안 선택지 숨김
+          render();
+          typeInto(node.text, showCards);
+        } else {
+          // 직전 하티박스 멘트를 유지(인트로 말풍선/친구 말풍선만 감춤). 즉시 선택지 표시.
+          if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
+          showCards();
+        }
       },
       showMirrors(node, done) {
         updateScene(node); // 배경/레이더/HUD 유지
@@ -527,6 +584,34 @@ export default function MissionPlayer(props: {
           }
         }, 2200);
       },
+      showReveal(node, done) {
+        updateScene(node);
+        vm.stage = "reveal";
+        vm.mode = "idle";
+        vm.bubbleKind = "hatiBox"; // 가이드 대사는 일반 하티 박스(#hatiBox)를 재사용
+        vm.text = node.text || "";
+        vm.choices = [];
+        vm.tapHint = ""; // 이전 라인 노드의 탭 힌트 잔류 방지
+        vm.mirrorImage = ""; // 정적 #mirrorTool 숨김(거울은 RubReveal 이 드래그용으로 렌더)
+        vm.rPairs = node.pairs || [];
+        vm.rMirror = node.mirrorImage || "";
+        vm.rThreshold = node.threshold ?? 0.85;
+        ms.done = done;
+        render();
+        audio.play("pop");
+      },
+      showVideo(node, done) {
+        updateScene(node); // 배경(black 등)/스프라이트 적용
+        vm.mode = "idle"; // 탭 진행 안 됨(건너뛰기 없음)
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.tapHint = "";
+        vm.videoSrc = node.src || "";
+        vm.videoStarted = false;
+        ms.done = done;
+        ms.node = node; // holdAfter 참조용
+        render();
+      },
       end() {
         vm.mode = "end";
         vm.ended = true;
@@ -549,6 +634,7 @@ export default function MissionPlayer(props: {
   // 배경 이미지 미리 로드 — 엔딩(m1_end3)에서 stage2로 교체될 때 깜빡임 방지.
   useEffect(() => {
     Object.values(theme.bg.states).forEach((src) => {
+      if (!src) return; // 빈 상태(예: black)는 실제 이미지가 없으므로 스킵
       const im = new Image();
       im.src = src;
     });
@@ -565,6 +651,8 @@ export default function MissionPlayer(props: {
   }, [audio]);
 
   const onStageClick = () => {
+    // 동영상 중 화면 탭은 무시(재생은 '재생 시작' 버튼으로만, 건너뛰기 없음).
+    if (vm.videoSrc) return;
     if (vm.mode === "typing") timers.finish?.();
     else if (vm.mode === "await") {
       audio.play("tap");
@@ -699,6 +787,33 @@ export default function MissionPlayer(props: {
     vm.stage = "none";
     force();
     done?.();
+  };
+
+  const finishReveal = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.stage = "none";
+    force();
+    done?.();
+  };
+
+  // 동영상: 재생 종료 → holdAfter 만큼 정지 후 다음 노드로.
+  const finishVideo = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.videoSrc = "";
+    force();
+    done?.();
+  };
+  const onVideoEnded = () => {
+    const hold = ms.node?.holdAfter ?? 0;
+    window.setTimeout(finishVideo, hold);
+  };
+  // '재생 시작' 버튼: 사용자 제스처로 재생 시작 → 버튼 숨김.
+  const startVideo = () => {
+    videoRef.current?.play().catch(() => {});
+    vm.videoStarted = true;
+    force();
   };
 
   const onMirrorAllDropped = () => {
@@ -856,8 +971,14 @@ export default function MissionPlayer(props: {
 
   return (
     <div id="viewport">
-      <div id="stage" ref={stageRef} className={vm.bright ? "bright" : ""} onClick={onStageClick}>
-        <img id="bg" src={theme.bg.states[vm.bg]} alt="" />
+      <div
+        id="stage"
+        ref={stageRef}
+        className={`${vm.bright ? "bright" : ""}${vm.bg === "black" ? " blackbg" : ""}`}
+        onClick={onStageClick}
+      >
+        {/* 배경 src 가 있을 때만 렌더(black 등 빈 상태는 빈 <img> 브로큰 아이콘 방지) */}
+        {theme.bg.states[vm.bg] ? <img id="bg" src={theme.bg.states[vm.bg]} alt="" /> : null}
         <div id="lightOverlay" />
 
         {/* 진행 스테퍼 */}
@@ -962,7 +1083,10 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 선택지 패널 — 안내 문구 + 카드를 한 배경 박스에 담는다 */}
-        <div id="choicePanel" className={vm.choices.length > 0 ? "show" : ""}>
+        <div
+          id="choicePanel"
+          className={`${vm.choices.length > 0 ? "show" : ""}${vm.choiceImage ? " img-choice" : ""}`}
+        >
           {/* 카드 위 안내 문구 (있을 때만) */}
           <div id="choicePrompt">{vm.choicePrompt}</div>
 
@@ -985,8 +1109,15 @@ export default function MissionPlayer(props: {
                       } // 드래그 카드: 합성 클릭 무시(선택은 pointerup에서)
                     : (e) => {
                         e.stopPropagation();
+                        if (vm.mode !== "choices") return;
                         audio.play("select");
-                        vm.pick?.(idx, c);
+                        // 선택 반응(pop)을 잠깐 보여준 뒤 다음 노드로 진행 → 원상태로 돌아오는 게 보인다.
+                        // React가 카드 DOM을 재사용하므로 제거→reflow→추가로 매번 애니메이션을 재시작.
+                        const el = e.currentTarget;
+                        el.classList.remove("picked");
+                        void el.offsetWidth;
+                        el.classList.add("picked");
+                        window.setTimeout(() => vm.pick?.(idx, c), 200);
                       }
                 }
                 onPointerDown={dragCard ? (e) => onCardDown(e, idx, c) : undefined}
@@ -998,7 +1129,11 @@ export default function MissionPlayer(props: {
                   {idx + 1}
                 </div>
                 <div className="icon" style={{ background: deco.bg }}>
-                  {deco.emoji}
+                  {deco.img ? (
+                    <img className="icon-img" src={deco.img} alt="" />
+                  ) : (
+                    deco.emoji
+                  )}
                 </div>
                 <div className="ctext">{c.text}</div>
               </button>
@@ -1008,7 +1143,7 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 공감 거울 특별 파트 (화면 A: mirrors / 화면 B: gauge) */}
-        {vm.stage !== "none" && (
+        {(vm.stage === "mirrors" || vm.stage === "gauge") && (
           <MirrorStage
             stage={vm.stage}
             theme={theme}
@@ -1032,6 +1167,17 @@ export default function MissionPlayer(props: {
           />
         )}
 
+        {/* 공감 거울 긁어서 드러내기 (reveal) */}
+        {vm.stage === "reveal" && (
+          <RubReveal
+            pairs={vm.rPairs}
+            mirrorImage={vm.rMirror}
+            threshold={vm.rThreshold}
+            stageRef={stageRef}
+            onDone={finishReveal}
+          />
+        )}
+
         {/* 교훈 배너(금색 오너먼트) — lesson 노드에서 표시 */}
         {vm.lesson && (
           <div id="lessonBanner" className="show">
@@ -1046,6 +1192,103 @@ export default function MissionPlayer(props: {
             <div className="lb-text">
               <div className="lb-title">{vm.lesson.title}</div>
               <div className="lb-sub">{vm.lesson.sub}</div>
+            </div>
+          </div>
+        )}
+
+        {/* 화면 가운데 큰 이미지(노드 image) — 선택지 등에서 상황 이미지를 크게 보여줄 때 */}
+        {vm.choiceImage && (
+          <img
+            id="choiceImage"
+            className="show"
+            src={vm.choiceImage}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        )}
+
+        {/* 화면 가운데 세로 스택 이미지(노드 images) — 여러 장을 작게 위아래로 */}
+        {vm.stackImages.length > 0 && (
+          <div id="imageStack" className="show">
+            {vm.stackImages.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt=""
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* 동영상(노드 video) — 까만 화면 위 가운데 크게. 자동재생하지 않고 '재생 시작'
+            버튼(사용자 제스처)으로만 재생 → 자동재생 정책과 무관, hang 없음. */}
+        {vm.videoSrc && (
+          <video
+            id="missionVideo"
+            ref={videoRef}
+            src={vm.videoSrc}
+            playsInline
+            preload="auto"
+            onEnded={onVideoEnded}
+          />
+        )}
+        {vm.videoSrc && !vm.videoStarted && (
+          <button id="videoPlayBtn" onClick={startVideo}>
+            <span className="vpb-icon">▶</span> 재생 시작
+          </button>
+        )}
+
+        {/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준. 상/하단 텍스트 오버레이 */}
+        {vm.cards.length > 0 && (
+          <div id="cardStage">
+            {vm.cards.map((c, i) => (
+              <div className="card-item" key={i}>
+                <img
+                  src={c.image}
+                  alt=""
+                  onError={(e) => {
+                    e.currentTarget.style.visibility = "hidden";
+                  }}
+                />
+                {c.top && <div className="card-text card-top">{c.top}</div>}
+                {c.bottom && <div className="card-text card-bottom">{c.bottom}</div>}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 우측 하단 공감 거울(노드 mirrorImage) */}
+        {vm.mirrorImage && (
+          <img
+            id="mirrorTool"
+            src={vm.mirrorImage}
+            alt="공감 거울"
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        )}
+
+        {/* 미션 완료 배너(노드 completeBanner) — 금색 오너먼트 플라크 */}
+        {vm.completeBanner && (
+          <div id="completeBanner">
+            <img
+              className="cb-star"
+              src="/assets/ui/star_gold.png"
+              alt=""
+              onError={(e) => {
+                e.currentTarget.style.visibility = "hidden";
+              }}
+            />
+            <div className="cb-plaque">
+              <span className="cb-spark">✦</span>
+              <span className="cb-text">{vm.completeBanner}</span>
+              <span className="cb-spark">✦</span>
             </div>
           </div>
         )}
@@ -1082,12 +1325,24 @@ export default function MissionPlayer(props: {
         {vm.showNext && (
           <button
             id="nextBtn"
+            className={props.finish ? "ship" : ""}
             onClick={(e) => {
               e.stopPropagation();
               props.onExit();
             }}
           >
-            다음 미션으로 <span>➜</span>
+            {props.finish ? (
+              <>
+                {props.finish.icon && (
+                  <img className="nb-ship-icon" src={props.finish.icon} alt="" />
+                )}
+                <span>{props.finish.label}</span>
+              </>
+            ) : (
+              <>
+                다음 미션으로 <span>➜</span>
+              </>
+            )}
           </button>
         )}
 

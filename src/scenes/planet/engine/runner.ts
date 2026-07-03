@@ -15,7 +15,9 @@ export class DialogueRunner {
     });
   }
 
-  private typeOf(n: MissionNode): "line" | "choice" | "branch" | "mirrors" | "gauge" {
+  private typeOf(
+    n: MissionNode,
+  ): "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video" {
     return n.type || (n.choices ? "choice" : "line");
   }
 
@@ -54,6 +56,14 @@ export class DialogueRunner {
     }
     if (t === "gauge") {
       this.view.showGauge(node, () => this.advance(node));
+      return;
+    }
+    if (t === "reveal") {
+      this.view.showReveal(node, () => this.advance(node));
+      return;
+    }
+    if (t === "video") {
+      this.view.showVideo(node, () => this.advance(node));
       return;
     }
     this.typeLine(node);

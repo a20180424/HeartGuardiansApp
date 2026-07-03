@@ -80,6 +80,12 @@ function makeFakeView(onEnd: () => void) {
     showGauge(_node, done) {
       done();
     },
+    showReveal(_node, done) {
+      done();
+    },
+    showVideo(_node, done) {
+      done();
+    },
     end() {
       onEnd();
     },
@@ -131,8 +137,64 @@ describe("DialogueRunner", () => {
           seq.push("gauge:" + node.id);
           Promise.resolve().then(done);
         },
+        showReveal(_node, done) {
+          done();
+        },
+        showVideo(_node, done) {
+          done();
+        },
         end() {
           expect(seq).toEqual(["mirrors:mir", "gauge:gau", "line:fin"]);
+          resolve();
+        },
+      };
+      new DialogueRunner(md, view).start();
+    });
+  });
+
+  it("reveal 노드는 showReveal 를 호출하고 done 시 next 로 진행한다", async () => {
+    const seq: string[] = [];
+    const md: MissionData = {
+      id: "t3",
+      title: "t3",
+      start: "rev",
+      nodes: [
+        {
+          id: "rev",
+          type: "reveal",
+          pairs: [{ before: "b1.png", after: "a1.png" }],
+          next: "vid",
+        },
+        { id: "vid", type: "video", src: "v.mp4", next: "fin" },
+        { id: "fin", type: "line", speaker: "hati", text: "끝", next: null },
+      ],
+    };
+    await new Promise<void>((resolve) => {
+      const view: RunnerView = {
+        reset() {},
+        execCommands() {},
+        showLine(node: MissionNode, onTyped: () => void) {
+          seq.push("line:" + node.id);
+          onTyped();
+          return Promise.resolve();
+        },
+        showChoices() {},
+        showMirrors(_n, done) {
+          done();
+        },
+        showGauge(_n, done) {
+          done();
+        },
+        showReveal(node: MissionNode, done: () => void) {
+          seq.push("reveal:" + node.id);
+          Promise.resolve().then(done);
+        },
+        showVideo(node: MissionNode, done: () => void) {
+          seq.push("video:" + node.id);
+          Promise.resolve().then(done);
+        },
+        end() {
+          expect(seq).toEqual(["reveal:rev", "video:vid", "line:fin"]);
           resolve();
         },
       };

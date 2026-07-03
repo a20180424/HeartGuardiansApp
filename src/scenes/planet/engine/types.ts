@@ -34,7 +34,7 @@ export interface GaugeOption {
 
 export interface MissionNode {
   id: string;
-  type?: "line" | "choice" | "branch" | "mirrors" | "gauge";
+  type?: "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video";
   speaker?: string; // "hati" | 친구 id(예: "lumi" | "lala" | "sola")
   text?: string;
   // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).
@@ -50,6 +50,25 @@ export interface MissionNode {
   choices?: Choice[];
   // 선택지 카드 위에 띄우는 짧은 안내 문구(선택). 없으면 표시하지 않는다.
   prompt?: string;
+  // 이 노드에서 화면 가운데에 크게 띄우는 이미지 경로(선택 노드 등). 지정한 노드에서만 표시.
+  image?: string;
+  // 화면 가운데에 여러 장을 세로로 쌓아 표시(각 장은 작게). 지정한 노드에서만 표시.
+  images?: string[];
+  // 화면 가운데에 카드를 가로로 나란히 표시(높이 기준, 페더 없음). 카드 이미지 위에
+  // 상단/하단 텍스트를 얹는다(가운데 선 기준 위·아래, 자동 줄바꿈·가운데 정렬). 지정 노드에서만.
+  cards?: { image: string; top?: string; bottom?: string }[];
+  // 화면 우측 하단에 띄우는 공감 거울 이미지 경로. 지정한 노드에서만 표시.
+  mirrorImage?: string;
+  // 이 line 노드에서 자동 진행(2초 후 자동 넘김)을 끈다. 탭으로만 다음으로 넘어간다.
+  noAuto?: boolean;
+  // 화면 가운데에 "미션 완료!" 같은 완료 배너를 띄운다(문구 지정). 지정한 노드에서만 표시.
+  completeBanner?: string;
+  // type: "reveal" 전용 — 긁어서 드러내기 이미지 쌍(before=위 캔버스, after=아래 img)과 완료 임계값.
+  pairs?: { before: string; after: string }[];
+  threshold?: number;
+  // type: "video" 전용 — 재생할 동영상 경로와 재생 종료 후 정지 시간(ms).
+  src?: string;
+  holdAfter?: number;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id
@@ -90,6 +109,8 @@ export interface RunnerView {
   ): void;
   showMirrors(node: MissionNode, done: () => void): void;
   showGauge(node: MissionNode, done: () => void): void;
+  showReveal(node: MissionNode, done: () => void): void;
+  showVideo(node: MissionNode, done: () => void): void;
   end(): void;
 }
 
@@ -117,7 +138,8 @@ export interface MissionTheme {
   // 레이더 HUD("마음 신호 탐색기") 표시 여부. 생략 시 표시(true). 미션2처럼 안 쓰는 미션은 false.
   showRadar?: boolean;
   badgeColors: string[];
-  choiceIcons: Record<string, { emoji: string; bg: string }>;
+  // 선택지 아이콘. emoji(문자) 또는 img(이미지/데이터URI SVG) 중 하나로 표시.
+  choiceIcons: Record<string, { emoji: string; bg: string; img?: string }>;
   fx: Record<string, string>;
   sfx: { byNode: Record<string, string> };
   gaugeIcons?: Record<string, { emoji: string; color: string }>;
