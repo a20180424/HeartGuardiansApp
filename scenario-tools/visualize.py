@@ -73,6 +73,8 @@ def node_mermaid(n):
         rows.append(f"<b class='hd-gauge'>🎚 게이지 선택 · {len(n.get('options') or [])}개</b>")
         if n.get("banner"):
             rows.append(f"<span class='meta'>배너: {esc(trunc(n['banner'], 20))}</span>")
+    elif ntype == "reveal":                          # 긁어서 드러내기(공감 거울)
+        rows.append(f"<b class='hd-mirror'>🪞 긁어서 드러내기 · {len(n.get('pairs') or [])}쌍</b>")
     elif ntype == "video":                           # 동영상 재생(전용 화면)
         rows.append("<b class='hd-video'>🎬 동영상</b>")
         if n.get("src"):
@@ -101,6 +103,10 @@ def node_mermaid(n):
             esc(os.path.basename(s)) for s in n["images"]))
     if n.get("mirrorImage"):                         # 우측 하단 공감 거울
         meta.append(f"🪞 {esc(os.path.basename(n['mirrorImage']))}")
+    if n.get("pairs"):                               # 긁어서 드러내기 이미지 쌍
+        meta.append("🖼 " + ", ".join(
+            f"{esc(os.path.basename(p.get('before','')))}→{esc(os.path.basename(p.get('after','')))}"
+            for p in n["pairs"]))
     if ntype == "video" and n.get("holdAfter"):      # 재생 후 정지 시간
         meta.append(f"⏸ 재생 후 {n['holdAfter']}ms")
     if ntype == "mirrors":                           # 드래그 카드 · 타깃별 반응 · reveal
@@ -136,7 +142,7 @@ def node_mermaid(n):
         return f'  {nid}{{{{"{label}"}}}}'   # 육각형 = 선택
     if ntype == "branch":
         return f'  {nid}{{"{label}"}}'       # 마름모 = 분기
-    if ntype in ("mirrors", "gauge"):
+    if ntype in ("mirrors", "gauge", "reveal"):
         return f'  {nid}(["{label}"])'       # 스타디움 = 공감 거울 특수 상호작용
     if ntype == "video":
         return f'  {nid}[["{label}"]]'       # 서브루틴(겹사각형) = 동영상 재생
@@ -189,6 +195,8 @@ def scenario_mermaid(data):
             cls = "mirrorNode"
         elif ntype == "gauge":
             cls = "gaugeNode"
+        elif ntype == "reveal":
+            cls = "mirrorNode"
         elif ntype == "video":
             cls = "videoNode"
         elif ntype == "line" and n.get("next") in (None, ""):

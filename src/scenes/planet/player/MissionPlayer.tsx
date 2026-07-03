@@ -564,6 +564,7 @@ export default function MissionPlayer(props: {
         vm.mode = "idle";
         vm.bubbleKind = "none";
         vm.choices = [];
+        vm.tapHint = ""; // 이전 라인 노드의 탭 힌트 잔류 방지
         vm.rPairs = node.pairs || [];
         vm.rMirror = node.mirrorImage || "";
         vm.rText = node.text || "";
