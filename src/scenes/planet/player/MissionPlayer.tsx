@@ -453,9 +453,12 @@ export default function MissionPlayer(props: {
             vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
             render();
             window.clearTimeout(timers.auto);
-            timers.auto = window.setTimeout(() => {
-              if (vm.mode === "await") advanceLine();
-            }, 2000);
+            // noAuto 노드는 자동 진행을 끄고 탭(또는 상호작용)으로만 넘어간다.
+            if (!node.noAuto) {
+              timers.auto = window.setTimeout(() => {
+                if (vm.mode === "await") advanceLine();
+              }, 2000);
+            }
           });
         });
       },

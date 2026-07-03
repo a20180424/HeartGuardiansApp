@@ -409,16 +409,16 @@
   opacity: 1;
 }
 
-/* 화면 가운데 세로 스택 이미지(노드 images) — 여러 장을 작게 위아래로, 각 장 가장자리 페더 */
+/* 화면 가운데 이미지(노드 images) — 여러 장을 가로로 나란히, 각 장 가장자리 페더 */
 #imageStack {
   position: absolute;
   inset: 0;
   z-index: 3;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 26px;
+  gap: 36px;
   padding: 96px 40px 40px; /* 상단 스테퍼 아래로 */
   pointer-events: none;
   opacity: 0;
@@ -429,8 +429,8 @@
 }
 #imageStack img {
   display: block;
-  max-height: 34%;
-  max-width: 74%;
+  max-height: 66%;
+  max-width: 46%;
   object-fit: contain;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
@@ -447,7 +447,7 @@
   position: absolute;
   right: 48px;
   bottom: 40px;
-  height: 44%;
+  height: 29%; /* 기존 44%의 약 2/3 */
   width: auto;
   object-fit: contain;
   z-index: 6;

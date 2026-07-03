@@ -56,6 +56,8 @@ export interface MissionNode {
   images?: string[];
   // 화면 우측 하단에 띄우는 공감 거울 이미지 경로. 지정한 노드에서만 표시.
   mirrorImage?: string;
+  // 이 line 노드에서 자동 진행(2초 후 자동 넘김)을 끈다. 탭으로만 다음으로 넘어간다.
+  noAuto?: boolean;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id

@@ -85,6 +85,7 @@
       "text": "공감 거울을 터치해서 이 차가운 화면 위로 슥슥 문질러봐!",
       "images": ["/assets/char/Luna/luna_unheard1.png", "/assets/char/Luna/luna_unheard2.png"],
       "mirrorImage": "/assets/ui/empathy-mirror2.png",
+      "noAuto": true,
       "next": "m3_end"
     },
 
