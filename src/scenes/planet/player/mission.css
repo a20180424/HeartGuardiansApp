@@ -500,23 +500,23 @@
   align-items: center;
   gap: 16px;
   padding: 22px 62px;
-  border: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   border-radius: 60px;
-  background: linear-gradient(160deg, #9be319, #5aa800);
-  color: #fff;
+  background: linear-gradient(160deg, #7a86a3, #49546c);
+  color: #eef2fb;
   font-size: 40px;
   font-weight: 900;
   letter-spacing: 1px;
   cursor: pointer;
   box-shadow:
-    0 12px 0 #3c7400,
-    0 18px 30px rgba(0, 0, 0, 0.45);
+    0 11px 0 #2c3446,
+    0 18px 30px rgba(0, 0, 0, 0.5);
 }
 #videoPlayBtn:active {
   transform: translateX(-50%) translateY(6px);
   box-shadow:
-    0 6px 0 #3c7400,
-    0 10px 18px rgba(0, 0, 0, 0.4);
+    0 5px 0 #2c3446,
+    0 10px 18px rgba(0, 0, 0, 0.45);
 }
 #videoPlayBtn .vpb-icon {
   font-size: 30px;
