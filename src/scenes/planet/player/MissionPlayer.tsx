@@ -88,6 +88,7 @@ interface VM {
   rPairs: { before: string; after: string }[];
   rMirror: string;
   rThreshold: number;
+  videoSrc: string; // type:"video" 재생 중인 동영상 경로(없으면 "")
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -182,6 +183,7 @@ export default function MissionPlayer(props: {
     rPairs: [],
     rMirror: "",
     rThreshold: 0.85,
+    videoSrc: "",
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -428,6 +430,7 @@ export default function MissionPlayer(props: {
           rPairs: [],
           rMirror: "",
           rThreshold: 0.85,
+          videoSrc: "",
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -578,6 +581,17 @@ export default function MissionPlayer(props: {
         ms.done = done;
         render();
         audio.play("pop");
+      },
+      showVideo(node, done) {
+        updateScene(node); // 배경(black 등)/스프라이트 적용
+        vm.mode = "idle"; // 탭 진행 안 됨(건너뛰기 없음)
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.tapHint = "";
+        vm.videoSrc = node.src || "";
+        ms.done = done;
+        ms.node = node; // holdAfter 참조용
+        render();
       },
       end() {
         vm.mode = "end";
@@ -760,6 +774,19 @@ export default function MissionPlayer(props: {
     vm.stage = "none";
     force();
     done?.();
+  };
+
+  // 동영상: 재생 종료 → holdAfter 만큼 정지 후 다음 노드로.
+  const finishVideo = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.videoSrc = "";
+    force();
+    done?.();
+  };
+  const onVideoEnded = () => {
+    const hold = ms.node?.holdAfter ?? 0;
+    window.setTimeout(finishVideo, hold);
   };
 
   const onMirrorAllDropped = () => {
@@ -1169,6 +1196,20 @@ export default function MissionPlayer(props: {
               />
             ))}
           </div>
+        )}
+
+        {/* 동영상(노드 video) — 까만 화면 위 가운데 크게 재생. 건너뛰기/컨트롤 없음 */}
+        {vm.videoSrc && (
+          <video
+            id="missionVideo"
+            src={vm.videoSrc}
+            autoPlay
+            playsInline
+            onEnded={onVideoEnded}
+            onCanPlay={(e) => {
+              e.currentTarget.play().catch(() => {});
+            }}
+          />
         )}
 
         {/* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준. 상/하단 텍스트 오버레이 */}

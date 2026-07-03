@@ -83,6 +83,9 @@ function makeFakeView(onEnd: () => void) {
     showReveal(_node, done) {
       done();
     },
+    showVideo(_node, done) {
+      done();
+    },
     end() {
       onEnd();
     },
@@ -157,8 +160,9 @@ describe("DialogueRunner", () => {
           id: "rev",
           type: "reveal",
           pairs: [{ before: "b1.png", after: "a1.png" }],
-          next: "fin",
+          next: "vid",
         },
+        { id: "vid", type: "video", src: "v.mp4", next: "fin" },
         { id: "fin", type: "line", speaker: "hati", text: "끝", next: null },
       ],
     };
@@ -182,8 +186,12 @@ describe("DialogueRunner", () => {
           seq.push("reveal:" + node.id);
           Promise.resolve().then(done);
         },
+        showVideo(node: MissionNode, done: () => void) {
+          seq.push("video:" + node.id);
+          Promise.resolve().then(done);
+        },
         end() {
-          expect(seq).toEqual(["reveal:rev", "line:fin"]);
+          expect(seq).toEqual(["reveal:rev", "video:vid", "line:fin"]);
           resolve();
         },
       };

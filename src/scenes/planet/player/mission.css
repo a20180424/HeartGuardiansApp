@@ -475,6 +475,21 @@
   opacity: 1;
 }
 
+/* 동영상(노드 video) — 까만 화면 위 가운데 크게(전체화면 아님) */
+#missionVideo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 84%;
+  max-height: 84%;
+  width: auto;
+  height: auto;
+  z-index: 5;
+  background: #000;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
 /* 화면 가운데 카드들(노드 cards) — 가로로 나란히, 높이 기준, 페더 없음 + 등장 애니 */
 #cardStage {
   position: absolute;

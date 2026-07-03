@@ -14,7 +14,7 @@
     {
       "id": "m3_video",
       "type": "video",
-      "src": "/assets/video/mission3-scene2.mp4",
+      "src": "/video/Planet1_Mission3.mp4",
       "holdAfter": 800,
       "hideFriend": true,
       "next": "m3_q1_prompt"

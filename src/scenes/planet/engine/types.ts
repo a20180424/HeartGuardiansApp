@@ -66,6 +66,9 @@ export interface MissionNode {
   // type: "reveal" 전용 — 긁어서 드러내기 이미지 쌍(before=위 캔버스, after=아래 img)과 완료 임계값.
   pairs?: { before: string; after: string }[];
   threshold?: number;
+  // type: "video" 전용 — 재생할 동영상 경로와 재생 종료 후 정지 시간(ms).
+  src?: string;
+  holdAfter?: number;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id
@@ -107,6 +110,7 @@ export interface RunnerView {
   showMirrors(node: MissionNode, done: () => void): void;
   showGauge(node: MissionNode, done: () => void): void;
   showReveal(node: MissionNode, done: () => void): void;
+  showVideo(node: MissionNode, done: () => void): void;
   end(): void;
 }
 
