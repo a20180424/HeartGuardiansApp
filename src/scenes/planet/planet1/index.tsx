@@ -43,6 +43,7 @@ export default function Planet1() {
   useEffect(() => {
     [MISSION01_THEME, MISSION02_THEME, MISSION03_THEME].forEach((t) =>
       Object.values(t.bg.states).forEach((src) => {
+        if (!src) return; // 빈 상태(예: black)는 스킵
         const im = new Image();
         im.src = src;
       }),

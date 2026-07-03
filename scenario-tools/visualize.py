@@ -73,6 +73,10 @@ def node_mermaid(n):
         rows.append(f"<b class='hd-gauge'>🎚 게이지 선택 · {len(n.get('options') or [])}개</b>")
         if n.get("banner"):
             rows.append(f"<span class='meta'>배너: {esc(trunc(n['banner'], 20))}</span>")
+    elif ntype == "video":                           # 동영상 재생(전용 화면)
+        rows.append("<b class='hd-video'>🎬 동영상</b>")
+        if n.get("src"):
+            rows.append(f"<span class='meta'>{esc(os.path.basename(n['src']))}</span>")
     else:
         spk = esc(n.get("speaker", "?"))
         head = f"<b class='hd-{spk}'>💬 {spk}</b>"
@@ -90,6 +94,10 @@ def node_mermaid(n):
         meta.append("📌 hold 유지")
     elif n.get("hold") is False:
         meta.append("📌 hold 해제")
+    if n.get("image"):                               # 화면 가운데 이미지(선택 등)
+        meta.append(f"🖼 {esc(os.path.basename(n['image']))}")
+    if ntype == "video" and n.get("holdAfter"):      # 재생 후 정지 시간
+        meta.append(f"⏸ 재생 후 {n['holdAfter']}ms")
     if ntype == "mirrors":                           # 드래그 카드 · 타깃별 반응 · reveal
         if n.get("card"):
             meta.append(f"🃏 카드: {esc(trunc(n['card'], 18))}")
@@ -125,6 +133,8 @@ def node_mermaid(n):
         return f'  {nid}{{"{label}"}}'       # 마름모 = 분기
     if ntype in ("mirrors", "gauge"):
         return f'  {nid}(["{label}"])'       # 스타디움 = 공감 거울 특수 상호작용
+    if ntype == "video":
+        return f'  {nid}[["{label}"]]'       # 서브루틴(겹사각형) = 동영상 재생
     return f'  {nid}["{label}"]'             # 사각형 = 대사
 
 
@@ -159,6 +169,7 @@ def scenario_mermaid(data):
         "  classDef endNode    fill:#ffd6d6,stroke:#cf222e,stroke-width:2px;",
         "  classDef mirrorNode fill:#e6f6ff,stroke:#0969da,stroke-width:2px,color:#053a63;",
         "  classDef gaugeNode  fill:#eaffea,stroke:#1a7f37,stroke-width:2px,color:#053f1e;",
+        "  classDef videoNode  fill:#fbe9ff,stroke:#8250df,stroke-width:2px,color:#3b1f78;",
     ]
     for n in nodes:
         nid = n["id"]
@@ -173,6 +184,8 @@ def scenario_mermaid(data):
             cls = "mirrorNode"
         elif ntype == "gauge":
             cls = "gaugeNode"
+        elif ntype == "video":
+            cls = "videoNode"
         elif ntype == "line" and n.get("next") in (None, ""):
             cls = "endNode"
         else:
@@ -197,7 +210,7 @@ HTML_TMPL = """<!doctype html>
   /* 노드 내부 단 구조 */
   .nid{{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:#8b949e;letter-spacing:.2px}}
   .hd-hati{{color:#1f6feb}} .hd-lumi{{color:#1a7f37}} .hd-lala{{color:#bf3989}} .hd-sola{{color:#9a6700}} .hd-choice{{color:#9a6700}} .hd-branch{{color:#8250df}}
-  .hd-mirror{{color:#0969da}} .hd-gauge{{color:#1a7f37}}
+  .hd-mirror{{color:#0969da}} .hd-gauge{{color:#1a7f37}} .hd-video{{color:#8250df}}
   .emo{{color:#8250df;font-size:11px}}
   .say{{font-size:13px}}
   .meta{{font-size:10px;color:#6e7781}}
@@ -211,6 +224,7 @@ HTML_TMPL = """<!doctype html>
     <span class="chip">▭ line(대사)</span>
     <span class="chip">⬡ choice(선택)</span>
     <span class="chip">◇ branch(분기)</span>
+    <span class="chip">🎬 video(동영상)</span>
     <span class="chip">🔁 모두 탐색</span>
     <span class="chip">↻ 재진입 문구</span>
     <span class="chip">⚙ onEnter(진입)</span>

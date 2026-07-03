@@ -50,6 +50,8 @@ export interface MissionNode {
   choices?: Choice[];
   // 선택지 카드 위에 띄우는 짧은 안내 문구(선택). 없으면 표시하지 않는다.
   prompt?: string;
+  // 이 노드에서 화면 가운데에 크게 띄우는 이미지 경로(선택 노드 등). 지정한 노드에서만 표시.
+  image?: string;
   requireAll?: boolean;
   condition?: string; // "allExplored"
   watch?: string; // 감시할 choice 노드 id

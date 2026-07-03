@@ -338,10 +338,13 @@ export const MISSION03_THEME: MissionTheme = {
     states: {
       main: `${A}/bg/mission3-main-bg.png`,
       stage4: `${A}/bg/light-planet-stage4.png`,
+      black: "", // 까만 화면(동영상 노드): 이미지 없이 #stage 배경을 검게(#000)
     },
     initial: "main",
     byNode: {
       m3_intro: "main",
+      m3_video: "black", // 동영상 구간부터 까만 화면. 이후 노드에서 배경을 다시 켜지 않아
+      // 마지막 노드(m3_end) 직전까지 계속 까만 화면으로 유지된다(sparse 유지).
       m3_end: "stage4",
     },
   },

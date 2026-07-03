@@ -42,6 +42,7 @@ interface VM {
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
+  choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
@@ -140,6 +141,7 @@ export default function MissionPlayer(props: {
     hideFriend: false,
     lesson: null,
     sideImage: "",
+    choiceImage: "",
     friendGlow: false,
     bright: false,
     empathy: false,
@@ -277,6 +279,7 @@ export default function MissionPlayer(props: {
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
       vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
       vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
+      vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
       vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
@@ -374,6 +377,7 @@ export default function MissionPlayer(props: {
           hideFriend: false,
           lesson: null,
           sideImage: "",
+          choiceImage: "",
           friendGlow: false,
           bright: false,
           empathy: false,
@@ -551,6 +555,7 @@ export default function MissionPlayer(props: {
   // 배경 이미지 미리 로드 — 엔딩(m1_end3)에서 stage2로 교체될 때 깜빡임 방지.
   useEffect(() => {
     Object.values(theme.bg.states).forEach((src) => {
+      if (!src) return; // 빈 상태(예: black)는 실제 이미지가 없으므로 스킵
       const im = new Image();
       im.src = src;
     });
@@ -858,8 +863,13 @@ export default function MissionPlayer(props: {
 
   return (
     <div id="viewport">
-      <div id="stage" ref={stageRef} className={vm.bright ? "bright" : ""} onClick={onStageClick}>
-        <img id="bg" src={theme.bg.states[vm.bg]} alt="" />
+      <div
+        id="stage"
+        ref={stageRef}
+        className={`${vm.bright ? "bright" : ""}${vm.bg === "black" ? " blackbg" : ""}`}
+        onClick={onStageClick}
+      >
+        <img id="bg" src={theme.bg.states[vm.bg] || undefined} alt="" />
         <div id="lightOverlay" />
 
         {/* 진행 스테퍼 */}
@@ -964,7 +974,10 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 선택지 패널 — 안내 문구 + 카드를 한 배경 박스에 담는다 */}
-        <div id="choicePanel" className={vm.choices.length > 0 ? "show" : ""}>
+        <div
+          id="choicePanel"
+          className={`${vm.choices.length > 0 ? "show" : ""}${vm.choiceImage ? " img-choice" : ""}`}
+        >
           {/* 카드 위 안내 문구 (있을 때만) */}
           <div id="choicePrompt">{vm.choicePrompt}</div>
 
@@ -1050,6 +1063,19 @@ export default function MissionPlayer(props: {
               <div className="lb-sub">{vm.lesson.sub}</div>
             </div>
           </div>
+        )}
+
+        {/* 화면 가운데 큰 이미지(노드 image) — 선택지 등에서 상황 이미지를 크게 보여줄 때 */}
+        {vm.choiceImage && (
+          <img
+            id="choiceImage"
+            className="show"
+            src={vm.choiceImage}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
         )}
 
         {/* 우측 가운데 장식 이미지(노드 sideImage) */}

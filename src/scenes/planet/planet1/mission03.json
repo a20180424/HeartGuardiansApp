@@ -8,7 +8,55 @@
       "type": "line",
       "speaker": "hati",
       "text": "루나가 걱정돼. 루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!",
-      "next": "m3_end"
+      "next": "m3_video"
+    },
+
+    {
+      "id": "m3_video",
+      "type": "video",
+      "src": "/assets/video/mission3-scene2.mp4",
+      "holdAfter": 800,
+      "hideFriend": true,
+      "next": "m3_q1_prompt"
+    },
+
+    {
+      "id": "m3_q1_prompt",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
+      "next": "m3_q1_choice"
+    },
+    {
+      "id": "m3_q1_choice",
+      "type": "choice",
+      "hideFriend": true,
+      "image": "/assets/char/Luna/luna_unheard1.png",
+      "choices": [
+        { "text": "슬픔", "next": "m3_q2_choice" },
+        { "text": "화남", "next": "m3_q2_choice" },
+        { "text": "걱정", "next": "m3_q2_choice" },
+        { "text": "외로움", "next": "m3_q2_choice" },
+        { "text": "관심없음", "next": "m3_q2_choice" },
+        { "text": "혼란스러움", "next": "m3_q2_choice" },
+        { "text": "지침", "next": "m3_q2_choice" }
+      ]
+    },
+    {
+      "id": "m3_q2_choice",
+      "type": "choice",
+      "hideFriend": true,
+      "image": "/assets/char/Luna/luna_unheard2.png",
+      "choices": [
+        { "text": "슬픔", "next": "m3_end" },
+        { "text": "화남", "next": "m3_end" },
+        { "text": "걱정", "next": "m3_end" },
+        { "text": "외로움", "next": "m3_end" },
+        { "text": "관심없음", "next": "m3_end" },
+        { "text": "혼란스러움", "next": "m3_end" },
+        { "text": "지침", "next": "m3_end" }
+      ]
     },
 
     {
