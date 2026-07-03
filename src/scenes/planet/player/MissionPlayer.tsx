@@ -1013,7 +1013,11 @@ export default function MissionPlayer(props: {
                   {idx + 1}
                 </div>
                 <div className="icon" style={{ background: deco.bg }}>
-                  {deco.emoji}
+                  {deco.img ? (
+                    <img className="icon-img" src={deco.img} alt="" />
+                  ) : (
+                    deco.emoji
+                  )}
                 </div>
                 <div className="ctext">{c.text}</div>
               </button>

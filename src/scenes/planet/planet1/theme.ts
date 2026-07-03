@@ -326,6 +326,105 @@ const LUNA_PLACEHOLDER: SpriteSet = {
   byNode: {},
 };
 
+// 미션3 감정 선택지: 광택 있는 컬러 구체 + 표정(인라인 SVG 데이터URI).
+// 3D 일러스트 대신 CSS/SVG로 레퍼런스 느낌을 재현한다(어두운 카드 위 컬러 얼굴).
+const INK = "#332c46";
+const BROW = `fill='none' stroke='${INK}' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'`;
+const MOUTH = `fill='none' stroke='${INK}' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'`;
+const EYE = `fill='${INK}'`;
+const emoFace = (base: string, gloss: string, feat: string): string =>
+  "data:image/svg+xml," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>` +
+      `<defs><radialGradient id='g' cx='36%' cy='28%' r='80%'>` +
+      `<stop offset='0%' stop-color='${gloss}'/>` +
+      `<stop offset='60%' stop-color='${base}'/>` +
+      `<stop offset='100%' stop-color='${base}'/>` +
+      `</radialGradient></defs>` +
+      `<circle cx='50' cy='52' r='45' fill='url(#g)'/>` +
+      `<ellipse cx='40' cy='29' rx='20' ry='11' fill='#ffffff' opacity='0.25'/>` +
+      feat +
+      `</svg>`,
+  );
+
+const M3_CHOICE_ICONS: Record<string, { emoji: string; bg: string; img?: string }> = {
+  슬픔: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#3fa0ef",
+      "#8fd0ff",
+      `<path d='M27 41 L43 37' ${BROW}/><path d='M57 37 L73 41' ${BROW}/>` +
+        `<ellipse cx='36' cy='51' rx='4.5' ry='5.5' ${EYE}/><ellipse cx='64' cy='51' rx='4.5' ry='5.5' ${EYE}/>` +
+        `<path d='M38 71 Q50 63 62 71' ${MOUTH}/>` +
+        `<circle cx='30' cy='62' r='3.2' fill='#cfe9ff'/>`,
+    ),
+  },
+  화남: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#ef4d3d",
+      "#ff8a72",
+      `<path d='M27 37 L44 44' ${BROW}/><path d='M56 44 L73 37' ${BROW}/>` +
+        `<ellipse cx='36' cy='52' rx='4.5' ry='5.5' ${EYE}/><ellipse cx='64' cy='52' rx='4.5' ry='5.5' ${EYE}/>` +
+        `<path d='M38 71 Q50 63 62 71' ${MOUTH}/>`,
+    ),
+  },
+  걱정: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#f0c23a",
+      "#ffe28c",
+      `<path d='M28 40 Q36 36 44 40' ${BROW}/><path d='M56 40 Q64 36 72 40' ${BROW}/>` +
+        `<ellipse cx='36' cy='52' rx='4.5' ry='5.5' ${EYE}/><ellipse cx='64' cy='52' rx='4.5' ry='5.5' ${EYE}/>` +
+        `<path d='M41 70 Q50 64 59 70' ${MOUTH}/>`,
+    ),
+  },
+  외로움: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#a273e0",
+      "#caa8f2",
+      `<path d='M31 51 Q36 56 41 51' ${MOUTH}/><path d='M59 51 Q64 56 69 51' ${MOUTH}/>` +
+        `<path d='M40 70 Q50 65 60 70' ${MOUTH}/>`,
+    ),
+  },
+  관심없음: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#54cfae",
+      "#9be9d3",
+      `<path d='M31 50 L41 50' ${MOUTH}/><path d='M59 50 L69 50' ${MOUTH}/>` +
+        `<path d='M40 67 L60 67' ${MOUTH}/>`,
+    ),
+  },
+  혼란스러움: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#ef85b0",
+      "#ffb8d4",
+      `<ellipse cx='36' cy='51' rx='5' ry='6' ${EYE}/><circle cx='64' cy='50' r='3.3' ${EYE}/>` +
+        `<path d='M39 68 Q44.5 63 50 68 T61 68' ${MOUTH}/>` +
+        `<text x='69' y='31' font-family='sans-serif' font-size='30' font-weight='700' fill='${INK}'>?</text>`,
+    ),
+  },
+  지침: {
+    emoji: "",
+    bg: "transparent",
+    img: emoFace(
+      "#9dc45a",
+      "#c8e58c",
+      `<path d='M31 49 Q36 55 41 49' ${MOUTH}/><path d='M59 49 Q64 55 69 49' ${MOUTH}/>` +
+        `<path d='M40 68 Q45 64 50 68 T60 68' ${MOUTH}/>`,
+    ),
+  },
+};
+
 export const MISSION03_THEME: MissionTheme = {
   speakers: {
     hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` },
@@ -370,7 +469,7 @@ export const MISSION03_THEME: MissionTheme = {
   },
   showRadar: false, // 가운데 콘텐츠 확정 전까지 HUD 미표시
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
-  choiceIcons: {},
+  choiceIcons: M3_CHOICE_ICONS,
   fx: {
     fx_light_return: "lightReturn",
   },
