@@ -95,15 +95,16 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
+      "text": "루나의 마음을 완전히 공감 했구나!!!",
       "images": ["/assets/char/Luna/luna_heard1.png", "/assets/char/Luna/luna_heard2.png"],
       "next": "m3_card"
     },
     {
       "id": "m3_card",
       "type": "line",
+      "speaker": "hati",
       "hideFriend": true,
-      "text": "",
+      "text": "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
       "onEnter": [{ "cmd": "fx", "value": "fx_empathy_card" }],
       "next": "m3_complete"
     },
