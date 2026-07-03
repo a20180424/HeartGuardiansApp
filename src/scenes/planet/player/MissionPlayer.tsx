@@ -915,7 +915,8 @@ export default function MissionPlayer(props: {
         className={`${vm.bright ? "bright" : ""}${vm.bg === "black" ? " blackbg" : ""}`}
         onClick={onStageClick}
       >
-        <img id="bg" src={theme.bg.states[vm.bg] || undefined} alt="" />
+        {/* 배경 src 가 있을 때만 렌더(black 등 빈 상태는 빈 <img> 브로큰 아이콘 방지) */}
+        {theme.bg.states[vm.bg] ? <img id="bg" src={theme.bg.states[vm.bg]} alt="" /> : null}
         <div id="lightOverlay" />
 
         {/* 진행 스테퍼 */}
