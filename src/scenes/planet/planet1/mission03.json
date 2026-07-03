@@ -1,0 +1,24 @@
+{
+  "id": "mission03",
+  "title": "공감 없는 세상",
+  "start": "m3_intro",
+  "nodes": [
+    {
+      "id": "m3_intro",
+      "type": "line",
+      "speaker": "hati",
+      "text": "루나가 걱정돼. 루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!",
+      "next": "m3_end"
+    },
+
+    {
+      "id": "m3_end",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "text": "축하해! 대원은 이제 첫 번째 공감 원석인 이해의 사파이어를 얻었어! 이 원석은 다른 사람의 마음을 이해하려는 힘을 담고 있단다.",
+      "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
+      "next": null
+    }
+  ]
+}

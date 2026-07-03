@@ -2,15 +2,22 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
-import { MISSION01_THEME, MISSION01_DATA, MISSION02_THEME, MISSION02_DATA } from "./theme";
+import {
+  MISSION01_THEME,
+  MISSION01_DATA,
+  MISSION02_THEME,
+  MISSION02_DATA,
+  MISSION03_THEME,
+  MISSION03_DATA,
+} from "./theme";
 import "./Planet1.css";
 
 // Planet1 컨테이너. subscene들을 순서대로 진행한다(내부 상태 머신).
 // 목표: prologue → mission1 → mission2 → mission3 → epilogue.
-// 현재 구현: prologue, mission1, mission2.
-type Stage = "prologue" | "mission1" | "mission2";
+// 현재 구현: prologue, mission1, mission2, mission3(시작·끝 골격).
+type Stage = "prologue" | "mission1" | "mission2" | "mission3";
 
-const STAGES: Stage[] = ["prologue", "mission1", "mission2"];
+const STAGES: Stage[] = ["prologue", "mission1", "mission2", "mission3"];
 const FADE_MS = 160;
 
 export default function Planet1() {
@@ -28,9 +35,9 @@ export default function Planet1() {
   const [stage, setStage] = useState<Stage>(initialStage);
   const [fading, setFading] = useState(false);
 
-  // 전환 시 배경 깜빡임 방지: 두 미션 배경을 미리 캐시에 올려둔다.
+  // 전환 시 배경 깜빡임 방지: 미션 배경들을 미리 캐시에 올려둔다.
   useEffect(() => {
-    [MISSION01_THEME, MISSION02_THEME].forEach((t) =>
+    [MISSION01_THEME, MISSION02_THEME, MISSION03_THEME].forEach((t) =>
       Object.values(t.bg.states).forEach((src) => {
         const im = new Image();
         im.src = src;
@@ -63,11 +70,21 @@ export default function Planet1() {
         />
       )}
       {stage === "mission2" && (
-        // mission3 미구현이라 완료 시 홈으로. (추후 goTo("mission3"))
+        // mission2 완료 → mission3로 전환.
         <MissionPlayer
           scenario={MISSION02_DATA}
           theme={MISSION02_THEME}
           currentStep={2}
+          onExit={() => goTo("mission3")}
+        />
+      )}
+      {stage === "mission3" && (
+        // 마지막 미션: 완료 시 "다음 미션으로" 대신 우주선 버튼 → 홈으로.
+        <MissionPlayer
+          scenario={MISSION03_DATA}
+          theme={MISSION03_THEME}
+          currentStep={3}
+          finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
           onExit={() => nav("/home")}
         />
       )}

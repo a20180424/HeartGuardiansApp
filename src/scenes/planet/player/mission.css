@@ -908,6 +908,30 @@
     0 12px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* 우주선 변형(마지막 미션 완료 → 홈): 프롤로그의 흰 알약형 버튼과 톤을 맞춘다 */
+#nextBtn.ship {
+  background: #fff;
+  color: #1f2937;
+  font-size: 36px;
+  gap: 14px;
+  padding: 16px 40px 16px 22px;
+  border-radius: 60px;
+  text-shadow: none;
+  box-shadow:
+    0 12px 0 #b9c2cf,
+    0 18px 28px rgba(0, 0, 0, 0.35);
+}
+#nextBtn.ship:active {
+  box-shadow:
+    0 6px 0 #b9c2cf,
+    0 10px 18px rgba(0, 0, 0, 0.35);
+}
+#nextBtn.ship .nb-ship-icon {
+  width: 96px;
+  height: 70px;
+  object-fit: contain;
+}
+
 /* ---------- exit (← 홈) ---------- */
 #missionExit {
   position: absolute;

@@ -1,11 +1,13 @@
 import type { MissionData, MissionTheme, SpriteSet } from "../engine/types";
 import missionData from "./mission01.json";
 import mission2Data from "./mission02.json";
+import mission3Data from "./mission03.json";
 
 // 시나리오 콘텐츠(대사·선택지·분기 그래프). 런타임 fetch 대신 빌드 타임 import로
 // 타입 검증·파일 존재 보장. JSON 추론 타입은 union(type/next 등)과 안 맞아 단언한다.
 export const MISSION01_DATA = missionData as unknown as MissionData;
 export const MISSION02_DATA = mission2Data as unknown as MissionData;
+export const MISSION03_DATA = mission3Data as unknown as MissionData;
 
 const A = "/assets";
 
@@ -310,4 +312,64 @@ export const MISSION02_THEME: MissionTheme = {
     run: { emoji: "🏃", color: "#3b82f6" },
     meditate: { emoji: "🧘", color: "#22c55e" },
   },
+};
+
+// ---------- Mission 3: 공감 없는 세상 (루나) ----------
+// 현재는 시작(인트로)·끝(엔딩) 골격만 정의. 가운데 콘텐츠는 추후 채운다.
+// 루나 캐릭터 아트가 아직 없어 임시로 루미 스프라이트를 placeholder로 사용한다.
+// (인트로/엔딩 모두 친구 레이어를 숨기므로 화면엔 보이지 않는다. 아트 준비되면 경로 교체.)
+const LUNA_PLACEHOLDER: SpriteSet = {
+  char: {
+    sad: `${A}/char/Lumi/lumi_sad.png`,
+  },
+  initial: "sad",
+  byNode: {},
+};
+
+export const MISSION03_THEME: MissionTheme = {
+  speakers: {
+    hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` },
+    luna: { name: "루나" },
+  },
+  banner: { pill: "미션 3", title: "공감 없는 세상", ribbon: "사라진 이해의 빛을 밝혀라" },
+  bannerNode: "m3_intro",
+  initialFriend: "luna",
+  bg: {
+    states: {
+      main: `${A}/bg/mission3-main-bg.png`,
+      stage4: `${A}/bg/light-planet-stage4.png`,
+    },
+    initial: "main",
+    byNode: {
+      m3_intro: "main",
+      m3_end: "stage4",
+    },
+  },
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      m3_intro: "explaining",
+      m3_end: "celebrating",
+    },
+  },
+  friends: { luna: LUNA_PLACEHOLDER },
+  radar: {
+    states: {
+      p25: `${A}/device/radar_25.png`,
+      p50: `${A}/device/radar_50.png`,
+      p75: `${A}/device/radar_75.png`,
+      p100: `${A}/device/radar_100.png`,
+      active: `${A}/device/radar_active.png`,
+    },
+    initial: "p100",
+    byNode: {},
+  },
+  showRadar: false, // 가운데 콘텐츠 확정 전까지 HUD 미표시
+  badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
+  choiceIcons: {},
+  fx: {
+    fx_light_return: "lightReturn",
+  },
+  sfx: { byNode: {} },
 };

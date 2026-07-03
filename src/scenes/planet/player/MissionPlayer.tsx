@@ -108,6 +108,8 @@ export default function MissionPlayer(props: {
   theme: MissionTheme;
   onExit: () => void;
   currentStep?: number; // 진행 스테퍼에서 이 미션이 몇 번째인지(1~3). 기본 1.
+  // 엔딩 완료 버튼 커스터마이즈(마지막 미션 등). 없으면 기본 "다음 미션으로".
+  finish?: { label: string; icon?: string };
 }) {
   const { scenario, theme } = props;
   const [, force] = useReducer((x) => x + 1, 0);
@@ -1082,12 +1084,24 @@ export default function MissionPlayer(props: {
         {vm.showNext && (
           <button
             id="nextBtn"
+            className={props.finish ? "ship" : ""}
             onClick={(e) => {
               e.stopPropagation();
               props.onExit();
             }}
           >
-            다음 미션으로 <span>➜</span>
+            {props.finish ? (
+              <>
+                {props.finish.icon && (
+                  <img className="nb-ship-icon" src={props.finish.icon} alt="" />
+                )}
+                <span>{props.finish.label}</span>
+              </>
+            ) : (
+              <>
+                다음 미션으로 <span>➜</span>
+              </>
+            )}
           </button>
         )}
 
