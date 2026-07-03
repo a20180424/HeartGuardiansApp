@@ -34,7 +34,7 @@ export interface GaugeOption {
 
 export interface MissionNode {
   id: string;
-  type?: "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal";
+  type?: "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video";
   speaker?: string; // "hati" | 친구 id(예: "lumi" | "lala" | "sola")
   text?: string;
   // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).

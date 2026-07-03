@@ -140,6 +140,9 @@ describe("DialogueRunner", () => {
         showReveal(_node, done) {
           done();
         },
+        showVideo(_node, done) {
+          done();
+        },
         end() {
           expect(seq).toEqual(["mirrors:mir", "gauge:gau", "line:fin"]);
           resolve();
