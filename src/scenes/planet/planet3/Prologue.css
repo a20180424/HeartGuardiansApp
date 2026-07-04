@@ -1,0 +1,9 @@
+/* Planet3(얼음 행성) 프롤로그 placeholder 오버라이드.
+   레이아웃은 공용 prologue/Prologue.css 를 쓰고, 여기선 포인트 색만 얼음톤으로 바꾼다.
+   배경은 공용 기본값을 상속(전용 아트 준비 시 background 추가). */
+.prologue.prologue--planet3 {
+  --planet-accent: #38bdf8;
+  --planet-accent-deep: #0369a1;
+  --planet-panel-bg: #eef7ff;
+  --planet-tab: #0ea5e9;
+}

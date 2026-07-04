@@ -1,58 +1,88 @@
-import { Suspense, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Canvas } from "@react-three/fiber";
-import { World } from "./World";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Prologue from "./Prologue";
+import MissionPlayer from "../player/MissionPlayer";
+import {
+  MISSION01_THEME,
+  MISSION01_DATA,
+  MISSION02_THEME,
+  MISSION02_DATA,
+  MISSION03_THEME,
+  MISSION03_DATA,
+} from "./theme";
+import "../planet1/Planet1.css"; // 공용 subscene 페이드 오버레이(.planet-fade) 재사용
+
+// Planet3(얼음 행성) 컨테이너. prologue → mission1 → mission2 → mission3 → home 상태 머신.
+// 각 미션은 현재 시작·끝 골격. 3D 샘플은 Planet3Sample.tsx에 보존(실제 작업 때 연결).
+type Stage = "prologue" | "mission1" | "mission2" | "mission3";
+
+const STAGES: Stage[] = ["prologue", "mission1", "mission2", "mission3"];
+const FADE_MS = 160;
 
 export default function Planet3() {
   const nav = useNavigate();
-  const [talk, setTalk] = useState<{ name: string; line: string } | null>(null);
+  const [params] = useSearchParams();
+
+  const m = params.get("m");
+  const wanted =
+    params.get("stage") ?? (m ? (m === "0" ? "prologue" : `mission${m}`) : null);
+  const initialStage: Stage =
+    import.meta.env.DEV && wanted && (STAGES as string[]).includes(wanted)
+      ? (wanted as Stage)
+      : "prologue";
+
+  const [stage, setStage] = useState<Stage>(initialStage);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    [MISSION01_THEME, MISSION02_THEME, MISSION03_THEME].forEach((t) =>
+      Object.values(t.bg.states).forEach((src) => {
+        if (!src) return;
+        const im = new Image();
+        im.src = src;
+      }),
+    );
+  }, []);
+
+  const goTo = (next: Stage) => {
+    setFading(true);
+    window.setTimeout(() => {
+      setStage(next);
+      window.setTimeout(() => setFading(false), 60);
+    }, FADE_MS);
+  };
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#0b1020" }}>
-      <Canvas camera={{ position: [0, 5, 11], fov: 50 }} style={{ position: "absolute", inset: 0 }}>
-        <color attach="background" args={["#0b1020"]} />
-        <Suspense fallback={null}>
-          <World onTalk={(name, line) => setTalk({ name, line })} />
-        </Suspense>
-      </Canvas>
-
-      <button
-        className="btn ghost"
-        style={{ position: "absolute", top: 28, right: 28 }}
-        onClick={() => nav("/home")}
-      >
-        ← 홈
-      </button>
-      <div style={{ position: "absolute", top: 28, left: 28, color: "#fff", opacity: 0.8 }}>
-        Planet 3 (3D) · NPC를 클릭해 대화 · 드래그로 회전
-      </div>
-
-      {talk && (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: 48,
-            transform: "translateX(-50%)",
-            background: "#fff",
-            color: "#1f2937",
-            padding: "22px 28px",
-            borderRadius: 20,
-            maxWidth: 600,
-            boxShadow: "0 12px 40px rgba(0,0,0,.4)",
-          }}
-        >
-          <div style={{ fontWeight: 800, color: "#7c3aed", marginBottom: 8 }}>{talk.name}</div>
-          <div style={{ fontSize: 22 }}>{talk.line}</div>
-          <button
-            className="btn"
-            style={{ marginTop: 16, padding: "10px 20px", fontSize: 18 }}
-            onClick={() => setTalk(null)}
-          >
-            닫기
-          </button>
-        </div>
+    <>
+      {stage === "prologue" && (
+        <Prologue onStart={() => goTo("mission1")} onHome={() => nav("/home")} />
       )}
-    </div>
+      {stage === "mission1" && (
+        <MissionPlayer
+          scenario={MISSION01_DATA}
+          theme={MISSION01_THEME}
+          currentStep={1}
+          onExit={() => goTo("mission2")}
+        />
+      )}
+      {stage === "mission2" && (
+        <MissionPlayer
+          scenario={MISSION02_DATA}
+          theme={MISSION02_THEME}
+          currentStep={2}
+          onExit={() => goTo("mission3")}
+        />
+      )}
+      {stage === "mission3" && (
+        <MissionPlayer
+          scenario={MISSION03_DATA}
+          theme={MISSION03_THEME}
+          currentStep={3}
+          finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
+          onExit={() => nav("/home")}
+        />
+      )}
+      <div className={`planet-fade${fading ? " show" : ""}`} aria-hidden="true" />
+    </>
   );
 }
