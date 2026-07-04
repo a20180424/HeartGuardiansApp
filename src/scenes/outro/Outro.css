@@ -1,9 +1,7 @@
 .outro {
-  position: fixed;
+  /* FixedStage(1280×800) 무대를 채운다. 무대 밖 뷰포트 단위(100vw/dvh) 대신 무대 100%. */
+  position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100dvh;
-  min-height: 100svh;
   background: #000;
   overflow: hidden;
 }

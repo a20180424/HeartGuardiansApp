@@ -29,10 +29,10 @@ button {
   cursor: pointer;
 }
 
-/* 공통 Scene 레이아웃 */
+/* 공통 Scene 레이아웃 — FixedStage(1280×800) 무대를 채운다. */
 .scene {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,8 +68,7 @@ button {
 
 /* 영상 자리표시자 */
 .video-placeholder {
-  width: 70vw;
-  max-width: 900px;
+  width: min(70%, 900px); /* 무대(1280) 기준. was 70vw + max-width:900px */
   aspect-ratio: 16/9;
   background: repeating-linear-gradient(45deg, #111827, #111827 20px, #0b1020 20px, #0b1020 40px);
   border: 2px dashed #475569;

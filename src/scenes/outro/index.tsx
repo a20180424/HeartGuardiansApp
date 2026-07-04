@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { skipSeekTarget } from "./outro.logic";
+import FixedStage from "../../lib/FixedStage";
 import "./Outro.css";
 
 type Status = "playing" | "ended";
@@ -31,6 +32,7 @@ export default function Outro() {
   };
 
   return (
+    <FixedStage>
     <div className="outro">
       <video
         ref={videoRef}
@@ -72,6 +74,7 @@ export default function Outro() {
         </button>
       )}
     </div>
+    </FixedStage>
   );
 }
 
