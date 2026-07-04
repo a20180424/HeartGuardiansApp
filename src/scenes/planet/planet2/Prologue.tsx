@@ -1,4 +1,5 @@
 import PrologueTemplate from "../prologue/PrologueTemplate";
+import { MISSION_STEPS } from "./theme"; // 미션 이름(스텝 라벨) 단일 출처
 import "./Prologue.css"; // planet2 전용: 포인트 색 + 배경 오버라이드(prologue--planet2)
 
 const OBJECTIVES = [
@@ -12,8 +13,6 @@ const REWARDS = [
   { icon: "📡", name: "마음 신호 탐색기", desc: "보이지 않는 마음 신호를 찾아내는 도구예요." },
   { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
-
-const STEPS = ["마음 신호 발견하기", "안개 수정 나무 깨우기", "흐려진 마음의 마을로"];
 
 export default function Prologue({
   onStart,
@@ -38,7 +37,7 @@ export default function Prologue({
       questSub="친구들의 마음 신호를 관찰하고 안개를 걷어내자!"
       questMascot="/assets/char/planet2_arji.png"
       questMascotAlt="아르지"
-      steps={STEPS}
+      steps={MISSION_STEPS}
       onStart={onStart}
       onHome={onHome}
     />
