@@ -1086,11 +1086,11 @@
 }
 #hatiAvatar {
   position: absolute;
-  left: 26px;
+  left: -40px;
   top: 50%;
   transform: translateY(-50%);
-  width: 150px;
-  height: 150px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid #5b8def;
