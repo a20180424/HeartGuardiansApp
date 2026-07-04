@@ -51,7 +51,7 @@
   - `interface Emotion { id: string; name: string; emoji: string }`
   - `interface CopingAction { id: number; text: string; emoji: string }`
   - `interface EmotionCoping { actions: CopingAction[]; feedbacks: Record<number, string> }`
-  - `interface EmotionGuideResult { situationId: number; emotion: string; actionId: number }`
+  - `interface EmotionGuideResult { situationId: number; emotionId: string; actionId: number }` — 서버로 보낼 답변 1건. 텍스트 없이 **id만**(situationId=상황 id, emotionId=감정 키 예:"joy", actionId=행동 id 1~6).
   - `const SITUATIONS: Situation[]` (10개, id 1~10)
   - `const EMOTIONS: Emotion[]` (8개: joy, sad, anger, anxiety, anticipation, calm, proud, shy)
   - `const COPING_ACTIONS: Record<string, EmotionCoping>` (감정 id별 actions 6개(id 1~6) + feedbacks 키 1~6)
@@ -185,10 +185,11 @@ export interface EmotionCoping {
   feedbacks: Record<number, string>;
 }
 
+// 서버로 전송할 답변 1건. 텍스트가 아니라 id만 담는다.
 export interface EmotionGuideResult {
-  situationId: number;
-  emotion: string;
-  actionId: number;
+  situationId: number; // 상황 id
+  emotionId: string; // 감정 키(예: "joy")
+  actionId: number; // 행동 id(1~6)
 }
 
 export const SITUATIONS = content.situations as Situation[];
@@ -276,7 +277,7 @@ describe("emotionGuide 로직", () => {
       expect(r.state.step).toBe(2);
       expect(r.state.emotion).toBeNull();
       expect(r.state.action).toBeNull();
-      expect(r.state.results).toEqual([{ situationId: 1, emotion: "anger", actionId: 5 }]);
+      expect(r.state.results).toEqual([{ situationId: 1, emotionId: "anger", actionId: 5 }]);
     }
   });
 
@@ -347,7 +348,8 @@ export type AdvanceResult =
 export function advance(state: GameState, total = TOTAL_STEPS): AdvanceResult {
   const results: EmotionGuideResult[] = [
     ...state.results,
-    { situationId: state.step, emotion: state.emotion!, actionId: state.action! },
+    // 텍스트가 아니라 id만 저장 — 이 배열이 그대로 서버 payload가 된다.
+    { situationId: state.step, emotionId: state.emotion!, actionId: state.action! },
   ];
   if (state.step >= total) return { kind: "done", results };
   return {

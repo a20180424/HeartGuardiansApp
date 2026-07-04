@@ -86,6 +86,8 @@ MissionPlayer는 게임 내용·결과를 전혀 모른다. `onDone`(=다음 노
     }}
     ```
   - 지금은 메모리(ref) 보관까지만. 서버 연동은 후속.
+  - `results`는 텍스트 없이 **id만** 담는다: `{ situationId, emotionId, actionId }[]`
+    (emotionId=감정 키 "joy" 등, actionId=행동 id 1~6). 이 배열이 그대로 서버 payload가 된다.
 
 ### 4) 게임 컴포넌트 — `planet2/EmotionGuideStage.tsx`
 
