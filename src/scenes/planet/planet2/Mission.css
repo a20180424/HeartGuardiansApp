@@ -6,13 +6,29 @@
    base(mission.css) 기본값을 시드로 넣어두었으니, 아래 값만 조정하면 된다.
    left/bottom/height 는 .planet2 #hatiFull(특이도 1,1,0)로 base(#hatiFull 1,0,0)를 이긴다. */
 .planet2 #hatiFull {
-  left: 510px;
+  left: 1160px;
   bottom: -18px;
-  height: 730px;
+  height: 570px;
 }
 
 /* 등장 상태(fade-in 끝) 의 transform 을 바꾸려면 .show 까지 붙여 특이도를 맞춘다.
    위치/크기만 조정할 거면 이 블록은 손대지 않아도 된다. */
 /* .planet2 #hatiFull.show {
   transform: translateY(0) scale(1);
+} */
+
+/* 인트로 하티 말풍선(#hatiBubble) 위치·너비.
+   base(mission.css) 기본값 시드 — .planet2 #hatiBubble(1,1,0)로 base(#hatiBubble 1,0,0)를 이긴다.
+   꼬리(::after)·이름색(.bubble-name)까지 바꾸려면 아래 주석 블록을 쓰면 된다. */
+.planet2 #hatiBubble {
+  left: 1280px;
+  bottom: 572px;
+  max-width: 600px;
+}
+
+/* 말풍선 꼬리 위치를 바꾸려면 이 블록을 켠다.
+   base 는 left:60px; bottom:-22px 로 왼쪽 아래를 가리킨다. */
+/* .planet2 #hatiBubble::after {
+  left: 60px;
+  bottom: -22px;
 } */

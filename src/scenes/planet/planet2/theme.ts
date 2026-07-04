@@ -10,7 +10,7 @@ export const MISSION03_DATA = mission03 as unknown as MissionData;
 
 // 미션 이름 — 프롤로그 스텝 목록 + 미션 진행 스테퍼 라벨에서 공유한다.
 export const MISSION_STEPS = [
-  "가디언즈 감정 설명서",
+  "감정 설명서",
   "감정 단어 연구소",
   "숨은 감정 찾기",
 ];
@@ -54,7 +54,7 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 1", title: "가디언즈 감정 설명서", ribbon: "마음의 차이를 발견하라!" },
+  banner: { pill: "미션 1", title: "감정 설명서", ribbon: "마음의 차이를 발견하라!" },
   bannerNode: "p2_m1_intro",
   bg: {
     // intro 는 프롤로그와 동일한 안개 배경, 이후 노드는 기존 스테이지 배경으로 복귀.
