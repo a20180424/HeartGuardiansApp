@@ -9,6 +9,7 @@ import PlanetButton from "./components/PlanetButton";
 import MenuBar, { type MenuKey } from "./components/MenuBar";
 import HatiHelper from "./components/HatiHelper";
 import Modal from "../../shared/components/Modal";
+import FixedStage from "../../lib/FixedStage";
 import bannerUrl from "../../shared/assets/TitleBanner.png";
 import goalPlate from "./assets/BannerPlate03.png";
 import starUrl from "./assets/PurposeStart.png";
@@ -42,6 +43,7 @@ export default function Home() {
     popup && popup !== "goal" ? MENU_PLATE[popup] : goalPlate;
 
   return (
+    <FixedStage>
     <div className="home">
       <img className="home-title" src={bannerUrl} alt="하트 가디언즈: 우주 공감 탐험대" />
 
@@ -80,5 +82,6 @@ export default function Home() {
       {/* 팝업 내용은 추후 채움 (지금은 빈 모달) */}
       <Modal open={popup !== null} onClose={() => setPopup(null)} plateUrl={popupPlate} />
     </div>
+    </FixedStage>
   );
 }

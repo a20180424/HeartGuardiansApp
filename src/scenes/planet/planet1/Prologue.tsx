@@ -1,3 +1,4 @@
+import FixedStage from "../../../lib/FixedStage";
 import "./Prologue.css";
 
 // Planet1 프롤로그 subscene — 행성 도착 도입부.
@@ -29,6 +30,7 @@ export default function Prologue({
   onHome: () => void;
 }) {
   return (
+    <FixedStage>
     <div className="prologue">
       {/* ① 타이틀 배너 */}
       <div className="prologue__title">
@@ -128,5 +130,6 @@ export default function Prologue({
         ))}
       </ol>
     </div>
+    </FixedStage>
   );
 }

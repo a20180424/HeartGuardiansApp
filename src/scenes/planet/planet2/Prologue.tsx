@@ -1,3 +1,4 @@
+import FixedStage from "../../../lib/FixedStage";
 import "../planet1/Prologue.css"; // 공용 레이아웃/템플릿(단일 소스)
 import "./Prologue.css"; // planet2 전용: 포인트 색 + 배경만 오버라이드
 
@@ -29,6 +30,7 @@ export default function Prologue({
   onHome: () => void;
 }) {
   return (
+    <FixedStage>
     <div className="prologue prologue--planet2">
       {/* ① 타이틀 배너 */}
       <div className="prologue__title">
@@ -130,5 +132,6 @@ export default function Prologue({
         ))}
       </ol>
     </div>
+    </FixedStage>
   );
 }
