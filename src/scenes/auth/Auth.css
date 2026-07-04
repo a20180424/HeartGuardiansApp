@@ -1,9 +1,9 @@
 .auth {
-  position: fixed;
+  /* FixedStage(1280×800) 무대를 채운다. 무대 높이가 항상 800px 고정이라
+     기존 vh/vw 반응형은 불필요해졌고(무대 밖 뷰포트 기준이라 오히려 깨짐),
+     아래 값들은 전부 800h/1280w 기준 px로 확정한다. */
+  position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100dvh;
-  min-height: 100svh;
   overflow: hidden;
   background:
     url("./assets/Background01.png") center / cover no-repeat,
@@ -19,9 +19,9 @@
 }
 
 .auth__banner {
-  width: min(52vw, 720px);
+  width: 666px; /* was min(52vw, 720px) → 52vw@1280 = 666px */
   height: auto;
-  margin-top: calc(env(safe-area-inset-top) + 1vh);
+  margin-top: calc(env(safe-area-inset-top) + 8px); /* was +1vh */
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
 }
 
@@ -37,7 +37,7 @@
   /* ── 노브: 글로우 테두리 두께(↑면 글로우 두껍게/코너 크게) ── */
   border: 34px solid transparent;
   border-image: url("../../shared/assets/PanelBackground01.png") 44 fill / 34px / 0 stretch;
-  padding: clamp(10px, 2vh, 22px);
+  padding: 16px; /* was clamp(10px, 2vh, 22px) */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,9 +46,9 @@
 
 .auth-panel__title {
   /* ── 노브: 타이틀 크기(기존의 약 2배) ───────────── */
-  font-size: clamp(40px, 6.4vh, 60px);
+  font-size: 51px; /* was clamp(40px, 6.4vh, 60px) */
   font-weight: 800;
-  margin: 0 0 clamp(12px, 2.4vh, 28px);
+  margin: 0 0 19px; /* was clamp(12px, 2.4vh, 28px) */
   text-align: center;
 }
 
@@ -56,15 +56,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(14px, 2.6vh, 26px);
+  gap: 21px; /* was clamp(14px, 2.6vh, 26px) */
   width: 100%;
 }
 
 .auth-bigbtn {
   /* ── 노브: 큰 버튼(로그인/회원가입·계속하기 등) 크기 ── */
   width: min(74%, 340px);
-  font-size: clamp(17px, 2.4vh, 22px);
-  padding: clamp(10px, 1.8vh, 16px);
+  font-size: 19px; /* was clamp(17px, 2.4vh, 22px) */
+  padding: 14px; /* was clamp(10px, 1.8vh, 16px) */
   border-radius: 999px;
 }
 
@@ -73,11 +73,11 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1.6vh, 16px);
+  gap: 13px; /* was clamp(8px, 1.6vh, 16px) */
 }
 .auth-back {
   align-self: flex-start;
-  font-size: clamp(14px, 2vh, 18px);
+  font-size: 16px; /* was clamp(14px, 2vh, 18px) */
   padding: 8px 16px;
   border-radius: 999px;
 }
@@ -86,7 +86,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1.4vh, 14px);
+  gap: 11px; /* was clamp(8px, 1.4vh, 14px) */
 }
 
 /* 한 줄에 필드 여러 개를 균등 분배(학교+이름 / 학년+반+번호 / 비밀번호+확인). */
@@ -110,14 +110,14 @@
 }
 
 .field__label {
-  font-size: clamp(13px, 1.8vh, 16px);
+  font-size: 14px; /* was clamp(13px, 1.8vh, 16px) */
   font-weight: 700;
   opacity: 0.85;
 }
 .field__select,
 .field__input {
   font: inherit;
-  font-size: clamp(16px, 2.2vh, 20px);
+  font-size: 18px; /* was clamp(16px, 2.2vh, 20px) */
   padding: 10px 12px;
   border-radius: 12px;
   border: none;
@@ -127,14 +127,14 @@
 
 .auth-error {
   color: #fca5a5;
-  font-size: clamp(14px, 2vh, 18px);
+  font-size: 16px; /* was clamp(14px, 2vh, 18px) */
   font-weight: 700;
   margin: 0;
 }
 .auth-submit {
   align-self: center;
   width: min(70%, 360px);
-  font-size: clamp(18px, 2.6vh, 24px);
+  font-size: 21px; /* was clamp(18px, 2.6vh, 24px) */
   border-radius: 999px;
 }
 .auth-submit:disabled {

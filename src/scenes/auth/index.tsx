@@ -9,6 +9,7 @@ import { getProgress } from "../../lib/progress";
 import { setSession, clearSession } from "../../lib/session";
 import { credentialStore } from "../../lib/api";
 import type { Credentials } from "../../lib/api";
+import FixedStage from "../../lib/FixedStage";
 import "./Auth.css";
 import bannerUrl from "../../shared/assets/TitleBanner.png";
 
@@ -125,6 +126,7 @@ export default function Auth() {
   }
 
   return (
+    <FixedStage>
     <div className="auth">
       <img className="auth__banner" src={bannerUrl} alt="하트 가디언즈: 우주 공감 탐험대" />
       <div className="auth__panel">
@@ -162,5 +164,6 @@ export default function Auth() {
         )}
       </div>
     </div>
+    </FixedStage>
   );
 }
