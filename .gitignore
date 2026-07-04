@@ -38,6 +38,9 @@ public/assets/3d/azure_nexus.glb
 # Playwright MCP verification artifacts (screenshots, console logs)
 .playwright-mcp/
 
+# Claude Code — 개인 로컬 설정만 제외. 공유 설정(.mcp.json, .claude/*.config.json)은 커밋한다.
+.claude/settings.local.json
+
 # Superpowers SDD scratch (ledger, task briefs/reports, review diffs)
 .superpowers/
 

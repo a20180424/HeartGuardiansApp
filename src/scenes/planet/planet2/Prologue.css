@@ -1,0 +1,13 @@
+/* Planet2(안개 행성) 프롤로그 전용 오버라이드.
+   레이아웃은 planet1/Prologue.css 를 그대로 쓰고, 여기서는 '포인트 색'과 '배경'만 바꾼다.
+   .prologue.prologue--planet2 로 specificity(0,2,0)를 높여, 값이 planet1 화면으로 새지 않게 한다. */
+.prologue.prologue--planet2 {
+  /* ② 포인트 색 — 안개 행성 키 컬러(그린). accent/accent-deep 일단 동일 값으로. */
+  --planet-accent: #2f8326;
+  --planet-accent-deep: #2f8326;
+  --planet-panel-bg: #fff7ec;
+  --planet-tab: #ef4444;
+
+  /* ③ 배경 — 안개 행성 배경. */
+  background: url("/assets/bg/fog-planet-stage1.png") center / cover no-repeat;
+}
