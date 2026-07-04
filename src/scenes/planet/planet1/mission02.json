@@ -150,7 +150,10 @@
     },
     {
       "id": "m2_end3", "type": "line", "speaker": "hati", "hideFriend": true,
-      "text": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
+      "lesson": {
+        "title": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
+        "sub": ""
+      },
       "onEnter": [ { "cmd": "fx", "value": "fx_light_return" } ],
       "next": null
     }
