@@ -32,3 +32,26 @@
   left: 60px;
   bottom: -22px;
 } */
+
+/* ── 노드별 가운데 이미지(#choiceImage) ──────────────────────────────
+   #stage 에 현재 노드 id 가 node-<id> 클래스로 붙는다(공유 MissionPlayer).
+   그래서 노드 하나만 조준할 수 있다. base #choiceImage 기본값:
+   top:110px; height:64%; (좌우 auto 중앙정렬)
+   .planet2 #stage.node-<id> #choiceImage(특이도 1,3,1)로 base(1,0,0)를 이긴다. */
+
+/* 책 표지(preplay) 만 조정 */
+.planet2 #stage.node-p2_m1_preplay #choiceImage {
+  top: 155px;
+  height: 70%;
+  /* base 의 가장자리 페더 마스크 끄기(네 변 녹임 제거) */
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* 완성 이미지(result) 만 조정 */
+.planet2 #stage.node-p2_m1_result #choiceImage {
+  top: 157px;
+  height: 75%;
+  -webkit-mask: none;
+  mask: none;
+}

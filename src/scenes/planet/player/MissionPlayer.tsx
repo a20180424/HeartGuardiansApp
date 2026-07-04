@@ -980,7 +980,7 @@ export default function MissionPlayer(props: {
       <div
         id="stage"
         ref={stageRef}
-        className={`${vm.bright ? "bright" : ""}${vm.bg === "black" ? " blackbg" : ""}`}
+        className={`${vm.bright ? "bright" : ""}${vm.bg === "black" ? " blackbg" : ""}${vm.debugId ? ` node-${vm.debugId}` : ""}`}
         onClick={onStageClick}
       >
         {/* 배경 src 가 있을 때만 렌더(black 등 빈 상태는 빈 <img> 브로큰 아이콘 방지) */}
