@@ -102,6 +102,7 @@ export const MISSION01_THEME: MissionTheme = {
       m1_end_recover: "active",
     },
   },
+  radarPlatform: `${A}/device/radar_platform.png`,
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
   choiceIcons: {
     "나를 싫어하게 된 것 같아": { emoji: "💔", bg: "#f3e8ff" },

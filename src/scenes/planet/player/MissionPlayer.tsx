@@ -1023,14 +1023,21 @@ export default function MissionPlayer(props: {
           </div>
         </div>
 
-        {/* 레이더 (미션별로 끌 수 있음 — showRadar !== false 일 때만) */}
+        {/* 레이더 HUD (미션별로 끌 수 있음 — showRadar !== false 일 때만).
+            radar + 플랫폼을 한 div로 묶어 세트로 이동한다. */}
         {theme.showRadar !== false && (
-          <img
-            id="radar"
-            className={vm.radarPulse ? "pulse" : ""}
-            src={theme.radar.states[vm.radar]}
-            alt="마음 신호 탐색기"
-          />
+          <div id="radarHud">
+            {/* 레이더 뒤에 세트로 깔리는 부유 플랫폼 (radarPlatform 지정된 미션만) */}
+            {theme.radarPlatform && (
+              <img id="radarPlatform" src={theme.radarPlatform} alt="" aria-hidden="true" />
+            )}
+            <img
+              id="radar"
+              className={vm.radarPulse ? "pulse" : ""}
+              src={theme.radar.states[vm.radar]}
+              alt="마음 신호 탐색기"
+            />
+          </div>
         )}
 
         {/* 인트로 타이틀 배너 */}

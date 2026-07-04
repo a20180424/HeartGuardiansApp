@@ -203,11 +203,28 @@
 }
 
 /* ---------- radar device (left) ---------- */
-#radar {
+/* radar + 플랫폼을 묶는 세트. 세트 전체 이동은 이 요소의 left/top만 조정한다. */
+#radarHud {
   position: absolute;
   left: 70px;
   top: 250px;
   z-index: 3;
+}
+/* 레이더 뒤에 깔리는 부유 플랫폼. 위치/크기는 radar(0,0) 기준 상대값. radar보다 뒤(낮은 z-index). */
+#radarHud #radarPlatform {
+  position: absolute;
+  left: -210px;
+  top: 330px;
+  z-index: 1;
+  height: 650px;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+#radarHud #radar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
   height: 560px;
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
   transition: transform 0.4s ease;
@@ -1355,8 +1372,8 @@
 /* ---------- empathy card panel (ending) ---------- */
 #empathyCard {
   position: absolute;
-  left: 530px;
-  top: 168px;
+  left: 600px;
+  top: 200px;
   z-index: 7;
   height: 486px;
   border-radius: 28px;
