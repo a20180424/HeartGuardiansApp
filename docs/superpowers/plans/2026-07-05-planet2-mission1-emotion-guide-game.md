@@ -19,7 +19,8 @@
 
 ## File Structure
 
-- `src/scenes/planet/planet2/emotionGuide.data.ts` (신규) — 상황/감정/행동·피드백 데이터 + 타입.
+- `src/scenes/planet/planet2/emotionGuide.content.json` (신규) — 지문(상황)·감정·행동/피드백 콘텐츠 데이터(원본 HTML 이식). 이후 문구 편집은 이 파일만 고친다.
+- `src/scenes/planet/planet2/emotionGuide.data.ts` (신규) — 위 JSON을 타입과 함께 로드해 재노출하는 얇은 로더 + 타입 정의.
 - `src/scenes/planet/planet2/emotionGuide.data.test.ts` (신규) — 데이터 정합성 검증.
 - `src/scenes/planet/planet2/emotionGuide.logic.ts` (신규) — 순수 게임 상태 머신.
 - `src/scenes/planet/planet2/emotionGuide.logic.test.ts` (신규) — 상태 머신 검증.
@@ -35,9 +36,12 @@
 
 ---
 
-### Task 1: 게임 데이터 모듈
+### Task 1: 게임 콘텐츠 JSON + 데이터 로더
+
+콘텐츠(지문/감정/행동/피드백)는 편집 편의를 위해 **JSON 파일**로 분리하고, `emotionGuide.data.ts`는 그 JSON을 타입과 함께 로드해 재노출하는 얇은 로더로 둔다. 다운스트림(Task 2/5/6)이 쓰는 export 표면은 로더가 그대로 유지하므로, 이후 문구 수정은 JSON만 고치면 된다.
 
 **Files:**
+- Create: `src/scenes/planet/planet2/emotionGuide.content.json`
 - Create: `src/scenes/planet/planet2/emotionGuide.data.ts`
 - Test: `src/scenes/planet/planet2/emotionGuide.data.test.ts`
 
@@ -52,10 +56,12 @@
   - `const EMOTIONS: Emotion[]` (8개: joy, sad, anger, anxiety, anticipation, calm, proud, shy)
   - `const COPING_ACTIONS: Record<string, EmotionCoping>` (감정 id별 actions 6개(id 1~6) + feedbacks 키 1~6)
 
-**데이터 이식 규칙:** `mytemp/행성2_미션1_게임.html`에서 아래 상수를 **내용 그대로** 옮기되, TS 타입에 맞게 필드만 정리한다.
-- `situations` (HTML 393~404행) → `SITUATIONS`: 필드 `id`, `title`, `desc` 그대로.
-- `emotions` (HTML 407~416행) → `EMOTIONS`: `id`, `name`, `emoji`만 남기고 `color`/`activeColor`(Tailwind 클래스)는 **버린다**.
-- `copingActions` (HTML 419~564행) → `COPING_ACTIONS`: 각 감정의 `actions`(각 `id`,`text`,`emoji`)와 `feedbacks`(키 1~6) 그대로.
+**데이터 이식 규칙:** `mytemp/행성2_미션1_게임.html`의 상수를 **내용 그대로** JSON으로 옮기되, TS 타입에 맞게 필드만 정리한다.
+- `situations` (HTML 393~404행) → JSON `situations`: 필드 `id`, `title`, `desc` 그대로.
+- `emotions` (HTML 407~416행) → JSON `emotions`: `id`, `name`, `emoji`만 남기고 `color`/`activeColor`(Tailwind 클래스)는 **버린다**.
+- `copingActions` (HTML 419~564행) → JSON `copingActions`: 각 감정의 `actions`(각 `id`,`text`,`emoji`)와 `feedbacks`(키 "1"~"6") 그대로.
+
+(참고: `resolveJsonModule`은 이미 `mission01.json` 등을 import 중이라 활성화돼 있어 별도 tsconfig 변경 불필요.)
 
 - [ ] **Step 1: 데이터 정합성 테스트 작성**
 
@@ -107,12 +113,54 @@ describe("emotionGuide 데이터", () => {
 Run: `npx vitest run src/scenes/planet/planet2/emotionGuide.data.test.ts`
 Expected: FAIL — `emotionGuide.data` 모듈을 찾을 수 없음.
 
-- [ ] **Step 3: 데이터 모듈 작성**
+- [ ] **Step 3: 콘텐츠 JSON 작성**
 
-Create `src/scenes/planet/planet2/emotionGuide.data.ts`. 타입 정의는 아래 그대로 두고, 데이터 3개(`SITUATIONS`, `EMOTIONS`, `COPING_ACTIONS`)는 위 "데이터 이식 규칙"대로 HTML에서 옮긴다.
+Create `src/scenes/planet/planet2/emotionGuide.content.json`. 아래 shape에 "데이터 이식 규칙"대로 HTML 상수를 빠짐없이 옮긴다(상황 10개, 감정 8개, 감정별 actions 6 + feedbacks 6). 대표 형태:
+
+```json
+{
+  "situations": [
+    {
+      "id": 1,
+      "title": "기후 변동 위기",
+      "desc": "내일 가디언즈 대원들과 함께 기분 좋은 야외 탐색을 가기로 했는데, 일기예보에서 하루 종일 강한 비바람이 몰아칠 확률이 90%라고 발표할 때"
+    }
+  ],
+  "emotions": [
+    { "id": "joy", "name": "기쁨/신남", "emoji": "😄" },
+    { "id": "sad", "name": "슬픔/눈물", "emoji": "😢" },
+    { "id": "anger", "name": "화남/억울", "emoji": "😡" },
+    { "id": "anxiety", "name": "걱정/긴장", "emoji": "😰" },
+    { "id": "anticipation", "name": "설렘/기대", "emoji": "🤩" },
+    { "id": "calm", "name": "무덤덤/평온", "emoji": "😑" },
+    { "id": "proud", "name": "뿌듯/자랑", "emoji": "🥳" },
+    { "id": "shy", "name": "쑥스/부끄", "emoji": "🫣" }
+  ],
+  "copingActions": {
+    "joy": {
+      "actions": [
+        { "id": 1, "text": "제자리에서 기분 좋게 방방 뛰어보기", "emoji": "🏃‍♂️" }
+      ],
+      "feedbacks": {
+        "1": "방방 뛰며 기쁜 신체 에너지를 온몸으로 나누었군요. 긍정이 가득 차오릅니다!"
+      }
+    }
+  }
+}
+```
+
+주의:
+- `situations`는 HTML 394~403행의 나머지 9개(id 2~10)까지 채운다.
+- `copingActions`는 8개 감정 전부(joy/sad/anger/anxiety/anticipation/calm/proud/shy), 각 `actions` 6개(id 1~6)와 `feedbacks` 키 "1"~"6"을 HTML 419~564행에서 빠짐없이 옮긴다. 누락 시 Step 5 테스트가 실패한다.
+- JSON이라 후행 콤마·주석은 넣지 않는다.
+
+- [ ] **Step 4: 데이터 로더 작성**
+
+Create `src/scenes/planet/planet2/emotionGuide.data.ts` — 위 JSON을 타입과 함께 로드해 재노출한다:
 
 ```ts
-// mytemp/행성2_미션1_게임.html 학생 모드 데이터 이식(Tailwind 색상 클래스 제외).
+// 콘텐츠는 emotionGuide.content.json 에서 관리하고, 여기서 타입을 입혀 재노출한다.
+import content from "./emotionGuide.content.json";
 
 export interface Situation {
   id: number;
@@ -143,52 +191,22 @@ export interface EmotionGuideResult {
   actionId: number;
 }
 
-// HTML 393~404행 situations 이식.
-export const SITUATIONS: Situation[] = [
-  { id: 1, title: "기후 변동 위기", desc: "내일 가디언즈 대원들과 함께 기분 좋은 야외 탐색을 가기로 했는데, 일기예보에서 하루 종일 강한 비바람이 몰아칠 확률이 90%라고 발표할 때" },
-  // … HTML 394~403행 나머지 9개(id 2~10) 그대로 이어서 옮긴다.
-];
-
-// HTML 407~416행 emotions 이식(color/activeColor 제외).
-export const EMOTIONS: Emotion[] = [
-  { id: "joy", name: "기쁨/신남", emoji: "😄" },
-  { id: "sad", name: "슬픔/눈물", emoji: "😢" },
-  { id: "anger", name: "화남/억울", emoji: "😡" },
-  { id: "anxiety", name: "걱정/긴장", emoji: "😰" },
-  { id: "anticipation", name: "설렘/기대", emoji: "🤩" },
-  { id: "calm", name: "무덤덤/평온", emoji: "😑" },
-  { id: "proud", name: "뿌듯/자랑", emoji: "🥳" },
-  { id: "shy", name: "쑥스/부끄", emoji: "🫣" },
-];
-
-// HTML 419~564행 copingActions 이식. 감정 id별 actions(id 1~6) + feedbacks(키 1~6).
-export const COPING_ACTIONS: Record<string, EmotionCoping> = {
-  joy: {
-    actions: [
-      { id: 1, text: "제자리에서 기분 좋게 방방 뛰어보기", emoji: "🏃‍♂️" },
-      // … HTML 424~427행 id 2~6 그대로.
-    ],
-    feedbacks: {
-      1: "방방 뛰며 기쁜 신체 에너지를 온몸으로 나누었군요. 긍정이 가득 차오릅니다!",
-      // … HTML 431~435행 키 2~6 그대로.
-    },
-  },
-  // … sad, anger, anxiety, anticipation, calm, proud, shy 를 HTML 438~563행 그대로 이어서 옮긴다.
-};
+export const SITUATIONS = content.situations as Situation[];
+export const EMOTIONS = content.emotions as Emotion[];
+// JSON의 feedbacks 키는 문자열("1"..)이지만 런타임 접근은 숫자 인덱스로도 동작한다.
+export const COPING_ACTIONS = content.copingActions as unknown as Record<string, EmotionCoping>;
 ```
 
-주의: 8개 감정 전부(joy/sad/anger/anxiety/anticipation/calm/proud/shy)와 각 6 actions·6 feedbacks를 빠짐없이 옮긴다. 누락 시 Step 4 테스트가 실패한다.
-
-- [ ] **Step 4: 테스트 통과 확인**
+- [ ] **Step 5: 테스트 통과 확인**
 
 Run: `npx vitest run src/scenes/planet/planet2/emotionGuide.data.test.ts`
 Expected: PASS (3 tests).
 
-- [ ] **Step 5: 커밋**
+- [ ] **Step 6: 커밋**
 
 ```bash
-git add src/scenes/planet/planet2/emotionGuide.data.ts src/scenes/planet/planet2/emotionGuide.data.test.ts
-git commit -m "$(printf 'feat(planet2): 감정 설명서 미니게임 데이터 모듈 이식\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>')"
+git add src/scenes/planet/planet2/emotionGuide.content.json src/scenes/planet/planet2/emotionGuide.data.ts src/scenes/planet/planet2/emotionGuide.data.test.ts
+git commit -m "$(printf 'feat(planet2): 감정 설명서 콘텐츠 JSON + 데이터 로더 이식\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>')"
 ```
 
 ---
@@ -1036,13 +1054,13 @@ Run: `npm run dev`
 **Spec coverage**
 - 제네릭 minigame 노드 + 주입 → Task 3, 4, 6. ✅
 - 게임 컴포넌트(10문항 플레이, 표지·완료화면 제외) → Task 5. ✅
-- 데이터 이식(Tailwind 색상 제거) → Task 1. ✅
-- 결과 메모리(planet2 ref, 서버 TODO) → Task 6 Step 4. ✅
+- 데이터 이식(콘텐츠 JSON 분리 + 타입 로더, Tailwind 색상 제거) → Task 1. ✅
+- 결과 메모리(planet2 ref, 서버 전송 지점 = onFinish 콜백의 TODO) → Task 6 Step 4. ✅
 - 테스트(data/logic/runner/missions) → Task 1,2,3,6. ✅
 - mission01.json 노드 교체 → Task 6 Step 3. ✅
 - 최소 스타일(#stage 오버레이, CDN 금지) → Task 5. ✅
 - 스코프 제외(교사모드 등) → 어느 태스크도 구현하지 않음. ✅
 
-**Placeholder scan:** 데이터 본문(Task 1 Step 3)은 `mytemp` HTML의 정확한 행 범위를 출처로 지정하고 대표 예시 + 완전성 검증 테스트(Task 1)로 보증 — 150줄 데이터를 플랜에 재전사하면 오히려 전사 오류 위험이 커서 의도적으로 출처 참조 방식을 택함. 그 외 코드 단계는 전부 실제 코드 포함.
+**Placeholder scan:** 콘텐츠 JSON 본문(Task 1 Step 3)은 `mytemp` HTML의 정확한 행 범위를 출처로 지정하고 대표 예시 + 완전성 검증 테스트(Task 1)로 보증 — 150줄 데이터를 플랜에 재전사하면 오히려 전사 오류 위험이 커서 의도적으로 출처 참조 방식을 택함. 그 외 코드 단계(로더 포함)는 전부 실제 코드 포함.
 
 **Type consistency:** `EmotionGuideResult`(data.ts) → logic.ts/컴포넌트/index.tsx 동일 사용. `GameState`/`advance`/`AdvanceResult` 시그니처 일관. `games?: Record<string, ComponentType<{ onDone: () => void }>>`가 MissionPlayer(정의)·planet2(주입)에서 동일. `showMinigame(node, done)` 시그니처가 types.ts/runner.ts/MissionPlayer/모든 fake view에서 일관.

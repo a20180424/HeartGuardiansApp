@@ -101,22 +101,26 @@ MissionPlayer는 게임 내용·결과를 전혀 모른다. `onDone`(=다음 노
 - 배치: `#stage`(1920×1200 좌표계) 위 오버레이. **최소 스타일**(가독성 위주, 절대배치 px).
   Tailwind/외부폰트 없음. 비주얼 폴리싱은 후속 단계.
 
-### 5) 데이터 — `planet2/emotionGuide.data.ts`
+### 5) 데이터 — `planet2/emotionGuide.content.json` + `planet2/emotionGuide.data.ts`
 
-원본 JS 상수를 TS 모듈로 이식(내용 1:1, Tailwind 색상 클래스는 제거):
+콘텐츠(지문/감정/행동/피드백)는 편집 편의를 위해 **JSON으로 분리**하고, `.data.ts`는 그
+JSON을 타입과 함께 로드해 재노출하는 얇은 로더로 둔다(코드베이스의 `mission01.json`+`theme.ts` 패턴).
+원본 JS 상수를 1:1 이식하되 Tailwind 색상 클래스는 제거.
 
-```ts
-export interface Situation { id: number; title: string; desc: string; }
-export interface Emotion { id: string; name: string; emoji: string; }
-export interface CopingAction { id: number; text: string; emoji: string; }
-export interface EmotionCoping { actions: CopingAction[]; feedbacks: Record<number, string>; }
-
-export const SITUATIONS: Situation[];                 // 10개
-export const EMOTIONS: Emotion[];                      // 8개
-export const COPING_ACTIONS: Record<string, EmotionCoping>; // 감정 id → 6 actions + 6 feedbacks
-
-export interface EmotionGuideResult { situationId: number; emotion: string; actionId: number; }
-```
+- `emotionGuide.content.json`: `{ situations[10], emotions[8], copingActions{감정 id → actions[6] + feedbacks{"1".."6"}} }`
+- `emotionGuide.data.ts`:
+  ```ts
+  import content from "./emotionGuide.content.json";
+  export interface Situation { id: number; title: string; desc: string; }
+  export interface Emotion { id: string; name: string; emoji: string; }
+  export interface CopingAction { id: number; text: string; emoji: string; }
+  export interface EmotionCoping { actions: CopingAction[]; feedbacks: Record<number, string>; }
+  export interface EmotionGuideResult { situationId: number; emotion: string; actionId: number; }
+  export const SITUATIONS = content.situations as Situation[];
+  export const EMOTIONS = content.emotions as Emotion[];
+  export const COPING_ACTIONS = content.copingActions as unknown as Record<string, EmotionCoping>;
+  ```
+- 이후 지문·답변 문구 수정은 **JSON만** 고치면 된다(로더·컴포넌트·테스트 무변경).
 
 ## 데이터 흐름
 
