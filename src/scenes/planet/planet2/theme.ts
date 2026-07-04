@@ -94,7 +94,7 @@ export const MISSION02_THEME: MissionTheme = {
 
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 3", title: "(임시) 미션 3", ribbon: "안개 행성 미션 3 골격" },
+  banner: { pill: "미션 3", title: "숨은 감정 찾기", ribbon: "안개 속 진짜 진심을 해독하라" },
   bannerNode: "p2_m3_intro",
   bg: BG,
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
