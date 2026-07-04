@@ -1107,7 +1107,7 @@
   top: 50%;
   transform: translateY(-50%);
   width: 240px;
-  height: 240px;  
+  height: 240px;
   object-fit: cover;
 }
 @keyframes hatiPop {
@@ -1831,7 +1831,7 @@
   top: 50%;
   transform: translateY(-50%);
   width: 240px;
-  height: 240px;  
+  height: 240px;
   object-fit: cover;
 }
 .ms-guide-body {
