@@ -48,11 +48,11 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 1", title: "(임시) 미션 1", ribbon: "안개 행성 미션 1 골격" },
-  bannerNode: "p2m1_intro",
+  bannerNode: "p2_m1_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage1-bg.png` },
     initial: "main",
-    byNode: { p2m1_intro: "main" },
+    byNode: { p2_m1_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
@@ -68,11 +68,11 @@ export const MISSION01_THEME: MissionTheme = {
 export const MISSION02_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 2", title: "(임시) 미션 2", ribbon: "안개 행성 미션 2 골격" },
-  bannerNode: "p2m2_intro",
+  bannerNode: "p2_m2_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
     initial: "main",
-    byNode: { p2m2_intro: "main" },
+    byNode: { p2_m2_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
@@ -88,11 +88,11 @@ export const MISSION02_THEME: MissionTheme = {
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 3", title: "(임시) 미션 3", ribbon: "안개 행성 미션 3 골격" },
-  bannerNode: "p2m3_intro",
+  bannerNode: "p2_m3_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
     initial: "main",
-    byNode: { p2m3_intro: "main" },
+    byNode: { p2_m3_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },

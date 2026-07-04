@@ -1,18 +1,28 @@
 {
   "id": "mission02",
   "title": "(임시) 미션 2",
-  "start": "p2m2_intro",
+  "start": "p2_m2_intro",
   "nodes": [
     {
-      "id": "p2m2_intro",
+      "id": "p2_m2_intro",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
+      "noAuto": true,
       "text": "(임시) 미션2 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
-      "next": "p2m2_end"
+      "next": "p2_m2_play"
     },
     {
-      "id": "p2m2_end",
+      "id": "p2_m2_play",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "여기서 게임을 플레이하자",
+      "next": "p2_m2_end"
+    },
+    {
+      "id": "p2_m2_end",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
