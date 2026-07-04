@@ -203,11 +203,28 @@
 }
 
 /* ---------- radar device (left) ---------- */
-#radar {
+/* radar + 플랫폼을 묶는 세트. 세트 전체 이동은 이 요소의 left/top만 조정한다. */
+#radarHud {
   position: absolute;
   left: 70px;
   top: 250px;
   z-index: 3;
+}
+/* 레이더 뒤에 깔리는 부유 플랫폼. 위치/크기는 radar(0,0) 기준 상대값. radar보다 뒤(낮은 z-index). */
+#radarHud #radarPlatform {
+  position: absolute;
+  left: -210px;
+  top: 330px;
+  z-index: 1;
+  height: 650px;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+#radarHud #radar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
   height: 560px;
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
   transition: transform 0.4s ease;
@@ -309,7 +326,7 @@
 /* ---------- 교훈 배너(금색 오너먼트) — 공감 거울의 비밀 등 ---------- */
 #lessonBanner {
   position: absolute;
-  top: 150px;
+  top: 50%;
   left: 50%;
   width: 1520px;
   z-index: 7;
@@ -326,14 +343,14 @@
     inset 0 0 70px rgba(90, 120, 220, 0.12);
   pointer-events: none;
   opacity: 0;
-  transform: translateX(-50%) translateY(-12px) scale(0.97);
+  transform: translate(-50%, calc(-50% - 12px)) scale(0.97);
   transition:
     opacity 0.5s ease,
     transform 0.5s ease;
 }
 #lessonBanner.show {
   opacity: 1;
-  transform: translateX(-50%) translateY(0) scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 .lb-star {
   width: 148px;
@@ -1062,7 +1079,7 @@
 /* ---------- Hati guidance box (bottom-left) ---------- */
 #hatiBox {
   position: absolute;
-  left: 60px;
+  left: 100px;
   bottom: 40px;
   z-index: 5;
   display: flex;
@@ -1070,7 +1087,7 @@
   gap: 26px;
   background: rgba(255, 255, 255, 0.96);
   border-radius: 34px;
-  padding: 26px 48px 26px 200px;
+  padding: 26px 48px 26px 170px;
   min-height: 186px;
   width: 1040px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
@@ -1086,11 +1103,11 @@
 }
 #hatiAvatar {
   position: absolute;
-  left: 26px;
+  left: -85px;
   top: 50%;
   transform: translateY(-50%);
-  width: 150px;
-  height: 150px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid #5b8def;
@@ -1355,8 +1372,8 @@
 /* ---------- empathy card panel (ending) ---------- */
 #empathyCard {
   position: absolute;
-  left: 530px;
-  top: 168px;
+  left: 600px;
+  top: 200px;
   z-index: 7;
   height: 486px;
   border-radius: 28px;
@@ -1797,28 +1814,28 @@
   min-width: 48px;
   text-align: right;
 }
-/* 일반 하티 박스(#hatiBox)와 동일한 룩 — 미션 전반과 일관성 유지 */
+/* 일반 하티 박스(#hatiBox)와 동일한 룩 — 미션 전반과 일관성 유지 (#hatiBox 기준으로 정렬) */
 .ms-guidebar {
   position: absolute;
-  left: 40px;
-  right: 40px;
+  left: 100px;
   bottom: 40px;
   min-height: 186px;
+  width: 1040px;
   display: flex;
   align-items: center;
   gap: 26px;
   background: rgba(255, 255, 255, 0.96);
   border-radius: 34px;
-  padding: 26px 48px 26px 200px;
+  padding: 26px 48px 26px 170px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 .ms-hati {
   position: absolute;
-  left: 26px;
+  left: -85px;
   top: 50%;
   transform: translateY(-50%);
-  width: 150px;
-  height: 150px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid #5b8def;
@@ -1835,6 +1852,7 @@
   margin-bottom: 4px;
 }
 .ms-guidetext {
+  margin: 0; /* <p> 기본 상하 margin 제거 — 이름/본문 사이 공백이 생기지 않게 (#hatiText(div)와 동일) */
   font-size: 36px;
   font-weight: 700;
   color: #222b3d;
@@ -1848,21 +1866,83 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
+  /* '잡아당겨봐' 유도용 둥둥 애니메이션. transform 은 카드가 아닌 홀더에 걸어
+     드래그 전용 카드 transform 과 충돌하지 않게 한다(중앙 정렬 -50% 유지). */
+  animation: msCardFloat 2.6s ease-in-out infinite;
 }
+@keyframes msCardFloat {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 11px));
+  }
+}
+/* 드래그 중엔 둥둥 정지 — 카드가 손가락을 정확히 따라가도록 */
+.ms-card-holder:has(.ms-card.dragging) {
+  animation: none;
+}
+/* 말풍선 젤리 스티커: 두꺼운 흰 테두리 + 파스텔 그라디언트 + 통통한 캔디버튼 그림자 */
 .ms-card {
-  border: none;
-  background: linear-gradient(#eafbe7, #c8f0c0);
-  color: #14532d;
-  font-size: 28px;
-  font-weight: 800;
-  border-radius: 20px;
-  padding: 18px 28px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  border: 5px solid #ffffff;
+  background: linear-gradient(160deg, #ffe27a 0%, #ff9ec9 52%, #c79bff 100%);
+  color: #5f2a63;
+  font-size: 30px;
+  font-weight: 900;
+  border-radius: 30px;
+  padding: 28px 44px 30px;
+  box-shadow:
+    0 8px 0 #9d6be0,
+    /* 아래쪽 입체 입술 */ 0 20px 34px rgba(90, 40, 110, 0.42),
+    /* 바닥 그림자 */ inset 0 3px 6px rgba(255, 255, 255, 0.85); /* 안쪽 하이라이트 */
   cursor: grab;
   touch-action: none;
   white-space: pre-line; /* card 텍스트의 \n 을 줄바꿈으로 표시 */
   text-align: center;
-  line-height: 1.35;
+  line-height: 1.4;
+  overflow: visible;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ms-card:hover {
+  box-shadow:
+    0 8px 0 #9d6be0,
+    0 24px 40px rgba(90, 40, 110, 0.5),
+    inset 0 3px 6px rgba(255, 255, 255, 0.85);
+}
+/* 상단 광택(젤리 느낌) */
+.ms-card::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 9px;
+  height: 34%;
+  border-radius: 22px 22px 44px 44px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+/* 우상단 하트 뱃지 — 살짝 기울고 콩닥콩닥 */
+.ms-card::after {
+  content: "💛";
+  position: absolute;
+  top: -24px;
+  right: -20px;
+  font-size: 44px;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.3));
+  pointer-events: none;
+  animation: msHeartBeat 1.4s ease-in-out infinite;
+}
+@keyframes msHeartBeat {
+  0%,
+  100% {
+    transform: rotate(12deg) scale(1);
+  }
+  50% {
+    transform: rotate(12deg) scale(1.2);
+  }
 }
 .ms-card.dragging {
   z-index: 60;

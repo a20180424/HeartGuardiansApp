@@ -33,7 +33,7 @@
       ]
     },
     { "id": "m2_q2_wrongA_lala", "type": "line", "speaker": "lala", "text": "응 어떻게 하면 좋을까?", "next": "m2_q2_wrongA_hati" },
-    { "id": "m2_q2_wrongA_hati", "type": "line", "speaker": "hati", "text": "함께 해결하려는 마음은 좋지. 하지만 친구는 아직 걱정되는 마음이 커. 먼저 걱정되는 마음을 알아준 뒤에 방법을 생각하면 좋아.", "next": "m2_q2_retry" },
+    { "id": "m2_q2_wrongA_hati", "type": "line", "speaker": "hati", "text": "함께 해결하려는 마음은 좋지만 친구는 아직 걱정되는 마음이 커. 먼저 걱정되는 마음을 알아준 뒤에 방법을 생각하면 좋아.", "next": "m2_q2_retry" },
     { "id": "m2_q2_wrongB_lala", "type": "line", "speaker": "lala", "text": "응 그랬으면 좋겠어.", "next": "m2_q2_wrongB_hati" },
     { "id": "m2_q2_wrongB_hati", "type": "line", "speaker": "hati", "text": "응원하는 말도 좋은 말이야. 하지만 친구는 지금 확신보다 걱정되는 마음을 이해받고 싶어 할 수 있어. 먼저 마음을 알아주는 것이 더 따듯한 공감이야.", "next": "m2_q2_retry" },
     { "id": "m2_q2_retry", "type": "line", "speaker": "hati", "text": "다시 선택해봐", "next": "m2_q2_choice" },
@@ -118,7 +118,23 @@
     { "id": "m2_gauge_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "", "lesson": { "title": "공감 거울의 비밀", "sub": "내가 생각하는 방식보다 상대방이 원하는 방식으로 배려해주는 것이 진짜 공감이다." }, "next": "m2_secret_wake" },
 
     { "id": "m2_secret_wake", "type": "line", "speaker": "hati", "hideFriend": true, "text": "공감 거울이 깨어났어!", "next": "m2_secret_lesson" },
-    { "id": "m2_secret_lesson", "type": "line", "speaker": "hati", "hideFriend": true, "text": "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.", "onEnter": [ { "cmd": "fx", "value": "fx_empathy_card" } ], "next": "m2_end1" },
+    {
+      "id": "m2_secret_lesson", "type": "line", "speaker": "hati", "hideFriend": true,
+      "text": "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.",
+      "cards": [
+        {
+          "image": "/assets/ui/light-planet-empathy-card.png",
+          "top": "같은 말도 친구마다 다르게 느껴질 수 있다.",
+          "bottom": "사람마다 마음의 온도는 다르답니다."
+        },
+        {
+          "image": "/assets/ui/light-planet-empathy-card.png",
+          "top": "관심과 위로도 친구가 원할 때 더 따듯한 법이다.",
+          "bottom": "때로는 묵묵히 기다려 주는 것도 공감이예요."
+        }
+      ],
+      "next": "m2_end1"
+    },
 
     {
       "id": "m2_end1", "type": "line", "speaker": "hati", "hideFriend": true,
@@ -134,7 +150,10 @@
     },
     {
       "id": "m2_end3", "type": "line", "speaker": "hati", "hideFriend": true,
-      "text": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
+      "lesson": {
+        "title": "왜 우리는 친구의 마음을 열심히 이해하려고 노력해야 할까?",
+        "sub": ""
+      },
       "onEnter": [ { "cmd": "fx", "value": "fx_light_return" } ],
       "next": null
     }

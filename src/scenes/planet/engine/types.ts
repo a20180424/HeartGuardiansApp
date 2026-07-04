@@ -135,6 +135,8 @@ export interface MissionTheme {
   // 아무도 말하기 전(인트로) 기본으로 잡아둘 친구 id.
   initialFriend: string;
   radar: { states: Record<string, string>; initial: string; byNode: Record<string, string> };
+  // 레이더 HUD 뒤(아래)에 세트로 깔리는 장식 이미지(부유 플랫폼 등). 생략 시 표시하지 않음.
+  radarPlatform?: string;
   // 레이더 HUD("마음 신호 탐색기") 표시 여부. 생략 시 표시(true). 미션2처럼 안 쓰는 미션은 false.
   showRadar?: boolean;
   badgeColors: string[];
