@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { skipSeekTarget } from "./intro.logic";
+import FixedStage from "../../lib/FixedStage";
 import "./Intro.css";
 
 type Status = "playing" | "ended";
@@ -31,6 +32,7 @@ export default function Intro() {
   };
 
   return (
+    <FixedStage>
     <div className="intro">
       <video
         ref={videoRef}
@@ -72,6 +74,7 @@ export default function Intro() {
         </button>
       )}
     </div>
+    </FixedStage>
   );
 }
 

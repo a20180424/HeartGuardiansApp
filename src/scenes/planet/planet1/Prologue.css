@@ -8,10 +8,9 @@
   --planet-panel-bg: #fff7ec;
   --planet-tab: #ef4444; /* '오늘의 탐험' 탭 — 2단계에서 사용 */
 
-  position: relative;
-  width: 100vw;
-  height: 100dvh;
-  min-height: 100svh;
+  /* FixedStage(1280×800) 무대를 채운다. 절대배치 자식들의 기준 컨테이너. */
+  position: absolute;
+  inset: 0;
   overflow: hidden;
   background: url("/assets/bg/light-planet-stage1.png") center / cover no-repeat;
 }

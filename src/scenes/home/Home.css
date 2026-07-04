@@ -1,10 +1,7 @@
-/* 1280×800 CSS px 기준. 씬은 전체화면 고정 + 배경 cover. 요소는 위에 절대배치. */
+/* 1280×800 CSS px 기준. FixedStage 무대를 채움 + 배경 cover. 요소는 위에 절대배치. */
 .home {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100dvh;
-  min-height: 100svh;
   overflow: hidden;
   background:
     url("./assets/SpaceshipBackground.png") center / cover no-repeat,
