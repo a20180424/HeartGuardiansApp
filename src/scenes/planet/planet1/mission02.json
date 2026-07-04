@@ -33,7 +33,7 @@
       ]
     },
     { "id": "m2_q2_wrongA_lala", "type": "line", "speaker": "lala", "text": "응 어떻게 하면 좋을까?", "next": "m2_q2_wrongA_hati" },
-    { "id": "m2_q2_wrongA_hati", "type": "line", "speaker": "hati", "text": "함께 해결하려는 마음은 좋지. 하지만 친구는 아직 걱정되는 마음이 커. 먼저 걱정되는 마음을 알아준 뒤에 방법을 생각하면 좋아.", "next": "m2_q2_retry" },
+    { "id": "m2_q2_wrongA_hati", "type": "line", "speaker": "hati", "text": "함께 해결하려는 마음은 좋지만 친구는 아직 걱정되는 마음이 커. 먼저 걱정되는 마음을 알아준 뒤에 방법을 생각하면 좋아.", "next": "m2_q2_retry" },
     { "id": "m2_q2_wrongB_lala", "type": "line", "speaker": "lala", "text": "응 그랬으면 좋겠어.", "next": "m2_q2_wrongB_hati" },
     { "id": "m2_q2_wrongB_hati", "type": "line", "speaker": "hati", "text": "응원하는 말도 좋은 말이야. 하지만 친구는 지금 확신보다 걱정되는 마음을 이해받고 싶어 할 수 있어. 먼저 마음을 알아주는 것이 더 따듯한 공감이야.", "next": "m2_q2_retry" },
     { "id": "m2_q2_retry", "type": "line", "speaker": "hati", "text": "다시 선택해봐", "next": "m2_q2_choice" },

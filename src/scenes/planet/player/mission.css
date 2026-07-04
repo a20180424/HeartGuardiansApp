@@ -1079,7 +1079,7 @@
 /* ---------- Hati guidance box (bottom-left) ---------- */
 #hatiBox {
   position: absolute;
-  left: 60px;
+  left: 100px;
   bottom: 40px;
   z-index: 5;
   display: flex;
@@ -1087,7 +1087,7 @@
   gap: 26px;
   background: rgba(255, 255, 255, 0.96);
   border-radius: 34px;
-  padding: 26px 48px 26px 200px;
+  padding: 26px 48px 26px 170px;
   min-height: 186px;
   width: 1040px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
@@ -1103,11 +1103,11 @@
 }
 #hatiAvatar {
   position: absolute;
-  left: -40px;
+  left: -85px;
   top: 50%;
   transform: translateY(-50%);
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid #5b8def;
