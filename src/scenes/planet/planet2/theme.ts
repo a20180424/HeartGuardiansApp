@@ -11,7 +11,7 @@ export const MISSION03_DATA = mission03 as unknown as MissionData;
 // 미션 이름 — 프롤로그 스텝 목록 + 미션 진행 스테퍼 라벨에서 공유한다.
 export const MISSION_STEPS = [
   "감정 설명서",
-  "감정 단어 연구소",
+  "공감 레이더 만들기",
   "숨은 감정 찾기",
 ];
 
@@ -78,7 +78,7 @@ export const MISSION01_THEME: MissionTheme = {
 
 export const MISSION02_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 2", title: "(임시) 미션 2", ribbon: "안개 행성 미션 2 골격" },
+  banner: { pill: "미션 2", title: "공감 레이더 만들기", ribbon: "공감 레이더 부품을 조립하라!" },
   bannerNode: "p2_m2_intro",
   bg: BG,
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
