@@ -122,6 +122,8 @@ export default function MissionPlayer(props: {
   onExit: () => void;
   currentStep?: number; // 진행 스테퍼에서 이 미션이 몇 번째인지(1~3). 기본 1.
   steps?: string[]; // 진행 스테퍼 라벨(미션 이름) 3개. 없으면 기존 planet1 라벨.
+  // 행성별 스코프 클래스(예: "planet2"). #viewport 에 붙여 공유 CSS 를 행성 단위로 오버라이드.
+  scopeClass?: string;
   // 엔딩 완료 버튼 커스터마이즈(마지막 미션 등). 없으면 기본 "다음 미션으로".
   finish?: { label: string; icon?: string };
 }) {
@@ -974,7 +976,7 @@ export default function MissionPlayer(props: {
   const stepLabel = (i: number, fallback: ReactNode) => props.steps?.[i] ?? fallback;
 
   return (
-    <div id="viewport">
+    <div id="viewport" className={props.scopeClass}>
       <div
         id="stage"
         ref={stageRef}

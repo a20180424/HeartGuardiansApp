@@ -54,12 +54,16 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 1", title: "(임시) 미션 1", ribbon: "안개 행성 미션 1 골격" },
+  banner: { pill: "미션 1", title: "가디언즈 감정 설명서", ribbon: "마음의 차이를 발견하라!" },
   bannerNode: "p2_m1_intro",
   bg: {
-    states: { main: `${A}/bg/light-planet-stage1-bg.png` },
-    initial: "main",
-    byNode: { p2_m1_intro: "main" },
+    // intro 는 프롤로그와 동일한 안개 배경, 이후 노드는 기존 스테이지 배경으로 복귀.
+    states: {
+      fog: `${A}/bg/fog-planet-stage1.png`,
+      main: `${A}/bg/light-planet-stage1-bg.png`,
+    },
+    initial: "fog",
+    byNode: { p2_m1_intro: "fog", p2_m1_play: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },

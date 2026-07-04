@@ -12,6 +12,7 @@ import {
   MISSION_STEPS,
 } from "./theme";
 import "../planet1/Planet1.css"; // 공용 subscene 페이드 오버레이(.planet-fade) 재사용
+import "./Mission.css"; // planet2 전용 미션 오버라이드(.planet2 스코프) — intro 하티 등
 
 // Planet2 컨테이너. subscene들을 순서대로 진행한다(내부 상태 머신).
 // prologue → mission1 → mission2 → mission3 → home. 각 미션은 현재 시작·끝 골격.
@@ -67,6 +68,7 @@ export default function Planet2() {
           theme={MISSION01_THEME}
           currentStep={1}
           steps={MISSION_STEPS}
+          scopeClass="planet2"
           onExit={() => goTo("mission2")}
         />
       )}
@@ -76,6 +78,7 @@ export default function Planet2() {
           theme={MISSION02_THEME}
           currentStep={2}
           steps={MISSION_STEPS}
+          scopeClass="planet2"
           onExit={() => goTo("mission3")}
         />
       )}
@@ -85,6 +88,7 @@ export default function Planet2() {
           theme={MISSION03_THEME}
           currentStep={3}
           steps={MISSION_STEPS}
+          scopeClass="planet2"
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
           onExit={() => nav("/home")}
         />
