@@ -8,6 +8,13 @@ export const MISSION01_DATA = mission01 as unknown as MissionData;
 export const MISSION02_DATA = mission02 as unknown as MissionData;
 export const MISSION03_DATA = mission03 as unknown as MissionData;
 
+// 미션 이름 — 프롤로그 스텝 목록 + 미션 진행 스테퍼 라벨에서 공유한다.
+export const MISSION_STEPS = [
+  "가디언즈 감정 설명서",
+  "감정 단어 연구소",
+  "숨은 감정 찾기",
+];
+
 const A = "/assets";
 
 // 하티 스프라이트 — planet1과 동일(미션 공통). 골격에선 하티만 말한다.

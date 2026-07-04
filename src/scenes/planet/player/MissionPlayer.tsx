@@ -4,6 +4,7 @@ import {
   useRef,
   type MouseEvent,
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
 } from "react";
 import { DialogueRunner } from "../engine/runner";
 import type {
@@ -120,6 +121,7 @@ export default function MissionPlayer(props: {
   theme: MissionTheme;
   onExit: () => void;
   currentStep?: number; // 진행 스테퍼에서 이 미션이 몇 번째인지(1~3). 기본 1.
+  steps?: string[]; // 진행 스테퍼 라벨(미션 이름) 3개. 없으면 기존 planet1 라벨.
   // 엔딩 완료 버튼 커스터마이즈(마지막 미션 등). 없으면 기본 "다음 미션으로".
   finish?: { label: string; icon?: string };
 }) {
@@ -968,6 +970,8 @@ export default function MissionPlayer(props: {
           ? "active"
           : "locked";
   const connFilled = (i: number) => i < step || (i === step && missionDone); // step i 뒤 커넥터
+  // 스테퍼 라벨: props.steps(미션 이름)가 있으면 그걸, 없으면 기존 planet1 기본 라벨.
+  const stepLabel = (i: number, fallback: ReactNode) => props.steps?.[i] ?? fallback;
 
   return (
     <div id="viewport">
@@ -993,9 +997,14 @@ export default function MissionPlayer(props: {
                 <span className="num">1</span>
               </div>
               <div className="label">
-                마음 신호
-                <br />
-                탐색기
+                {stepLabel(
+                  0,
+                  <>
+                    마음 신호
+                    <br />
+                    탐색기
+                  </>,
+                )}
               </div>
             </div>
             <div className={`connector${connFilled(1) ? " filled" : ""}`} id="conn1" />
@@ -1004,9 +1013,14 @@ export default function MissionPlayer(props: {
                 <span className="num">2</span>
               </div>
               <div className="label">
-                공감 거울
-                <br />
-                깨우기
+                {stepLabel(
+                  1,
+                  <>
+                    공감 거울
+                    <br />
+                    깨우기
+                  </>,
+                )}
               </div>
             </div>
             <div className={`connector${connFilled(2) ? " filled" : ""}`} id="conn2" />
@@ -1015,9 +1029,14 @@ export default function MissionPlayer(props: {
                 <span className="num">3</span>
               </div>
               <div className="label">
-                공감 없는
-                <br />
-                세상으로
+                {stepLabel(
+                  2,
+                  <>
+                    공감 없는
+                    <br />
+                    세상으로
+                  </>,
+                )}
               </div>
             </div>
           </div>
