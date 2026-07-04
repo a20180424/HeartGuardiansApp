@@ -95,9 +95,7 @@ export default function Prologue({
         <div className="prologue__quest-body">
           <h2 className="prologue__quest-title">사라진 이해의 빛을 찾아라!</h2>
           <p className="prologue__quest-sub">
-            친구들의 마음을 이해하고
-            <br />
-            빛을 되찾아보자!
+            친구들의 마음을 이해하고 빛을 되찾아보자!
           </p>
           <button type="button" className="btn prologue__start" onClick={onStart}>
             탐험 시작!
