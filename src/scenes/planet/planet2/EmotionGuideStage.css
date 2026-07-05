@@ -1,15 +1,28 @@
 /* 감정 설명서 미니게임 최소 스타일(기능 우선). #stage(1920×1200) 위 오버레이. */
+/* 오버레이 = 딤 스크림: 미션 배경/스테퍼/하티가 뒤에 어둡게 비친다. */
 .eg-overlay {
   position: absolute;
   inset: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  font-family: inherit;
+}
+/* 패널 = 가운데 카드(스테이지 ~85% = 1632×1020). */
+.eg-panel {
+  width: 1632px;
+  height: 1020px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 40px 56px;
   background: #0e1f10;
   color: #e5d3b3;
-  font-family: inherit;
+  border: 3px solid #a39063;
+  border-radius: 28px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
 .eg-hud {

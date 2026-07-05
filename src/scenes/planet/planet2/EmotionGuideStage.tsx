@@ -35,11 +35,12 @@ export default function EmotionGuideStage(props: {
 
   return (
     <div className="eg-overlay" onClick={(e) => e.stopPropagation()}>
-      <div className="eg-hud">
-        가디언즈 감정 설명서 · {state.step} / {TOTAL_STEPS}
-      </div>
+      <div className="eg-panel">
+        <div className="eg-hud">
+          가디언즈 감정 설명서 · {state.step} / {TOTAL_STEPS}
+        </div>
 
-      <div className="eg-body">
+        <div className="eg-body">
         {/* 왼쪽: 상황 + 감정 8지선다 */}
         <div className="eg-col">
           <div className="eg-title">🧭 {situation.title}</div>
@@ -88,9 +89,10 @@ export default function EmotionGuideStage(props: {
         </div>
       </div>
 
-      <button className="eg-next" disabled={!canAdvance(state)} onClick={onNext}>
-        {state.step >= TOTAL_STEPS ? "설명서 완성하기 ✨" : "다음 상황으로 ➡️"}
-      </button>
+        <button className="eg-next" disabled={!canAdvance(state)} onClick={onNext}>
+          {state.step >= TOTAL_STEPS ? "설명서 완성하기 ✨" : "다음 상황으로 ➡️"}
+        </button>
+      </div>
     </div>
   );
 }
