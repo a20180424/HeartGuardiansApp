@@ -55,3 +55,25 @@
   -webkit-mask: none;
   mask: none;
 }
+
+/* ── 왼쪽 radarHud(공감 레이더) 위치·크기 ─────────────────────────────
+   radarHud 는 미션2만 켜져 있어(showRadar) 이 override 는 사실상 미션2 전용.
+   base(mission.css) 규칙이 #radarHud #radar 처럼 ID 2개(특이도 2,0,0)라
+   반드시 #radarHud 를 함께 써서 .planet2 #radarHud …(2,1,0)로 이겨야 한다.
+   아래는 base 기본값 시드 — 신규 이미지에 맞춰 값만 조정하면 된다. */
+.planet2 #radarHud {
+  left: 70px;
+  top: 250px;
+}
+/* 뒤 플랫폼(원단, 낮은 z) */
+.planet2 #radarHud #radarPlatform {
+  left: -120px;
+  top: 410px;
+  height: 770px;
+}
+/* 앞 레이더 기기(높은 z) */
+.planet2 #radarHud #radar {
+  left: 60px;
+  top: 0;
+  height: 830px;
+}
