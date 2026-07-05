@@ -34,6 +34,8 @@ const SLOT_POS: { left: string; top: string }[] = ROW_Y.flatMap((top) =>
 export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
   const [state, setState] = useState<GameState>(() => initialState(STAGES, shuffle));
   const [wrongBox, setWrongBox] = useState<string | null>(null);
+  // 드래그 중 포인터가 올라간 드롭존 하나만 하이라이트(카드 크기와 무관하게 대상 명확).
+  const [hoverBox, setHoverBox] = useState<string | null>(null);
   const [banner, setBanner] = useState<string | null>(null);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
   const doneRef = useRef(false);
@@ -70,6 +72,16 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
     }
   }
 
+  // 화면 좌표가 어느 감정 상자(드롭존) 안인지 히트테스트. 없으면 null.
+  function boxAt(clientX: number, clientY: number): string | null {
+    const hit = Object.entries(boxRefs.current).find(([, el]) => {
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
+    });
+    return hit ? hit[0] : null;
+  }
+
   // 드래그: 단어 버블을 포인터로 옮기고, 놓은 지점의 감정 상자를 판정.
   function onBubbleDown(e: React.PointerEvent) {
     if (!word || doneRef.current) return;
@@ -91,6 +103,7 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
       x: (e.clientX - dragOrigin.current.px) / dragScale.current,
       y: (e.clientY - dragOrigin.current.py) / dragScale.current,
     });
+    setHoverBox(boxAt(e.clientX, e.clientY));
   }
   function onBubbleUp(e: React.PointerEvent) {
     if (e.pointerId !== activePointerId.current) return;
@@ -98,19 +111,17 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
     activePointerId.current = null;
     dragOrigin.current = null;
     setDrag(null);
+    setHoverBox(null);
     // 놓은 지점이 어느 감정 상자 안인가 히트테스트.
-    const hit = Object.entries(boxRefs.current).find(([, el]) => {
-      if (!el) return false;
-      const r = el.getBoundingClientRect();
-      return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-    });
-    if (hit) attempt(hit[0]);
+    const target = boxAt(e.clientX, e.clientY);
+    if (target) attempt(target);
   }
   function onBubbleCancel(e: React.PointerEvent) {
     if (e.pointerId !== activePointerId.current) return;
     activePointerId.current = null;
     dragOrigin.current = null;
     setDrag(null);
+    setHoverBox(null);
   }
 
   return (
@@ -144,18 +155,19 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
           </div>
           <div className="er-instruction">감정 단어를 성격에 맞게 분류해 보자!</div>
 
-          {/* 감정 상자 3개(드롭 존 + 탭) */}
+          {/* 감정 상자 3개(드롭 존 + 탭): 컬러 명패 + 레이더 글라스 원형 */}
           <div className="er-boxes">
             {stage.emotions.map((e: Emotion) => (
               <div
                 key={e.id}
                 ref={(el) => { boxRefs.current[e.id] = el; }}
-                className={`er-box${wrongBox === e.id ? " er-box--wrong" : ""}`}
+                className={`er-box${wrongBox === e.id ? " er-box--wrong" : ""}${hoverBox === e.id ? " er-box--over" : ""}`}
                 style={{ ["--box-color" as string]: e.color }}
                 onClick={() => attempt(e.id)}
               >
-                <span className="er-box-emoji">{e.emoji}</span>
-                <span className="er-box-name">{e.name}</span>
+                <div className="er-box-radar">
+                  <span className="er-box-radar-label">{e.name}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -172,7 +184,6 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
                 onPointerUp={onBubbleUp}
                 onPointerCancel={onBubbleCancel}
               >
-                <span className="er-word-emoji">{word.emoji}</span>
                 <span className="er-word-text">{word.text}</span>
               </div>
             )}

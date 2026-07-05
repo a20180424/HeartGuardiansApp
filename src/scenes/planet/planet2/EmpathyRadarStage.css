@@ -87,14 +87,24 @@
   }
 }
 
-/* 우: 플레이 영역 */
+/* 우: 플레이 영역 — 양피지 카드 패널 */
 .er-play {
   position: relative;
   z-index: 1;
   flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  padding: 30px 32px;
+  color: #5c4a30;
+  background: linear-gradient(158deg, #f5ecd6, #e7d7b2);
+  border: 5px solid #c9b083;
+  border-radius: 26px;
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.5),
+    inset 0 0 40px rgba(150, 120, 70, 0.18),
+    0 12px 30px rgba(0, 0, 0, 0.35);
 }
 .er-header {
   display: flex;
@@ -102,57 +112,114 @@
   align-items: center;
 }
 .er-stage {
-  padding: 10px 24px;
-  font-size: 28px;
+  padding: 8px 22px;
+  font-size: 26px;
   font-weight: 800;
   color: #06251a;
   background: linear-gradient(180deg, #9be9c6, #52c793);
   border-radius: 999px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 .er-progress {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
-  color: #ffe066;
+  color: #b3701d;
 }
 .er-instruction {
-  margin-top: 20px;
-  font-size: 30px;
-  font-weight: 700;
+  margin-top: 18px;
+  font-size: 32px;
+  font-weight: 800;
   text-align: center;
+  color: #4f3f28;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
-/* 감정 상자 3개 */
+/* 감정 상자 3개: 감정 이름이 들어간 레이더 글라스 원형 드롭존 */
 .er-boxes {
-  margin-top: 32px;
+  margin-top: 26px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 18px;
 }
 .er-box {
-  height: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 5px solid var(--box-color, #6fae8e);
-  border-radius: 28px;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease;
   user-select: none;
+  transition: transform 0.12s ease;
 }
-.er-box:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.14); }
-.er-box-emoji { font-size: 64px; }
-.er-box-name { font-size: 36px; font-weight: 800; }
-.er-box--wrong { animation: er-shake 0.45s ease; border-color: #ff6b6b; }
+.er-box:hover { transform: translateY(-4px); }
+
+/* 레이더 글라스 드롭 존(다크 그린 유리 + 조준선). 외곽선 색 = 감정색(--box-color) */
+.er-box-radar {
+  position: relative;
+  width: 100%;
+  max-width: 190px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 6px solid var(--box-color, #a8834e);
+  background:
+    linear-gradient(rgba(150, 220, 165, 0.28), rgba(150, 220, 165, 0.28)) center / 58% 2px no-repeat,
+    linear-gradient(rgba(150, 220, 165, 0.28), rgba(150, 220, 165, 0.28)) center / 2px 58% no-repeat,
+    radial-gradient(circle at 42% 36%, #3c5c46, #182a20 78%);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.65), 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.er-box-radar::after {
+  content: "";
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(150, 220, 165, 0.22);
+}
+.er-box-radar::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(150, 220, 165, 0.55);
+  transform: translate(-50%, -50%);
+}
+/* 드롭존 안에 감정 이름(레이더 신호 readout 느낌의 초록 글로우). */
+.er-box-radar-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: rgba(205, 255, 214, 0.95);
+  text-shadow: 0 0 10px rgba(120, 220, 150, 0.85), 0 2px 4px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+/* hover/over는 외곽선 색(감정색)은 유지하고 글로우로만 강조. */
+.er-box:hover .er-box-radar {
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.4);
+}
+/* 드래그 중 포인터가 올라간 드롭존만 강조(강한 글로우 + 살짝 들림). */
+.er-box--over { transform: translateY(-5px); }
+.er-box--over .er-box-radar {
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.5), 0 0 26px rgba(255, 235, 150, 0.95);
+}
+
+.er-box--wrong { animation: er-shake 0.45s ease; }
+.er-box--wrong .er-box-radar {
+  border-color: #ff6b6b;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6), 0 0 18px rgba(255, 90, 90, 0.75);
+}
 @keyframes er-shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-10px); }
   75% { transform: translateX(10px); }
 }
 
-/* 현재 단어 버블 */
+/* 현재 단어 명패(드래그 가능) */
 .er-word-area {
   flex: 1;
   display: flex;
@@ -162,21 +229,19 @@
 .er-word {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 28px 48px;
-  font-size: 44px;
+  padding: 10px 20px;
+  font-size: 30px;
   font-weight: 800;
-  color: #06251a;
-  background: linear-gradient(180deg, #ffffff, #d7f2e6);
-  border: 4px solid #ffffff;
-  border-radius: 28px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  color: #4a3a20;
+  background: linear-gradient(180deg, #fdf6e3, #efdfbe);
+  border: 5px solid #c79a45;
+  border-radius: 22px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35), inset 0 0 0 2px rgba(255, 255, 255, 0.55);
   cursor: grab;
   touch-action: none;
   user-select: none;
 }
 .er-word:active { cursor: grabbing; }
-.er-word-emoji { font-size: 48px; }
 
 /* 스테이지 전환 / 완료 배너 */
 .er-banner {
