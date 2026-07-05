@@ -9,7 +9,7 @@ DST.mkdir(parents=True, exist_ok=True)
 
 # Files copied with an alpha-bbox trim (transparent margins removed).
 TRIM = [
-    "PlayerButton.png", "AvatarFace.png", "BannerPlate03.png", "PurposeStart.png",
+    "PlayerButton.png", "AvatarFaceMale.png", "AvatarFaceFemale.png", "BannerPlate03.png", "PurposeStart.png",
     "HeartScorePlate.png", "HeartFull.png", "HeartEmpty.png", "HeartConnect.png",
     "Lock.png", "RocketButton.png", "SpaceshipBackground.png",
 ]
