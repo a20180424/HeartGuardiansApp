@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
+import EmotionGuideStage from "./EmotionGuideStage";
+import type { EmotionGuideResult } from "./emotionGuide.data";
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -37,6 +39,9 @@ export default function Planet2() {
   const [stage, setStage] = useState<Stage>(initialStage);
   const [fading, setFading] = useState(false);
 
+  // 미션1 미니게임 결과(감정/행동 선택). 서버 준비 전까지 세션 메모리에만 보관.
+  const emotionResultRef = useRef<EmotionGuideResult[] | null>(null);
+
   // 전환 시 배경 깜빡임 방지: 미션 배경들을 미리 캐시에 올려둔다.
   useEffect(() => {
     [MISSION01_THEME, MISSION02_THEME, MISSION03_THEME].forEach((t) =>
@@ -69,6 +74,16 @@ export default function Planet2() {
           currentStep={1}
           steps={MISSION_STEPS}
           scopeClass="planet2"
+          games={{
+            emotionGuide: ({ onDone }) => (
+              <EmotionGuideStage
+                onFinish={(results) => {
+                  emotionResultRef.current = results; // TODO: 서버 준비 시 이 지점에서 POST
+                  onDone();
+                }}
+              />
+            ),
+          }}
           onExit={() => goTo("mission2")}
         />
       )}
