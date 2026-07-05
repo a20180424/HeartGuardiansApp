@@ -93,7 +93,7 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "(임시) 미션2 완료!",
+      "text": "새로운 친구를 만나러 가보자!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null

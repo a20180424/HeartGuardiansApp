@@ -153,7 +153,7 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
             <span className="er-stage">{stage.id}단계 · {stage.title}</span>
             <span className="er-progress">부품 {state.earnedParts.length} / 9</span>
           </div>
-          <div className="er-instruction">감정 단어를 성격에 맞게 분류해 보자!</div>
+          <div className="er-instruction">감정 카드를 성격 레이더로 옮겨보세요!</div>
 
           {/* 감정 상자 3개(드롭 존 + 탭): 컬러 명패 + 레이더 글라스 원형 */}
           <div className="er-boxes">
