@@ -626,6 +626,11 @@ export default function MissionPlayer(props: {
         updateScene(node); // 배경/HUD 유지
         vm.stage = "minigame";
         vm.gameId = node.game || "";
+        if (import.meta.env.DEV && !props.games?.[vm.gameId]) {
+          console.warn(
+            `[MissionPlayer] minigame '${vm.gameId}' has no matching component in the games prop; nothing will render.`,
+          );
+        }
         vm.mode = "idle";
         vm.bubbleKind = "none";
         vm.choices = [];
