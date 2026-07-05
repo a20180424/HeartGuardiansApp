@@ -27,10 +27,14 @@
 /* 좌: 조립기 인벤토리 */
 .er-inventory {
   position: relative;
-  width: 900px;
+  /* 인벤토리 전체 크기 마스터 노브. 부품(.er-part)은 이 너비의 %라 함께 스케일됨. */
+  width: 1200px;
   aspect-ratio: 1402 / 1122;
   align-self: center;
   flex: none;
+  /* 조립기 이미지 왼쪽에 투명 여백이 있어 이미지를 왼쪽으로 당김.
+     음수 margin이라 당기는 만큼 우측 플레이 영역(flex:1)에 공간을 넘겨줌. 튜닝용 노브. */
+  margin-left: -120px;
 }
 .er-assembler {
   position: absolute;
@@ -40,19 +44,44 @@
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
+  /* 배경 조립기 이미지만 미세 이동(부품은 고정). 왼쪽=x 음수, 위=y 음수. 튜닝용 노브. */
+  transform: translate(-18px, -18px);
 }
+/* 래퍼: 슬롯 중심에 정렬만 담당(정적 transform). 애니메이션은 안쪽 img가 맡아
+   translate(-50%,-50%) 정렬과 움직임 transform이 충돌하지 않게 분리. */
 .er-part {
   position: absolute;
-  width: 11%;
+  width: 8%;
   transform: translate(-50%, -50%);
   user-select: none;
   -webkit-user-drag: none;
-  animation: er-part-pop 0.4s ease;
 }
-@keyframes er-part-pop {
-  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
-  70% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.er-part-img {
+  display: block;
+  width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* 등장(페이드) + 살짝 떠오름 + 후광 펄스. 서로 다른 속성이라 3개가 안 충돌함. */
+  animation:
+    er-part-in 0.4s ease both,
+    er-part-float 2.8s ease-in-out infinite,
+    er-part-glow 2.2s ease-in-out infinite;
+}
+@keyframes er-part-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes er-part-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes er-part-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(150, 245, 200, 0.5)); }
+  50% {
+    filter:
+      drop-shadow(0 0 16px rgba(150, 245, 200, 0.95))
+      drop-shadow(0 0 26px rgba(120, 230, 180, 0.55));
+  }
 }
 
 /* 우: 플레이 영역 */

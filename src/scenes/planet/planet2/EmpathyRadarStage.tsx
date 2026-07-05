@@ -15,19 +15,21 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// 조립기 배경 이미지 위 9개 부품 슬롯 중심(이미지 컨테이너 대비 %).
-// ⚠️ dev 서버에서 배경과 겹쳐보며 미세조정할 것(Step 6).
-const SLOT_POS: { left: string; top: string }[] = [
-  { left: "42%", top: "31%" }, // 1
-  { left: "52%", top: "31%" }, // 2
-  { left: "62%", top: "31%" }, // 3
-  { left: "42%", top: "45%" }, // 4
-  { left: "52%", top: "45%" }, // 5
-  { left: "62%", top: "45%" }, // 6
-  { left: "42%", top: "58%" }, // 7
-  { left: "52%", top: "58%" }, // 8
-  { left: "62%", top: "58%" }, // 9
-];
+// ⚠️ 좌표 튜닝용 임시 플래그. true면 획득 여부와 무관하게 9개 부품을 모두 표시한다.
+// 커밋/PR 전에 반드시 false로 되돌릴 것.
+const DEBUG_SHOW_ALL_PARTS = false;
+
+// 부품 슬롯 좌표(이미지 컨테이너 대비 %). 슬롯이 규칙적인 3×3 그리드라
+// 열 X 3개 + 행 Y 3개만으로 9칸을 생성한다. → 이 6개 값만 만지면 일괄 조정.
+//   · 그리드 전체를 좌우로: COL_X 세 값을 같이 ± / 상하로: ROW_Y 세 값을 같이 ±
+//   · 열/행 간격: 각 배열의 벌어진 정도를 조정
+// ⚠️ dev 서버에서 배경과 겹쳐보며 미세조정할 것.
+const COL_X = ["42%", "52%", "62%"]; // 좌·중·우 열의 가로 중심
+const ROW_Y = ["31%", "45%", "58%"]; // 상·중·하 행의 세로 중심
+// 부품 번호 1..9는 행 우선(1,2,3=윗줄 / 4,5,6=가운뎃줄 / 7,8,9=아랫줄).
+const SLOT_POS: { left: string; top: string }[] = ROW_Y.flatMap((top) =>
+  COL_X.map((left) => ({ left, top })),
+);
 
 export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
   const [state, setState] = useState<GameState>(() => initialState(STAGES, shuffle));
@@ -119,16 +121,17 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
           <img className="er-assembler" src={`${ASSET}/radar-assembler.png`} alt="공감 레이더 조립기" draggable={false} />
           {SLOT_POS.map((pos, i) => {
             const partId = i + 1;
-            if (!earned.has(partId)) return null;
+            if (!DEBUG_SHOW_ALL_PARTS && !earned.has(partId)) return null;
             return (
-              <img
-                key={partId}
-                className="er-part"
-                src={`${ASSET}/radar-part-${partId}.png`}
-                alt={`부품 ${partId}`}
-                style={{ left: pos.left, top: pos.top }}
-                draggable={false}
-              />
+              <div key={partId} className="er-part" style={{ left: pos.left, top: pos.top }}>
+                <img
+                  className="er-part-img"
+                  src={`${ASSET}/radar-part-${partId}.png`}
+                  alt={`부품 ${partId}`}
+                  style={{ animationDelay: `${(i % 4) * 0.3}s` }}
+                  draggable={false}
+                />
+              </div>
             );
           })}
         </div>
