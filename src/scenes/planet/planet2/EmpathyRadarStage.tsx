@@ -39,6 +39,7 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
   const bubbleRef = useRef<HTMLDivElement | null>(null);
   const dragOrigin = useRef<{ px: number; py: number } | null>(null);
   const activePointerId = useRef<number | null>(null);
+  const dragScale = useRef(1);
 
   const stage = STAGES[state.stageIndex];
   const word = currentWord(state);
@@ -70,16 +71,24 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
   // 드래그: 단어 버블을 포인터로 옮기고, 놓은 지점의 감정 상자를 판정.
   function onBubbleDown(e: React.PointerEvent) {
     if (!word || doneRef.current) return;
+    if (activePointerId.current !== null) return;
     e.preventDefault();
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     activePointerId.current = e.pointerId;
     dragOrigin.current = { px: e.clientX, py: e.clientY };
+    // 스테이지가 CSS scale 되므로 포인터 델타를 scale로 나눔
+    const stageEl = document.getElementById("stage");
+    const w = stageEl?.getBoundingClientRect().width || 1920;
+    dragScale.current = w / 1920 || 1;
     setDrag({ x: 0, y: 0 });
   }
   function onBubbleMove(e: React.PointerEvent) {
     if (e.pointerId !== activePointerId.current) return;
     if (!dragOrigin.current) return;
-    setDrag({ x: e.clientX - dragOrigin.current.px, y: e.clientY - dragOrigin.current.py });
+    setDrag({
+      x: (e.clientX - dragOrigin.current.px) / dragScale.current,
+      y: (e.clientY - dragOrigin.current.py) / dragScale.current,
+    });
   }
   function onBubbleUp(e: React.PointerEvent) {
     if (e.pointerId !== activePointerId.current) return;
