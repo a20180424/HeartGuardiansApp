@@ -102,7 +102,8 @@
 .field--school,
 .field--name,
 .field--select,
-.field--pin {
+.field--pin,
+.field--gender {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -140,4 +141,28 @@
 .auth-submit:disabled {
   opacity: 0.5;
   box-shadow: none;
+}
+
+/* 성별 세그먼트 토글: 남자/여자 두 버튼을 붙여 하나만 선택 강조. */
+.gender-toggle {
+  display: flex;
+  gap: 6px;
+}
+.gender-toggle__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  font: inherit;
+  font-size: 18px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  border: none;
+  background: #0f172a;
+  color: #fff;
+  opacity: 0.55;
+  cursor: pointer;
+}
+.gender-toggle__btn.is-selected {
+  opacity: 1;
+  background: #2563eb;
+  font-weight: 700;
 }
