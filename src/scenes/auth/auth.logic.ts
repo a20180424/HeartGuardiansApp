@@ -1,6 +1,6 @@
 // Auth Scene의 순수 로직(서버/DOM 의존 없음). 컴포넌트는 이 함수들만 호출한다.
 import { ApiError, type Credentials } from "../../lib/api";
-import type { School } from "../../lib/auth";
+import type { School, Gender } from "../../lib/auth";
 
 export interface FormState {
   grade: number | null; // 1~6 (select)
@@ -8,10 +8,11 @@ export interface FormState {
   number: number | null; // 1~30 (select)
   pin: string; // 4자리, 시스템 키보드 입력
   pinConfirm: string; // signup 전용 확인 입력
+  gender: Gender | null; // signup 전용, male/female
 }
 
 export function initialForm(): FormState {
-  return { grade: null, class: null, number: null, pin: "", pinConfirm: "" };
+  return { grade: null, class: null, number: null, pin: "", pinConfirm: "", gender: null };
 }
 
 /** 숫자만 남기고 최대 4자리로 자른다(PIN/확인 입력 정제). */
@@ -23,7 +24,7 @@ export function sanitizePin(raw: string): string {
 export function isComplete(s: FormState, mode: "login" | "signup", name: string): boolean {
   const base = s.grade !== null && s.class !== null && s.number !== null && s.pin.length === 4;
   if (mode === "login") return base;
-  return base && name.trim().length > 0 && s.pin === s.pinConfirm;
+  return base && name.trim().length > 0 && s.pin === s.pinConfirm && s.gender !== null;
 }
 
 export function toCredentials(s: FormState, schoolId: string): Credentials {

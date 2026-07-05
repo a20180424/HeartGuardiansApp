@@ -8,6 +8,7 @@ const profile: Profile = {
   grade: 3,
   class: 2,
   number: 12,
+  gender: "male",
   school: { id: "s1", name: "행복초등학교" },
 };
 const data: SessionData = { profile, progress: 2 };

@@ -4,7 +4,7 @@ import Chooser from "./components/Chooser";
 import CredentialForm from "./components/CredentialForm";
 import WelcomePanel from "./components/WelcomePanel";
 import { classifyVerifyError } from "./auth.logic";
-import { getSchools, verify, logout, signup, type School } from "../../lib/auth";
+import { getSchools, verify, logout, signup, type School, type Gender } from "../../lib/auth";
 import { getProgress } from "../../lib/progress";
 import { setSession, clearSession } from "../../lib/session";
 import { credentialStore } from "../../lib/api";
@@ -86,11 +86,12 @@ export default function Auth() {
     setScreen("login");
   }
 
-  async function handleSignup(creds: Credentials, name: string) {
+  async function handleSignup(creds: Credentials, name: string, gender: Gender | null) {
+    if (!gender) return; // 폼에서 canSubmit으로 보장되지만 타입 안전 가드
     setSubmitting(true);
     setErrorMsg(null);
     try {
-      await signup({ ...creds, name }); // 가입
+      await signup({ ...creds, name, gender }); // 가입
       const profile = await verify(creds); // 같은 값으로 자동 로그인(자격증명 저장) + 이름 확인
       setWelcomeName(profile.name);
       setSubmitting(false);

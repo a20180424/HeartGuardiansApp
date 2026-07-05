@@ -24,7 +24,7 @@
 
 | 파일 | 용도(추정) |
 | --- | --- |
-| `AvatarFace.png` | 프로필 카드 플레이어 얼굴(원형, 남자) |
+| `AvatarFaceMale.png` / `AvatarFaceFemale.png` | 프로필 카드 플레이어 얼굴(성별별) |
 | `PlayerButton.png` | 프로필 카드 배경 plate (파란 라운드 사각형) |
 | `PlayerScore.png` | 얇은 다크 pill — 용도 미정(프로필 내부 요소?) |
 | `BannerPlate03.png` | (미확인) |
@@ -52,7 +52,7 @@
 ### 1. 프로필 카드 (좌측 상단) — 확정
 
 플레이어가 누군지 나타내는 카드. 배경 plate + 얼굴은 이미지 에셋 사용
-(`PlayerButton.png` = plate, `AvatarFace.png` = 남자 얼굴).
+(`PlayerButton.png` = plate, `AvatarFaceMale.png`/`AvatarFaceFemale.png` = 성별별 얼굴).
 
 - **레벨 `Lv{n}`**: `n` = 서버가 주는 `progress`(0~4) 값 **그대로**. 별도 레벨 개념 없음.
   - `progress` 0 = 행성 0개 클리어, 1 = 1번 행성 클리어 … 클리어 순서는 무조건 순차적.

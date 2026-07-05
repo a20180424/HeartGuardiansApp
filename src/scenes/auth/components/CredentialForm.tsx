@@ -1,7 +1,7 @@
 // 학교 + 이름(signup) + 학년/반/번호(드롭다운) + 비밀번호[/확인](시스템 키보드).
 // 서버 호출은 하지 않는다 — 완성된 Credentials를 onSubmit으로 올린다.
 import { useEffect, useState } from "react";
-import type { School } from "../../../lib/auth";
+import type { School, Gender } from "../../../lib/auth";
 import type { Credentials } from "../../../lib/api";
 import {
   initialForm,
@@ -17,7 +17,7 @@ interface Props {
   schools: School[];
   submitting: boolean;
   errorMsg: string | null;
-  onSubmit: (creds: Credentials, name: string) => void;
+  onSubmit: (creds: Credentials, name: string, gender: Gender | null) => void;
   onBack: () => void;
 }
 
@@ -82,6 +82,27 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
     </label>
   );
 
+  const genderToggle = () => (
+    // 두 버튼을 <label>로 감싸면 label 클릭이 첫 버튼(남자)으로 전달돼 의도치 않게
+    // 선택된다. 기본값 없는 필수 필드라 role="group"으로 묶어 그 오작동을 막는다.
+    <div className="field field--gender" role="group" aria-label="성별">
+      <span className="field__label">성별</span>
+      <div className="gender-toggle">
+        {(["male", "female"] as const).map((g) => (
+          <button
+            key={g}
+            type="button"
+            className={"gender-toggle__btn" + (form.gender === g ? " is-selected" : "")}
+            aria-pressed={form.gender === g}
+            onClick={() => setForm((s) => ({ ...s, gender: g }))}
+          >
+            {g === "male" ? "남자" : "여자"}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="auth-form-wrap">
       <button type="button" className="btn ghost auth-back" onClick={onBack}>
@@ -104,6 +125,7 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
               />
             </label>
           )}
+          {mode === "signup" && genderToggle()}
         </div>
 
         <div className="field-row">
@@ -124,7 +146,7 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
           type="button"
           className="btn auth-submit"
           disabled={!canSubmit}
-          onClick={() => schoolId && onSubmit(toCredentials(form, schoolId), name.trim())}
+          onClick={() => schoolId && onSubmit(toCredentials(form, schoolId), name.trim(), form.gender)}
         >
           {submitting ? "잠시만요…" : mode === "login" ? "로그인" : "가입하기"}
         </button>
