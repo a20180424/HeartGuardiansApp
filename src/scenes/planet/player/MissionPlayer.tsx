@@ -41,6 +41,7 @@ interface VM {
   hati: string;
   radar: string;
   radarPulse: boolean;
+  radarShown: boolean; // 레이더 HUD 표시 여부(노드별 sparse 제어, theme.showRadar 와 별개)
   bg: string;
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
@@ -157,6 +158,7 @@ export default function MissionPlayer(props: {
     hati: theme.hatiSprites.initial,
     radar: theme.radar.initial,
     radarPulse: false,
+    radarShown: true,
     bg: theme.bg.initial,
     hideFriend: false,
     lesson: null,
@@ -306,6 +308,8 @@ export default function MissionPlayer(props: {
       setSprite("friend", theme.friends[vm.friendId]?.byNode[node.id]);
       setSprite("hati", theme.hatiSprites.byNode[node.id]);
       setSprite("radar", theme.radar.byNode[node.id]);
+      const rShow = theme.radarShow?.[node.id];
+      if (rShow !== undefined) vm.radarShown = rShow; // 레이더 HUD 표시 토글(sparse, 지정 노드부터 유지)
       const bg = theme.bg.byNode[node.id];
       if (bg) vm.bg = bg; // 배경 교체(sparse, 지정 노드까지 유지)
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
@@ -416,6 +420,7 @@ export default function MissionPlayer(props: {
           hati: theme.hatiSprites.initial,
           radar: theme.radar.initial,
           radarPulse: false,
+          radarShown: true,
           bg: theme.bg.initial,
           hideFriend: false,
           lesson: null,
@@ -1089,7 +1094,7 @@ export default function MissionPlayer(props: {
 
         {/* 레이더 HUD (미션별로 끌 수 있음 — showRadar !== false 일 때만).
             radar + 플랫폼을 한 div로 묶어 세트로 이동한다. */}
-        {theme.showRadar !== false && (
+        {theme.showRadar !== false && vm.radarShown && (
           <div id="radarHud">
             {/* 레이더 뒤에 세트로 깔리는 부유 플랫폼 (radarPlatform 지정된 미션만) */}
             {theme.radarPlatform && (

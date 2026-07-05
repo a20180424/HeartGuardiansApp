@@ -142,6 +142,9 @@ export interface MissionTheme {
   radarPlatform?: string;
   // 레이더 HUD("마음 신호 탐색기") 표시 여부. 생략 시 표시(true). 미션2처럼 안 쓰는 미션은 false.
   showRadar?: boolean;
+  // 노드별 레이더 HUD 표시 토글(sparse, 지정 노드부터 다음 지정 전까지 유지). 초기값 표시.
+  // 예: { p2_m2_play1: false } → play1 노드부터 레이더를 숨긴다. showRadar:false 면 무시.
+  radarShow?: Record<string, boolean>;
   badgeColors: string[];
   // 선택지 아이콘. emoji(문자) 또는 img(이미지/데이터URI SVG) 중 하나로 표시.
   choiceIcons: Record<string, { emoji: string; bg: string; img?: string }>;
