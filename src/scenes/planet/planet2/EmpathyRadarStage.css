@@ -87,11 +87,14 @@
   }
 }
 
-/* 우: 플레이 영역 — 양피지 카드 패널 */
+/* 우: 플레이 영역 — 양피지 카드 패널.
+   align-self: flex-start 로 세로 stretch를 끄면 콘텐츠 높이만큼만 차지(빈 공간 제거).
+   상단 정렬이라 조립기 위쪽과 나란히 시작. 세로 가운데 두려면 center 로 바꾸면 됨. */
 .er-play {
   position: relative;
   z-index: 1;
   flex: 1;
+  align-self: center;
   min-width: 0;
   box-sizing: border-box;
   display: flex;
@@ -221,7 +224,9 @@
 
 /* 현재 단어 명패(드래그 가능) */
 .er-word-area {
-  flex: 1;
+  flex: none;
+  /* 드롭존↔카드 간격 = 드래그 이동 거리. 드롭존 1개 높이(~140px)만큼 더 줘서 드래그 느낌 확보. */
+  margin-top: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -263,6 +268,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
+  /* er-play(z-index:1) 위로 확실히 올라오게. 배너는 pointer-events:none 이라 클릭 방해 안 함. */
+  z-index: 50;
   transform: translate(-50%, -50%);
   padding: 28px 56px;
   font-size: 48px;
