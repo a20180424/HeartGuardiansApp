@@ -58,6 +58,21 @@ const RADAR = {
   byNode: {},
 };
 
+// 미션2 전용 레이더 — "공감 레이더" 신규 이미지(planet1 재사용 RADAR와 분리).
+// 앞 기기(empathy_radar) 1종 + 뒤 플랫폼(empathy_radar_platform). 게이지 단계 이미지가
+// 아직 1종뿐이라 모든 상태를 같은 이미지로 두었다(byNode 비어 있어 초기값만 표시).
+const RADAR_M2 = {
+  states: {
+    p25: `${A}/device/empathy_radar.png`,
+    p50: `${A}/device/empathy_radar.png`,
+    p75: `${A}/device/empathy_radar.png`,
+    p100: `${A}/device/empathy_radar.png`,
+    active: `${A}/device/empathy_radar.png`,
+  },
+  initial: "p100",
+  byNode: {},
+};
+
 const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 export const MISSION01_THEME: MissionTheme = {
@@ -84,8 +99,10 @@ export const MISSION02_THEME: MissionTheme = {
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
-  radar: RADAR,
-  showRadar: false,
+  radar: RADAR_M2,
+  // 왼쪽 radarHud 표시 — 레이더 기기 + 뒤 플랫폼(원단) 2겹, 미션2 전용 신규 이미지.
+  radarPlatform: `${A}/device/empathy_radar_platform.png`,
+  // radarShow 미지정 → radarShown 이 처음부터 끝까지 true. 미션2 전체에서 레이더 HUD 표시.
   badgeColors: BADGE_COLORS,
   choiceIcons: {},
   fx: { fx_light_return: "lightReturn" },

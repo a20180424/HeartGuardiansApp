@@ -78,4 +78,12 @@ describe("planet2 mission skeletons", () => {
     expect(play?.game).toBe("emotionGuide");
     expect(play?.next).toBe("p2_m1_result");
   });
+
+  it("mission02는 empathyRadar minigame 노드를 가지고 p2_m2_complete 로 이어진다", () => {
+    const play = mission02.nodes.find((n) => n.id === "p2_m2_play");
+    expect(play).toBeDefined();
+    expect(play?.type).toBe("minigame");
+    expect(play?.game).toBe("empathyRadar");
+    expect(play?.next).toBe("p2_m2_complete");
+  });
 });

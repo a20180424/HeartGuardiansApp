@@ -1,0 +1,282 @@
+/* 미션2 공감 레이더 미니게임. #stage(1920×1200) 위 오버레이. px 절대배치(vh/vw 금지). */
+.er-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  font-family: inherit;
+}
+.er-panel {
+  position: relative;
+  width: 1632px;
+  height: 1020px;
+  display: flex;
+  gap: 32px;
+  padding: 40px;
+  background: rgba(20, 38, 31, 0.65);
+  color: #dcefe4;
+  border: 6px solid #6fae8e;
+  border-radius: 32px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), inset 0 0 60px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+/* 좌: 조립기 인벤토리 */
+.er-inventory {
+  position: relative;
+  /* 인벤토리 전체 크기 마스터 노브. 부품(.er-part)은 이 너비의 %라 함께 스케일됨. */
+  width: 1200px;
+  aspect-ratio: 1402 / 1122;
+  align-self: center;
+  flex: none;
+  /* 조립기 이미지 왼쪽에 투명 여백이 있어 이미지를 왼쪽으로 당김.
+     음수 margin이라 당기는 만큼 우측 플레이 영역(flex:1)에 공간을 넘겨줌. 튜닝용 노브. */
+  margin-left: -120px;
+  /* 조립기 이미지 오른쪽 투명 여백도 회수 → 카드 영역이 왼쪽으로 넓어짐.
+     더 음수일수록 카드가 왼쪽으로 확장(기계는 안 움직임, 카드가 z-index로 위에 그려짐). 튜닝용 노브. */
+  margin-right: -80px;
+}
+.er-assembler {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* 배경 조립기 이미지만 미세 이동(부품은 고정). 왼쪽=x 음수, 위=y 음수. 튜닝용 노브. */
+  transform: translate(-18px, -18px);
+}
+/* 래퍼: 슬롯 중심에 정렬만 담당(정적 transform). 애니메이션은 안쪽 img가 맡아
+   translate(-50%,-50%) 정렬과 움직임 transform이 충돌하지 않게 분리. */
+.er-part {
+  position: absolute;
+  width: 8%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.er-part-img {
+  display: block;
+  width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* 등장(페이드) + 살짝 떠오름 + 후광 펄스. 서로 다른 속성이라 3개가 안 충돌함. */
+  animation:
+    er-part-in 0.4s ease both,
+    er-part-float 2.8s ease-in-out infinite,
+    er-part-glow 2.2s ease-in-out infinite;
+}
+@keyframes er-part-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes er-part-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes er-part-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(150, 245, 200, 0.5)); }
+  50% {
+    filter:
+      drop-shadow(0 0 16px rgba(150, 245, 200, 0.95))
+      drop-shadow(0 0 26px rgba(120, 230, 180, 0.55));
+  }
+}
+
+/* 우: 플레이 영역 — 양피지 카드 패널.
+   align-self: flex-start 로 세로 stretch를 끄면 콘텐츠 높이만큼만 차지(빈 공간 제거).
+   상단 정렬이라 조립기 위쪽과 나란히 시작. 세로 가운데 두려면 center 로 바꾸면 됨. */
+.er-play {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  align-self: center;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 32px;
+  color: #5c4a30;
+  background: linear-gradient(158deg, #f5ecd6, #e7d7b2);
+  border: 5px solid #c9b083;
+  border-radius: 26px;
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.5),
+    inset 0 0 40px rgba(150, 120, 70, 0.18),
+    0 12px 30px rgba(0, 0, 0, 0.35);
+}
+.er-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.er-stage {
+  padding: 8px 22px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #06251a;
+  background: linear-gradient(180deg, #9be9c6, #52c793);
+  border-radius: 999px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.er-progress {
+  font-size: 26px;
+  font-weight: 800;
+  color: #b3701d;
+}
+.er-instruction {
+  margin-top: 18px;
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  color: #4f3f28;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 감정 상자 3개: 감정 이름이 들어간 레이더 글라스 원형 드롭존 */
+.er-boxes {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.er-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.12s ease;
+}
+.er-box:hover { transform: translateY(-4px); }
+
+/* 레이더 글라스 드롭 존(다크 그린 유리 + 조준선). 외곽선 색 = 감정색(--box-color) */
+.er-box-radar {
+  position: relative;
+  width: 100%;
+  max-width: 190px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 6px solid var(--box-color, #a8834e);
+  background:
+    linear-gradient(rgba(150, 220, 165, 0.28), rgba(150, 220, 165, 0.28)) center / 58% 2px no-repeat,
+    linear-gradient(rgba(150, 220, 165, 0.28), rgba(150, 220, 165, 0.28)) center / 2px 58% no-repeat,
+    radial-gradient(circle at 42% 36%, #3c5c46, #182a20 78%);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.65), 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.er-box-radar::after {
+  content: "";
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(150, 220, 165, 0.22);
+}
+.er-box-radar::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(150, 220, 165, 0.55);
+  transform: translate(-50%, -50%);
+}
+/* 드롭존 안에 감정 이름(레이더 신호 readout 느낌의 초록 글로우). */
+.er-box-radar-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: rgba(205, 255, 214, 0.95);
+  text-shadow: 0 0 10px rgba(120, 220, 150, 0.85), 0 2px 4px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+/* hover/over는 외곽선 색(감정색)은 유지하고 글로우로만 강조. */
+.er-box:hover .er-box-radar {
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.4);
+}
+/* 드래그 중 포인터가 올라간 드롭존만 강조(강한 글로우 + 살짝 들림). */
+.er-box--over { transform: translateY(-5px); }
+.er-box--over .er-box-radar {
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.5), 0 0 26px rgba(255, 235, 150, 0.95);
+}
+
+.er-box--wrong { animation: er-shake 0.45s ease; }
+.er-box--wrong .er-box-radar {
+  border-color: #ff6b6b;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6), 0 0 18px rgba(255, 90, 90, 0.75);
+}
+@keyframes er-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* 현재 단어 명패(드래그 가능) */
+.er-word-area {
+  flex: none;
+  /* 드롭존↔카드 간격 = 드래그 이동 거리. 드롭존 1개 높이(~140px)만큼 더 줘서 드래그 느낌 확보. */
+  margin-top: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* 드래그 토큰: 크림 배경 위에서 대비되도록 글로시 에메랄드 캡슐 + 초록 글로우.
+   글로우는 box-shadow만 펄스(transform 미사용 → 드래그 인라인 transform과 충돌 없음). */
+.er-word {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 30px;
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(180deg, #45d3aa, #1f9f7d 55%, #17836a);
+  border: 4px solid #ecfff9;
+  border-radius: 999px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  animation: er-word-pulse 2.4s ease-in-out infinite;
+}
+.er-word:active { cursor: grabbing; }
+@keyframes er-word-pulse {
+  0%, 100% {
+    box-shadow:
+      0 10px 22px rgba(0, 0, 0, 0.35), 0 0 16px rgba(65, 205, 165, 0.4),
+      inset 0 2px 6px rgba(255, 255, 255, 0.55), inset 0 -5px 10px rgba(0, 0, 0, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 10px 22px rgba(0, 0, 0, 0.35), 0 0 32px rgba(65, 205, 165, 0.8),
+      inset 0 2px 6px rgba(255, 255, 255, 0.55), inset 0 -5px 10px rgba(0, 0, 0, 0.22);
+  }
+}
+
+/* 스테이지 전환 / 완료 배너 */
+.er-banner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* er-play(z-index:1) 위로 확실히 올라오게. 배너는 pointer-events:none 이라 클릭 방해 안 함. */
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  padding: 28px 56px;
+  font-size: 48px;
+  font-weight: 900;
+  color: #06251a;
+  background: linear-gradient(180deg, #ffe89b, #ffcf52);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
