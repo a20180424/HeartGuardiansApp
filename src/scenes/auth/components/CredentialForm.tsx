@@ -83,7 +83,9 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
   );
 
   const genderToggle = () => (
-    <label className="field field--gender">
+    // 두 버튼을 <label>로 감싸면 label 클릭이 첫 버튼(남자)으로 전달돼 의도치 않게
+    // 선택된다. 기본값 없는 필수 필드라 role="group"으로 묶어 그 오작동을 막는다.
+    <div className="field field--gender" role="group" aria-label="성별">
       <span className="field__label">성별</span>
       <div className="gender-toggle">
         {(["male", "female"] as const).map((g) => (
@@ -98,7 +100,7 @@ export default function CredentialForm({ mode, schools, submitting, errorMsg, on
           </button>
         ))}
       </div>
-    </label>
+    </div>
   );
 
   return (
