@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmotionGuideStage from "./EmotionGuideStage";
+import EmpathyRadarStage from "./EmpathyRadarStage";
 import type { EmotionGuideResult } from "./emotionGuide.data";
 import {
   MISSION01_THEME,
@@ -94,6 +95,9 @@ export default function Planet2() {
           currentStep={2}
           steps={MISSION_STEPS}
           scopeClass="planet2"
+          games={{
+            empathyRadar: ({ onDone }) => <EmpathyRadarStage onDone={onDone} />,
+          }}
           onExit={() => goTo("mission3")}
         />
       )}

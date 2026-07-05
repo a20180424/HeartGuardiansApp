@@ -28,60 +28,30 @@
       "hideFriend": true,
       "noAuto": true,
       "text": "감정 단어들을 성격에 맞게 분류하면, 레이더 부품이 하나씩 만들어질거야!",
-      "next": "p2_m2_play1"
+      "next": "p2_m2_preplay1"
     },
     {
-      "id": "p2_m2_play1",
+      "id": "p2_m2_preplay1",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
       "text": "단어를 잘 보고 성격에 맞는 감정 상자에 드래그해봐!",
-      "next": "p2_m2_play1_hint"
+      "next": "p2_m2_preplay2"
     },
     {
-      "id": "p2_m2_play1_hint",
+      "id": "p2_m2_preplay2",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
       "text": "정확하게 분류하면 레이더 부품이 하나씩 완성될거야!",
-      "next": "p2_m2_stage1_clear"
+      "next": "p2_m2_play"
     },
     {
-      "id": "p2_m2_stage1_clear",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "정확해! 1단계 부품이 모두 완성되었어!",
-      "next": "p2_m2_stage2_intro"
-    },
-    {
-      "id": "p2_m2_stage2_intro",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "이제 2단계 부품을 완성해서 검정 신호를 탐지해보자!",
-      "next": "p2_m2_play2_hint"
-    },
-    {
-      "id": "p2_m2_play2_hint",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "감정 단어를 잘 분류하면 부품이 하나씩 완성될거야!",
-      "next": "p2_m2_stage3_intro"
-    },
-    {
-      "id": "p2_m2_stage3_intro",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "마지막 단계야! 남은 부품들을 완성해서 모든 감정을 제대로 탐지할 수 있는 완벽한 공감 레이더를 만들자",
+      "id": "p2_m2_play",
+      "type": "minigame",
+      "game": "empathyRadar",
       "next": "p2_m2_complete"
     },
     {
