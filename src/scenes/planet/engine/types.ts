@@ -34,7 +34,7 @@ export interface GaugeOption {
 
 export interface MissionNode {
   id: string;
-  type?: "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video";
+  type?: "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video" | "minigame";
   speaker?: string; // "hati" | 친구 id(예: "lumi" | "lala" | "sola")
   text?: string;
   // 친구 대사를 하티 라인·선택 화면에서도 계속 띄워둔다(맥락 유지).
@@ -46,6 +46,8 @@ export interface MissionNode {
   lesson?: { title: string; sub: string };
   // 화면 우측 가운데에 띄우는 장식 이미지 경로(세로 80% 크기). 지정한 노드에서만 표시.
   sideImage?: string;
+  // type: "minigame" 전용 — 렌더할 게임 식별자(games 맵의 키). 예: "emotionGuide".
+  game?: string;
   next?: string | null;
   choices?: Choice[];
   // 선택지 카드 위에 띄우는 짧은 안내 문구(선택). 없으면 표시하지 않는다.
@@ -111,6 +113,7 @@ export interface RunnerView {
   showGauge(node: MissionNode, done: () => void): void;
   showReveal(node: MissionNode, done: () => void): void;
   showVideo(node: MissionNode, done: () => void): void;
+  showMinigame(node: MissionNode, done: () => void): void;
   end(): void;
 }
 
