@@ -462,6 +462,45 @@
   }
 }
 
+/* 완성 이미지 뒤 금빛 후광(fx resultGlow). #choiceImage(z-index:3) 뒤에 깔린다. */
+#choiceGlow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 40px;
+  width: 74%;
+  height: 82%;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  /* 책보다 크게 잡아 실루엣 바깥으로 금빛 후광이 퍼지게 한다. */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 240, 180, 0.9) 0%,
+    rgba(212, 175, 55, 0.6) 40%,
+    rgba(46, 139, 87, 0.32) 60%,
+    transparent 74%
+  );
+  filter: blur(46px);
+  opacity: 0;
+  animation: choiceGlowPulse 2.4s ease-in-out infinite;
+}
+#choiceGlow.show {
+  opacity: 1;
+}
+@keyframes choiceGlowPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.72;
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+  }
+}
+
 /* ---------- 화면 가운데 큰 이미지(노드 image) ----------
    이미지(위) + 선택지 버튼(아래) 세로 스택. 크기/위치 1차안(추후 조정). */
 #choiceImage {

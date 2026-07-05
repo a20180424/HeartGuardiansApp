@@ -53,6 +53,7 @@ interface VM {
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
+  bookGlow: boolean; // 완성 이미지(node.image) 뒤 금빛 후광(fx로 켬, choiceImage 있을 때만 표시)
   progress: "start" | "done";
   tapHint: string;
   showNext: boolean;
@@ -168,6 +169,7 @@ export default function MissionPlayer(props: {
     friendGlow: false,
     bright: false,
     empathy: false,
+    bookGlow: false,
     progress: "start",
     tapHint: "",
     showNext: false,
@@ -344,6 +346,13 @@ export default function MissionPlayer(props: {
           vm.empathy = false;
           render();
           break;
+        case "resultGlow":
+          // 완성 이미지(감정 설명서) 뒤 금빛 후광 + 반짝임 버스트(완료 축하).
+          audio.play("reveal");
+          vm.bookGlow = true;
+          sparkleBurst();
+          render();
+          break;
         case "lightReturn":
           audio.play("fanfare");
           vm.bright = true;
@@ -419,6 +428,7 @@ export default function MissionPlayer(props: {
           friendGlow: false,
           bright: false,
           empathy: false,
+          bookGlow: false,
           progress: "start",
           tapHint: "",
           showNext: false,
@@ -1259,6 +1269,9 @@ export default function MissionPlayer(props: {
             </div>
           </div>
         )}
+
+        {/* 완성 이미지 뒤 금빛 후광(fx resultGlow). 이미지가 떠 있을 때만 표시 */}
+        {vm.bookGlow && vm.choiceImage && <div id="choiceGlow" className="show" />}
 
         {/* 화면 가운데 큰 이미지(노드 image) — 선택지 등에서 상황 이미지를 크게 보여줄 때 */}
         {vm.choiceImage && (

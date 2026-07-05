@@ -36,6 +36,7 @@
       "noAuto": true,
       "text": "가디언즈 감정 설명서가 완성되었어. 공감 카드를 확인해보자!",
       "image": "/assets/planet2/guardians-emotion-guide-complete.png",
+      "onEnter": [{ "cmd": "fx", "value": "fx_result_glow" }],
       "next": "p2_m1_cards"
     },
     {
