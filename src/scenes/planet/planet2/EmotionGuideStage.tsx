@@ -58,9 +58,7 @@ export default function EmotionGuideStage(props: {
           <div className="eg-energy">
             <div className="eg-energy-head">
               <span className="eg-energy-label">공감 에너지</span>
-              <span className="eg-energy-text">
-                {completed} / {TOTAL_STEPS}
-              </span>
+              <span className="eg-energy-text">{energyPct}%</span>
             </div>
             <div className="eg-energy-track">
               <div className="eg-energy-fill" style={{ width: `${energyPct}%` }} />
