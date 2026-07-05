@@ -3,6 +3,8 @@
 
 import { request, authHeaders, credentialStore, type Credentials } from "./api";
 
+export type Gender = "male" | "female";
+
 export interface School {
   id: string;
   name: string;
@@ -14,11 +16,13 @@ export interface Profile {
   grade: number;
   class: number;
   number: number;
+  gender: Gender;
   school: School | null;
 }
 
 export interface SignupBody extends Credentials {
   name: string;
+  gender: Gender;
 }
 
 /** Public: list of schools (to populate the signup/login school picker). */
