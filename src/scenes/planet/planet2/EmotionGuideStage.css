@@ -1,0 +1,136 @@
+/* 감정 설명서 미니게임 최소 스타일(기능 우선). #stage(1920×1200) 위 오버레이. */
+.eg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 56px;
+  background: #0e1f10;
+  color: #e5d3b3;
+  font-family: inherit;
+  overflow: hidden;
+}
+.eg-hud {
+  flex: 0 0 auto;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.eg-body {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 32px;
+  min-height: 0;
+}
+.eg-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #f7f3e3;
+  color: #2b2b2b;
+  border-radius: 20px;
+  padding: 28px;
+  overflow-y: auto;
+}
+.eg-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+.eg-desc {
+  font-size: 26px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.eg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: auto;
+}
+.eg-emo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 6px;
+  border: 2px solid #cbb98a;
+  border-radius: 14px;
+  background: #fffdf5;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.eg-emo.sel {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.4);
+}
+.eg-emo .em {
+  font-size: 34px;
+}
+.eg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.eg-act {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid #cbb98a;
+  border-radius: 14px;
+  background: #fffdf5;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.eg-act.sel {
+  border-color: #2e8b57;
+  box-shadow: 0 0 0 4px rgba(46, 139, 87, 0.3);
+}
+.eg-badge {
+  font-size: 15px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 8px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.eg-badge.self { background: #d7f0df; color: #1c6b3a; }
+.eg-badge.wish { background: #f6e6bf; color: #916b12; }
+.eg-locked {
+  margin: auto;
+  font-size: 24px;
+  font-weight: 800;
+  color: #7a6f55;
+  text-align: center;
+}
+.eg-feedback {
+  background: #eaf7ee;
+  border: 2px dashed #57b07a;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #245c39;
+}
+.eg-next {
+  flex: 0 0 auto;
+  padding: 20px;
+  border: none;
+  border-radius: 16px;
+  font-size: 26px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #2e8b57;
+  color: #fff;
+}
+.eg-next:disabled {
+  background: #8a8a7a;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
