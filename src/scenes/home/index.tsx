@@ -47,7 +47,7 @@ export default function Home() {
     <div className="home">
       <img className="home-title" src={bannerUrl} alt="하트 가디언즈: 우주 공감 탐험대" />
 
-      <ProfileCard name={profile.name} progress={progress} />
+      <ProfileCard name={profile.name} progress={progress} gender={profile.gender} />
 
       <button
         type="button"
