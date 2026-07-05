@@ -38,6 +38,7 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
   const boxRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const bubbleRef = useRef<HTMLDivElement | null>(null);
   const dragOrigin = useRef<{ px: number; py: number } | null>(null);
+  const activePointerId = useRef<number | null>(null);
 
   const stage = STAGES[state.stageIndex];
   const word = currentWord(state);
@@ -71,15 +72,19 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
     if (!word || doneRef.current) return;
     e.preventDefault();
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    activePointerId.current = e.pointerId;
     dragOrigin.current = { px: e.clientX, py: e.clientY };
     setDrag({ x: 0, y: 0 });
   }
   function onBubbleMove(e: React.PointerEvent) {
+    if (e.pointerId !== activePointerId.current) return;
     if (!dragOrigin.current) return;
     setDrag({ x: e.clientX - dragOrigin.current.px, y: e.clientY - dragOrigin.current.py });
   }
   function onBubbleUp(e: React.PointerEvent) {
+    if (e.pointerId !== activePointerId.current) return;
     if (!dragOrigin.current) return;
+    activePointerId.current = null;
     dragOrigin.current = null;
     setDrag(null);
     // 놓은 지점이 어느 감정 상자 안인가 히트테스트.
@@ -89,6 +94,12 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
       return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
     });
     if (hit) attempt(hit[0]);
+  }
+  function onBubbleCancel(e: React.PointerEvent) {
+    if (e.pointerId !== activePointerId.current) return;
+    activePointerId.current = null;
+    dragOrigin.current = null;
+    setDrag(null);
   }
 
   return (
@@ -147,6 +158,7 @@ export default function EmpathyRadarStage({ onDone }: { onDone: () => void }) {
                 onPointerDown={onBubbleDown}
                 onPointerMove={onBubbleMove}
                 onPointerUp={onBubbleUp}
+                onPointerCancel={onBubbleCancel}
               >
                 <span className="er-word-emoji">{word.emoji}</span>
                 <span className="er-word-text">{word.text}</span>
