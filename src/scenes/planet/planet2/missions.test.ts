@@ -41,6 +41,9 @@ function runToEnd(data: MissionData): Promise<{ lines: string[]; fx: string[] }>
       showVideo(_n, done) {
         done();
       },
+      showMinigame(_n, done) {
+        done();
+      },
       end() {
         resolve({ lines, fx });
       },
