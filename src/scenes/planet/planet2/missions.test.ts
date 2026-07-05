@@ -41,6 +41,9 @@ function runToEnd(data: MissionData): Promise<{ lines: string[]; fx: string[] }>
       showVideo(_n, done) {
         done();
       },
+      showMinigame(_n, done) {
+        done();
+      },
       end() {
         resolve({ lines, fx });
       },
@@ -67,4 +70,12 @@ describe("planet2 mission skeletons", () => {
       expect(data.nodes.every((n) => n.id.startsWith("p2_m"))).toBe(true);
     },
   );
+
+  it("mission01은 emotionGuide minigame 노드를 가지고 p2_m1_result 로 이어진다", () => {
+    const play = mission01.nodes.find((n) => n.id === "p2_m1_play");
+    expect(play).toBeDefined();
+    expect(play?.type).toBe("minigame");
+    expect(play?.game).toBe("emotionGuide");
+    expect(play?.next).toBe("p2_m1_result");
+  });
 });

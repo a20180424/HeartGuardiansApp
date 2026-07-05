@@ -24,11 +24,8 @@
     },
     {
       "id": "p2_m1_play",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "여기서 게임을 플레이하자",
+      "type": "minigame",
+      "game": "emotionGuide",
       "next": "p2_m1_result"
     },
     {
@@ -39,6 +36,7 @@
       "noAuto": true,
       "text": "가디언즈 감정 설명서가 완성되었어. 공감 카드를 확인해보자!",
       "image": "/assets/planet2/guardians-emotion-guide-complete.png",
+      "onEnter": [{ "cmd": "fx", "value": "fx_result_glow" }],
       "next": "p2_m1_cards"
     },
     {

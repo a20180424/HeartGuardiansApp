@@ -5,6 +5,7 @@ import {
   type MouseEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  type ComponentType,
 } from "react";
 import { DialogueRunner } from "../engine/runner";
 import type {
@@ -52,6 +53,7 @@ interface VM {
   friendGlow: boolean;
   bright: boolean;
   empathy: boolean;
+  bookGlow: boolean; // 완성 이미지(node.image) 뒤 금빛 후광(fx로 켬, choiceImage 있을 때만 표시)
   progress: "start" | "done";
   tapHint: string;
   showNext: boolean;
@@ -61,7 +63,7 @@ interface VM {
   dragNode: boolean;
   dzShow: boolean;
   // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge / reveal: 긁어서 드러내기)
-  stage: "none" | "mirrors" | "gauge" | "reveal";
+  stage: "none" | "mirrors" | "gauge" | "reveal" | "minigame";
   sHideBubbles: boolean; // 거울/게이지 캐릭터 말풍선 숨김(대사가 이미지에 포함된 경우)
   sBanner: string;
   sPrompt: string;
@@ -91,6 +93,7 @@ interface VM {
   rThreshold: number;
   videoSrc: string; // type:"video" 재생 중인 동영상 경로(없으면 "")
   videoStarted: boolean; // '재생 시작' 버튼을 눌러 재생을 시작했는지(버튼 숨김용)
+  gameId: string; // type:"minigame" 렌더할 게임 식별자(games 맵 키). 없으면 ""
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
@@ -126,6 +129,8 @@ export default function MissionPlayer(props: {
   scopeClass?: string;
   // 엔딩 완료 버튼 커스터마이즈(마지막 미션 등). 없으면 기본 "다음 미션으로".
   finish?: { label: string; icon?: string };
+  // type:"minigame" 노드가 참조하는 게임 컴포넌트 맵(node.game → 컴포넌트). 완료 시 onDone 호출.
+  games?: Record<string, ComponentType<{ onDone: () => void }>>;
 }) {
   const { scenario, theme } = props;
   const [, force] = useReducer((x) => x + 1, 0);
@@ -164,6 +169,7 @@ export default function MissionPlayer(props: {
     friendGlow: false,
     bright: false,
     empathy: false,
+    bookGlow: false,
     progress: "start",
     tapHint: "",
     showNext: false,
@@ -190,6 +196,7 @@ export default function MissionPlayer(props: {
     rThreshold: 0.85,
     videoSrc: "",
     videoStarted: false,
+    gameId: "",
     debug: "",
     debugId: "",
     debugCopied: false,
@@ -339,6 +346,13 @@ export default function MissionPlayer(props: {
           vm.empathy = false;
           render();
           break;
+        case "resultGlow":
+          // 완성 이미지(감정 설명서) 뒤 금빛 후광 + 반짝임 버스트(완료 축하).
+          audio.play("reveal");
+          vm.bookGlow = true;
+          sparkleBurst();
+          render();
+          break;
         case "lightReturn":
           audio.play("fanfare");
           vm.bright = true;
@@ -414,6 +428,7 @@ export default function MissionPlayer(props: {
           friendGlow: false,
           bright: false,
           empathy: false,
+          bookGlow: false,
           progress: "start",
           tapHint: "",
           showNext: false,
@@ -439,6 +454,7 @@ export default function MissionPlayer(props: {
           rThreshold: 0.85,
           videoSrc: "",
           videoStarted: false,
+          gameId: "",
           debug: "",
           debugId: "",
           debugCopied: false,
@@ -614,6 +630,22 @@ export default function MissionPlayer(props: {
         vm.videoStarted = false;
         ms.done = done;
         ms.node = node; // holdAfter 참조용
+        render();
+      },
+      showMinigame(node, done) {
+        updateScene(node); // 배경/HUD 유지
+        vm.stage = "minigame";
+        vm.gameId = node.game || "";
+        if (import.meta.env.DEV && !props.games?.[vm.gameId]) {
+          console.warn(
+            `[MissionPlayer] minigame '${vm.gameId}' has no matching component in the games prop; nothing will render.`,
+          );
+        }
+        vm.mode = "idle";
+        vm.bubbleKind = "none";
+        vm.choices = [];
+        vm.tapHint = "";
+        ms.done = done;
         render();
       },
       end() {
@@ -801,6 +833,15 @@ export default function MissionPlayer(props: {
     done?.();
   };
 
+  const finishMinigame = () => {
+    const done = ms.done;
+    ms.done = undefined;
+    vm.stage = "none";
+    vm.gameId = "";
+    force();
+    done?.();
+  };
+
   // 동영상: 재생 종료 → holdAfter 만큼 정지 후 다음 노드로.
   const finishVideo = () => {
     const done = ms.done;
@@ -951,6 +992,8 @@ export default function MissionPlayer(props: {
     window.addEventListener("pointercancel", up);
   };
 
+  const MiniGame =
+    vm.stage === "minigame" ? props.games?.[vm.gameId] : undefined;
   const many = vm.choices.length >= 4;
   // 친구 말풍선/표정: 지금 친구가 말하는 중이면 그 대사·표정, 아니면 hold로 유지 중인
   // 대사(heldText)와 그 짝 표정(heldSprite)으로 함께 되돌린다.
@@ -1206,6 +1249,9 @@ export default function MissionPlayer(props: {
           />
         )}
 
+        {/* 미니게임 (minigame) — planet 컨테이너가 games prop으로 주입 */}
+        {MiniGame && <MiniGame onDone={finishMinigame} />}
+
         {/* 교훈 배너(금색 오너먼트) — lesson 노드에서 표시 */}
         {vm.lesson && (
           <div id="lessonBanner" className="show">
@@ -1223,6 +1269,9 @@ export default function MissionPlayer(props: {
             </div>
           </div>
         )}
+
+        {/* 완성 이미지 뒤 금빛 후광(fx resultGlow). 이미지가 떠 있을 때만 표시 */}
+        {vm.bookGlow && vm.choiceImage && <div id="choiceGlow" className="show" />}
 
         {/* 화면 가운데 큰 이미지(노드 image) — 선택지 등에서 상황 이미지를 크게 보여줄 때 */}
         {vm.choiceImage && (

@@ -86,6 +86,9 @@ function makeFakeView(onEnd: () => void) {
     showVideo(_node, done) {
       done();
     },
+    showMinigame(_node, done) {
+      done();
+    },
     end() {
       onEnd();
     },
@@ -143,6 +146,9 @@ describe("DialogueRunner", () => {
         showVideo(_node, done) {
           done();
         },
+        showMinigame(_n, done) {
+          done();
+        },
         end() {
           expect(seq).toEqual(["mirrors:mir", "gauge:gau", "line:fin"]);
           resolve();
@@ -193,8 +199,57 @@ describe("DialogueRunner", () => {
           seq.push("video:" + node.id);
           Promise.resolve().then(done);
         },
+        showMinigame(_n, done) {
+          done();
+        },
         end() {
           expect(seq).toEqual(["reveal:rev", "video:vid", "line:fin"]);
+          resolve();
+        },
+      };
+      new DialogueRunner(md, view).start();
+    });
+  });
+
+  it("minigame 노드는 showMinigame 를 호출하고 done 시 next 로 진행한다", async () => {
+    const seq: string[] = [];
+    const md: MissionData = {
+      id: "t4",
+      title: "t4",
+      start: "game",
+      nodes: [
+        { id: "game", type: "minigame", game: "demo", next: "fin" },
+        { id: "fin", type: "line", speaker: "hati", text: "끝", next: null },
+      ],
+    };
+    await new Promise<void>((resolve) => {
+      const view: RunnerView = {
+        reset() {},
+        execCommands() {},
+        showLine(node: MissionNode, onTyped: () => void) {
+          seq.push("line:" + node.id);
+          onTyped();
+          return Promise.resolve();
+        },
+        showChoices() {},
+        showMirrors(_n, done) {
+          done();
+        },
+        showGauge(_n, done) {
+          done();
+        },
+        showReveal(_n, done) {
+          done();
+        },
+        showVideo(_n, done) {
+          done();
+        },
+        showMinigame(node: MissionNode, done: () => void) {
+          seq.push("minigame:" + node.id);
+          Promise.resolve().then(done);
+        },
+        end() {
+          expect(seq).toEqual(["minigame:game", "line:fin"]);
           resolve();
         },
       };

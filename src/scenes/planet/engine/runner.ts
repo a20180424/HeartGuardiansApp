@@ -17,7 +17,7 @@ export class DialogueRunner {
 
   private typeOf(
     n: MissionNode,
-  ): "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video" {
+  ): "line" | "choice" | "branch" | "mirrors" | "gauge" | "reveal" | "video" | "minigame" {
     return n.type || (n.choices ? "choice" : "line");
   }
 
@@ -64,6 +64,10 @@ export class DialogueRunner {
     }
     if (t === "video") {
       this.view.showVideo(node, () => this.advance(node));
+      return;
+    }
+    if (t === "minigame") {
+      this.view.showMinigame(node, () => this.advance(node));
       return;
     }
     this.typeLine(node);

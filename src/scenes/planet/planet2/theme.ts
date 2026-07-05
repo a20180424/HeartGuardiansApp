@@ -72,7 +72,7 @@ export const MISSION01_THEME: MissionTheme = {
   showRadar: false,
   badgeColors: BADGE_COLORS,
   choiceIcons: {},
-  fx: { fx_light_return: "lightReturn" },
+  fx: { fx_light_return: "lightReturn", fx_result_glow: "resultGlow" },
   sfx: { byNode: {} },
 };
 
