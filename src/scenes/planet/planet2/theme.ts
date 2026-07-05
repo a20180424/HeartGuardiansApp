@@ -102,8 +102,7 @@ export const MISSION02_THEME: MissionTheme = {
   radar: RADAR_M2,
   // 왼쪽 radarHud 표시 — 레이더 기기 + 뒤 플랫폼(원단) 2겹, 미션2 전용 신규 이미지.
   radarPlatform: `${A}/device/empathy_radar_platform.png`,
-  // 인트로(intro·brief1·brief2)까지만 레이더를 보여주고, 게임 준비(preplay1)부터 숨긴다.
-  radarShow: { p2_m2_preplay1: false },
+  // radarShow 미지정 → radarShown 이 처음부터 끝까지 true. 미션2 전체에서 레이더 HUD 표시.
   badgeColors: BADGE_COLORS,
   choiceIcons: {},
   fx: { fx_light_return: "lightReturn" },
