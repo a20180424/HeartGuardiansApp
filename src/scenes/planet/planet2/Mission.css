@@ -109,3 +109,10 @@
 .planet2 #castStage .cast-member[data-i="2"] {
   left: 780px;
 }
+/* 머리 위 이름표 — 위치/크기 미세조정.
+   margin-bottom: 머리에서 얼마나 띄울지(↑). left/transform 으로 좌우 정렬.
+   개별 캐릭터마다 다르게 하려면 .cast-member[data-i="N"] .cast-name 으로 조준한다. */
+.planet2 #castStage .cast-name {
+  font-size: 30px;
+  margin-bottom: -730px;
+}

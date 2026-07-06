@@ -264,13 +264,39 @@
   pointer-events: none;
   filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.45));
 }
-/* 플레이트 위 캐릭터 공통(높이 기준). 개별 좌우 위치는 data-i 로 잡는다. */
+/* 플레이트 위 캐릭터 래퍼(캐릭터 img + 머리 위 이름표를 묶음).
+   높이(height)로 캐릭터 크기를, bottom 으로 바닥선을 잡는다. width 는 auto(캐릭터 폭에 맞춰 축소). */
 #castStage .cast-member {
   position: absolute;
   bottom: 250px;
   height: 460px;
   z-index: 2;
+}
+/* 캐릭터 이미지 — 래퍼 높이에 맞춘다. */
+#castStage .cast-char {
+  display: block;
+  height: 100%;
   filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.4));
+}
+/* 머리 위 이름표(초록 알약 + 금색 테두리). 래퍼 상단 중앙 기준.
+   위아래는 bottom, 좌우는 left(50% = 캐릭터 중앙)로 잡고, translate 로 정렬한다. */
+#castStage .cast-name {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 6px 22px;
+  border-radius: 999px;
+  background: #3f9b3f;
+  border: 3px solid #ecd98a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
 }
 /* 좌·중·우 세 명 배치(base 시드 — override 로 미세조정). */
 #castStage .cast-member[data-i="0"] {

@@ -114,9 +114,9 @@ export const MISSION02_THEME: MissionTheme = {
 const MISSION03_CAST = {
   platform: `${A}/planet2/cast-platform.png`,
   members: [
-    `${A}/planet2/cast-mira-blank.png`,
-    `${A}/planet2/cast-arji-blank.png`,
-    `${A}/planet2/cast-nubi-blank.png`,
+    { img: `${A}/planet2/cast-mira-blank.png`, name: "미라" },
+    { img: `${A}/planet2/cast-arji-blank.png`, name: "아르지" },
+    { img: `${A}/planet2/cast-nubi-blank.png`, name: "누비" },
   ],
 };
 

@@ -1110,12 +1110,16 @@ export default function MissionPlayer(props: {
         )}
 
         {/* 무대(플레이트) 위 캐릭터 세트 — theme.cast 지정 미션 전체에서 상시 표시.
-            플레이트 위에 members 를 좌→우로 세운다(위치는 CSS nth-child 로 배치). */}
+            플레이트 위에 members 를 좌→우로 세운다(위치는 CSS data-i 로 배치).
+            각 멤버는 래퍼(.cast-member) 안에 캐릭터 img + 머리 위 이름표(.cast-name). */}
         {theme.cast && (
           <div id="castStage">
             <img id="castPlatform" src={theme.cast.platform} alt="" aria-hidden="true" />
-            {theme.cast.members.map((src, i) => (
-              <img key={i} className="cast-member" data-i={i} src={src} alt="" aria-hidden="true" />
+            {theme.cast.members.map((m, i) => (
+              <div key={i} className="cast-member" data-i={i}>
+                <img className="cast-char" src={m.img} alt="" aria-hidden="true" />
+                <span className="cast-name">{m.name}</span>
+              </div>
             ))}
           </div>
         )}
