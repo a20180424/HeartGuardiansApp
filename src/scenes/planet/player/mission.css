@@ -244,6 +244,45 @@
   }
 }
 
+/* ---------- cast stage (플레이트 위 캐릭터 세트) ---------- */
+/* 플레이트(#castPlatform) + 그 위 캐릭터들(.cast-member)을 묶는 세트.
+   세트 전체 이동은 #castStage 의 left/bottom 만 조정한다.
+   좌표계는 #stage(1920×1200) 기준. 아래는 base 시드값 — 미션별로 override 로 튜닝한다. */
+#castStage {
+  position: absolute;
+  left: 90px;
+  bottom: 60px;
+  z-index: 3;
+}
+/* 바닥 플레이트(부유 원형 돌판). 캐릭터보다 뒤(낮은 z-index). */
+#castStage #castPlatform {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 1080px;
+  pointer-events: none;
+  filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.45));
+}
+/* 플레이트 위 캐릭터 공통(높이 기준). 개별 좌우 위치는 data-i 로 잡는다. */
+#castStage .cast-member {
+  position: absolute;
+  bottom: 250px;
+  height: 460px;
+  z-index: 2;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.4));
+}
+/* 좌·중·우 세 명 배치(base 시드 — override 로 미세조정). */
+#castStage .cast-member[data-i="0"] {
+  left: 120px;
+}
+#castStage .cast-member[data-i="1"] {
+  left: 400px;
+}
+#castStage .cast-member[data-i="2"] {
+  left: 680px;
+}
+
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
   position: absolute;

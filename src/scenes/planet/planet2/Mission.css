@@ -77,3 +77,35 @@
   top: 0;
   height: 830px;
 }
+
+/* ── 무대(플레이트 + 캐릭터 3명) 위치·크기 ─────────────────────────────
+   #castStage 는 미션3(theme.cast)만 켜져 있어 이 override 는 사실상 미션3 전용.
+   base(mission.css) 규칙이 #castStage #castPlatform 처럼 ID 2개(특이도 2,0,0)라
+   반드시 #castStage 를 함께 써서 .planet2 #castStage …(2,1,0)로 이겨야 한다.
+   아래는 base 기본값 시드 — 여기 값만 바꿔서 미세조정한다. */
+.planet2 #castStage {
+  left: -190px;
+  bottom: -350px;
+}
+/* 바닥 플레이트 */
+.planet2 #castStage #castPlatform {
+  width: 1530px;
+  bottom: 0px;
+}
+/* 캐릭터 공통(높이·바닥선) */
+.planet2 #castStage .cast-member {
+  bottom: 500px;
+  height: 760px;
+}
+/* 좌·중·우 개별 위치 */
+.planet2 #castStage .cast-member[data-i="0"] {
+  left: 220px;
+  bottom: 450px;
+}
+.planet2 #castStage .cast-member[data-i="1"] {
+  left: 500px;  
+  bottom: 550px;
+}
+.planet2 #castStage .cast-member[data-i="2"] {
+  left: 780px;
+}

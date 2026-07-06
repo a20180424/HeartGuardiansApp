@@ -145,6 +145,9 @@ export interface MissionTheme {
   // 노드별 레이더 HUD 표시 토글(sparse, 지정 노드부터 다음 지정 전까지 유지). 초기값 표시.
   // 예: { p2_m2_play1: false } → play1 노드부터 레이더를 숨긴다. showRadar:false 면 무시.
   radarShow?: Record<string, boolean>;
+  // 무대(플레이트) 위에 세우는 캐릭터 세트. 지정된 미션 전체에서 상시 표시(생략 시 없음).
+  // platform=바닥 플레이트 이미지, members=그 위에 좌→우로 세울 캐릭터 이미지들.
+  cast?: { platform: string; members: string[] };
   badgeColors: string[];
   // 선택지 아이콘. emoji(문자) 또는 img(이미지/데이터URI SVG) 중 하나로 표시.
   choiceIcons: Record<string, { emoji: string; bg: string; img?: string }>;

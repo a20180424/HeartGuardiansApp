@@ -1109,6 +1109,17 @@ export default function MissionPlayer(props: {
           </div>
         )}
 
+        {/* 무대(플레이트) 위 캐릭터 세트 — theme.cast 지정 미션 전체에서 상시 표시.
+            플레이트 위에 members 를 좌→우로 세운다(위치는 CSS nth-child 로 배치). */}
+        {theme.cast && (
+          <div id="castStage">
+            <img id="castPlatform" src={theme.cast.platform} alt="" aria-hidden="true" />
+            {theme.cast.members.map((src, i) => (
+              <img key={i} className="cast-member" data-i={i} src={src} alt="" aria-hidden="true" />
+            ))}
+          </div>
+        )}
+
         {/* 인트로 타이틀 배너 */}
         <div id="titleBanner" className={vm.intro ? "show" : ""}>
           <div className="tb-badge">
