@@ -117,24 +117,30 @@
   margin-bottom: -730px;
 }
 
-/* ── 결과 노드(p2_m3_result) — 웃는 3인 1장 전용 위치·크기 ──────────────
-   결과 노드에선 3명이 1장(data-i="0")으로 교체된다. #stage 에 node-p2_m3_result
-   클래스가 붙어(공유 MissionPlayer) 이 노드에서만 조준할 수 있다. JSON 노드 추가 불필요.
-   위 기본 .cast-member[data-i="0"](bottom:450) 보다 특이도가 높아 이긴다. */
+/* ── 웃는 3인(byNode 교체) 전용 위치·크기 ────────────────────────────────
+   결과부터 3명이 1장(data-i="0")으로 교체되고, cast 는 sparse 라 result·result2·end
+   3개 노드에서 계속 뜬다. #stage 에 node-<id> 클래스가 붙으므로(공유 MissionPlayer)
+   세 노드를 콤마로 나열해 같은 규칙을 건다 — 값은 한 번만, 대상만 3개.
+   (트리오가 뜨는 노드를 추가/변경하면 여기 셀렉터 목록에도 그 노드를 넣어야 한다.)
+   기본 .cast-member[data-i="0"](bottom:450) 보다 특이도가 높아 이긴다. */
 
-/* 무대(플레이트+캐릭터) 전체를 결과 노드에서만 이동. 기본 .planet2 #castStage(-190,-350)
-   를 시드로 넣었다 — left 키우면 오른쪽, bottom 키우면 위로. 가운데로 옮길 때 여기만 조정.
-   (아래 cast-member/cast-char 오프셋과 합쳐져 최종 위치가 된다.) */
-.planet2 #stage.node-p2_m3_result #castStage {
+/* 무대(플레이트+캐릭터) 전체 이동. left 키우면 오른쪽, bottom 키우면 위로. */
+.planet2 #stage.node-p2_m3_result #castStage,
+.planet2 #stage.node-p2_m3_result2 #castStage,
+.planet2 #stage.node-p2_m3_end #castStage {
   left: 190px;
   bottom: -350px;
 }
-
-.planet2 #stage.node-p2_m3_result #castStage .cast-member[data-i="0"] {
+/* 웃는 3인 세로 위치(바닥선). */
+.planet2 #stage.node-p2_m3_result #castStage .cast-member[data-i="0"],
+.planet2 #stage.node-p2_m3_result2 #castStage .cast-member[data-i="0"],
+.planet2 #stage.node-p2_m3_end #castStage .cast-member[data-i="0"] {
   bottom: 550px; /* ↑ 값이 클수록 위로 (아래로 내리려면 줄인다) */
   /* left: 220px;  좌우 이동 */
 }
-/* 웃는 3인 크기 조정(높이 기준). */
-.planet2 #stage.node-p2_m3_result #castStage .cast-char {
+/* 웃는 3인 크기(높이 기준). */
+.planet2 #stage.node-p2_m3_result #castStage .cast-char,
+.planet2 #stage.node-p2_m3_result2 #castStage .cast-char,
+.planet2 #stage.node-p2_m3_end #castStage .cast-char {
   height: 760px; /* 키우면 커진다 */
 }
