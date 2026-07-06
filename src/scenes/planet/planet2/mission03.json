@@ -14,11 +14,8 @@
     },
     {
       "id": "p2_m3_play",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "여기서 게임을 플레이하자",
+      "type": "minigame",
+      "game": "hiddenEmotion",
       "next": "p2_m3_cards"
     },
     {

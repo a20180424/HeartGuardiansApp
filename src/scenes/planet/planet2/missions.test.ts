@@ -86,4 +86,12 @@ describe("planet2 mission skeletons", () => {
     expect(play?.game).toBe("empathyRadar");
     expect(play?.next).toBe("p2_m2_complete");
   });
+
+  it("mission03은 hiddenEmotion minigame 노드를 가지고 p2_m3_cards 로 이어진다", () => {
+    const play = mission03.nodes.find((n) => n.id === "p2_m3_play");
+    expect(play).toBeDefined();
+    expect(play?.type).toBe("minigame");
+    expect(play?.game).toBe("hiddenEmotion");
+    expect(play?.next).toBe("p2_m3_cards");
+  });
 });
