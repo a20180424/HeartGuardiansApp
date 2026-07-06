@@ -77,3 +77,84 @@
   top: 0;
   height: 830px;
 }
+
+/* ── 무대(플레이트 + 캐릭터 3명) 위치·크기 ─────────────────────────────
+   #castStage 는 미션3(theme.cast)만 켜져 있어 이 override 는 사실상 미션3 전용.
+   base(mission.css) 규칙이 #castStage #castPlatform 처럼 ID 2개(특이도 2,0,0)라
+   반드시 #castStage 를 함께 써서 .planet2 #castStage …(2,1,0)로 이겨야 한다.
+   아래는 base 기본값 시드 — 여기 값만 바꿔서 미세조정한다. */
+.planet2 #castStage {
+  left: -190px;
+  bottom: -350px;
+}
+/* 바닥 플레이트 */
+.planet2 #castStage #castPlatform {
+  width: 1530px;
+  bottom: 0px;
+}
+/* 캐릭터 공통(높이·바닥선) */
+.planet2 #castStage .cast-member {
+  bottom: 500px;
+  height: 760px;
+}
+/* 좌·중·우 개별 위치 */
+.planet2 #castStage .cast-member[data-i="0"] {
+  left: 220px;
+  bottom: 450px;
+}
+.planet2 #castStage .cast-member[data-i="1"] {
+  left: 500px;  
+  bottom: 550px;
+}
+.planet2 #castStage .cast-member[data-i="2"] {
+  left: 780px;
+}
+/* 머리 위 이름표 — 위치/크기 미세조정.
+   margin-bottom: 머리에서 얼마나 띄울지(↑). left/transform 으로 좌우 정렬.
+   개별 캐릭터마다 다르게 하려면 .cast-member[data-i="N"] .cast-name 으로 조준한다. */
+.planet2 #castStage .cast-name {
+  font-size: 30px;
+  margin-bottom: -730px;
+}
+
+/* ── 웃는 3인(byNode 교체) 전용 위치·크기 ────────────────────────────────
+   결과부터 3명이 1장(data-i="0")으로 교체되고, cast 는 sparse 라 result·result2·end
+   3개 노드에서 계속 뜬다. #stage 에 node-<id> 클래스가 붙으므로(공유 MissionPlayer)
+   세 노드를 콤마로 나열해 같은 규칙을 건다 — 값은 한 번만, 대상만 3개.
+   (트리오가 뜨는 노드를 추가/변경하면 여기 셀렉터 목록에도 그 노드를 넣어야 한다.)
+   기본 .cast-member[data-i="0"](bottom:450) 보다 특이도가 높아 이긴다. */
+
+/* 무대(플레이트+캐릭터) 전체 이동. left 키우면 오른쪽, bottom 키우면 위로. */
+.planet2 #stage.node-p2_m3_result #castStage,
+.planet2 #stage.node-p2_m3_result2 #castStage,
+.planet2 #stage.node-p2_m3_end #castStage {
+  left: 190px;
+  bottom: -350px;
+}
+/* 웃는 3인 세로 위치(바닥선). */
+.planet2 #stage.node-p2_m3_result #castStage .cast-member[data-i="0"],
+.planet2 #stage.node-p2_m3_result2 #castStage .cast-member[data-i="0"],
+.planet2 #stage.node-p2_m3_end #castStage .cast-member[data-i="0"] {
+  bottom: 550px; /* ↑ 값이 클수록 위로 (아래로 내리려면 줄인다) */
+  /* left: 220px;  좌우 이동 */
+}
+/* 웃는 3인 크기(높이 기준). */
+.planet2 #stage.node-p2_m3_result #castStage .cast-char,
+.planet2 #stage.node-p2_m3_result2 #castStage .cast-char,
+.planet2 #stage.node-p2_m3_end #castStage .cast-char {
+  height: 760px; /* 키우면 커진다 */
+}
+
+/* ── end 노드 — 리워드 카드 위 "탐험 성공!" 리본 ─────────────────────────
+   node.image(→ #choiceImage, 가로 중앙)를 리본으로 재사용. 리워드 카드는 node.cards(#cardStage).
+   base #choiceImage(top:110px, height:64%, 페더 마스크) 를 리본용으로 덮어쓴다.
+   #cardStage(z-index:5) 위에 오도록 z-index 를 올리고, top/width 로 카드 위쪽에 배치한다. */
+.planet2 #stage.node-p2_m3_end #choiceImage {
+  top: 140px; /* 위로/아래로 이동(값↑ 내려감) */
+  height: auto; /* width 로 크기 제어하려고 해제 */
+  width: 720px; /* 리본 가로 크기 */
+  max-width: 90%;
+  z-index: 6; /* 리워드 카드(5)보다 위 */
+  -webkit-mask: none; /* base 가장자리 페더 끄기 */
+  mask: none;
+}

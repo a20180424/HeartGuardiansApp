@@ -1,0 +1,53 @@
+/* 미션3 "숨은 감정 찾기" 미니게임 (임시 스텁). #stage(1920×1200) 위 오버레이. px 절대배치(vh/vw 금지).
+   팝업 셸(오버레이+패널)은 mission2 EmpathyRadarStage.css 의 .er-overlay/.er-panel 을 본떴다. */
+.he-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  font-family: inherit;
+}
+.he-panel {
+  position: relative;
+  width: 1632px;
+  height: 1020px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px;
+  background: rgba(20, 38, 31, 0.65);
+  color: #dcefe4;
+  border: 6px solid #6fae8e;
+  border-radius: 32px;
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.6),
+    inset 0 0 60px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+/* ── 아래는 임시 placeholder 콘텐츠 — 실제 게임으로 교체 시 지운다 ── */
+.he-title {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+.he-note {
+  font-size: 32px;
+  opacity: 0.8;
+}
+.he-done {
+  padding: 20px 44px;
+  border-radius: 18px;
+  border: 3px solid #ecd98a;
+  background: #3f9b3f;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}

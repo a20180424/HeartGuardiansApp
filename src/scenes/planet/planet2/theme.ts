@@ -109,6 +109,21 @@ export const MISSION02_THEME: MissionTheme = {
   sfx: { byNode: {} },
 };
 
+// 미션3 무대 — 부유 플레이트 위에 무표정(감정 드러나기 전) 친구 3명(누비·미라·아르지)을 세운다.
+// -found(감정을 찾은) 버전도 assets 에 함께 있어 미션 진행 중 감정 공개 시 교체할 수 있다.
+const MISSION03_CAST = {
+  platform: `${A}/planet2/cast-platform.png`,
+  members: [
+    { img: `${A}/planet2/cast-mira-blank.png`, name: "미라" },
+    { img: `${A}/planet2/cast-arji-blank.png`, name: "아르지" },
+    { img: `${A}/planet2/cast-nubi-blank.png`, name: "누비" },
+  ],
+  // 결과 노드에서 3명 개별(무표정) → 웃는 3인 1장으로 교체(이름표 없음).
+  byNode: {
+    p2_m3_result: [{ img: `${A}/planet2/cast-trio-smile.png` }],
+  },
+};
+
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 3", title: "숨은 감정 찾기", ribbon: "안개 속 진짜 진심을 해독하라" },
@@ -119,6 +134,7 @@ export const MISSION03_THEME: MissionTheme = {
   initialFriend: "placeholder",
   radar: RADAR,
   showRadar: false,
+  cast: MISSION03_CAST,
   badgeColors: BADGE_COLORS,
   choiceIcons: {},
   fx: { fx_light_return: "lightReturn" },

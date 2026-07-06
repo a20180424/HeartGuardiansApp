@@ -4,6 +4,7 @@ import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmotionGuideStage from "./EmotionGuideStage";
 import EmpathyRadarStage from "./EmpathyRadarStage";
+import HiddenEmotionStage from "./HiddenEmotionStage";
 import type { EmotionGuideResult } from "./emotionGuide.data";
 import {
   MISSION01_THEME,
@@ -108,6 +109,11 @@ export default function Planet2() {
           currentStep={3}
           steps={MISSION_STEPS}
           scopeClass="planet2"
+          games={{
+            // TODO(planet2 mission3): HiddenEmotionStage 안에 실제 게임을 채운다.
+            // 지금은 팝업 셸 + 완료 버튼만 있는 임시 스텁(mission2 empathyRadar 방식과 동일 구조).
+            hiddenEmotion: ({ onDone }) => <HiddenEmotionStage onDone={onDone} />,
+          }}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
           onExit={() => nav("/home")}
         />
