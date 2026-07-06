@@ -118,6 +118,10 @@ const MISSION03_CAST = {
     { img: `${A}/planet2/cast-arji-blank.png`, name: "아르지" },
     { img: `${A}/planet2/cast-nubi-blank.png`, name: "누비" },
   ],
+  // 결과 노드에서 3명 개별(무표정) → 웃는 3인 1장으로 교체(이름표 없음).
+  byNode: {
+    p2_m3_result: [{ img: `${A}/planet2/cast-trio-smile.png` }],
+  },
 };
 
 export const MISSION03_THEME: MissionTheme = {

@@ -42,6 +42,7 @@ interface VM {
   radar: string;
   radarPulse: boolean;
   radarShown: boolean; // 레이더 HUD 표시 여부(노드별 sparse 제어, theme.showRadar 와 별개)
+  castMembers: { img: string; name?: string }[]; // 플레이트 위 캐릭터 레이어(노드별 sparse 교체)
   bg: string;
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
@@ -159,6 +160,7 @@ export default function MissionPlayer(props: {
     radar: theme.radar.initial,
     radarPulse: false,
     radarShown: true,
+    castMembers: theme.cast?.members ?? [],
     bg: theme.bg.initial,
     hideFriend: false,
     lesson: null,
@@ -310,6 +312,8 @@ export default function MissionPlayer(props: {
       setSprite("radar", theme.radar.byNode[node.id]);
       const rShow = theme.radarShow?.[node.id];
       if (rShow !== undefined) vm.radarShown = rShow; // 레이더 HUD 표시 토글(sparse, 지정 노드부터 유지)
+      const cb = theme.cast?.byNode?.[node.id];
+      if (cb) vm.castMembers = cb; // 플레이트 위 캐릭터 레이어 교체(sparse, 지정 노드부터 유지)
       const bg = theme.bg.byNode[node.id];
       if (bg) vm.bg = bg; // 배경 교체(sparse, 지정 노드까지 유지)
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
@@ -421,6 +425,7 @@ export default function MissionPlayer(props: {
           radar: theme.radar.initial,
           radarPulse: false,
           radarShown: true,
+          castMembers: theme.cast?.members ?? [],
           bg: theme.bg.initial,
           hideFriend: false,
           lesson: null,
@@ -1115,10 +1120,10 @@ export default function MissionPlayer(props: {
         {theme.cast && (
           <div id="castStage">
             <img id="castPlatform" src={theme.cast.platform} alt="" aria-hidden="true" />
-            {theme.cast.members.map((m, i) => (
+            {vm.castMembers.map((m, i) => (
               <div key={i} className="cast-member" data-i={i}>
                 <img className="cast-char" src={m.img} alt="" aria-hidden="true" />
-                <span className="cast-name">{m.name}</span>
+                {m.name && <span className="cast-name">{m.name}</span>}
               </div>
             ))}
           </div>
