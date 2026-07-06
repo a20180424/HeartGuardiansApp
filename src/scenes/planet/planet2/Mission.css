@@ -144,3 +144,17 @@
 .planet2 #stage.node-p2_m3_end #castStage .cast-char {
   height: 760px; /* 키우면 커진다 */
 }
+
+/* ── end 노드 — 리워드 카드 위 "탐험 성공!" 리본 ─────────────────────────
+   node.image(→ #choiceImage, 가로 중앙)를 리본으로 재사용. 리워드 카드는 node.cards(#cardStage).
+   base #choiceImage(top:110px, height:64%, 페더 마스크) 를 리본용으로 덮어쓴다.
+   #cardStage(z-index:5) 위에 오도록 z-index 를 올리고, top/width 로 카드 위쪽에 배치한다. */
+.planet2 #stage.node-p2_m3_end #choiceImage {
+  top: 140px; /* 위로/아래로 이동(값↑ 내려감) */
+  height: auto; /* width 로 크기 제어하려고 해제 */
+  width: 720px; /* 리본 가로 크기 */
+  max-width: 90%;
+  z-index: 6; /* 리워드 카드(5)보다 위 */
+  -webkit-mask: none; /* base 가장자리 페더 끄기 */
+  mask: none;
+}
