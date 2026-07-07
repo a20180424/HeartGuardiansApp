@@ -14,12 +14,13 @@ import {
   TOTAL_STEPS,
   type GameState,
 } from "./emotionGuide.logic";
-import { createFakeClassVotesSource } from "./classResults.source";
+import { createServerClassVotesSource } from "./classResults.source";
+import { submitEmotionGuideAnswers } from "./emotionGuide.api";
 import ClassResultsBoard from "./ClassResultsBoard";
 import "./EmotionGuideStage.css";
 
-// 반 결과 폴링 간격. 가짜 데이터는 데모용으로 짧게, 실제 서버 연결 시 10000(10초)로.
-const CLASS_POLL_MS = 1500;
+// 반 결과 폴링 간격(서버 "오늘 우리 반" 조회). 10초.
+const CLASS_POLL_MS = 10000;
 
 export default function EmotionGuideStage(props: {
   onFinish: (results: EmotionGuideResult[]) => void;
@@ -29,8 +30,8 @@ export default function EmotionGuideStage(props: {
   const [phase, setPhase] = useState<"play" | "board">("play");
   const [finalResults, setFinalResults] = useState<EmotionGuideResult[]>([]);
 
-  // 반 결과 데이터 소스(가짜). 서버 준비 시 이 한 줄만 createServerClassVotesSource 로 교체.
-  const votesSource = useMemo(() => createFakeClassVotesSource(), []);
+  // 반 결과 데이터 소스(실서버). 오프라인 데모가 필요하면 createFakeClassVotesSource 로 교체.
+  const votesSource = useMemo(() => createServerClassVotesSource(), []);
 
   const situation = SITUATIONS[state.step - 1];
   const coping = state.emotion ? COPING_ACTIONS[state.emotion] : null;
@@ -48,6 +49,10 @@ export default function EmotionGuideStage(props: {
       // 10문항 완료 → 내 답 보관 후 반 결과 대시보드로 전환(아직 미션 진행 아님).
       setFinalResults(r.results);
       setPhase("board");
+      // 서버에 내 답 제출(upsert). 실패해도 대시보드는 진행 — 다음 폴링에 내 표가 합류한다.
+      submitEmotionGuideAnswers(r.results).catch((e) =>
+        console.error("[emotionGuide] 답변 제출 실패", e),
+      );
     } else {
       setState(r.state);
     }

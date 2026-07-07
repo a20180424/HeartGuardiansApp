@@ -8,7 +8,7 @@
   color: #e5d3b3;
 }
 
-/* ── 상단: 하티 바 + 응답 현황 + 완료 ── */
+/* ── 상단: 하티 바 + 다음으로 버튼 ── */
 .crb-top {
   flex: 0 0 auto;
   display: flex;
@@ -28,20 +28,25 @@
 .crb-hati-name { font-size: 15px; font-weight: 800; color: #d4af37; letter-spacing: 1px; }
 .crb-hati-line { font-size: 20px; font-weight: 700; line-height: 1.4; color: #f2e6cf; }
 
-.crb-status {
+.crb-count {
   flex: 0 0 auto;
+  align-self: stretch;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 12px 20px;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 20px;
   background: #142910;
   border: 1px solid rgba(163, 144, 99, 0.5);
   border-radius: 16px;
 }
-.crb-respond { display: flex; flex-direction: column; align-items: center; }
-.crb-respond-label { font-size: 13px; font-weight: 800; letter-spacing: 2px; color: #a39063; }
-.crb-respond-count { font-size: 26px; font-weight: 800; color: #d4af37; }
+.crb-count-label { font-size: 13px; font-weight: 800; letter-spacing: 2px; color: #a39063; }
+.crb-count-num { font-size: 26px; font-weight: 800; color: #d4af37; }
+
 .crb-done {
+  flex: 0 0 auto;
+  align-self: stretch;
   padding: 14px 22px;
   border: 1px solid #fff5cc;
   border-radius: 14px;
@@ -51,12 +56,6 @@
   color: #fff;
   background: linear-gradient(90deg, #2e8b57, #256b45);
   white-space: nowrap;
-}
-.crb-done:disabled {
-  background: linear-gradient(90deg, #6b6a5e, #55554b);
-  border-color: rgba(255, 255, 255, 0.2);
-  cursor: not-allowed;
-  opacity: 0.7;
 }
 
 /* ── 본문: 양면 ── */
