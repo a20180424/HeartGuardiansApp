@@ -41,6 +41,11 @@ export default function ClassResultsBoard(props: {
     [snap.votes, situationId],
   );
   const maxCount = Math.max(1, ...dist.map((d) => d.count));
+  // 응답한 학생 수 = 표에 등장하는 distinct studentId(App에서 집계).
+  const respondedCount = useMemo(
+    () => new Set(snap.votes.map((v) => v.studentId)).size,
+    [snap.votes],
+  );
   const board = useMemo(() => leaderboard(snap.votes, situationId), [snap.votes, situationId]);
   const actions = useMemo(
     () => actionBreakdown(snap.votes, situationId, emotionId),
@@ -56,6 +61,10 @@ export default function ClassResultsBoard(props: {
           <span className="crb-hati-line">
             우리 반 친구들은 어떤 대답을 했는지 알아보자. 결과가 실시간으로 채워지고 있어!
           </span>
+        </div>
+        <div className="crb-count">
+          <span className="crb-count-label">응답한 친구</span>
+          <span className="crb-count-num">{respondedCount}명</span>
         </div>
         <button className="crb-done" onClick={onComplete}>
           다음으로 ➡️
