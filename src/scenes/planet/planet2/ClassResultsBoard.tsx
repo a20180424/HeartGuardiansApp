@@ -4,12 +4,7 @@ import type { ClassVotesSource, ClassVotesSnapshot } from "./classResults.source
 import { emotionDistribution, leaderboard, actionBreakdown } from "./classResults.logic";
 import "./ClassResultsBoard.css";
 
-const EMPTY_SNAPSHOT: ClassVotesSnapshot = {
-  votes: [],
-  respondedStudents: 0,
-  totalStudents: 0,
-  complete: false,
-};
+const EMPTY_SNAPSHOT: ClassVotesSnapshot = { votes: [] };
 
 const emotionName = (id: string) => EMOTIONS.find((e) => e.id === id)?.name ?? id;
 const emotionEmoji = (id: string) => EMOTIONS.find((e) => e.id === id)?.emoji ?? "";
@@ -46,6 +41,11 @@ export default function ClassResultsBoard(props: {
     [snap.votes, situationId],
   );
   const maxCount = Math.max(1, ...dist.map((d) => d.count));
+  // 응답한 학생 수 = 표에 등장하는 distinct studentId(App에서 집계).
+  const respondedCount = useMemo(
+    () => new Set(snap.votes.map((v) => v.studentId)).size,
+    [snap.votes],
+  );
   const board = useMemo(() => leaderboard(snap.votes, situationId), [snap.votes, situationId]);
   const actions = useMemo(
     () => actionBreakdown(snap.votes, situationId, emotionId),
@@ -54,29 +54,21 @@ export default function ClassResultsBoard(props: {
 
   return (
     <div className="crb">
-      {/* 상단: 하티 말풍선 + 응답 현황 + 완료 */}
+      {/* 상단: 하티 말풍선 + 다음으로(항상 활성 — 선생님 안내에 맞춰 넘어감) */}
       <div className="crb-top">
         <div className="crb-hati">
           <span className="crb-hati-name">🛰️ 하티</span>
           <span className="crb-hati-line">
-            우리 반 친구들은 어떤 대답을 했는지 알아보자. 모두 다 대답을 할 때까지 기다려볼까.
+            우리 반 친구들은 어떤 대답을 했는지 알아보자. 결과가 실시간으로 채워지고 있어!
           </span>
         </div>
-        <div className="crb-status">
-          <div className="crb-respond">
-            <span className="crb-respond-label">응답 현황</span>
-            <span className="crb-respond-count">
-              {snap.respondedStudents} / {snap.totalStudents || "-"}
-            </span>
-          </div>
-          <button
-            className="crb-done"
-            disabled={!snap.complete}
-            onClick={onComplete}
-          >
-            {snap.complete ? "완료 · 다음으로 ➡️" : "친구들 응답 대기 중…"}
-          </button>
+        <div className="crb-count">
+          <span className="crb-count-label">응답한 친구</span>
+          <span className="crb-count-num">{respondedCount}명</span>
         </div>
+        <button className="crb-done" onClick={onComplete}>
+          다음으로 ➡️
+        </button>
       </div>
 
       <div className="crb-body">
