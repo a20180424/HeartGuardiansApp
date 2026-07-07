@@ -128,7 +128,9 @@ button {
   min-height: 220px;
 }
 
-.card {
+/* 미션 엔진(player/)의 선택지 .card 규칙과 클래스명이 겹치므로 .he-screen 안으로 스코프한다.
+   (전역 .card { width:100% }가 미션 선택지 카드를 화면 밖까지 늘리던 문제 방지) */
+.he-screen .card {
   display: block;
   width: 100%;
   min-height: 220px;
@@ -140,7 +142,7 @@ button {
   cursor: default;
 }
 
-.card-inner {
+.he-screen .card-inner {
   position: relative;
   display: block;
   width: 100%;
@@ -150,11 +152,11 @@ button {
   transform-style: preserve-3d;
 }
 
-.card.revealed .card-inner {
+.he-screen .card.revealed .card-inner {
   transform: rotateY(180deg);
 }
 
-.card-face {
+.he-screen .card-face {
   position: absolute;
   inset: 0;
   border-radius: 14px;
@@ -163,11 +165,11 @@ button {
   overflow: hidden;
 }
 
-.card-back {
+.he-screen .card-back {
   background: url("/assets/planet2/hidden-emotion/card-back.png") center / cover no-repeat;
 }
 
-.card-front {
+.he-screen .card-front {
   transform: rotateY(180deg);
   background-size: cover;
   background-position: center;
