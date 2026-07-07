@@ -1,5 +1,6 @@
 /* 미션3 "숨은 감정 찾기" 미니게임. #stage(1920×1200) 오버레이 안에서
-   1280×800 캔버스를 transform:scale(1.5)로 통째 확대. 원본: mytemp/.../index2.html.
+   1280×800 캔버스를 transform:scale()로 중앙 팝업으로 인셋. 원본: mytemp/.../index2.html.
+   scale(1.1) → 1408×880 (여백 상하 160·좌우 256) → 미션 엔진 HUD(홈·사운드)를 벗어남.
    변경점: fog 배경(::before) 제거, 카드 아트는 뷰 인라인 배경, 반응형 제거. px 절대배치(vh/vw 금지). */
 
 :root {
@@ -36,7 +37,7 @@ button {
 .he-scale {
   width: 1280px;
   height: 800px;
-  transform: scale(1.5);
+  transform: scale(1.1);
   transform-origin: center center;
   flex: none;
 }
