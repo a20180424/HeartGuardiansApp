@@ -110,8 +110,7 @@ export default function Planet2() {
           steps={MISSION_STEPS}
           scopeClass="planet2"
           games={{
-            // TODO(planet2 mission3): HiddenEmotionStage 안에 실제 게임을 채운다.
-            // 지금은 팝업 셸 + 완료 버튼만 있는 임시 스텁(mission2 empathyRadar 방식과 동일 구조).
+            // "숨은 감정 찾기" 미니게임(친구 3명 공감 추리). 완료 시 onDone → p2_m3_cards.
             hiddenEmotion: ({ onDone }) => <HiddenEmotionStage onDone={onDone} />,
           }}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
