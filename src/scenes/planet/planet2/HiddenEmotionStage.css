@@ -49,6 +49,9 @@ button {
   overflow: hidden;
   isolation: isolate;
   box-sizing: border-box;
+  /* 원본 body가 color:var(--ink)를 깔아 자식들이 어두운 글자색을 상속했다.
+     무대(#stage)는 흰색 글자를 상속시키므로, 게임 루트에서 잉크색을 다시 깐다. */
+  color: var(--ink);
 }
 
 .he-screen::after {
