@@ -1,6 +1,7 @@
 // 반 결과 데이터 소스 — 포트-어댑터 추상화.
 // 컴포넌트/집계 로직은 ClassVotesSource 인터페이스에만 의존한다(가짜/서버 무관).
-// 서버 준비 시 createServerClassVotesSource() 를 추가하고 주입부만 교체하면 된다.
+// 실제 연결은 createServerClassVotesSource(), 오프라인 데모는 createFakeClassVotesSource().
+import { fetchClassAnswers } from "./emotionGuide.api";
 
 export interface ClassVote {
   studentId: string;
@@ -12,13 +13,11 @@ export interface ClassVote {
 
 export interface ClassVotesSnapshot {
   votes: ClassVote[]; // 지금까지 응답(도착)한 표
-  respondedStudents: number;
-  totalStudents: number;
-  complete: boolean; // 전원 응답 완료
 }
 
 export interface ClassVotesSource {
-  // 실제 서버의 "10초 폴링" 모델과 동일한 형태. 호출마다 최신 스냅샷을 돌려준다.
+  // 실제 서버의 "폴링" 모델과 동일한 형태. 호출마다 최신 스냅샷을 돌려준다.
+  // 전원 대기/완료 판정은 폐기됨 — 서버는 "오늘(KST) 우리 반" 표만 flat 으로 준다.
   fetch(): Promise<ClassVotesSnapshot>;
 }
 
@@ -112,15 +111,21 @@ export function createFakeClassVotesSource(opts?: {
   return {
     fetch() {
       const revealed = perStudent.slice(0, responded);
-      const snapshot: ClassVotesSnapshot = {
-        votes: revealed.flat(),
-        respondedStudents: responded,
-        totalStudents,
-        complete: responded >= totalStudents,
-      };
-      // 다음 폴링 때 더 도착시킨다(이미 전원이면 유지).
+      const snapshot: ClassVotesSnapshot = { votes: revealed.flat() };
+      // 다음 폴링 때 더 도착시킨다(이미 전원이면 유지) — 데모용 점진 반영.
       responded = Math.min(totalStudents, responded + arrivalPerTick);
       return Promise.resolve(snapshot);
+    },
+  };
+}
+
+// 서버 어댑터: 실제 API(GET /api/planet2/emotion-guide/class-answers)로 "오늘 우리 반"
+// 표를 받아 그대로 스냅샷으로 돌려준다. 인증 헤더는 api.ts 의 저장 자격증명에서 채워진다.
+export function createServerClassVotesSource(): ClassVotesSource {
+  return {
+    async fetch() {
+      const votes = await fetchClassAnswers();
+      return { votes };
     },
   };
 }
