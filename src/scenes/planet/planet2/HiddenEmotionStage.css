@@ -23,7 +23,7 @@ button {
   font: inherit;
 }
 
-/* #stage(1920×1200) 위 오버레이. 프로토타입 1280×800 캔버스를 통째 1.5배 확대. */
+/* #stage(1920×1200) 위 오버레이. 프로토타입 1280×800 캔버스를 scale(1.1)로 중앙 팝업 인셋. */
 .he-overlay {
   position: absolute;
   inset: 0;
@@ -336,7 +336,7 @@ button {
 
 .puzzle-card {
   width: min(1040px, 100%);
-  max-height: min(650px, 630px);
+  max-height: 630px;
   overflow: auto;
   padding: 24px 28px;
   border-radius: 22px;
