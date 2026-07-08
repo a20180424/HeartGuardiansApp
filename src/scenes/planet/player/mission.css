@@ -1690,11 +1690,11 @@
 .ms-mirrors {
   position: absolute;
   top: 300px;
-  left: 40px;
+  left: 10px;
   right: 40px;
   display: flex;
   justify-content: center;
-  gap: 710px; /* 두 거울 사이 간격 — 이 값만 조정하면 됨 */
+  gap: 675px; /* 두 거울 사이 간격 — 이 값만 조정하면 됨 */
 }
 .ms-col {
   display: flex;
@@ -1774,7 +1774,7 @@
    카드를 드래그하는 동안엔 아래 :has() 규칙으로 숨긴다(유휴 시에만 표시). */
 .ms-arrow {
   position: absolute;
-  top: 50%;
+  top: 42%;
   z-index: 5;
   font-size: 72px;
   line-height: 1;
@@ -1786,14 +1786,14 @@
   transition: opacity 0.2s ease;
 }
 .ms-arrow.to-left {
-  right: -104px;
+  right: -84px;
   animation: msArrowL 0.9s ease-in-out infinite;
 }
 .ms-arrow.to-left::before {
   content: "◀";
 }
 .ms-arrow.to-right {
-  left: -104px;
+  left: -84px;
   animation: msArrowR 0.9s ease-in-out infinite;
 }
 .ms-arrow.to-right::before {
@@ -1877,10 +1877,11 @@
 }
 /* 통짜 이미지엔 자체 금색 프레임이 있으므로 기본 파란 글로우 제거(active/touchable 효과는 유지).
    거울 전체(이미지 + 후광 + 링 + 화살표) 미세조정: translate=위치(x=오른쪽+, y=아래+), scale=크기(1=기본).
-   컨테이너에 걸어서 후광·링이 이미지와 함께 움직인다(transform이라 레이아웃 영향 없음). */
-.ms-mirror.full {
+   컨테이너에 걸어서 후광·링이 이미지와 함께 움직인다(transform이라 레이아웃 영향 없음).
+   ⚠ .mstage.mirrors 로 스코프 — 게이지(.mstage.gauge .ms-mirror.single.full)엔 영향 안 주게. */
+.mstage.mirrors .ms-mirror.full {
   box-shadow: none;
-  transform: translate(0px, 0px) scale(1);
+  transform: translate(15px, 65px) scale(1.35);
   transform-origin: center center;
 }
 .ms-bubble {
