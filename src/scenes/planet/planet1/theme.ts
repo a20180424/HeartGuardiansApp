@@ -207,8 +207,8 @@ export const MISSION02_THEME: MissionTheme = {
       mirror2: `${A}/bg/empathy-mirror-stage2.png`,
       mirror3: `${A}/bg/empathy-mirror-stage3.png`,
       mirror4: `${A}/bg/empathy-mirror-stage4.png`,
-      secret1: `${A}/bg/empathy-mirror-secret-1.png`,
-      secret2: `${A}/bg/empathy-mirror-secret-2.png`,
+      secret1: `${A}/bg/empathy-mirror-broken-heart.png`,
+      secret2: `${A}/bg/empathy-mirror-twin.webp`,
     },
     initial: "mirror1",
     byNode: {

@@ -1658,6 +1658,8 @@
   top: 210px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 5; /* 게이지 거울(.ms-gaugeWrap, z:auto) 위로 올려 배너가 가려지지 않게 */
+  pointer-events: none; /* 장식용 텍스트 배너 — 위로 올렸어도 아래 거울/카드 조작을 막지 않게 */
   text-align: center;
   padding: 16px 56px 20px;
   background: rgba(8, 16, 38, 0.55);
@@ -1688,11 +1690,11 @@
 .ms-mirrors {
   position: absolute;
   top: 300px;
-  left: 40px;
+  left: 10px;
   right: 40px;
   display: flex;
   justify-content: center;
-  gap: 710px; /* 두 거울 사이 간격 — 이 값만 조정하면 됨 */
+  gap: 675px; /* 두 거울 사이 간격 — 이 값만 조정하면 됨 */
 }
 .ms-col {
   display: flex;
@@ -1725,6 +1727,24 @@
   margin-left: 370px; /* 이 값을 키우면 거울이 오른쪽으로 이동 → 게이지(flex:1)가 그만큼 줄어듦 */
   margin-top: 150px; /* 거울 전체(후광+캐릭터+말풍선)를 아래로 내림 */
 }
+/* 거울 통짜 이미지(프레임+캐릭터+말풍선 합본)를 쓸 때: 이미지 자체에 금색 프레임이
+   있으므로 CSS 파란 글로우(box-shadow)는 끈다. 크기는 위 .ms-mirror.single 값으로 조절. */
+.ms-mirror.single.full {
+  box-shadow: none;
+}
+.ms-fullmirror {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+  /* 이미지만 미세조정(게이지에 영향 없음 — absolute라 레이아웃 밖):
+     translate = 위치 이동(x=오른쪽+, y=아래+), scale = 크기(1=기본). 이 한 줄만 바꾸면 됨.
+     .ms-mirror 는 overflow:visible 이라 키워도 잘리지 않음. */
+  transform: translate(-54px, -37px) scale(1.1);
+  transform-origin: center center;
+}
 /* 지금 카드를 놓아야 하는 거울 — 숨쉬는 듯한 빛 + 위아래로 통통 튀는 강조 */
 .ms-mirror.active {
   animation: msActivePulse 1.3s ease-in-out infinite;
@@ -1749,48 +1769,72 @@
   z-index: 0;
   pointer-events: none;
 }
-/* "여기예요!" 안내 라벨(거울 아래에서 통통) */
-.ms-mirror.active::after {
-  content: "여기예요!";
+/* 드롭 타깃 안내 화살표(카드를 놓을 활성 거울을 가리킴).
+   좌측 거울(to-left)=오른쪽에서 왼쪽으로, 우측 거울(to-right)=왼쪽에서 오른쪽으로.
+   카드를 드래그하는 동안엔 아래 :has() 규칙으로 숨긴다(유휴 시에만 표시). */
+.ms-arrow {
   position: absolute;
-  left: 50%;
-  bottom: -58px;
-  transform: translateX(-50%);
-  background: linear-gradient(180deg, #ffe9b0, #f4c94b);
-  color: #4a3400;
-  font-weight: 900;
-  font-size: 26px;
-  padding: 8px 24px;
-  border-radius: 999px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
-  white-space: nowrap;
-  animation: msLabelBob 1s ease-in-out infinite;
-  z-index: 4;
+  top: 42%;
+  z-index: 5;
+  font-size: 72px;
+  line-height: 1;
+  color: #ffe08a;
+  text-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    0 0 14px rgba(255, 220, 120, 0.6);
   pointer-events: none;
+  transition: opacity 0.2s ease;
 }
+.ms-arrow.to-left {
+  right: -84px;
+  animation: msArrowL 0.9s ease-in-out infinite;
+}
+.ms-arrow.to-left::before {
+  content: "◀";
+}
+.ms-arrow.to-right {
+  left: -84px;
+  animation: msArrowR 0.9s ease-in-out infinite;
+}
+.ms-arrow.to-right::before {
+  content: "▶";
+}
+/* 카드를 잡고 움직이는 동안엔 화살표 숨김(드래그 핸들러가 .ms-dragging 토글) */
+.mstage.ms-dragging .ms-arrow {
+  opacity: 0;
+}
+@keyframes msArrowL {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(-14px);
+  }
+}
+@keyframes msArrowR {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(14px);
+  }
+}
+/* 후광만 pulse(예전엔 transform:scale 도 했지만, .ms-mirror.full 의 위치/크기
+   transform 을 덮어쓰지 않도록 box-shadow 만 사용). */
 @keyframes msActivePulse {
   0%,
   100% {
-    transform: scale(1);
     box-shadow: 0 0 30px rgba(120, 200, 255, 0.5);
   }
   50% {
-    transform: scale(1.06);
     box-shadow: 0 0 64px 10px rgba(150, 220, 255, 0.95);
   }
 }
 @keyframes msSpin {
   to {
     transform: rotate(360deg);
-  }
-}
-@keyframes msLabelBob {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(5px);
   }
 }
 .ms-mirror.touchable {
@@ -1819,6 +1863,26 @@
 .mstage.mirrors .ms-char {
   width: 320px;
   height: auto;
+}
+/* 통짜 거울 이미지 모드(프레임+캐릭터+말풍선 합본): 거울 원을 꽉 채운다.
+   (위치/크기 조정은 이미지가 아니라 아래 .ms-mirror.full 에서 — 후광·링과 함께 움직이도록)
+   transform:none 은 기본 .ms-char 의 translateX(-50%) 상속을 끊어 박스 정중앙 정렬(후광 링과 동심원). */
+.mstage.mirrors .ms-char.full {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: none;
+}
+/* 통짜 이미지엔 자체 금색 프레임이 있으므로 기본 파란 글로우 제거(active/touchable 효과는 유지).
+   거울 전체(이미지 + 후광 + 링 + 화살표) 미세조정: translate=위치(x=오른쪽+, y=아래+), scale=크기(1=기본).
+   컨테이너에 걸어서 후광·링이 이미지와 함께 움직인다(transform이라 레이아웃 영향 없음).
+   ⚠ .mstage.mirrors 로 스코프 — 게이지(.mstage.gauge .ms-mirror.single.full)엔 영향 안 주게. */
+.mstage.mirrors .ms-mirror.full {
+  box-shadow: none;
+  transform: translate(15px, 65px) scale(1.35);
+  transform-origin: center center;
 }
 .ms-bubble {
   position: absolute;

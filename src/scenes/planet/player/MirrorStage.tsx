@@ -33,6 +33,7 @@ export interface MirrorStageProps {
   friend: string;
   friendLine: string;
   header: string;
+  gaugeImage: string; // 거울 안을 통째로 채우는 이미지("" 이면 friend 스프라이트 + 말풍선 사용)
   options: GaugeVM[];
   // handlers / refs
   cardRef: RefObject<HTMLButtonElement | null>;
@@ -70,7 +71,7 @@ export default function MirrorStage(p: MirrorStageProps) {
                 <b>{i + 1}</b> {tg.title}
               </div>
               <div
-                className={`ms-mirror${p.activeTarget === i ? " active" : ""}${
+                className={`ms-mirror${p.hideBubbles ? " full" : ""}${p.activeTarget === i ? " active" : ""}${
                   p.revealPhase !== "none" && p.revealFriend === tg.friend ? " touchable" : ""
                 }`}
                 ref={(el) => {
@@ -78,8 +79,19 @@ export default function MirrorStage(p: MirrorStageProps) {
                 }}
                 onClick={() => p.onMirrorTouch(i)}
               >
-                <img className="ms-char" src={tg.charImage || friendSrc(t, tg.friend)} alt={tg.title} />
+                {/* hideBubbles(=대사가 이미지에 포함) 이면 거울 전체를 채우는 통짜 이미지로,
+                    아니면 기존 320px 캐릭터 + 말풍선 div 로 렌더 */}
+                <img
+                  className={`ms-char${p.hideBubbles ? " full" : ""}`}
+                  src={tg.charImage || friendSrc(t, tg.friend)}
+                  alt={tg.title}
+                />
                 {!p.hideBubbles && <div className="ms-bubble">{tg.bubble}</div>}
+                {/* 지금 카드를 놓을 거울을 가리키는 화살표(유휴 시에만 — 드래그 중엔 CSS로 숨김).
+                    좌측 거울(i=0)=왼쪽, 우측 거울(i=1)=오른쪽 방향. */}
+                {p.activeTarget === i && (
+                  <span className={`ms-arrow ${i === 0 ? "to-left" : "to-right"}`} aria-hidden="true" />
+                )}
               </div>
             </div>
           ))}
@@ -88,9 +100,16 @@ export default function MirrorStage(p: MirrorStageProps) {
 
       {p.stage === "gauge" && (
         <div className="ms-gaugeWrap">
-          <div className="ms-mirror single">
-            <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
-            {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
+          <div className={`ms-mirror single${p.gaugeImage ? " full" : ""}`}>
+            {p.gaugeImage ? (
+              // 프레임+캐릭터+말풍선이 합쳐진 거울 통짜 이미지
+              <img className="ms-fullmirror" src={p.gaugeImage} alt={p.friend} />
+            ) : (
+              <>
+                <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
+                {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
+              </>
+            )}
           </div>
 
           <div className="ms-gauge">
