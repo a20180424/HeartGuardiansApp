@@ -1769,24 +1769,57 @@
   z-index: 0;
   pointer-events: none;
 }
-/* "여기예요!" 안내 라벨(거울 아래에서 통통) */
-.ms-mirror.active::after {
-  content: "여기예요!";
+/* 드롭 타깃 안내 화살표(카드를 놓을 활성 거울을 가리킴).
+   좌측 거울(to-left)=오른쪽에서 왼쪽으로, 우측 거울(to-right)=왼쪽에서 오른쪽으로.
+   카드를 드래그하는 동안엔 아래 :has() 규칙으로 숨긴다(유휴 시에만 표시). */
+.ms-arrow {
   position: absolute;
-  left: 50%;
-  bottom: -58px;
-  transform: translateX(-50%);
-  background: linear-gradient(180deg, #ffe9b0, #f4c94b);
-  color: #4a3400;
-  font-weight: 900;
-  font-size: 26px;
-  padding: 8px 24px;
-  border-radius: 999px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
-  white-space: nowrap;
-  animation: msLabelBob 1s ease-in-out infinite;
-  z-index: 4;
+  top: 50%;
+  z-index: 5;
+  font-size: 72px;
+  line-height: 1;
+  color: #ffe08a;
+  text-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    0 0 14px rgba(255, 220, 120, 0.6);
   pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.ms-arrow.to-left {
+  right: -104px;
+  animation: msArrowL 0.9s ease-in-out infinite;
+}
+.ms-arrow.to-left::before {
+  content: "◀";
+}
+.ms-arrow.to-right {
+  left: -104px;
+  animation: msArrowR 0.9s ease-in-out infinite;
+}
+.ms-arrow.to-right::before {
+  content: "▶";
+}
+/* 카드를 잡고 움직이는 동안엔 화살표 숨김(드래그 핸들러가 .ms-dragging 토글) */
+.mstage.ms-dragging .ms-arrow {
+  opacity: 0;
+}
+@keyframes msArrowL {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(-14px);
+  }
+}
+@keyframes msArrowR {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(14px);
+  }
 }
 @keyframes msActivePulse {
   0%,
@@ -1802,15 +1835,6 @@
 @keyframes msSpin {
   to {
     transform: rotate(360deg);
-  }
-}
-@keyframes msLabelBob {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(5px);
   }
 }
 .ms-mirror.touchable {
@@ -1839,6 +1863,21 @@
 .mstage.mirrors .ms-char {
   width: 320px;
   height: auto;
+}
+/* 통짜 거울 이미지 모드(프레임+캐릭터+말풍선 합본): 거울 원을 꽉 채운다.
+   이미지만 미세조정(레이아웃 영향 없음): translate=위치(x=오른쪽+, y=아래+), scale=크기(1=기본). */
+.mstage.mirrors .ms-char.full {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: translate(0px, 0px) scale(1);
+  transform-origin: center center;
+}
+/* 통짜 이미지엔 자체 금색 프레임이 있으므로 기본 파란 글로우 제거(active/touchable 효과는 유지) */
+.ms-mirror.full {
+  box-shadow: none;
 }
 .ms-bubble {
   position: absolute;

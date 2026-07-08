@@ -71,7 +71,7 @@ export default function MirrorStage(p: MirrorStageProps) {
                 <b>{i + 1}</b> {tg.title}
               </div>
               <div
-                className={`ms-mirror${p.activeTarget === i ? " active" : ""}${
+                className={`ms-mirror${p.hideBubbles ? " full" : ""}${p.activeTarget === i ? " active" : ""}${
                   p.revealPhase !== "none" && p.revealFriend === tg.friend ? " touchable" : ""
                 }`}
                 ref={(el) => {
@@ -79,8 +79,19 @@ export default function MirrorStage(p: MirrorStageProps) {
                 }}
                 onClick={() => p.onMirrorTouch(i)}
               >
-                <img className="ms-char" src={tg.charImage || friendSrc(t, tg.friend)} alt={tg.title} />
+                {/* hideBubbles(=대사가 이미지에 포함) 이면 거울 전체를 채우는 통짜 이미지로,
+                    아니면 기존 320px 캐릭터 + 말풍선 div 로 렌더 */}
+                <img
+                  className={`ms-char${p.hideBubbles ? " full" : ""}`}
+                  src={tg.charImage || friendSrc(t, tg.friend)}
+                  alt={tg.title}
+                />
                 {!p.hideBubbles && <div className="ms-bubble">{tg.bubble}</div>}
+                {/* 지금 카드를 놓을 거울을 가리키는 화살표(유휴 시에만 — 드래그 중엔 CSS로 숨김).
+                    좌측 거울(i=0)=왼쪽, 우측 거울(i=1)=오른쪽 방향. */}
+                {p.activeTarget === i && (
+                  <span className={`ms-arrow ${i === 0 ? "to-left" : "to-right"}`} aria-hidden="true" />
+                )}
               </div>
             </div>
           ))}

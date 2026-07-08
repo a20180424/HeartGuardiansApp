@@ -897,6 +897,8 @@ export default function MissionPlayer(props: {
       startY = e.clientY;
     const active = vm.sActive;
     card.classList.add("dragging");
+    const mstage = card.closest(".mstage"); // 드래그 중 화살표 힌트 숨김용 클래스 토글
+    mstage?.classList.add("ms-dragging");
     audio.play("pop");
     const move = (ev: PointerEvent) => {
       const dx = (ev.clientX - startX) / scale,
@@ -908,6 +910,7 @@ export default function MissionPlayer(props: {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
+      mstage?.classList.remove("ms-dragging");
       msMirrorRefs.current[active]?.classList.remove("over");
       const dropped = overMirror(active, ev.clientX, ev.clientY);
       if (dropped && vm.stage === "mirrors") {
