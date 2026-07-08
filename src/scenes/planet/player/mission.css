@@ -1658,6 +1658,8 @@
   top: 210px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 5; /* 게이지 거울(.ms-gaugeWrap, z:auto) 위로 올려 배너가 가려지지 않게 */
+  pointer-events: none; /* 장식용 텍스트 배너 — 위로 올렸어도 아래 거울/카드 조작을 막지 않게 */
   text-align: center;
   padding: 16px 56px 20px;
   background: rgba(8, 16, 38, 0.55);
@@ -1737,6 +1739,11 @@
   height: 100%;
   object-fit: contain;
   z-index: 1;
+  /* 이미지만 미세조정(게이지에 영향 없음 — absolute라 레이아웃 밖):
+     translate = 위치 이동(x=오른쪽+, y=아래+), scale = 크기(1=기본). 이 한 줄만 바꾸면 됨.
+     .ms-mirror 는 overflow:visible 이라 키워도 잘리지 않음. */
+  transform: translate(-54px, -37px) scale(1.1);
+  transform-origin: center center;
 }
 /* 지금 카드를 놓아야 하는 거울 — 숨쉬는 듯한 빛 + 위아래로 통통 튀는 강조 */
 .ms-mirror.active {
