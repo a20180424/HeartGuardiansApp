@@ -1865,13 +1865,15 @@
   height: auto;
 }
 /* 통짜 거울 이미지 모드(프레임+캐릭터+말풍선 합본): 거울 원을 꽉 채운다.
-   (위치/크기 조정은 이미지가 아니라 아래 .ms-mirror.full 에서 — 후광·링과 함께 움직이도록) */
+   (위치/크기 조정은 이미지가 아니라 아래 .ms-mirror.full 에서 — 후광·링과 함께 움직이도록)
+   transform:none 은 기본 .ms-char 의 translateX(-50%) 상속을 끊어 박스 정중앙 정렬(후광 링과 동심원). */
 .mstage.mirrors .ms-char.full {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform: none;
 }
 /* 통짜 이미지엔 자체 금색 프레임이 있으므로 기본 파란 글로우 제거(active/touchable 효과는 유지).
    거울 전체(이미지 + 후광 + 링 + 화살표) 미세조정: translate=위치(x=오른쪽+, y=아래+), scale=크기(1=기본).
