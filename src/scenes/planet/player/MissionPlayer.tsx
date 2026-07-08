@@ -88,6 +88,7 @@ interface VM {
   sFriend: string;
   sFriendLine: string;
   sHeader: string;
+  sGaugeImage: string; // 거울 안을 통째로 채우는 이미지("" 이면 friend 스프라이트 + 말풍선 사용)
   sOptions: { icon: string; title: string; desc: string; fill: number }[];
   // reveal(긁어서 드러내기)
   rPairs: { before: string; after: string }[];
@@ -194,6 +195,7 @@ export default function MissionPlayer(props: {
     sFriend: "",
     sFriendLine: "",
     sHeader: "",
+    sGaugeImage: "",
     sOptions: [],
     rPairs: [],
     rMirror: "",
@@ -458,6 +460,7 @@ export default function MissionPlayer(props: {
           sFriend: "",
           sFriendLine: "",
           sHeader: "",
+          sGaugeImage: "",
           sOptions: [],
           rPairs: [],
           rMirror: "",
@@ -595,6 +598,7 @@ export default function MissionPlayer(props: {
         vm.sFriend = node.speaker && node.speaker !== "hati" ? node.speaker : "lumi";
         vm.sFriendLine = node.text || "";
         vm.sHeader = node.header || "";
+        vm.sGaugeImage = node.gaugeMirror || ""; // 거울 통짜 이미지(있으면 스프라이트/말풍선 대신)
         vm.sPrompt = node.lead || ""; // 먼저 도입 대사
         vm.sOptions = (node.options || []).map((o) => ({
           icon: o.icon,
@@ -952,7 +956,8 @@ export default function MissionPlayer(props: {
     const node = ms.node;
     const opt = node?.options?.[idx];
     if (!opt) return;
-    vm.sFriendLine = opt.onPick; // 루미 반응 말풍선
+    vm.sFriendLine = opt.onPick; // 루미 반응 말풍선(말풍선 숨김 노드에선 이미지가 대신함)
+    if (opt.pickImage) vm.sGaugeImage = opt.pickImage; // 100% 반응 거울 이미지로 교체
     force();
     if (opt.correct) {
       audio.play("correct");
@@ -969,6 +974,7 @@ export default function MissionPlayer(props: {
         if (vm.stage !== "gauge") return;
         vm.sOptions = vm.sOptions.map((o) => ({ ...o, fill: 0 })); // 게이지 리셋
         vm.sFriendLine = node?.text || vm.sFriendLine; // 원래 대사로 복귀
+        vm.sGaugeImage = node?.gaugeMirror || vm.sGaugeImage; // 기본 거울 이미지로 복귀
         force();
       }, 1800);
     }
@@ -1254,6 +1260,7 @@ export default function MissionPlayer(props: {
             friend={vm.sFriend}
             friendLine={vm.sFriendLine}
             header={vm.sHeader}
+            gaugeImage={vm.sGaugeImage}
             options={vm.sOptions}
             cardRef={msCardRef}
             mirrorRefs={msMirrorRefs}

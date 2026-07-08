@@ -30,6 +30,7 @@ export interface GaugeOption {
   desc: string; // "용기를 내서 다가가 보자."
   correct: boolean; // 정답 여부
   onPick: string; // 100% 도달 시 친구 반응 대사
+  pickImage?: string; // 100% 도달 시 교체할 거울 이미지(정답이면 유지, 오답이면 잠시 후 mirrorImage로 복귀)
 }
 
 export interface MissionNode {
@@ -90,6 +91,9 @@ export interface MissionNode {
   header?: string; // 선택 패널 제목 ("어떻게 도와줄래?")
   lead?: string; // 게이지 등장 전 하티 도입 대사
   options?: GaugeOption[];
+  // 게이지 거울(단일) 안을 통째로 채우는 이미지(프레임+캐릭터+말풍선 합본). 지정 시 friend 스프라이트/말풍선 대신 사용.
+  // (line/reveal 노드의 우측 하단 mirrorImage 와는 다른 슬롯)
+  gaugeMirror?: string;
 }
 
 export interface MissionData {

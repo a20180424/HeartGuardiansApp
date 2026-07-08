@@ -108,9 +108,11 @@
       "lead": "속상한 친구를 어떻게 도와줄 수 있을까? 먼저 계속 다가가 볼까?",
       "header": "어떻게 도와줄래?",
       "prompt": "진행도 100%가 되도록 드래그해봐!",
+      "hideBubbles": true,
+      "gaugeMirror": "/assets/planet1/mission2/empathy-mirror-lumi-1-alone.webp",
       "options": [
-        { "icon": "run", "title": "계속 다가가기", "desc": "용기를 내서 다가가 보자.", "correct": false, "onPick": "걱정해 주는 건 좋지만, 지금은 내 감정을 정리할 혼자만의 시간이 필요해." },
-        { "icon": "meditate", "title": "기다려주기", "desc": "조금 기다려주며 지켜보자.", "correct": true, "onPick": "기다려줘서 고마워. 지금은 내 감정을 정리할 혼자만의 시간이 필요해." }
+        { "icon": "run", "title": "계속 다가가기", "desc": "용기를 내서 다가가 보자.", "correct": false, "onPick": "걱정해 주는 건 좋지만, 지금은 내 감정을 정리할 혼자만의 시간이 필요해.", "pickImage": "/assets/planet1/mission2/empathy-mirror-lumi-2-guard.webp" },
+        { "icon": "meditate", "title": "기다려주기", "desc": "조금 기다려주며 지켜보자.", "correct": true, "onPick": "기다려줘서 고마워. 지금은 내 감정을 정리할 혼자만의 시간이 필요해.", "pickImage": "/assets/planet1/mission2/empathy-mirror-lumi-3-thankful.webp" }
       ],
       "next": "m2_gauge_lesson"
     },

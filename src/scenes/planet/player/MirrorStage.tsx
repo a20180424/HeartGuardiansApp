@@ -33,6 +33,7 @@ export interface MirrorStageProps {
   friend: string;
   friendLine: string;
   header: string;
+  gaugeImage: string; // 거울 안을 통째로 채우는 이미지("" 이면 friend 스프라이트 + 말풍선 사용)
   options: GaugeVM[];
   // handlers / refs
   cardRef: RefObject<HTMLButtonElement | null>;
@@ -88,9 +89,16 @@ export default function MirrorStage(p: MirrorStageProps) {
 
       {p.stage === "gauge" && (
         <div className="ms-gaugeWrap">
-          <div className="ms-mirror single">
-            <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
-            {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
+          <div className={`ms-mirror single${p.gaugeImage ? " full" : ""}`}>
+            {p.gaugeImage ? (
+              // 프레임+캐릭터+말풍선이 합쳐진 거울 통짜 이미지
+              <img className="ms-fullmirror" src={p.gaugeImage} alt={p.friend} />
+            ) : (
+              <>
+                <img className="ms-char" src={friendSrc(t, p.friend)} alt={p.friend} />
+                {!p.hideBubbles && <div className="ms-bubble">{p.friendLine}</div>}
+              </>
+            )}
           </div>
 
           <div className="ms-gauge">

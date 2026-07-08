@@ -1725,6 +1725,19 @@
   margin-left: 370px; /* 이 값을 키우면 거울이 오른쪽으로 이동 → 게이지(flex:1)가 그만큼 줄어듦 */
   margin-top: 150px; /* 거울 전체(후광+캐릭터+말풍선)를 아래로 내림 */
 }
+/* 거울 통짜 이미지(프레임+캐릭터+말풍선 합본)를 쓸 때: 이미지 자체에 금색 프레임이
+   있으므로 CSS 파란 글로우(box-shadow)는 끈다. 크기는 위 .ms-mirror.single 값으로 조절. */
+.ms-mirror.single.full {
+  box-shadow: none;
+}
+.ms-fullmirror {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
 /* 지금 카드를 놓아야 하는 거울 — 숨쉬는 듯한 빛 + 위아래로 통통 튀는 강조 */
 .ms-mirror.active {
   animation: msActivePulse 1.3s ease-in-out infinite;
