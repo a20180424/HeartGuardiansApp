@@ -346,6 +346,7 @@
   font-size: 17px;
   font-weight: 900;
   line-height: 1.25;
+  word-break: keep-all; /* 한글을 어절 단위로만 줄바꿈 — "다." 고아 방지 */
 }
 
 .etg .choice::before {

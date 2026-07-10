@@ -243,7 +243,7 @@ export default function EmpathyManualGame({ onDone }: { onDone: () => void }) {
                   disabled={!stepDone}
                   onClick={nextStep}
                 >
-                  {isLast ? "최종 성공" : "성공"}
+                  {isLast ? "완성" : "다음"}
                 </button>
               </div>
             </article>
