@@ -190,6 +190,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transform: translateY(9px); /* 단계 라벨과 간격 확보 — 3줄을 살짝 아래로 */
   animation: etg-ink 0.4s ease;
 }
 
@@ -212,11 +213,11 @@
 @keyframes etg-ink {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: translateY(9px);
   }
 }
 
