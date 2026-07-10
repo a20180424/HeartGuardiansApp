@@ -35,8 +35,8 @@
   left: 90px;
   right: auto;
   margin: 0;
-  top: 230px;
-  height: 60%;
+  top: 330px;
+  height: 70%;
   -webkit-mask: none; /* base 가장자리 페더 끄기 */
   mask: none;
 }
