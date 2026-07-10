@@ -74,7 +74,7 @@ export const MISSION02_THEME: MissionTheme = {
   banner: { pill: "미션 2", title: "(임시) 미션 2", ribbon: "안개 행성 미션 2 골격" },
   bannerNode: "p3_m2_intro",
   bg: {
-    states: { main: `${A}/bg/light-planet-stage2-bg.png` },
+    states: { main: `${A}/planet3/ice-planet-bg.png` },
     initial: "main",
     byNode: { p3_m2_intro: "main" },
   },
@@ -94,7 +94,7 @@ export const MISSION03_THEME: MissionTheme = {
   banner: { pill: "미션 3", title: "(임시) 미션 3", ribbon: "안개 행성 미션 3 골격" },
   bannerNode: "p3_m3_intro",
   bg: {
-    states: { main: `${A}/bg/light-planet-stage2-bg.png` },
+    states: { main: `${A}/planet3/ice-planet-bg.png` },
     initial: "main",
     byNode: { p3_m3_intro: "main" },
   },
