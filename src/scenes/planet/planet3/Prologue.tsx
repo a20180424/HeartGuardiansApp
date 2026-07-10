@@ -2,18 +2,18 @@ import PrologueTemplate from "../prologue/PrologueTemplate";
 import "./Prologue.css"; // planet3 전용: 얼음톤 포인트 색
 
 const OBJECTIVES = [
-  "(임시) 얼음 행성 학습 목표 1.",
-  "(임시) 얼음 행성 학습 목표 2.",
-  "(임시) 얼음 행성 학습 목표 3.",
+  "따듯한 말과 행동이 공감으로 이어진다는 것을 이해한다.",
+  "친구의 어려움을 함꼐 나누고 응원하느 방법을 배운다.",
+  "공감이 친구에게 힘이 된다는 것을 경험한다.",
 ];
 
 const REWARDS = [
-  { icon: "💎", name: "(임시) 얼음 원석", desc: "(임시) 보상 설명이 들어갈 예정." },
-  { icon: "🧭", name: "(임시) 탐험 도구", desc: "(임시) 보상 설명이 들어갈 예정." },
+  { icon: "💎", name: "따듯함의 원석", desc: "얼음 행성에서 얻는 첫 번째 원석이예요." },
+  { icon: "🌡️", name: "공감 온도계", desc: "차가운 마음을 감지하고 따듯하게 해주는 도구예요." },
   { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
 
-const STEPS = ["(임시) 미션 1", "(임시) 미션 2", "(임시) 미션 3"];
+const STEPS = ["차가운 마음 찾기", "얼음 궁전의 문 열기", "얼어붙은 친구 마을로"];
 
 export default function Prologue({
   onStart,
@@ -26,12 +26,12 @@ export default function Prologue({
     <PrologueTemplate
       modifier="prologue--planet3"
       planetName="얼음 행성"
-      hatiLines={["(임시) 얼음 행성 도입 대사.", "여기에 하티 소개가", "들어갈 예정이야!"]}
+      hatiLines={["친구들의 마음이", "얼어붙었어...", "따듯한 말과 행동으로", "마음을 녹여주면", "다시 빛날 수 있어!"]}
       objectives={OBJECTIVES}
       rewards={REWARDS}
-      questTitle="(임시) 얼음 행성 탐험!"
-      questSub="(임시) 오늘의 탐험 부제가 들어갈 예정."
-      questMascot="/assets/char/planet1-lumi.png"
+      questTitle="얼어붙은 마음을 녹여라"
+      questSub="따듯한 말과 행동으로 친구들의 마음을 녹이자."
+      questMascot="/assets/planet3/planet3-bunny.png"
       questMascotAlt="마스코트"
       steps={STEPS}
       onStart={onStart}
