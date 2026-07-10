@@ -50,13 +50,19 @@
   mask: none;
 }
 
-/* 미션1 후반 — 공감 송신기 "설명서" 이미지를 화면 가운데(postplay→end 동일 표시).
-   가로 중앙은 base(margin:0 auto) 그대로 두고, top/height 로 위치·크기만 조정. */
+/* ── 노브: 미션1 "설명서" 이미지(postplay·end 공용) 크기·위치 ─────────────
+   여기 3개 값만 만지면 postplay·end 가 함께 바뀐다.
+     · 크기      → height     (↑ 클수록 커짐, width 는 auto 라 비율 유지)
+     · 세로 위치  → top        (↑ 클수록 아래로)
+     · 가로 위치  → translateX (0 = 정가운데 / 양수 = 오른쪽 / 음수 = 왼쪽)
+   가로 중앙정렬은 base(margin:0 auto) 로 유지하고 translateX 로만 좌우로 민다.
+   (mask 는 base 가장자리 페더 끄기 — 건드릴 필요 없음.) */
 .planet3 #stage.node-p3_m1_postplay #choiceImage,
 .planet3 #stage.node-p3_m1_end #choiceImage {
-  top: 110px;
-  height: 64%;
-  -webkit-mask: none; /* base 가장자리 페더 끄기 */
+  height: 75%;              /* 크기 */
+  top: 150px;              /* 세로 위치 */
+  transform: translateX(0px); /* 가로 위치(±) */
+  -webkit-mask: none;
   mask: none;
 }
 
