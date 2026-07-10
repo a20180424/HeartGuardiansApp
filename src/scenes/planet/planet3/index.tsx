@@ -73,6 +73,7 @@ export default function Planet3() {
               <PlaceholderGameStage onDone={onDone} label="미션1 미니게임 (임시)" />
             ),
           }}
+          finish={{ label: "얼음 행성으로 이동", image: "/assets/planet3/ice-planet-move-tab.png" }}
           onExit={() => goTo("mission2")}
         />
       )}
