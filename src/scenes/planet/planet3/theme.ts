@@ -47,11 +47,11 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 // 진행 스테퍼 라벨(미션 이름) 3개 — 한 줄로 표시(planet2 관례).
 // 프롤로그 스텝과 미션 상단 스테퍼가 공유하는 미션 이름 단일 출처(Prologue.tsx 도 이걸 import).
-export const MISSION_STEPS = ["가디언즈 작전회의", "공감 손신기 연료 채우기", "얼어붙은 마음 녹이기"];
+export const MISSION_STEPS = ["가디언즈 작전회의", "공감 송신기 연료 채우기", "얼어붙은 마음 녹이기"];
 
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 1", title: "(임시) 미션 1", ribbon: "안개 행성 미션 1 골격" },
+  banner: { pill: "미션 1", title: "가디언즈 작전회의", ribbon: "공감 송신기 사용 설명서를 완성하라!" },
   bannerNode: "p3_m1_intro",
   bg: {
     states: { main: `${A}/planet3/prologue-bg.png` },

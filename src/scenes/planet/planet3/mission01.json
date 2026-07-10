@@ -1,6 +1,6 @@
 {
   "id": "mission01",
-  "title": "(임시) 미션 1",
+  "title": "가디언즈 작전회의",
   "start": "p3_m1_intro",
   "nodes": [
     {
@@ -9,7 +9,8 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "(임시) 미션1 인트로 대사입니다.",
+      "text": "얼음행성 친구들의 마음은 얼어붙어 있어. 공감 송신기를 사용해서 마음을 녹이려면 올바른 사용법을 알아야 해!",
+      "image": "/assets/planet3/empathy-transmitter.png",
       "next": "p3_m1_preplay"
     },
     {
