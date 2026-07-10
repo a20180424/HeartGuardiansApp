@@ -44,6 +44,21 @@
   mask: none;
 }
 
+/* 미션 완료 이미지 버튼(finish.image, "얼음 행성으로 이동") 크기·위치 튜닝.
+   base #nextBtn.img-only .nb-full-img(height:150px) 를 planet3 에서만 덮어쓴다.
+   (.planet3 #nextBtn.img-only .nb-full-img = 특이도 0,3,1 로 base(0,2,1) 을 이긴다.)
+   · 크기 → height ↑ 클수록 커짐
+   · 위치는 base #nextBtn { right:120px; bottom:70px } 이라, 옮기려면 아래 주석 참고. */
+.planet3 #nextBtn.img-only .nb-full-img {
+  height: 300px;
+}
+/* 버튼 위치를 옮기려면 이 블록을 켠다(값 조정). */
+.planet3 #nextBtn.img-only {
+  right: 10px;
+  bottom: 0px;
+}
+
+
 /* ── 이하 seed(주석) — 다른 노드에 이미지/레이더/무대가 붙으면 켜서 튜닝한다.
    #stage 에 현재 노드 id 가 node-<id> 로 붙으므로 노드별 조준이 가능하다.
    (planet2/Mission.css 의 choiceImage/radarHud/castStage 블록을 p3 노드 id 로 옮겨 쓰면 됨.)
