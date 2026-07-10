@@ -19,6 +19,16 @@
       "noAuto": true,
       "game": "placeholder",
       "image": "/assets/planet3/empathy-transmitter.png",
+      "next": "p3_m1_postplay"
+    },
+    {
+      "id": "p3_m1_postplay",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "공감 송신기 사용 설명서가 완성 되엇어!!!",
+      "image": "/assets/planet3/empathy-transmitter-manual.png",
       "next": "p3_m1_end"
     },
     {
@@ -28,7 +38,7 @@
       "hideFriend": true,
       "noAuto": true,
       "text": "좋아! 이제 공감 송신기를 사용할 준비가 되었어. 하지만 공감 송신기를 작동하려면 \"따듯한 말\" 연료가 필요해!",
-      "image": "/assets/planet3/empathy-transmitter.png",
+      "image": "/assets/planet3/empathy-transmitter-manual.png",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
