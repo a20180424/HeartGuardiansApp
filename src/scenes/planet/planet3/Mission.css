@@ -20,6 +20,14 @@
   max-width: 600px;
 }
 
+/* 미션 완료 "빛 복귀" 오버레이(#lightOverlay, fx_light_return→.bright) 끄기.
+   얼음 행성/우주선 배경 위에선 오른쪽 따뜻한 노란빛이 뿌옇게 떠서 planet3 에서만 제거.
+   순수 시각 효과라 "다음" 버튼 로직에는 영향 없음.
+   (.planet3 #stage.bright #lightOverlay = 특이도 2,2,0 로 base(2,1,0) 을 이긴다.) */
+.planet3 #stage.bright #lightOverlay {
+  opacity: 0;
+}
+
 /* 진행 스테퍼 라벨 — 얼음 행성 미션명이 길어(9글자) 162px .pnode 칸에서 2줄로 깨진다.
    폰트 크기(base 18px)는 그대로 두고, nowrap 으로 한 줄 고정 → 라벨이 칸보다 넓어지면
    가운데 정렬 그대로 좌우로 살짝 넘쳐 표시된다(원·커넥터 위치는 불변, 인접 라벨과 여유 있음).
