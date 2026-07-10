@@ -144,9 +144,9 @@ export default function EmpathyManualGame({ onDone }: { onDone: () => void }) {
     setFeedback(DEFAULT_FEEDBACK);
   }
 
-  // 슬롯별 진행 블록 채움 개수: 완성 6칸(숨김), 현재 단계 chosen×2, 이후 0.
-  const filledCount = (slot: number) =>
-    completed[slot] ? 6 : slot === currentStep ? chosen.length * 2 : 0;
+  // 슬롯별 진행 점(정답 1개=점 1개): 완성 3, 현재 단계 chosen 수, 이후 0.
+  const dotCount = (slot: number) =>
+    completed[slot] ? 3 : slot === currentStep ? chosen.length : 0;
 
   return (
     <div className="etg" onClick={(e) => e.stopPropagation()}>
@@ -155,23 +155,39 @@ export default function EmpathyManualGame({ onDone }: { onDone: () => void }) {
           {/* 왼쪽 — 공감 송신기 사용 설명서 보드 */}
           <aside className="board" aria-label="공감 송신기 사용 설명서">
             <h1>공감 송신기 사용 설명서</h1>
-            {STEPS.map((s, i) => (
-              <div
-                key={i}
-                className={`manual-slot${completed[i] ? " complete" : ""}`}
-              >
-                <div className="slot-label">단계 {i + 1}</div>
-                <p className="slot-desc">{completed[i] ? s.result : ""}</p>
-                <div className="blocks">
-                  {Array.from({ length: 6 }, (_, j) => (
-                    <span
-                      key={j}
-                      className={`block${j < filledCount(i) ? " filled" : ""}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div className="slots">
+              {STEPS.map((s, i) => {
+                const done = completed[i];
+                const dots = dotCount(i);
+                return (
+                  <div
+                    key={i}
+                    className={`manual-slot${done ? " complete" : ""}`}
+                  >
+                    <div className="slot-label">단계 {i + 1}</div>
+                    <div className="slot-dots" aria-hidden="true">
+                      {[0, 1, 2].map((d) => (
+                        <span key={d} className={`dot${d < dots ? " on" : ""}`} />
+                      ))}
+                    </div>
+                    <div className="slot-body">
+                      {done ? (
+                        <div className="slot-entry">{s.result}</div>
+                      ) : (
+                        <div className="slot-ghost" aria-hidden="true">
+                          <div className="ghost-row">
+                            <span className="ghost-num">{i + 1}.</span>
+                            <span className="ghost-bar w-title" />
+                          </div>
+                          <span className="ghost-bar w-1" />
+                          <span className="ghost-bar w-2" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </aside>
 
           {/* 오른쪽 — 활동 패널 */}

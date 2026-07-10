@@ -54,6 +54,8 @@
 .etg .board {
   height: 540px;
   padding: 28px 24px 22px;
+  display: flex;
+  flex-direction: column;
   outline: 4px solid rgba(34, 110, 255, 0.55);
   outline-offset: 8px;
   box-shadow: 0 0 28px rgba(36, 109, 255, 0.95), 0 10px 0 rgba(8, 20, 48, 0.5);
@@ -61,27 +63,36 @@
 }
 
 .etg .board h1 {
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   text-align: center;
   font-size: 27px;
   color: #123f89;
   letter-spacing: 0;
 }
 
+/* 3개 슬롯을 보드 높이에 균등 분배(위·중·아래) */
+.etg .slots {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .etg .manual-slot {
   position: relative;
-  height: 116px;
-  margin-bottom: 13px;
+  height: 132px;
+  display: flex;
+  align-items: center;
   border: 2px solid #3869a2;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.54);
   box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.72);
-  padding: 22px 15px 10px;
+  padding: 18px 20px;
+  transition: background 0.35s ease, border-color 0.35s ease;
 }
 
 .etg .manual-slot.complete {
-  padding: 26px 16px 12px 82px;
-  background: rgba(238, 255, 230, 0.78);
+  background: rgba(238, 255, 230, 0.85);
   border-color: #2d8b19;
 }
 
@@ -105,28 +116,86 @@
   border-color: #1a660b;
 }
 
-.etg .slot-desc {
-  margin: 0 0 9px;
-  min-height: 0;
-  color: #16294b;
-  font-size: 16px;
-  font-weight: 900;
-  line-height: 1.35;
+/* 단계별 진행 점(정답 1개당 1개). 완성 슬롯에선 숨김 — 텍스트로 대체. */
+.etg .slot-dots {
+  position: absolute;
+  right: 16px;
+  top: 13px;
+  display: flex;
+  gap: 7px;
 }
 
-.etg .manual-slot.complete .slot-desc {
-  min-height: 70px;
-  margin: 0;
+.etg .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #cdd8e6;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.etg .dot.on {
+  background: linear-gradient(180deg, #7fe05a, #3fbf2c);
+  box-shadow: 0 0 8px rgba(106, 255, 82, 0.6);
+}
+
+.etg .manual-slot.complete .slot-dots {
+  display: none;
+}
+
+.etg .slot-body {
+  flex: 1;
+}
+
+/* 미완성 — 완성본의 흐린 밑그림(ghost): 제목 줄 + 상세 2줄 */
+.etg .slot-ghost {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  opacity: 0.5;
+}
+
+.etg .ghost-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.etg .ghost-num {
+  color: #7d92aa;
+  font-size: 19px;
+  font-weight: 900;
+}
+
+.etg .ghost-bar {
+  height: 11px;
+  border-radius: 6px;
+  background: #c3d0e0;
+}
+
+.etg .ghost-bar.w-title {
+  width: 60%;
+}
+
+.etg .ghost-bar.w-1 {
+  width: 82%;
+}
+
+.etg .ghost-bar.w-2 {
+  width: 54%;
+}
+
+/* 완성 — 밑그림이 또렷한 텍스트로 "잉킹"되며 나타남 */
+.etg .slot-entry {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-size: 16px;
-  line-height: 1.42;
+  animation: etg-ink 0.4s ease;
 }
 
 .etg .record-title {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: #0a4fa0;
   font-size: 19px;
   font-weight: 900;
@@ -137,30 +206,18 @@
   color: #19253d;
   font-size: 15px;
   font-weight: 900;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
-.etg .blocks {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 6px;
-}
-
-.etg .block {
-  height: 21px;
-  border: 2px solid #8b9bac;
-  border-radius: 5px;
-  background: #fff;
-}
-
-.etg .block.filled {
-  border-color: #22870d;
-  background: linear-gradient(180deg, #98f05e, #4fbd2d);
-  box-shadow: 0 0 12px rgba(106, 255, 82, 0.65);
-}
-
-.etg .manual-slot.complete .blocks {
-  display: none;
+@keyframes etg-ink {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .etg .center {
