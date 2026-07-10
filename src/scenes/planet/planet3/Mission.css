@@ -20,11 +20,11 @@
   max-width: 600px;
 }
 
-/* 진행 스테퍼 라벨 — 얼음 행성 미션명이 base(font 18px)보다 길어(9글자)
-   162px .pnode 칸에서 2줄로 깨진다. 폰트를 살짝 줄이고 nowrap 으로 한 줄 고정.
+/* 진행 스테퍼 라벨 — 얼음 행성 미션명이 길어(9글자) 162px .pnode 칸에서 2줄로 깨진다.
+   폰트 크기(base 18px)는 그대로 두고, nowrap 으로 한 줄 고정 → 라벨이 칸보다 넓어지면
+   가운데 정렬 그대로 좌우로 살짝 넘쳐 표시된다(원·커넥터 위치는 불변, 인접 라벨과 여유 있음).
    (.planet3 .pnode .label = 특이도 0,3,0 로 base .pnode .label(0,2,0) 을 이긴다.) */
 .planet3 .pnode .label {
-  font-size: 16px;
   white-space: nowrap;
 }
 
