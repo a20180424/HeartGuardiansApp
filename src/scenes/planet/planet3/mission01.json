@@ -19,16 +19,6 @@
       "noAuto": true,
       "game": "placeholder",
       "image": "/assets/planet3/empathy-transmitter.png",
-      "next": "p3_m1_result"
-    },
-    {
-      "id": "p3_m1_result",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "좋아! 이제 공감 송신기를 사용할 준비가 되었어. 하지만 공감 송신기를 작동하려면 \"따듯한 말\" 연료가 필요해!",
-      "image": "/assets/planet3/empathy-transmitter.png",
       "next": "p3_m1_end"
     },
     {
@@ -37,7 +27,8 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "(임시) 미션1 완료!",
+      "text": "좋아! 이제 공감 송신기를 사용할 준비가 되었어. 하지만 공감 송신기를 작동하려면 \"따듯한 말\" 연료가 필요해!",
+      "image": "/assets/planet3/empathy-transmitter.png",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
