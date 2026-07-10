@@ -8,6 +8,7 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
+      "noAuto": true,
       "text": "(임시) 미션3 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
       "next": "p3m3_end"
     },
@@ -16,6 +17,7 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
+      "noAuto": true,
       "text": "(임시) 미션3 완료! 안개 행성 탐험 끝.",
       "completeBanner": "미션 완료!",
       "cards": [{ "image": "/assets/ui/planet1-reward-card.png" }],

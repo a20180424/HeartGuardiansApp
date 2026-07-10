@@ -8,6 +8,7 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
+      "noAuto": true,
       "text": "(임시) 미션2 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
       "next": "p3m2_end"
     },
@@ -16,6 +17,7 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
+      "noAuto": true,
       "text": "(임시) 미션2 완료!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
