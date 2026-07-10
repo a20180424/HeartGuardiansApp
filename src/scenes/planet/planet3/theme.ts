@@ -47,7 +47,7 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 // 진행 스테퍼 라벨(미션 이름) 3개 — 한 줄로 표시(planet2 관례).
 // 프롤로그 스텝과 미션 상단 스테퍼가 공유하는 미션 이름 단일 출처(Prologue.tsx 도 이걸 import).
-export const MISSION_STEPS = ["차가운 마음 찾기", "얼음 궁전의 문 열기", "얼어붙은 친구 마을로"];
+export const MISSION_STEPS = ["가디언즈 작전회의", "공감 손신기 연료 채우기", "얼어붙은 마음 녹이기"];
 
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
