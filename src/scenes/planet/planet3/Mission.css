@@ -20,6 +20,14 @@
   max-width: 600px;
 }
 
+/* 진행 스테퍼 라벨 — 얼음 행성 미션명이 base(font 18px)보다 길어(9글자)
+   162px .pnode 칸에서 2줄로 깨진다. 폰트를 살짝 줄이고 nowrap 으로 한 줄 고정.
+   (.planet3 .pnode .label = 특이도 0,3,0 로 base .pnode .label(0,2,0) 을 이긴다.) */
+.planet3 .pnode .label {
+  font-size: 16px;
+  white-space: nowrap;
+}
+
 /* ── 이하 seed(주석) — planet3 에 이미지/레이더/무대가 붙으면 켜서 튜닝한다.
    #stage 에 현재 노드 id 가 node-<id> 로 붙으므로 노드별 조준이 가능하다.
    (planet2/Mission.css 의 choiceImage/radarHud/castStage 블록을 p3 노드 id 로 옮겨 쓰면 됨.)
