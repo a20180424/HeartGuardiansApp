@@ -1544,6 +1544,27 @@
   object-fit: contain;
 }
 
+/* 이미지 전용 버튼(finish.image): 버튼 크롬(배경·패딩·그림자) 제거하고 이미지 하나만.
+   크기는 .nb-full-img 의 height 로 조절(planet 별 튜닝은 스코프 오버라이드로). */
+#nextBtn.img-only {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+  gap: 0;
+}
+#nextBtn.img-only:active {
+  box-shadow: none;
+}
+#nextBtn.img-only .nb-full-img {
+  height: 150px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
+}
+
 /* ---------- exit (← 홈) ---------- */
 #missionExit {
   position: absolute;

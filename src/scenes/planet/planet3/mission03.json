@@ -1,24 +1,64 @@
 {
   "id": "mission03",
   "title": "(임시) 미션 3",
-  "start": "p3m3_intro",
+  "start": "p3_m3_intro",
   "nodes": [
     {
-      "id": "p3m3_intro",
+      "id": "p3_m3_intro",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "(임시) 미션3 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
-      "next": "p3m3_end"
+      "noAuto": true,
+      "text": "(임시) 미션3 인트로 대사입니다.",
+      "next": "p3_m3_play"
     },
     {
-      "id": "p3m3_end",
+      "id": "p3_m3_play",
+      "type": "minigame",
+      "noAuto": true,
+      "game": "placeholder",
+      "next": "p3_m3_cards"
+    },
+    {
+      "id": "p3_m3_cards",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "(임시) 미션3 완료! 안개 행성 탐험 끝.",
+      "noAuto": true,
+      "text": "(임시) 미션3 공감 카드 대사입니다.",
+      "cards": [
+        { "image": "/assets/ui/empathy_card.png", "top": "(임시) 카드 문구 1", "bottom": "(임시) 카드 설명 1입니다." },
+        { "image": "/assets/ui/empathy_card.png", "top": "(임시) 카드 문구 2", "bottom": "(임시) 카드 설명 2입니다." }
+      ],
+      "next": "p3_m3_result"
+    },
+    {
+      "id": "p3_m3_result",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "(임시) 미션3 결과 대사입니다.",
+      "next": "p3_m3_result2"
+    },
+    {
+      "id": "p3_m3_result2",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "(임시) 안개 행성의 모든 미션을 완료했어!",
       "completeBanner": "미션 완료!",
-      "cards": [{ "image": "/assets/ui/planet1-reward-card.png" }],
+      "next": "p3_m3_end"
+    },
+    {
+      "id": "p3_m3_end",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "(임시) 미션3 보상 대사입니다.",
+      "cards": [{ "image": "/assets/ui/empathy_card.png" }],
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
     }

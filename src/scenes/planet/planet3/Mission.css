@@ -1,0 +1,90 @@
+/* Planet3 전용 미션 오버라이드.
+   #viewport 에 붙는 .planet3 스코프로 공유 mission.css 를 이 행성에서만 덮어쓴다.
+   → 여기서 바꾼 값은 planet3 미션1·2·3 에만 적용되고, 다른 행성은 영향 없다.
+   (planet2/Mission.css 를 관례대로 옮겨온 것 — 값/타깃 노드는 planet3 에 맞춰 조정.)
+
+   인트로 전신 하티(#hatiFull) 위치·크기.
+   base(mission.css) 기본값은 left:510px; height:730px (가운데 크게) 라
+   아래 .planet3 오버라이드(특이도 1,1,0)로 base(#hatiFull 1,0,0)를 이겨 오른쪽으로 옮긴다. */
+.planet3 #hatiFull {
+  left: 1160px;
+  bottom: -18px;
+  height: 570px;
+}
+
+/* 인트로 하티 말풍선(#hatiBubble) 위치·너비.
+   base 기본값 left:1030px; bottom:452px — .planet3 #hatiBubble(1,1,0)로 이긴다. */
+.planet3 #hatiBubble {
+  left: 1280px;
+  bottom: 572px;
+  max-width: 600px;
+}
+
+/* 미션 완료 "빛 복귀" 오버레이(#lightOverlay, fx_light_return→.bright) 끄기.
+   얼음 행성/우주선 배경 위에선 오른쪽 따뜻한 노란빛이 뿌옇게 떠서 planet3 에서만 제거.
+   순수 시각 효과라 "다음" 버튼 로직에는 영향 없음.
+   (.planet3 #stage.bright #lightOverlay = 특이도 2,2,0 로 base(2,1,0) 을 이긴다.) */
+.planet3 #stage.bright #lightOverlay {
+  opacity: 0;
+}
+
+/* 진행 스테퍼 라벨 — 얼음 행성 미션명이 길어(9글자) 162px .pnode 칸에서 2줄로 깨진다.
+   폰트 크기(base 18px)는 그대로 두고, nowrap 으로 한 줄 고정 → 라벨이 칸보다 넓어지면
+   가운데 정렬 그대로 좌우로 살짝 넘쳐 표시된다(원·커넥터 위치는 불변, 인접 라벨과 여유 있음).
+   (.planet3 .pnode .label = 특이도 0,3,0 로 base .pnode .label(0,2,0) 을 이긴다.) */
+.planet3 .pnode .label {
+  white-space: nowrap;
+}
+
+/* 미션1 전반 — 공감 송신기(안테나) 이미지를 화면 왼쪽에 크게(intro→play).
+   base #choiceImage 는 margin:0 auto 로 가로 중앙 → left/right/margin 을 덮어 왼쪽 고정.
+   (.planet3 #stage.node-<id> #choiceImage = 특이도 1,3,1 로 base(1,0,0) 을 이긴다.) */
+.planet3 #stage.node-p3_m1_intro #choiceImage,
+.planet3 #stage.node-p3_m1_play #choiceImage {
+  left: 90px;
+  right: auto;
+  margin: 0;
+  top: 330px;
+  height: 70%;
+  -webkit-mask: none; /* base 가장자리 페더 끄기 */
+  mask: none;
+}
+
+/* ── 노브: 미션1 "설명서" 이미지(postplay·end 공용) 크기·위치 ─────────────
+   여기 3개 값만 만지면 postplay·end 가 함께 바뀐다.
+     · 크기      → height     (↑ 클수록 커짐, width 는 auto 라 비율 유지)
+     · 세로 위치  → top        (↑ 클수록 아래로)
+     · 가로 위치  → translateX (0 = 정가운데 / 양수 = 오른쪽 / 음수 = 왼쪽)
+   가로 중앙정렬은 base(margin:0 auto) 로 유지하고 translateX 로만 좌우로 민다.
+   (mask 는 base 가장자리 페더 끄기 — 건드릴 필요 없음.) */
+.planet3 #stage.node-p3_m1_postplay #choiceImage,
+.planet3 #stage.node-p3_m1_end #choiceImage {
+  height: 75%;              /* 크기 */
+  top: 150px;              /* 세로 위치 */
+  transform: translateX(0px); /* 가로 위치(±) */
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* 미션 완료 이미지 버튼(finish.image, "얼음 행성으로 이동") 크기·위치 튜닝.
+   base #nextBtn.img-only .nb-full-img(height:150px) 를 planet3 에서만 덮어쓴다.
+   (.planet3 #nextBtn.img-only .nb-full-img = 특이도 0,3,1 로 base(0,2,1) 을 이긴다.)
+   · 크기 → height ↑ 클수록 커짐
+   · 위치는 base #nextBtn { right:120px; bottom:70px } 이라, 옮기려면 아래 주석 참고. */
+.planet3 #nextBtn.img-only .nb-full-img {
+  height: 300px;
+}
+/* 버튼 위치를 옮기려면 이 블록을 켠다(값 조정). */
+.planet3 #nextBtn.img-only {
+  right: 10px;
+  bottom: 0px;
+}
+
+
+/* ── 이하 seed(주석) — 다른 노드에 이미지/레이더/무대가 붙으면 켜서 튜닝한다.
+   #stage 에 현재 노드 id 가 node-<id> 로 붙으므로 노드별 조준이 가능하다.
+   (planet2/Mission.css 의 choiceImage/radarHud/castStage 블록을 p3 노드 id 로 옮겨 쓰면 됨.)
+
+.planet3 #stage.node-p3_m1_preplay #choiceImage { top: 155px; height: 70%; -webkit-mask: none; mask: none; }
+.planet3 #stage.node-p3_m1_result  #choiceImage { top: 157px; height: 75%; -webkit-mask: none; mask: none; }
+*/

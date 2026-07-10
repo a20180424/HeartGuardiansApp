@@ -1,4 +1,5 @@
 import PrologueTemplate from "../prologue/PrologueTemplate";
+import { MISSION_STEPS } from "./theme"; // 미션 이름(스텝 라벨) 단일 출처
 import "./Prologue.css"; // planet3 전용: 얼음톤 포인트 색
 
 const OBJECTIVES = [
@@ -12,8 +13,6 @@ const REWARDS = [
   { icon: "🌡️", name: "공감 온도계", desc: "차가운 마음을 감지하고 따듯하게 해주는 도구예요." },
   { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
-
-const STEPS = ["차가운 마음 찾기", "얼음 궁전의 문 열기", "얼어붙은 친구 마을로"];
 
 export default function Prologue({
   onStart,
@@ -33,7 +32,7 @@ export default function Prologue({
       questSub="따듯한 말과 행동으로 친구들의 마음을 녹이자."
       questMascot="/assets/planet3/planet3-bunny.png"
       questMascotAlt="마스코트"
-      steps={STEPS}
+      steps={MISSION_STEPS}
       onStart={onStart}
       onHome={onHome}
     />

@@ -131,7 +131,9 @@ export default function MissionPlayer(props: {
   // 행성별 스코프 클래스(예: "planet2"). #viewport 에 붙여 공유 CSS 를 행성 단위로 오버라이드.
   scopeClass?: string;
   // 엔딩 완료 버튼 커스터마이즈(마지막 미션 등). 없으면 기본 "다음 미션으로".
-  finish?: { label: string; icon?: string };
+  //  · icon: 아이콘 이미지 + label 텍스트(.ship 변형)
+  //  · image: 텍스트 없이 버튼 전체를 이미지 하나로(.img-only 변형, label 은 alt 로만 사용)
+  finish?: { label: string; icon?: string; image?: string };
   // type:"minigame" 노드가 참조하는 게임 컴포넌트 맵(node.game → 컴포넌트). 완료 시 onDone 호출.
   games?: Record<string, ComponentType<{ onDone: () => void }>>;
 }) {
@@ -1437,13 +1439,15 @@ export default function MissionPlayer(props: {
         {vm.showNext && (
           <button
             id="nextBtn"
-            className={props.finish ? "ship" : ""}
+            className={props.finish?.image ? "img-only" : props.finish ? "ship" : ""}
             onClick={(e) => {
               e.stopPropagation();
               props.onExit();
             }}
           >
-            {props.finish ? (
+            {props.finish?.image ? (
+              <img className="nb-full-img" src={props.finish.image} alt={props.finish.label} />
+            ) : props.finish ? (
               <>
                 {props.finish.icon && (
                   <img className="nb-ship-icon" src={props.finish.icon} alt="" />

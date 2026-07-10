@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
+import PlaceholderGameStage from "./PlaceholderGameStage";
+import EmpathyManualGame from "./EmpathyManualGame";
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -9,8 +11,10 @@ import {
   MISSION02_DATA,
   MISSION03_THEME,
   MISSION03_DATA,
+  MISSION_STEPS,
 } from "./theme";
 import "../planet1/Planet1.css"; // 공용 subscene 페이드 오버레이(.planet-fade) 재사용
+import "./Mission.css"; // planet3 전용 미션 오버라이드(.planet3 스코프) — intro 하티 등
 
 // Planet3(얼음 행성) 컨테이너. prologue → mission1 → mission2 → mission3 → home 상태 머신.
 // 각 미션은 현재 시작·끝 골격. 3D 샘플은 Planet3Sample.tsx에 보존(실제 작업 때 연결).
@@ -62,6 +66,13 @@ export default function Planet3() {
           scenario={MISSION01_DATA}
           theme={MISSION01_THEME}
           currentStep={1}
+          steps={MISSION_STEPS}
+          scopeClass="planet3"
+          games={{
+            // 미션1 미니게임 — 공감 송신기 사용 설명서 완성(6지선다 ×3단계).
+            empathyManual: ({ onDone }) => <EmpathyManualGame onDone={onDone} />,
+          }}
+          finish={{ label: "얼음 행성으로 이동", image: "/assets/planet3/ice-planet-move-tab.png" }}
           onExit={() => goTo("mission2")}
         />
       )}
@@ -70,6 +81,13 @@ export default function Planet3() {
           scenario={MISSION02_DATA}
           theme={MISSION02_THEME}
           currentStep={2}
+          steps={MISSION_STEPS}
+          scopeClass="planet3"
+          games={{
+            placeholder: ({ onDone }) => (
+              <PlaceholderGameStage onDone={onDone} label="미션2 미니게임 (임시)" />
+            ),
+          }}
           onExit={() => goTo("mission3")}
         />
       )}
@@ -78,6 +96,13 @@ export default function Planet3() {
           scenario={MISSION03_DATA}
           theme={MISSION03_THEME}
           currentStep={3}
+          steps={MISSION_STEPS}
+          scopeClass="planet3"
+          games={{
+            placeholder: ({ onDone }) => (
+              <PlaceholderGameStage onDone={onDone} label="미션3 미니게임 (임시)" />
+            ),
+          }}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
           onExit={() => nav("/home")}
         />
