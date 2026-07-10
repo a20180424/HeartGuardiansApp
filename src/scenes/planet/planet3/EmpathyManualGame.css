@@ -1,0 +1,378 @@
+/* 행성3 미션1 미니게임 — "공감 송신기 사용 설명서" 완성.
+   mytemp/얼음행성미션1/index.html 의 #gameShell(보드 + 활동 패널) 룩앤필을 이식.
+   원본은 1280×800 좌표계라, 미션 엔진 #stage(1920×1200)에 맞추기 위해
+   1280×800 뷰포트 박스를 transform: scale(1.5) 로 확대해 무대를 채운다.
+   원본 CSS 픽셀값은 그대로 유지하되, 전역 클래스 충돌을 막기 위해 전부 .etg 밑으로 스코프. */
+
+/* 오버레이 — 어두운 딤(placeholder 관례). 무대 전체를 덮고 중앙 정렬. */
+.etg {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  font-family: Arial, "Noto Sans KR", "Malgun Gothic", sans-serif;
+  color: #fff;
+}
+
+.etg button {
+  font: inherit;
+}
+
+/* 1280×800 좌표 박스 → 1.5배 확대(1920×1200). 내부는 원본 px 그대로. */
+.etg-viewport {
+  position: relative;
+  width: 1280px;
+  height: 800px;
+  display: grid;
+  place-items: center;
+  transform: translateY(50px) scale(1.5);
+  transform-origin: center center;
+}
+
+/* ===== 이하 원본 #gameShell CSS 그대로(값 유지, .etg 스코프) ===== */
+
+.etg .stage {
+  width: 1142px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 520px 604px;
+  gap: 18px;
+  align-items: start;
+}
+
+.etg .board,
+.etg .activity {
+  border: 3px solid #0a4fa0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 251, 246, 0.96), rgba(232, 228, 224, 0.95));
+  box-shadow: 0 10px 0 rgba(8, 20, 48, 0.5), inset 0 0 0 3px rgba(255, 255, 255, 0.72);
+}
+
+.etg .board {
+  height: 540px;
+  padding: 28px 24px 22px;
+  outline: 4px solid rgba(34, 110, 255, 0.55);
+  outline-offset: 8px;
+  box-shadow: 0 0 28px rgba(36, 109, 255, 0.95), 0 10px 0 rgba(8, 20, 48, 0.5);
+  color: #102045;
+}
+
+.etg .board h1 {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: 27px;
+  color: #123f89;
+  letter-spacing: 0;
+}
+
+.etg .manual-slot {
+  position: relative;
+  height: 116px;
+  margin-bottom: 13px;
+  border: 2px solid #3869a2;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.54);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.72);
+  padding: 22px 15px 10px;
+}
+
+.etg .manual-slot.complete {
+  padding: 26px 16px 12px 82px;
+  background: rgba(238, 255, 230, 0.78);
+  border-color: #2d8b19;
+}
+
+.etg .slot-label {
+  position: absolute;
+  left: -12px;
+  top: -18px;
+  min-width: 84px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 2px solid #0c4f9d;
+  background: linear-gradient(180deg, #2c79c8, #0a4fa0);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.28);
+}
+
+.etg .manual-slot.complete .slot-label {
+  background: linear-gradient(180deg, #62bd3b, #20780e);
+  border-color: #1a660b;
+}
+
+.etg .slot-desc {
+  margin: 0 0 9px;
+  min-height: 0;
+  color: #16294b;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.etg .manual-slot.complete .slot-desc {
+  min-height: 70px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1.42;
+}
+
+.etg .record-title {
+  display: block;
+  margin-bottom: 5px;
+  color: #0a4fa0;
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.etg .record-detail {
+  color: #19253d;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.etg .blocks {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.etg .block {
+  height: 21px;
+  border: 2px solid #8b9bac;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.etg .block.filled {
+  border-color: #22870d;
+  background: linear-gradient(180deg, #98f05e, #4fbd2d);
+  box-shadow: 0 0 12px rgba(106, 255, 82, 0.65);
+}
+
+.etg .manual-slot.complete .blocks {
+  display: none;
+}
+
+.etg .center {
+  display: grid;
+  gap: 14px;
+}
+
+.etg .activity {
+  height: 540px;
+  padding: 18px 22px 22px;
+  background: linear-gradient(180deg, rgba(239, 244, 253, 0.97), rgba(219, 225, 235, 0.96));
+  color: #102045;
+}
+
+.etg .activity-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.etg .step-badge {
+  padding: 8px 18px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #2c79c8, #0a4fa0);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.etg .activity-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #143e8a;
+}
+
+.etg .tag-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.etg .small-tag {
+  padding: 5px 14px;
+  border-radius: 9px;
+  background: #0f5aa9;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.etg .mission-text {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.etg .speech {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.etg .alien {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  border: 2px solid #a5b4cd;
+  background: #d7dcff;
+  font-size: 42px;
+}
+
+.etg .speech-text {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border: 2px solid #b6bdcb;
+  border-radius: 12px;
+  background: #fffaf5;
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.etg .choice-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 5px 14px;
+  border-radius: 9px;
+  background: #0f5aa9;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.etg .choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  padding: 12px 14px;
+  border: 2px solid #aab5c8;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.etg .choice {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  text-align: left;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.etg .choice::before {
+  content: "?";
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #4b5b6d;
+  font-size: 20px;
+  font-weight: 900;
+  border: 2px solid #9aa9ba;
+  background: #fff;
+}
+
+.etg .choice.correct::before {
+  content: "O";
+  color: #fff;
+  background: linear-gradient(180deg, #7fd34c, #3b9b22);
+  border-color: #247c13;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+}
+
+.etg .choice.wrong::before {
+  content: "X";
+  color: #fff;
+  background: linear-gradient(180deg, #ed6d65, #c62e2e);
+  border-color: #a91d1d;
+}
+
+.etg .choice:disabled {
+  cursor: default;
+}
+
+.etg .feedback {
+  min-height: 30px;
+  margin: 11px 0 0;
+  color: #0a4f9d;
+  font-size: 17px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.etg .controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 9px;
+}
+
+.etg .primary,
+.etg .secondary {
+  min-width: 116px;
+  border: 2px solid #815b00;
+  border-radius: 9px;
+  padding: 8px 14px;
+  background: linear-gradient(180deg, #ffe68e, #c79108);
+  color: #fff;
+  text-shadow: 0 2px 1px rgba(0, 0, 0, 0.35);
+  font-size: 17px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.32);
+}
+
+.etg .secondary {
+  border-color: #355a89;
+  background: linear-gradient(180deg, #fbfbfb, #c8d3df);
+  color: #1a3764;
+  text-shadow: none;
+}
+
+.etg .primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@keyframes etg-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.etg .choice.wrong {
+  animation: etg-shake 220ms ease-in-out;
+}

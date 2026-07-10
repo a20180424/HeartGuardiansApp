@@ -17,8 +17,7 @@
       "id": "p3_m1_play",
       "type": "minigame",
       "noAuto": true,
-      "game": "placeholder",
-      "image": "/assets/planet3/empathy-transmitter.png",
+      "game": "empathyManual",
       "next": "p3_m1_postplay"
     },
     {

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import PlaceholderGameStage from "./PlaceholderGameStage";
+import EmpathyManualGame from "./EmpathyManualGame";
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -68,10 +69,8 @@ export default function Planet3() {
           steps={MISSION_STEPS}
           scopeClass="planet3"
           games={{
-            // 임시: 실제 미니게임 대신 팝업+다음 버튼만. 개발 시 실제 스테이지로 교체.
-            placeholder: ({ onDone }) => (
-              <PlaceholderGameStage onDone={onDone} label="미션1 미니게임 (임시)" />
-            ),
+            // 미션1 미니게임 — 공감 송신기 사용 설명서 완성(6지선다 ×3단계).
+            empathyManual: ({ onDone }) => <EmpathyManualGame onDone={onDone} />,
           }}
           finish={{ label: "얼음 행성으로 이동", image: "/assets/planet3/ice-planet-move-tab.png" }}
           onExit={() => goTo("mission2")}
