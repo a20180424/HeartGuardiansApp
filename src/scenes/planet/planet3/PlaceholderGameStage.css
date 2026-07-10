@@ -35,31 +35,6 @@
   overflow: hidden;
 }
 
-/* 네 귀퉁이 황금 경첩 */
-.pgs-hinge {
-  position: absolute;
-  width: 52px;
-  height: 52px;
-  border: 5px solid #d4af37;
-  pointer-events: none;
-}
-.pgs-hinge.tl { top: 14px; left: 14px; border-right: none; border-bottom: none; border-top-left-radius: 12px; }
-.pgs-hinge.tr { top: 14px; right: 14px; border-left: none; border-bottom: none; border-top-right-radius: 12px; }
-.pgs-hinge.bl { bottom: 14px; left: 14px; border-right: none; border-top: none; border-bottom-left-radius: 12px; }
-.pgs-hinge.br { bottom: 14px; right: 14px; border-left: none; border-top: none; border-bottom-right-radius: 12px; }
-
-/* 좌측 책등 스티치 라인 */
-.pgs-spine {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 18px;
-  height: 100%;
-  background: #142910;
-  border-right: 2px dashed rgba(212, 175, 55, 0.35);
-  pointer-events: none;
-}
-
 .pgs-title {
   font-size: 46px;
   font-weight: 800;

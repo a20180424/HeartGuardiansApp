@@ -15,13 +15,6 @@ export default function PlaceholderGameStage({
   return (
     <div className="pgs-overlay" onClick={(e) => e.stopPropagation()}>
       <div className="pgs-panel">
-        {/* 네 귀퉁이 황금 경첩 + 좌측 책등 (planet2 팝업 참고) */}
-        <span className="pgs-hinge tl" />
-        <span className="pgs-hinge tr" />
-        <span className="pgs-hinge bl" />
-        <span className="pgs-hinge br" />
-        <span className="pgs-spine" />
-
         <div className="pgs-title">{label}</div>
         <p className="pgs-sub">여기에 미니게임이 들어갈 예정입니다.</p>
         <button type="button" className="pgs-next" onClick={onDone}>
