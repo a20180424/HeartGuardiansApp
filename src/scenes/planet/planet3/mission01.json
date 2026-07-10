@@ -1,19 +1,58 @@
 {
   "id": "mission01",
   "title": "(임시) 미션 1",
-  "start": "p3m1_intro",
+  "start": "p3_m1_intro",
   "nodes": [
     {
-      "id": "p3m1_intro",
+      "id": "p3_m1_intro",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "(임시) 미션1 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
-      "next": "p3m1_end"
+      "text": "(임시) 미션1 인트로 대사입니다.",
+      "next": "p3_m1_preplay"
     },
     {
-      "id": "p3m1_end",
+      "id": "p3_m1_preplay",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "(임시) 미션1 미니게임 준비 대사입니다.",
+      "next": "p3_m1_play"
+    },
+    {
+      "id": "p3_m1_play",
+      "type": "minigame",
+      "noAuto": true,
+      "game": "placeholder",
+      "next": "p3_m1_result"
+    },
+    {
+      "id": "p3_m1_result",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "(임시) 미션1 결과 대사입니다.",
+      "onEnter": [{ "cmd": "fx", "value": "fx_result_glow" }],
+      "next": "p3_m1_cards"
+    },
+    {
+      "id": "p3_m1_cards",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "(임시) 미션1 공감 카드 대사입니다.",
+      "cards": [
+        { "image": "/assets/ui/empathy_card.png", "top": "(임시) 카드 문구 1", "bottom": "" },
+        { "image": "/assets/ui/empathy_card.png", "top": "(임시) 카드 문구 2", "bottom": "" }
+      ],
+      "next": "p3_m1_end"
+    },
+    {
+      "id": "p3_m1_end",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,

@@ -45,14 +45,19 @@ const RADAR = {
 
 const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
+// 진행 스테퍼 라벨(미션 이름) 3개 — 한 줄로 표시(planet2 관례).
+// 넘기지 않으면 MissionPlayer 기본 라벨(하드코딩 <br/> 2줄)이 뜬다.
+// 임시 이름 — 실제 planet3 미션명 확정 시 교체.
+export const MISSION_STEPS = ["마음 신호 탐색기", "공감 거울 깨우기", "공감 없는 세상으로"];
+
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 1", title: "(임시) 미션 1", ribbon: "안개 행성 미션 1 골격" },
-  bannerNode: "p3m1_intro",
+  bannerNode: "p3_m1_intro",
   bg: {
-    states: { main: `${A}/bg/light-planet-stage1-bg.png` },
+    states: { main: `${A}/planet3/prologue-bg.png` },
     initial: "main",
-    byNode: { p3m1_intro: "main" },
+    byNode: { p3_m1_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
@@ -68,11 +73,11 @@ export const MISSION01_THEME: MissionTheme = {
 export const MISSION02_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 2", title: "(임시) 미션 2", ribbon: "안개 행성 미션 2 골격" },
-  bannerNode: "p3m2_intro",
+  bannerNode: "p3_m2_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
     initial: "main",
-    byNode: { p3m2_intro: "main" },
+    byNode: { p3_m2_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
@@ -88,11 +93,11 @@ export const MISSION02_THEME: MissionTheme = {
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 3", title: "(임시) 미션 3", ribbon: "안개 행성 미션 3 골격" },
-  bannerNode: "p3m3_intro",
+  bannerNode: "p3_m3_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
     initial: "main",
-    byNode: { p3m3_intro: "main" },
+    byNode: { p3_m3_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },

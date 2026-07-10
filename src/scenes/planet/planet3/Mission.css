@@ -1,0 +1,29 @@
+/* Planet3 전용 미션 오버라이드.
+   #viewport 에 붙는 .planet3 스코프로 공유 mission.css 를 이 행성에서만 덮어쓴다.
+   → 여기서 바꾼 값은 planet3 미션1·2·3 에만 적용되고, 다른 행성은 영향 없다.
+   (planet2/Mission.css 를 관례대로 옮겨온 것 — 값/타깃 노드는 planet3 에 맞춰 조정.)
+
+   인트로 전신 하티(#hatiFull) 위치·크기.
+   base(mission.css) 기본값은 left:510px; height:730px (가운데 크게) 라
+   아래 .planet3 오버라이드(특이도 1,1,0)로 base(#hatiFull 1,0,0)를 이겨 오른쪽으로 옮긴다. */
+.planet3 #hatiFull {
+  left: 1160px;
+  bottom: -18px;
+  height: 570px;
+}
+
+/* 인트로 하티 말풍선(#hatiBubble) 위치·너비.
+   base 기본값 left:1030px; bottom:452px — .planet3 #hatiBubble(1,1,0)로 이긴다. */
+.planet3 #hatiBubble {
+  left: 1280px;
+  bottom: 572px;
+  max-width: 600px;
+}
+
+/* ── 이하 seed(주석) — planet3 에 이미지/레이더/무대가 붙으면 켜서 튜닝한다.
+   #stage 에 현재 노드 id 가 node-<id> 로 붙으므로 노드별 조준이 가능하다.
+   (planet2/Mission.css 의 choiceImage/radarHud/castStage 블록을 p3 노드 id 로 옮겨 쓰면 됨.)
+
+.planet3 #stage.node-p3_m1_preplay #choiceImage { top: 155px; height: 70%; -webkit-mask: none; mask: none; }
+.planet3 #stage.node-p3_m1_result  #choiceImage { top: 157px; height: 75%; -webkit-mask: none; mask: none; }
+*/
