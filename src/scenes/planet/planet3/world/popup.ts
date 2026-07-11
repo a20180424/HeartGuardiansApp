@@ -112,6 +112,7 @@ export function showDialogue(
   badgeEmoji: string = '🐰',
 ): HTMLElement {
   const { ov, card } = makeOverlay(badgeEmoji);
+  ov.classList.add('popup-overlay--dialogue'); // 카드를 오른쪽에 도킹(NPC 안 가리게)
   const msg = document.createElement('p');
   msg.className = 'popup-text';
   msg.textContent = prompt;

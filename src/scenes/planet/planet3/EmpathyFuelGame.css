@@ -177,6 +177,38 @@
   background: linear-gradient(180deg, #b6a8ff, #8b79f0);
 }
 
+/* NPC 대화창은 화면 오른쪽에 도킹한다 — 가운데 두면 NPC를 가리므로.
+   딤/블러 스크림도 없애 대화 중에도 NPC의 몸동작·표정이 보이게 한다. */
+.efg-overlay .popup-overlay.popup-overlay--dialogue {
+  justify-content: flex-end;
+  padding-right: 40px;
+  background: transparent;
+  backdrop-filter: none;
+}
+/* 대화 팝업은 전체적으로 약 1.5배 크게(공유 팝업엔 영향 없음, --dialogue 스코프). */
+.efg-overlay .popup-overlay--dialogue .popup-card {
+  max-width: 600px;
+  padding: 51px 39px 39px;
+  border-radius: 42px;
+  margin-top: 39px;
+}
+.efg-overlay .popup-overlay--dialogue .popup-badge {
+  top: -45px;
+  width: 90px;
+  height: 90px;
+  font-size: 48px;
+  border-width: 6px;
+}
+.efg-overlay .popup-overlay--dialogue .popup-text {
+  font-size: 37px;
+  margin: 6px 0 36px;
+}
+.efg-overlay .popup-overlay--dialogue .popup-btn.dialogue {
+  font-size: 28px;
+  padding: 24px 39px;
+  border-radius: 27px;
+}
+
 /* --- 충전 피드백 --- 선택 카드가 닫힌 그 자리(화면 가운데)에 크게 팝업 --- */
 .efg-overlay .feedback {
   position: absolute;

@@ -11,7 +11,7 @@ import { parseStage2Data, createNpcGame } from './npcgame';
 import type { NpcDef } from './npcgame';
 import { createNpcs } from './npcs';
 
-const PROXIMITY = 1.5; // 팝업이 뜨는 근접 거리(월드 단위)
+const PROXIMITY = 6; // 팝업이 뜨는 근접 거리(월드 단위)
 
 // ctx = { scene, camera, walkable, size, uiRoot, setInputLocked, onStage2Enter, onComplete }
 // 이 월드는 stage1(연료 채우기=미션2)과 stage2(NPC=미션3)를 한 번에 살려두고 이어서
