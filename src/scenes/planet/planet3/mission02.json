@@ -9,6 +9,16 @@
       "noAuto": true,
       "hideFriend": true,
       "game": "empathyFuel",
+      "next": "p3_m2_postplay"
+    },
+    {
+      "id": "p3_m2_postplay",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "수고했어. 대원의 따듯한 말이 친구들을 웃게 만들었어.",
+      "completeBanner": "미션 완료!",
       "next": "p3_m2_end"
     },
     {
@@ -17,8 +27,9 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "얼어붙었던 마음까지 모두 녹았어. 얼음 행성이 다시 따뜻해졌어 — 정말 잘했어!",
-      "completeBanner": "미션 완료!",
+      "text": "축하해! 대원은 이제 첫 번째 공감 원석인 이해의 사파이어를 얻었어! 이 원석은 다른 사람의 마음을 이해하려는 힘을 담고 있단다.",
+      "image": "/assets/ui/explore-success.png",
+      "cards": [{ "image": "/assets/ui/planet3-reward-card.png" }],
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
     }
