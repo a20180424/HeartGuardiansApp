@@ -168,6 +168,15 @@
 .efg-overlay .popup-btn.skip { background: linear-gradient(180deg, #7cc0ff, #4a9df0); }
 .efg-overlay .popup-btn.ok   { background: linear-gradient(180deg, #ffb43b, #ff8a1e); width: 100%; }
 
+/* NPC 대화 선택지 — 정답을 색으로 암시하지 않게 둘 다 같은 중립 색, 문장이 길어 세로 배치 */
+.efg-overlay .popup-buttons.dialogue { flex-direction: column; }
+.efg-overlay .popup-btn.dialogue {
+  width: 100%;
+  font-size: 19px;
+  line-height: 1.4;
+  background: linear-gradient(180deg, #b6a8ff, #8b79f0);
+}
+
 /* --- 충전 피드백 --- 선택 카드가 닫힌 그 자리(화면 가운데)에 크게 팝업 --- */
 .efg-overlay .feedback {
   position: absolute;
