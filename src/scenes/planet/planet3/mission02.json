@@ -17,7 +17,7 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "충전 완료! 공감 송신기가 다시 따뜻하게 빛나기 시작했어. 정말 잘했어!",
+      "text": "얼어붙었던 마음까지 모두 녹았어. 얼음 행성이 다시 따뜻해졌어 — 정말 잘했어!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null

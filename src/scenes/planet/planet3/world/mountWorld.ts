@@ -1,6 +1,6 @@
 // 3D 월드 조립 + 라이프사이클. 원본 SRC/main.js(최상위 await 스크립트)를
 // container에 마운트/언마운트 가능한 함수로 이식한 것.
-//   mountWorld(container, { onComplete }) -> dispose()
+//   mountWorld(container, { onStage2Enter, onComplete }) -> dispose()
 // dispose는 초기화 완료 여부와 무관하게 즉시 안전하게 호출할 수 있다.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -12,7 +12,11 @@ import { createStageManager } from './stages';
 
 export function mountWorld(
   container: HTMLElement,
-  { onComplete }: { onComplete: () => void },
+  {
+    onStage2Enter,
+    onComplete,
+    startStage,
+  }: { onStage2Enter: () => void; onComplete: () => void; startStage?: 1 | 2 },
 ): () => void {
   // dispose가 비동기 초기화 완료보다 먼저 호출된 경우, 완료 콜백이 더 이상
   // 아무것도 시작하지 않도록 막는 경쟁 조건 가드.
@@ -238,9 +242,10 @@ export function mountWorld(
         size: SIZE,
         uiRoot: container,
         setInputLocked: (locked: boolean): void => { inputLocked = locked; },
+        onStage2Enter,
         onComplete,
       });
-      await stages.start();
+      await stages.start({ startStage });
       if (disposed) {
         disposeSceneResources();
         return;
