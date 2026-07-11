@@ -241,6 +241,7 @@ export function mountWorld(
         walkable: world.walkable,
         size: SIZE,
         hexTopY: world.hexTopY,
+        isDisposed: () => disposed,
         uiRoot: container,
         setInputLocked: (locked: boolean): void => { inputLocked = locked; },
         onStage2Enter,

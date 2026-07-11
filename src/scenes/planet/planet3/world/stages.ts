@@ -8,6 +8,7 @@ import { createScoreHud } from './scorehud';
 import { showChoice, showInfo, showFeedback, showDialogue } from './popup';
 import { STAGE1_DATA, STAGE2_DATA } from './assets';
 import { parseStage2Data, createNpcGame } from './npcgame';
+import type { NpcDef } from './npcgame';
 import { createNpcs } from './npcs';
 
 const PROXIMITY = 1.5; // 팝업이 뜨는 근접 거리(월드 단위)
@@ -22,6 +23,7 @@ export function createStageManager(ctx: {
   walkable: Set<string>;
   size: number;
   hexTopY: number;
+  isDisposed: () => boolean;
   uiRoot: HTMLElement;
   setInputLocked: (locked: boolean) => void;
   onStage2Enter: () => void;
@@ -121,15 +123,23 @@ export function createStageManager(ctx: {
   // NPC를 로드·배치한다. 3명 모두 lv3에 도달하면 onComplete가 호출된다.
   async function startStage2(): Promise<void> {
     ctx.onStage2Enter();
-    const isWalkableKey = (q: number, r: number): boolean => ctx.walkable.has(hexKey(q, r));
-    const parsed = parseStage2Data(STAGE2_DATA, isWalkableKey);
-    parsed.warnings.forEach((w) => console.warn('[stage2]', w));
-    npcGame = createNpcGame(parsed.npcs);
-    npcs = await createNpcs(ctx.scene, parsed.npcs, { size: ctx.size, hexTopY: ctx.hexTopY });
+    try {
+      const isWalkableKey = (q: number, r: number): boolean => ctx.walkable.has(hexKey(q, r));
+      const parsed = parseStage2Data(STAGE2_DATA, isWalkableKey);
+      parsed.warnings.forEach((w) => console.warn('[stage2]', w));
+      npcGame = createNpcGame(parsed.npcs);
+      const loaded = await createNpcs(ctx.scene, parsed.npcs, { size: ctx.size, hexTopY: ctx.hexTopY });
+      // 로드 도중 언마운트됐다면(dispose 선행) 방금 만든 NPC 리소스를 정리하고 중단 — GPU 누수 방지.
+      if (ctx.isDisposed()) { loaded.clear(); return; }
+      npcs = loaded;
+    } catch (err) {
+      console.error('[stage2] NPC 로드 실패:', err);
+      showInfo(ctx.uiRoot, '앗, 친구들을 불러오지 못했어요.\n잠시 후 다시 시도해 주세요.', '확인', null, '😢');
+    }
   }
 
   // NPC 근접 시 현재 라운드 대화를 연다. 정답 위치 노출 방지를 위해 버튼 순서를 섞는다.
-  function openNpcDialogue(def: import('./npcgame').NpcDef): void {
+  function openNpcDialogue(def: NpcDef): void {
     const round = npcGame!.currentRound(def.id);
     if (!round) return;
     popupOpen = true;

@@ -87,4 +87,18 @@ describe("createNpcGame", () => {
     expect(r.level).toBe(3);
     expect(r.npcDone).toBe(true);
   });
+
+  it("allDone stays false until every npc is finished", () => {
+    const two = parseStage2Data({ npcs: [
+      { q: 0, r: 0, rounds: [ { prompt: "p", warm: "w", cold: "c", feedback: "f" } ] },
+      { q: 1, r: 0, rounds: [ { prompt: "p", warm: "w", cold: "c", feedback: "f" } ] },
+    ] }, allWalkable).npcs;
+    const g = createNpcGame(two);
+    expect(g.allDone()).toBe(false);
+    g.choose(0, true);            // npc0 done, npc1 not
+    expect(g.isDone(0)).toBe(true);
+    expect(g.allDone()).toBe(false);
+    g.choose(1, true);            // both done
+    expect(g.allDone()).toBe(true);
+  });
 });
