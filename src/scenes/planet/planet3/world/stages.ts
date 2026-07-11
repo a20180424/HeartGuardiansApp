@@ -138,13 +138,15 @@ export function createStageManager(ctx: {
     }
   }
 
-  // NPC 근접 시 현재 라운드 대화를 연다. 선택지는 대본 순서 그대로 보여준다.
+  // NPC 근접 시 현재 라운드 대화를 연다. 선택지는 대본 순서 그대로 보여주고, 선택지 없는
+  // 마무리 '대사 라운드'는 '닫기' 버튼 하나로 넘긴다(대사만 보여주고 그 NPC 종료).
   function openNpcDialogue(def: NpcDef): void {
     const round = npcGame!.currentRound(def.id);
     if (!round) return;
     popupOpen = true;
     ctx.setInputLocked(true);
-    showDialogue(ctx.uiRoot, round.prompt, round.choices, (index) => {
+    const buttons = round.choices.length > 0 ? round.choices : ["닫기"];
+    showDialogue(ctx.uiRoot, round.prompt, buttons, (index) => {
       const r = npcGame!.choose(def.id, index);
       popupOpen = false;
       ctx.setInputLocked(false);
