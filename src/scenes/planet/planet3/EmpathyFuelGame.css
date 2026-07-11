@@ -30,8 +30,8 @@
 
 .efg-overlay .minimap {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  bottom: 16px;
+  left: 16px;
   border-radius: 50%;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   z-index: 5;
@@ -197,7 +197,7 @@
 /* --- 연료 게이지 HUD --- */
 .efg-overlay .score-hud {
   position: absolute;
-  top: 16px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
