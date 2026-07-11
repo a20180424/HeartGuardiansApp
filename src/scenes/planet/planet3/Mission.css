@@ -80,6 +80,20 @@
   bottom: 0px;
 }
 
+/* ── end 노드(p3_m2_end) — 리워드 카드 위 "탐험 성공!" 리본 ─────────────────
+   node.image(→ #choiceImage)를 리본으로 재사용, 리워드 카드는 node.cards(#cardStage).
+   base #choiceImage(top:110px, height:64%, 페더 마스크)를 리본용으로 덮어써서
+   #cardStage(z-index:5) 위에 오게 한다. planet2/Mission.css 의 p2_m3_end 규칙과 동일. */
+.planet3 #stage.node-p3_m2_end #choiceImage {
+  top: 140px; /* 위로/아래로 이동(값↑ 내려감) */
+  height: auto; /* width 로 크기 제어하려고 해제 */
+  width: 720px; /* 리본 가로 크기 */
+  max-width: 90%;
+  z-index: 6; /* 리워드 카드(5)보다 위 */
+  -webkit-mask: none; /* base 가장자리 페더 끄기 */
+  mask: none;
+}
+
 
 /* ── 이하 seed(주석) — 다른 노드에 이미지/레이더/무대가 붙으면 켜서 튜닝한다.
    #stage 에 현재 노드 id 가 node-<id> 로 붙으므로 노드별 조준이 가능하다.
