@@ -67,11 +67,11 @@ export function showChoice(parent: HTMLElement, text: string, onChoose: (take: b
 // 문장 + 버튼 1개(안내/전환). onOk는 nullable. badgeEmoji로 배지 이모지 지정.
 // 충전 직후 짧은 피드백 토스트(클릭 막지 않음, 스스로 사라짐).
 // positive=true → 따듯한 말(잘함), false → 차가운 말(아쉬움).
-export function showFeedback(parent: HTMLElement, positive: boolean): HTMLElement {
+export function showFeedback(parent: HTMLElement, positive: boolean, text?: string): HTMLElement {
   parent.querySelectorAll('.feedback').forEach((e) => e.remove()); // 중첩 방지
   const el = document.createElement('div');
   el.className = `feedback ${positive ? 'pos' : 'neg'}`;
-  el.textContent = positive ? '⚡ 따듯한 말로 충전!' : '🥶 앗, 차가운 말이야…';
+  el.textContent = text ?? (positive ? '⚡ 따듯한 말로 충전!' : '🥶 앗, 차가운 말이야…');
   parent.appendChild(el);
   el.addEventListener('animationend', () => el.remove());
   setTimeout(() => el.remove(), 1600); // 애니메이션 미지원 대비 보험
@@ -98,6 +98,42 @@ export function showInfo(
   btn.textContent = buttonLabel;
   btn.addEventListener('click', () => { ov.remove(); if (onOk) onOk(); });
   card.append(msg, btn);
+  parent.appendChild(ov);
+  return ov;
+}
+
+// NPC 대화 팝업: 고민 문장 + 선택지 버튼 N개(중립 스타일). 선택하면 그 인덱스를
+// onChoose로 넘긴다(정답 판정은 호출부). onChoose는 정확히 한 번 호출된다.
+export function showDialogue(
+  parent: HTMLElement,
+  prompt: string,
+  choices: string[],
+  onChoose: (index: number) => void,
+  badgeEmoji: string = '🐰',
+): HTMLElement {
+  const { ov, card } = makeOverlay(badgeEmoji);
+  ov.classList.add('popup-overlay--dialogue'); // 카드를 오른쪽에 도킹(NPC 안 가리게)
+  const msg = document.createElement('p');
+  msg.className = 'popup-text';
+  msg.textContent = prompt;
+  const row = document.createElement('div');
+  row.className = 'popup-buttons dialogue';
+
+  let done = false;
+  const finish = (index: number): void => {
+    if (done) return;
+    done = true;
+    ov.remove();
+    onChoose(index);
+  };
+  choices.forEach((label, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'popup-btn dialogue';
+    btn.textContent = label;
+    btn.addEventListener('click', () => finish(i));
+    row.appendChild(btn);
+  });
+  card.append(msg, row);
   parent.appendChild(ov);
   return ov;
 }

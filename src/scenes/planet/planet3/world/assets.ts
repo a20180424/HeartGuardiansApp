@@ -11,18 +11,26 @@ import snowRock02 from "/assets/planet3/world/models/snow-rock-02.glb?url";
 import edgeRock from "/assets/planet3/world/models/snow-rock-cluster-03.glb?url";
 import monument from "/assets/planet3/world/models/stone-monument-01-lit.glb?url";
 import bubble from "/assets/planet3/world/models/speech-bubble.glb?url";
+import npc1 from "/assets/planet3/world/models/npc-01.glb?url";
+import npc2 from "/assets/planet3/world/models/npc-02.glb?url";
+import npc3 from "/assets/planet3/world/models/npc-03.glb?url";
 import stage1 from "./stage1-sentences.json";
+import stage2 from "./stage2-npcs.json";
 
 export type ModelKey =
   | "hexA" | "hexB"
   | "tree01" | "tree02a" | "tree02b" | "tree02c"
   | "rock01" | "snowRock01" | "snowRock02"
-  | "edgeRock" | "monument" | "bubble";
+  | "edgeRock" | "monument" | "bubble"
+  | "npc1" | "npc2" | "npc3";
 
 export const MODEL_URLS: Record<ModelKey, string> = {
   hexA, hexB, tree01, tree02a, tree02b, tree02c,
   rock01, snowRock01, snowRock02, edgeRock, monument, bubble,
+  npc1, npc2, npc3,
 };
 
 export type Bubble = { q: number; r: number; text: string; good: boolean };
 export const STAGE1_DATA = stage1 as { passScore: number; bubbles: Bubble[] };
+
+export const STAGE2_DATA = stage2 as { npcs: unknown[] };
