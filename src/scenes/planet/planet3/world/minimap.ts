@@ -10,7 +10,7 @@
 //                 and the remaining speech-bubble world positions ([{x,z}]).
 export function createMinimap({ worldExtent }: { worldExtent: number }): {
   element: HTMLElement;
-  update(px: number, pz: number, yaw: number, points: { x: number; z: number }[]): void;
+  update(px: number, pz: number, yaw: number, points: { x: number; z: number }[], npcs?: { x: number; z: number; done: boolean }[]): void;
 } {
   const R = 225; // css px (square) — 하단 이동 후 가독성 위해 1.5배 확대
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -28,7 +28,13 @@ export function createMinimap({ worldExtent }: { worldExtent: number }): {
   const ctx = canvas.getContext('2d')!;
   ctx.scale(dpr, dpr);
 
-  function update(px: number, pz: number, yaw: number, bubbles: { x: number; z: number }[] = []): void {
+  function update(
+    px: number,
+    pz: number,
+    yaw: number,
+    bubbles: { x: number; z: number }[] = [],
+    npcs: { x: number; z: number; done: boolean }[] = [],
+  ): void {
     ctx.clearRect(0, 0, R, R);
 
     // Field disc — clip everything else inside it.
@@ -58,6 +64,17 @@ export function createMinimap({ worldExtent }: { worldExtent: number }): {
       ctx.beginPath();
       ctx.arc(center + b.x * scale, center + b.z * scale, 3 * k, 0, Math.PI * 2);
       ctx.fill();
+    }
+
+    // NPC 마커 — 미완료(파랑)/완료(초록). 말풍선 점(3*k)보다 크게(4.5*k) 그려 눈에 띄게.
+    for (const n of npcs) {
+      ctx.beginPath();
+      ctx.arc(center + n.x * scale, center + n.z * scale, 4.5 * k, 0, Math.PI * 2);
+      ctx.fillStyle = n.done ? '#28c76f' : '#4a9df0';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
     }
 
     // Player: world +z maps to screen-down; north (−z) is up.
