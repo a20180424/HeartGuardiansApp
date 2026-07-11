@@ -1,21 +1,13 @@
 {
   "id": "mission02",
   "title": "공감 송신기 연료 채우기",
-  "start": "p3_m2_intro",
+  "start": "p3_m2_play",
   "nodes": [
-    {
-      "id": "p3_m2_intro",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "공감 송신기를 켜려면 에너지가 필요해. 얼음 숲을 돌아다니며 '따듯한 말'을 모아 연료를 채워보자!",
-      "next": "p3_m2_play"
-    },
     {
       "id": "p3_m2_play",
       "type": "minigame",
       "noAuto": true,
+      "hideFriend": true,
       "game": "empathyFuel",
       "next": "p3_m2_end"
     },

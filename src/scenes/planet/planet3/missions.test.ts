@@ -57,7 +57,8 @@ describe("planet2 mission skeletons", () => {
     "%s: 시작→끝을 걸어 end 에 도달하고 마지막에 fx_light_return 을 쏜다",
     async (id) => {
       const { lines, fx } = await runToEnd(MISSIONS[id]);
-      expect(lines.length).toBeGreaterThanOrEqual(2); // intro + end
+      // mission02 는 intro 라인을 없애고 미니게임으로 바로 시작하므로 end 라인 1개만 남는다.
+      expect(lines.length).toBeGreaterThanOrEqual(1); // 최소 end 라인
       expect(fx).toContain("fx_light_return"); // 다음 버튼 조건
     },
   );

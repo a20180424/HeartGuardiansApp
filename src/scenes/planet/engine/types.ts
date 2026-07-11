@@ -133,6 +133,8 @@ export interface MissionTheme {
   speakers: Record<string, { name: string; avatar?: string }>;
   // 인트로 타이틀 타일 문구(하드코딩 대신 미션별 데이터).
   banner: { pill: string; title: string; ribbon: string };
+  // 인트로 타이틀 배너를 띄울 노드 id. 빈 문자열이면 이 미션에선 배너를 띄우지 않는다
+  // (미션2처럼 미니게임으로 바로 시작하는 경우).
   bannerNode: string;
   drag?: { node: string };
   bg: { states: Record<string, string>; initial: string; byNode: Record<string, string> };

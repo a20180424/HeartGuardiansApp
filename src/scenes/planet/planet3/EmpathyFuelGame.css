@@ -15,6 +15,9 @@
   inset: 0;
   z-index: 1;
   overflow: hidden;
+  /* three.js 모델 로딩 동안 canvas 가 붙기 전, 뒤의 미션 배경(#bg)이 비쳐 보이지 않도록
+     mountWorld 의 그라데이션 하늘(top #6ea9d8 → horizon #cfe6f5)과 같은 색으로 채운다. */
+  background: linear-gradient(#6ea9d8, #cfe6f5);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
