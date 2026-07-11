@@ -167,7 +167,7 @@ export function createStageManager(ctx: {
     ctx.setInputLocked(true);
     showInfo(
       ctx.uiRoot,
-      '모두의 얼어붙은 마음이 녹았어요! 🎉\n행성3의 친구들이 다시 웃어요!',
+      '모두의 얼어붙은 마음이 녹았어요! 🎉\n얼음 행성의 친구들이 다시 웃어요!',
       '미션 완료',
       () => {
         npcs!.clear();
