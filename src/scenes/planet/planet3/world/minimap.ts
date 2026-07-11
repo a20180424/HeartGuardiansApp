@@ -12,11 +12,12 @@ export function createMinimap({ worldExtent }: { worldExtent: number }): {
   element: HTMLElement;
   update(px: number, pz: number, yaw: number, points: { x: number; z: number }[]): void;
 } {
-  const R = 150; // css px (square)
+  const R = 225; // css px (square) — 하단 이동 후 가독성 위해 1.5배 확대
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const center = R / 2;
   const mapRadius = R / 2 - 9; // leave room for the ring border
   const scale = mapRadius / worldExtent;
+  const k = R / 150; // 마커(다이아·점·삼각형) 크기 스케일 — 원래 R=150 기준 값을 함께 키운다
 
   const canvas = document.createElement('canvas');
   canvas.className = 'minimap';
@@ -42,10 +43,10 @@ export function createMinimap({ worldExtent }: { worldExtent: number }): {
     // Monument marker at world origin (map center) — teal diamond.
     ctx.fillStyle = '#2fb3c4';
     ctx.beginPath();
-    ctx.moveTo(center, center - 5);
-    ctx.lineTo(center + 5, center);
-    ctx.lineTo(center, center + 5);
-    ctx.lineTo(center - 5, center);
+    ctx.moveTo(center, center - 5 * k);
+    ctx.lineTo(center + 5 * k, center);
+    ctx.lineTo(center, center + 5 * k);
+    ctx.lineTo(center - 5 * k, center);
     ctx.closePath();
     ctx.fill();
 
@@ -55,7 +56,7 @@ export function createMinimap({ worldExtent }: { worldExtent: number }): {
     ctx.fillStyle = '#7b61ff';
     for (const b of bubbles) {
       ctx.beginPath();
-      ctx.arc(center + b.x * scale, center + b.z * scale, 3, 0, Math.PI * 2);
+      ctx.arc(center + b.x * scale, center + b.z * scale, 3 * k, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -67,9 +68,9 @@ export function createMinimap({ worldExtent }: { worldExtent: number }): {
     const rx = -fz; // perpendicular ("right")
     const rz = fx;
     ctx.beginPath();
-    ctx.moveTo(mx + fx * 8, my + fz * 8); // tip
-    ctx.lineTo(mx - fx * 5 + rx * 4.5, my - fz * 5 + rz * 4.5);
-    ctx.lineTo(mx - fx * 5 - rx * 4.5, my - fz * 5 - rz * 4.5);
+    ctx.moveTo(mx + fx * 8 * k, my + fz * 8 * k); // tip
+    ctx.lineTo(mx - fx * 5 * k + rx * 4.5 * k, my - fz * 5 * k + rz * 4.5 * k);
+    ctx.lineTo(mx - fx * 5 * k - rx * 4.5 * k, my - fz * 5 * k - rz * 4.5 * k);
     ctx.closePath();
     ctx.fillStyle = '#ff6b4a';
     ctx.fill();

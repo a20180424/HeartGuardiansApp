@@ -217,7 +217,7 @@ export function mountWorld(
       container.appendChild(minimap.element);
 
       // Input: 가상 조이스틱(터치·마우스 공용) + 키보드. 매 프레임 { throttle, turn }으로 병합.
-      const joystick = createJoystick();
+      const joystick = createJoystick({ radius: 75 }); // CSS 210px(반경 105) 위젯에 맞춘 입력 반경
       container.appendChild(joystick.element);
 
       function readInput(): { throttle: number; turn: number } {
