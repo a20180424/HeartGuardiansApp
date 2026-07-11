@@ -240,6 +240,7 @@ export function mountWorld(
         camera,
         walkable: world.walkable,
         size: SIZE,
+        hexTopY: world.hexTopY,
         uiRoot: container,
         setInputLocked: (locked: boolean): void => { inputLocked = locked; },
         onStage2Enter,
@@ -263,7 +264,7 @@ export function mountWorld(
         sun.target.position.set(camera.position.x, 0, camera.position.z);
         snow.userData.update(dt);
         snow.position.set(camera.position.x, 0, camera.position.z); // keep snow around the player
-        minimap.update(camera.position.x, camera.position.z, camera.rotation.y, stages.bubblePoints());
+        minimap.update(camera.position.x, camera.position.z, camera.rotation.y, stages.bubblePoints(), stages.npcPoints());
         renderer.render(scene, camera);
       });
 
