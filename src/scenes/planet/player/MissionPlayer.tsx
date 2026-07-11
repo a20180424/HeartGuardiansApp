@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useLayoutEffect,
   useReducer,
   useRef,
   type MouseEvent,
@@ -250,7 +251,11 @@ export default function MissionPlayer(props: {
     node?: MissionNode;
   }>({}).current;
 
-  useEffect(() => {
+  // useLayoutEffect: 러너가 시작 노드로 진입하는 상태 전환을 첫 페인트 '전에' 끝낸다.
+  // useEffect(페인트 후 실행)면 vm 초기값(stage:"none"·기본 배경·초기 친구)이 한 프레임
+  // 먼저 그려져 미니게임으로 바로 시작하는 미션(예: 행성3 미션2)에서 배경/친구가 깜빡인다.
+  // useFitStage 와 같은 패턴·같은 목적.
+  useLayoutEffect(() => {
     let alive = true;
     const render = () => {
       if (alive) force();

@@ -15,6 +15,9 @@
   inset: 0;
   z-index: 1;
   overflow: hidden;
+  /* three.js 모델 로딩 동안 canvas 가 붙기 전, 뒤의 미션 배경(#bg)이 비쳐 보이지 않도록
+     mountWorld 의 그라데이션 하늘(top #6ea9d8 → horizon #cfe6f5)과 같은 색으로 채운다. */
+  background: linear-gradient(#6ea9d8, #cfe6f5);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -27,8 +30,8 @@
 
 .efg-overlay .minimap {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  bottom: 16px;
+  left: 16px;
   border-radius: 50%;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   z-index: 5;
@@ -38,8 +41,8 @@
   position: absolute;
   right: 28px;
   bottom: 28px;
-  width: 140px;
-  height: 140px;
+  width: 210px;
+  height: 210px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   border: 2px solid rgba(255, 255, 255, 0.35);
@@ -52,9 +55,9 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 60px;
-  height: 60px;
-  margin: -30px 0 0 -30px;
+  width: 90px;
+  height: 90px;
+  margin: -45px 0 0 -45px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
@@ -165,42 +168,42 @@
 .efg-overlay .popup-btn.skip { background: linear-gradient(180deg, #7cc0ff, #4a9df0); }
 .efg-overlay .popup-btn.ok   { background: linear-gradient(180deg, #ffb43b, #ff8a1e); width: 100%; }
 
-/* --- 충전 피드백 토스트 --- */
+/* --- 충전 피드백 --- 선택 카드가 닫힌 그 자리(화면 가운데)에 크게 팝업 --- */
 .efg-overlay .feedback {
   position: absolute;
-  top: 64px;
+  top: 50%;
   left: 50%;
   z-index: 8;
-  padding: 12px 22px;
+  padding: 24px 44px;
   border-radius: 999px;
-  font-size: 20px;
+  font-size: 40px;
   font-weight: 800;
   color: #fff;
   white-space: nowrap;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
   pointer-events: none;
   animation: efg-feedback-toast 1.4s ease forwards;
 }
 .efg-overlay .feedback.pos { background: linear-gradient(180deg, #ffb43b, #ff8a1e); }
 .efg-overlay .feedback.neg { background: linear-gradient(180deg, #7cc0ff, #4a9df0); }
 @keyframes efg-feedback-toast {
-  0%   { transform: translate(-50%, 6px) scale(0.6); opacity: 0; }
-  15%  { transform: translate(-50%, 0) scale(1.12); opacity: 1; }
-  30%  { transform: translate(-50%, 0) scale(1); opacity: 1; }
-  75%  { transform: translate(-50%, 0) scale(1); opacity: 1; }
-  100% { transform: translate(-50%, -26px) scale(1); opacity: 0; }
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  15%  { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+  30%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  75%  { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
 }
 
 /* --- 연료 게이지 HUD --- */
 .efg-overlay .score-hud {
   position: absolute;
-  top: 16px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 12px;
+  padding: 12px 21px;
   background: rgba(24, 27, 33, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
@@ -208,12 +211,12 @@
   z-index: 7;
   user-select: none;
 }
-.efg-overlay .score-hud .fuel-icon { font-size: 20px; line-height: 1; }
-.efg-overlay .fuel-gauge { display: flex; gap: 4px; }
+.efg-overlay .score-hud .fuel-icon { font-size: 30px; line-height: 1; }
+.efg-overlay .fuel-gauge { display: flex; gap: 6px; }
 .efg-overlay .fuel-cell {
-  width: 24px;
-  height: 15px;
-  border-radius: 4px;
+  width: 36px;
+  height: 22px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.15);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;

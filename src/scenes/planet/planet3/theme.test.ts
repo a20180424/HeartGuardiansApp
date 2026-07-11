@@ -16,7 +16,8 @@ const PAIRS: [string, MissionData, MissionTheme][] = [
 ];
 
 describe("planet2 theme integrity", () => {
-  it.each(PAIRS)("%s: bannerNode 가 DATA 의 실제 노드 id 다", (_id, data, theme) => {
+  it.each(PAIRS)("%s: bannerNode 가 DATA 의 실제 노드 id 다(빈 값이면 배너 없음)", (_id, data, theme) => {
+    if (theme.bannerNode === "") return; // 배너를 안 쓰는 미션(미션2)은 통과
     expect(data.nodes.some((n) => n.id === theme.bannerNode)).toBe(true);
   });
 
