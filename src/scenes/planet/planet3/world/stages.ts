@@ -10,7 +10,10 @@ import { STAGE1_DATA } from './assets';
 
 const PROXIMITY = 1.5; // 팝업이 뜨는 근접 거리(월드 단위)
 
-// ctx = { scene, camera, walkable, size, uiRoot, setInputLocked, onComplete }
+// ctx = { scene, camera, walkable, size, uiRoot, setInputLocked, onStage2Enter, onComplete }
+// 이 월드는 stage1(연료 채우기=미션2)과 stage2(NPC=미션3)를 한 번에 살려두고 이어서
+// 진행한다. onStage2Enter는 stage2로 넘어가는 순간(=행성3 관점의 미션3 전환)을 바깥에
+// 알리는 신호이고, onComplete는 stage2까지 다 끝났을 때만 호출된다.
 export function createStageManager(ctx: {
   scene: THREE.Scene;
   camera: THREE.Camera;
@@ -18,9 +21,10 @@ export function createStageManager(ctx: {
   size: number;
   uiRoot: HTMLElement;
   setInputLocked: (locked: boolean) => void;
+  onStage2Enter: () => void;
   onComplete: () => void;
 }): {
-  start(): Promise<void>;
+  start(opts?: { startStage?: 1 | 2 }): Promise<void>;
   update(dt: number): void;
   bubblePoints(): { x: number; z: number }[];
 } {
@@ -30,7 +34,13 @@ export function createStageManager(ctx: {
   let elapsed = 0;
   let popupOpen = false;
 
-  async function start(): Promise<void> {
+  async function start(opts?: { startStage?: 1 | 2 }): Promise<void> {
+    // DEV 편의: stage1을 건너뛰고 stage2로 바로 진입(?m=2&stage2=1). stage1 셋업/인트로
+    // 없이 stage2 전환만 실행한다(스테퍼도 onStage2Enter로 미션3이 된다).
+    if (opts?.startStage === 2) {
+      startStage2();
+      return;
+    }
     const data = STAGE1_DATA;
     const isWalkableKey = (q: number, r: number): boolean => ctx.walkable.has(hexKey(q, r));
     const parsed = parseStage1Data(data, isWalkableKey);
@@ -78,12 +88,14 @@ export function createStageManager(ctx: {
     });
   }
 
+  // Stage 1 통과 → 월드는 유지한 채 stage 2로 전환한다(미니게임을 끝내지 않는다).
+  // onComplete는 stage 2 끝에서만 호출된다.
   function onPass(): void {
     popupOpen = true;
     ctx.setInputLocked(true);
     showInfo(
       ctx.uiRoot,
-      '충전 완료! 공감 송신기가 켜졌어요 🎉\n다음으로 갈까?',
+      '충전 완료! 공감 송신기가 켜졌어요 🎉\n이제 얼어붙은 마음을 녹이러 가자!',
       '다음으로',
       () => {
         bubbles!.clear();
@@ -92,10 +104,30 @@ export function createStageManager(ctx: {
         hud = null;
         popupOpen = false;
         ctx.setInputLocked(false);
-        ctx.onComplete();
+        startStage2();
       },
       '🎉',
     );
+  }
+
+  // Stage 2 — 실제 NPC 콘텐츠는 이후(Phase 2)에 채운다. 지금은 stage 2 진입을 바깥
+  // (행성3 스테퍼 → 미션3)으로 알리고, onComplete→p3_m2_end까지의 흐름만 확인할 수
+  // 있게 임시 완료 버튼 하나만 띄운다. 월드와 이동은 그대로 살아 있다.
+  function startStage2(): void {
+    ctx.onStage2Enter();
+    const btn = document.createElement('button');
+    btn.className = 'st2-temp-done';
+    btn.textContent = '미션 완료 (임시)';
+    btn.style.cssText =
+      'position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:20;' +
+      'padding:12px 24px;border:none;border-radius:999px;cursor:pointer;' +
+      'font-family:system-ui,sans-serif;font-size:18px;font-weight:700;color:#fff;' +
+      'background:#2563eb;box-shadow:0 4px 14px rgba(0,0,0,0.25);';
+    btn.addEventListener('click', () => {
+      btn.remove();
+      ctx.onComplete();
+    });
+    ctx.uiRoot.appendChild(btn);
   }
 
   function update(dt: number): void {
