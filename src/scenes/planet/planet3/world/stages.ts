@@ -138,23 +138,20 @@ export function createStageManager(ctx: {
     }
   }
 
-  // NPC 근접 시 현재 라운드 대화를 연다. 정답 위치 노출 방지를 위해 버튼 순서를 섞는다.
+  // NPC 근접 시 현재 라운드 대화를 연다. 선택지는 대본 순서 그대로 보여준다.
   function openNpcDialogue(def: NpcDef): void {
     const round = npcGame!.currentRound(def.id);
     if (!round) return;
     popupOpen = true;
     ctx.setInputLocked(true);
-    const warmBtn = { label: round.warm, warm: true };
-    const coldBtn = { label: round.cold, warm: false };
-    const buttons = Math.random() < 0.5 ? [warmBtn, coldBtn] : [coldBtn, warmBtn];
-    showDialogue(ctx.uiRoot, round.prompt, buttons, (warm) => {
-      const r = npcGame!.choose(def.id, warm);
+    showDialogue(ctx.uiRoot, round.prompt, round.choices, (index) => {
+      const r = npcGame!.choose(def.id, index);
       popupOpen = false;
       ctx.setInputLocked(false);
       npcCooldown = elapsed + 1.2; // 피드백이 보이도록 잠시 재오픈 지연
       if (r.accepted) {
         npcs!.setLevel(def.id, r.level);
-        showFeedback(ctx.uiRoot, true, r.feedback);
+        if (r.feedback) showFeedback(ctx.uiRoot, true, r.feedback); // 중간 라운드는 피드백 없이 다음 대사로
         if (r.allDone) onAllNpcsDone();
       } else {
         showFeedback(ctx.uiRoot, false, r.feedback);

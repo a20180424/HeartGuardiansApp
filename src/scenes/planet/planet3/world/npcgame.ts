@@ -1,9 +1,10 @@
 // stage2 NPC 감정 녹이기(미션3) 순수 게임 상태 + 데이터 검증 (THREE 비의존, 단위 테스트용).
 
-export type NpcRound = { prompt: string; warm: string; cold: string; feedback: string };
+// 한 스텝(라운드): NPC 대사 + 3지선다 선택지 + 정답 인덱스 + 완료(마지막 라운드) 피드백.
+export type NpcRound = { prompt: string; choices: string[]; answer: number; feedback: string };
 export type NpcDef = { id: number; q: number; r: number; name: string; emoji: string; rounds: NpcRound[] };
 
-const COLD_FEEDBACK = "음… 그 말은 조금 차가운 것 같아.";
+const WRONG_FEEDBACK = "음… 친구가 조금 서운해할 것 같아.";
 
 // stage2 JSON을 검증·정규화한다. isWalkableKey(q,r)로 배치 가능 여부를 확인하고,
 // id는 배열 인덱스로 재부여한다(3D·미니맵과 공유하는 안정적 키).
@@ -25,14 +26,18 @@ export function parseStage2Data(
     }
     const rounds: NpcRound[] = [];
     n.rounds.forEach((rd: any, j: number) => {
-      if (!rd || typeof rd.prompt !== "string" || typeof rd.warm !== "string" || typeof rd.cold !== "string") {
+      const okChoices =
+        rd && Array.isArray(rd.choices) && rd.choices.length >= 2 && rd.choices.every((c: any) => typeof c === "string");
+      const okAnswer =
+        okChoices && typeof rd.answer === "number" && rd.answer >= 0 && rd.answer < rd.choices.length;
+      if (!rd || typeof rd.prompt !== "string" || !okChoices || !okAnswer) {
         warnings.push(`npc[${i}].round[${j}] 형식 오류 — 건너뜀`);
         return;
       }
       rounds.push({
         prompt: rd.prompt,
-        warm: rd.warm,
-        cold: rd.cold,
+        choices: rd.choices.slice(),
+        answer: rd.answer,
         feedback: typeof rd.feedback === "string" ? rd.feedback : "",
       });
     });
@@ -55,11 +60,11 @@ export function parseStage2Data(
   return { npcs, warnings };
 }
 
-// 감정 상태 머신. warm(따듯한 말)이면 감정 +1단계·다음 라운드, cold(차가운 말)이면 제자리.
+// 감정 상태 머신. 정답 선택지를 고르면 감정 +1단계·다음 라운드, 오답이면 제자리(재시도).
 // level = 진행한 라운드 수(0..3). round가 rounds.length에 도달하면 그 NPC는 완료(lv3).
 export function createNpcGame(npcs: NpcDef[]): {
   currentRound(id: number): NpcRound | null;
-  choose(id: number, warm: boolean): { accepted: boolean; level: number; npcDone: boolean; allDone: boolean; feedback: string };
+  choose(id: number, choiceIndex: number): { accepted: boolean; level: number; npcDone: boolean; allDone: boolean; feedback: string };
   levelOf(id: number): number;
   isDone(id: number): boolean;
   allDone(): boolean;
@@ -84,18 +89,18 @@ export function createNpcGame(npcs: NpcDef[]): {
   function levelOf(id: number): number {
     return cap3(round.get(id) ?? 0);
   }
-  function choose(id: number, warm: boolean): { accepted: boolean; level: number; npcDone: boolean; allDone: boolean; feedback: string } {
+  function choose(id: number, choiceIndex: number): { accepted: boolean; level: number; npcDone: boolean; allDone: boolean; feedback: string } {
     const n = byId.get(id);
     if (!n || isDone(id)) {
       return { accepted: false, level: cap3(round.get(id) ?? 0), npcDone: isDone(id), allDone: allDone(), feedback: "" };
     }
     const cur = round.get(id) ?? 0;
-    if (!warm) {
-      return { accepted: false, level: cap3(cur), npcDone: false, allDone: allDone(), feedback: COLD_FEEDBACK };
+    const rd = n.rounds[cur]!;
+    if (choiceIndex !== rd.answer) {
+      return { accepted: false, level: cap3(cur), npcDone: false, allDone: allDone(), feedback: WRONG_FEEDBACK };
     }
-    const passed = n.rounds[cur]!;
     round.set(id, cur + 1);
-    return { accepted: true, level: cap3(cur + 1), npcDone: isDone(id), allDone: allDone(), feedback: passed.feedback };
+    return { accepted: true, level: cap3(cur + 1), npcDone: isDone(id), allDone: allDone(), feedback: rd.feedback };
   }
 
   return { currentRound, choose, levelOf, isDone, allDone };

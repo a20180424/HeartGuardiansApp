@@ -102,13 +102,13 @@ export function showInfo(
   return ov;
 }
 
-// NPC 대화 팝업: 고민 문장 + 선택지 버튼 N개(중립 스타일). buttons 순서는 호출부에서
-// 섞어 넘겨 정답 위치가 노출되지 않게 한다. onChoose(warm)은 정확히 한 번 호출된다.
+// NPC 대화 팝업: 고민 문장 + 선택지 버튼 N개(중립 스타일). 선택하면 그 인덱스를
+// onChoose로 넘긴다(정답 판정은 호출부). onChoose는 정확히 한 번 호출된다.
 export function showDialogue(
   parent: HTMLElement,
   prompt: string,
-  buttons: { label: string; warm: boolean }[],
-  onChoose: (warm: boolean) => void,
+  choices: string[],
+  onChoose: (index: number) => void,
   badgeEmoji: string = '🐰',
 ): HTMLElement {
   const { ov, card } = makeOverlay(badgeEmoji);
@@ -120,19 +120,19 @@ export function showDialogue(
   row.className = 'popup-buttons dialogue';
 
   let done = false;
-  const finish = (warm: boolean): void => {
+  const finish = (index: number): void => {
     if (done) return;
     done = true;
     ov.remove();
-    onChoose(warm);
+    onChoose(index);
   };
-  for (const b of buttons) {
+  choices.forEach((label, i) => {
     const btn = document.createElement('button');
     btn.className = 'popup-btn dialogue';
-    btn.textContent = b.label;
-    btn.addEventListener('click', () => finish(b.warm));
+    btn.textContent = label;
+    btn.addEventListener('click', () => finish(i));
     row.appendChild(btn);
-  }
+  });
   card.append(msg, row);
   parent.appendChild(ov);
   return ov;
