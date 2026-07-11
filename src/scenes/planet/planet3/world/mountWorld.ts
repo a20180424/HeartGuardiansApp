@@ -176,10 +176,24 @@ export function mountWorld(
   // worldbuild.ts. yaw starts at 0 (looking -Z), which points toward the center.
   const START_HEX = { q: 0, r: 7 };
 
+  // 씬 리소스 정리 (geometry + material 모두). dispose()와, StrictMode 이중 마운트로
+  // buildTerrain/stages.start 도중 dispose가 먼저 호출된 bail 분기 양쪽에서 재사용된다.
+  function disposeSceneResources(): void {
+    scene.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (mesh.geometry) mesh.geometry.dispose();
+      const mat = mesh.material;
+      if (mat) (Array.isArray(mat) ? mat : [mat]).forEach((m) => m.dispose());
+    });
+  }
+
   (async () => {
     try {
       const world = await buildTerrain(scene, loader, { radius: RADIUS, size: SIZE });
-      if (disposed) return;
+      if (disposed) {
+        disposeSceneResources();
+        return;
+      }
 
       // Snow spreads a fixed distance around the player (independent of world size)
       // so density stays constant as the map grows; it re-centers on the camera below.
@@ -224,7 +238,10 @@ export function mountWorld(
         onComplete,
       });
       await stages.start();
-      if (disposed) return;
+      if (disposed) {
+        disposeSceneResources();
+        return;
+      }
 
       // Full animation loop now that the world exists.
       const clock = new THREE.Clock();
@@ -259,13 +276,7 @@ export function mountWorld(
     window.removeEventListener('keyup', onKeyUp);
     window.removeEventListener('blur', onBlur);
     window.removeEventListener('contextmenu', onContextMenu);
-    // 씬 리소스 정리 (geometry + material 모두)
-    scene.traverse((o) => {
-      const mesh = o as THREE.Mesh;
-      if (mesh.geometry) mesh.geometry.dispose();
-      const mat = mesh.material;
-      if (mat) (Array.isArray(mat) ? mat : [mat]).forEach((m) => m.dispose());
-    });
+    disposeSceneResources();
     renderer.dispose();
     container.replaceChildren(); // canvas·UI DOM 제거
   };
