@@ -10,7 +10,7 @@ import type { NpcDef } from './npcgame';
 const CLIPS = ['lv0', 'lv1', 'lv2', 'lv3'];
 const FADE = 1.2;             // 감정 전환 crossfade(초) — 레퍼런스와 동일
 const TARGET_HEIGHT = 2.4;    // NPC 키(월드 단위) — bbox 높이 기준 정규화
-const FACE_OFFSET = Math.PI;  // 정면이 카메라를 향하게 하는 Y축 보정(브라우저로 튜닝)
+const FACE_OFFSET = 0;         // 정면이 카메라를 향하게 하는 Y축 보정(모델 정면 기준)
 
 const NPC_URLS = [MODEL_URLS.npc1, MODEL_URLS.npc2, MODEL_URLS.npc3];
 
