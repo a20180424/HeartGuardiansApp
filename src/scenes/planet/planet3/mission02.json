@@ -1,6 +1,6 @@
 {
   "id": "mission02",
-  "title": "(임시) 미션 2",
+  "title": "공감 송신기 연료 채우기",
   "start": "p3_m2_intro",
   "nodes": [
     {
@@ -9,80 +9,14 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "(임시) 미션2 인트로 대사입니다.",
-      "next": "p3_m2_brief1"
-    },
-    {
-      "id": "p3_m2_brief1",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 설명 대사 1입니다.",
-      "next": "p3_m2_brief2"
-    },
-    {
-      "id": "p3_m2_brief2",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 설명 대사 2입니다.",
-      "next": "p3_m2_preplay1"
-    },
-    {
-      "id": "p3_m2_preplay1",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 미니게임 준비 대사 1입니다.",
-      "next": "p3_m2_preplay2"
-    },
-    {
-      "id": "p3_m2_preplay2",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 미니게임 준비 대사 2입니다.",
+      "text": "공감 송신기를 켜려면 에너지가 필요해. 얼음 숲을 돌아다니며 '따듯한 말'을 모아 연료를 채워보자!",
       "next": "p3_m2_play"
     },
     {
       "id": "p3_m2_play",
       "type": "minigame",
       "noAuto": true,
-      "game": "placeholder",
-      "next": "p3_m2_complete"
-    },
-    {
-      "id": "p3_m2_complete",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 완료 반응 대사입니다.",
-      "next": "p3_m2_outro"
-    },
-    {
-      "id": "p3_m2_outro",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 마무리 대사입니다.",
-      "next": "p3_m2_cards"
-    },
-    {
-      "id": "p3_m2_cards",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "noAuto": true,
-      "text": "(임시) 미션2 공감 카드 대사입니다.",
-      "cards": [
-        { "image": "/assets/ui/empathy_card.png", "top": "(임시) 카드 문구 1", "bottom": "(임시) 카드 설명입니다." }
-      ],
+      "game": "empathyFuel",
       "next": "p3_m2_end"
     },
     {
@@ -91,7 +25,7 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "(임시) 미션2 완료!",
+      "text": "충전 완료! 공감 송신기가 다시 따뜻하게 빛나기 시작했어. 정말 잘했어!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null

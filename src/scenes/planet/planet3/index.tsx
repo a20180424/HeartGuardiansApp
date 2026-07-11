@@ -4,6 +4,7 @@ import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import PlaceholderGameStage from "./PlaceholderGameStage";
 import EmpathyManualGame from "./EmpathyManualGame";
+import EmpathyFuelGame from "./EmpathyFuelGame";
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -84,9 +85,8 @@ export default function Planet3() {
           steps={MISSION_STEPS}
           scopeClass="planet3"
           games={{
-            placeholder: ({ onDone }) => (
-              <PlaceholderGameStage onDone={onDone} label="미션2 미니게임 (임시)" />
-            ),
+            // 미션2 미니게임 — 3D 얼음 숲에서 따듯한 말로 공감 송신기 연료 채우기.
+            empathyFuel: ({ onDone }) => <EmpathyFuelGame onDone={onDone} />,
           }}
           onExit={() => goTo("mission3")}
         />
