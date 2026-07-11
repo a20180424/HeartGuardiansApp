@@ -126,7 +126,7 @@ export function mountWorld(
   function makeOverlay(text: string): HTMLDivElement {
     const el = document.createElement('div');
     el.style.cssText =
-      'position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;' +
+      'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;' +
       'justify-content:center;gap:16px;color:#fff;font-family:system-ui,sans-serif;' +
       'font-size:22px;text-align:center;padding:24px;z-index:10;' +
       'background:rgba(20,30,45,0.35);';
@@ -183,7 +183,10 @@ export function mountWorld(
       const mesh = o as THREE.Mesh;
       if (mesh.geometry) mesh.geometry.dispose();
       const mat = mesh.material;
-      if (mat) (Array.isArray(mat) ? mat : [mat]).forEach((m) => m.dispose());
+      if (mat) (Array.isArray(mat) ? mat : [mat]).forEach((m) => {
+        Object.values(m).forEach((v) => { if (v && (v as THREE.Texture).isTexture) (v as THREE.Texture).dispose(); });
+        m.dispose();
+      });
     });
   }
 

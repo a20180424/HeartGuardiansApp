@@ -1,6 +1,6 @@
 {
   "id": "mission02",
-  "title": "(임시) 미션 2",
+  "title": "공감 송신기 연료 채우기",
   "start": "p3_m2_intro",
   "nodes": [
     {
