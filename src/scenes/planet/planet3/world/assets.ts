@@ -11,9 +11,9 @@ import snowRock02 from "/assets/planet3/world/models/snow-rock-02.glb?url";
 import edgeRock from "/assets/planet3/world/models/snow-rock-cluster-03.glb?url";
 import monument from "/assets/planet3/world/models/stone-monument-01-lit.glb?url";
 import bubble from "/assets/planet3/world/models/speech-bubble.glb?url";
-import npc1 from "/assets/planet3/world/models/npc-01.glb?url";
-import npc2 from "/assets/planet3/world/models/npc-02.glb?url";
-import npc3 from "/assets/planet3/world/models/npc-03.glb?url";
+import npc1 from "/assets/planet3/world/models/NPCs/npcA1.glb?url";
+import npc2 from "/assets/planet3/world/models/NPCs/npcB2.glb?url";
+import npc3 from "/assets/planet3/world/models/NPCs/npcC3.glb?url";
 import stage1 from "./stage1-sentences.json";
 import stage2 from "./stage2-npcs.json";
 
