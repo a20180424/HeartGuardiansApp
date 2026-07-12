@@ -47,6 +47,8 @@ export interface MissionNode {
   lesson?: { title: string; sub: string };
   // 화면 우측 가운데에 띄우는 장식 이미지 경로(세로 80% 크기). 지정한 노드에서만 표시.
   sideImage?: string;
+  // 화면 좌측 가운데에 띄우는 장식 이미지 경로(세로 90% 크기). 지정한 노드에서만 표시.
+  sideImageLeft?: string;
   // type: "minigame" 전용 — 렌더할 게임 식별자(games 맵의 키). 예: "emotionGuide".
   game?: string;
   next?: string | null;
@@ -136,6 +138,10 @@ export interface MissionTheme {
   // 인트로 타이틀 배너를 띄울 노드 id. 빈 문자열이면 이 미션에선 배너를 띄우지 않는다
   // (미션2처럼 미니게임으로 바로 시작하는 경우).
   bannerNode: string;
+  // 전신 하티(#hatiFull)+인트로 말풍선(#hatiBubble)을 추가로 켤 노드 id 목록.
+  // bannerNode 는 자동 포함되며, 여기 등록한 노드는 "타이틀 배너 없이" 전신 하티만 쓴다.
+  // (지정 안 하면 bannerNode 외 하티 라인은 하단 가이드 박스 #hatiBox 를 쓴다.)
+  fullHatiNodes?: string[];
   drag?: { node: string };
   bg: { states: Record<string, string>; initial: string; byNode: Record<string, string> };
   hatiSprites: SpriteSet;

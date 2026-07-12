@@ -63,11 +63,11 @@ describe("planet2 mission skeletons", () => {
   );
 
   it.each(["mission01", "mission02", "mission03"])(
-    "%s: 노드 id 가 p4m 접두어를 쓰고 start 노드가 존재한다",
+    "%s: 노드 id 가 p4_m 접두어를 쓰고 start 노드가 존재한다",
     (id) => {
       const data = MISSIONS[id];
       expect(data.nodes.some((n) => n.id === data.start)).toBe(true);
-      expect(data.nodes.every((n) => n.id.startsWith("p4m"))).toBe(true);
+      expect(data.nodes.every((n) => n.id.startsWith("p4_m"))).toBe(true);
     },
   );
 });

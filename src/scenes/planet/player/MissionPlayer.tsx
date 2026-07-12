@@ -30,7 +30,8 @@ interface VM {
   mode: "idle" | "typing" | "await" | "choices" | "end";
   bubbleKind: "none" | "hatiBox" | "hatiBubble" | "friendBubble";
   text: string;
-  intro: boolean;
+  intro: boolean; // 타이틀 배너 표시(= bannerNode 노드에서만). 인트로 오디오·루미 숨김도 여기 묶임
+  fullHati: boolean; // 전신 하티(#hatiFull) 표시. bannerNode ∪ fullHatiNodes 에서 켬(타이틀 배너와 분리)
   choices: Choice[];
   choicePrompt: string; // 선택지 카드 위 안내 문구(없으면 "")
   exploredSet: Set<number> | null;
@@ -48,6 +49,7 @@ interface VM {
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
+  sideImageLeft: string; // 좌측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
   stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
   cards: { image: string; top?: string; bottom?: string }[]; // 가운데 가로 카드들(node.cards)
@@ -167,6 +169,7 @@ export default function MissionPlayer(props: {
     bubbleKind: "none",
     text: "",
     intro: false,
+    fullHati: false,
     choices: [],
     choicePrompt: "",
     exploredSet: null,
@@ -184,6 +187,7 @@ export default function MissionPlayer(props: {
     hideFriend: false,
     lesson: null,
     sideImage: "",
+    sideImageLeft: "",
     choiceImage: "",
     stackImages: [],
     cards: [],
@@ -343,12 +347,15 @@ export default function MissionPlayer(props: {
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
       vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
       vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
+      vm.sideImageLeft = node.sideImageLeft || ""; // 좌측 장식 이미지(지정 노드에서만)
       vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
       vm.stackImages = node.images || []; // 화면 가운데 세로 스택 이미지들(node.images)
       vm.cards = node.cards || []; // 화면 가운데 가로 카드들(node.cards)
       vm.mirrorImage = node.mirrorImage || ""; // 우측 하단 공감 거울(node.mirrorImage)
       vm.completeBanner = node.completeBanner || ""; // 가운데 완료 배너(node.completeBanner)
-      vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
+      vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너 표시 + 인트로 오디오, 루미 숨김
+      // 전신 하티: bannerNode(인트로) ∪ theme.fullHatiNodes(추가 지정 노드). 타이틀 배너와는 분리.
+      vm.fullHati = vm.intro || !!theme.fullHatiNodes?.includes(node.id);
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
       if (s) audio.play(s);
@@ -437,6 +444,7 @@ export default function MissionPlayer(props: {
           bubbleKind: "none",
           text: "",
           intro: false,
+          fullHati: false,
           choices: [],
           choicePrompt: "",
           exploredSet: null,
@@ -454,6 +462,7 @@ export default function MissionPlayer(props: {
           hideFriend: false,
           lesson: null,
           sideImage: "",
+          sideImageLeft: "",
           choiceImage: "",
           stackImages: [],
           cards: [],
@@ -519,7 +528,8 @@ export default function MissionPlayer(props: {
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
           vm.lesson = node.lesson || null; // 교훈 배너 노드면 배너를 띄우고 하티 박스는 숨긴다
           const isHati = node.speaker === "hati";
-          const introHati = isHati && node.id === theme.bannerNode;
+          // 전신 하티(#hatiFull) 노드면 인트로 말풍선(#hatiBubble), 아니면 하단 박스(#hatiBox).
+          const introHati = isHati && vm.fullHati;
           vm.bubbleKind = node.lesson
             ? "none"
             : introHati
@@ -1176,7 +1186,7 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 인트로 전신 하티 */}
-        <img id="hatiFull" className={vm.intro ? "show" : ""} src={HATI_FULL} alt="하티" />
+        <img id="hatiFull" className={vm.fullHati ? "show" : ""} src={HATI_FULL} alt="하티" />
 
         {/* 인트로 하티 말풍선 */}
         <div id="hatiBubble" className={`bubble${vm.bubbleKind === "hatiBubble" ? " show" : ""}`}>
@@ -1188,7 +1198,7 @@ export default function MissionPlayer(props: {
         <div
           id="friendWrap"
           ref={friendWrapRef}
-          className={`${vm.intro || vm.stage !== "none" || vm.hideFriend ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+          className={`${vm.fullHati || vm.stage !== "none" || vm.hideFriend ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
         >
           <img
             id="friend"
@@ -1432,6 +1442,18 @@ export default function MissionPlayer(props: {
           <img
             id="sideImage"
             src={vm.sideImage}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        )}
+
+        {/* 좌측 가운데 장식 이미지(노드 sideImageLeft) */}
+        {vm.sideImageLeft && (
+          <img
+            id="sideImageLeft"
+            src={vm.sideImageLeft}
             alt=""
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";

@@ -1,0 +1,96 @@
+/* Planet4(그림자 행성) 미션1 전용 미세조정 노브.
+   #viewport 에 붙는 .p4_m1 스코프로 공유 player/mission.css 를 "미션1에서만" 덮어쓴다.
+   → 여기서 바꾼 값은 행성4 미션1 에만 적용되고, 행성4 미션2·3 이나 다른 행성엔 영향 없다.
+   (scopeClass="p4_m1" 은 index.tsx 의 mission1 MissionPlayer 에만 넘긴다.)
+
+   각 블록의 값은 base(player/mission.css)의 기본값을 "시드"로 넣어두었다.
+   → 지금은 base 와 같아 화면 변화가 없다. 아래 숫자만 바꾸면 미세조정된다. */
+
+/* ─────────────────────────────────────────────────────────────
+   1) 왼쪽 "공감 도구 전시장" 이미지 (#sideImageLeft)
+      base: left:40px; top:50%; transform:translateY(-50%); height:92%
+      - 좌우 이동:  left
+      - 상하 이동:  top  (또는 translateY 의 -50% 를 조절)
+      - 크기:       height  (width 는 auto 로 비율 유지)
+      특이도: .p4_m1 #sideImageLeft (1,1,0) 가 base #sideImageLeft (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m1 #sideImageLeft {
+  left: 1150px;
+  top: 55%;
+  transform: translateY(-50%);
+  height: 75%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2) 가운데 위 타이틀 블록 (#titleBanner = 미션1 + 가디언즈 최종 점검 + 골격 리본)
+      base: top:90px; left:712px; width:700px
+      - 블록 전체 이동/폭:  아래 #titleBanner 의 top / left / width
+      특이도: .p4_m1 #titleBanner (1,1,0) 가 base #titleBanner (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m1 #titleBanner {
+  top: 200px;
+  left: 250px;
+  width: 700px;
+}
+
+/* 타이틀 구성요소별 글자 크기까지 조절하려면 아래 주석을 켠다(base 값 시드).
+   특이도: .p4_m1 .tb-pill/.tb-title/.tb-ribbon (0,2,0) 가 base (0,1,0) 를 이긴다. */
+/*
+.p4_m1 .tb-pill   { font-size: 31px; }   |* 상단 "미션 1" 알약 *|
+.p4_m1 .tb-title  { font-size: 78px; }   |* "가디언즈 최종 점검" *|
+.p4_m1 .tb-ribbon { font-size: 30px; }   |* "그림자 행성 미션 1 골격" 리본 *|
+*/
+.p4_m1 .tb-ribbon { width: 1000px; font-size: 30px; }
+
+/* ─────────────────────────────────────────────────────────────
+   3) 인트로 전신 하티 (#hatiFull)
+      base: left:510px; bottom:-18px; height:730px
+      - 좌우 이동:  left
+      - 상하 이동:  bottom  (값이 클수록 위로)
+      - 크기:       height  (width 는 auto 로 비율 유지)
+      특이도: .p4_m1 #hatiFull (1,1,0) 가 base #hatiFull (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m1 #hatiFull {
+  left: 0px;
+  bottom: -18px;
+  height: 730px;
+}
+
+/* 등장(fade-in 끝) 상태의 transform 까지 바꾸려면 아래 주석을 켠다(base 값 시드).
+   위치/크기만 조정할 거면 건드릴 필요 없다. */
+/*
+.p4_m1 #hatiFull.show { transform: translateY(0) scale(1); }
+*/
+
+/* ─────────────────────────────────────────────────────────────
+   4) 인트로 하티 말풍선 (#hatiBubble)
+      base: left:1030px; bottom:452px; max-width:600px
+      - 좌우 이동:  left
+      - 상하 이동:  bottom  (값이 클수록 위로)
+      - 폭:         max-width
+      특이도: .p4_m1 #hatiBubble (1,1,0) 가 base #hatiBubble (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m1 #hatiBubble {
+  left: 570px;
+  bottom: 370px;
+  max-width: 600px;
+}
+
+/* 말풍선 꼬리(::after) 위치를 바꾸려면 아래 주석을 켠다.
+   base 는 left:60px; bottom:-22px 로 왼쪽 아래를 가리킨다. */
+/*
+.p4_m1 #hatiBubble::after { left: 60px; bottom: -22px; }
+*/
+
+/* ─────────────────────────────────────────────────────────────
+   5) 배경 이미지 좌우 반전 (#bg = shadow-spaceship-bg.png)
+      scaleX(-1) 로 좌우 뒤집는다. 되돌리려면 이 블록을 지우거나 주석 처리.
+      특이도: .p4_m1 #bg (1,1,0) 가 base #bg (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m1 #bg {
+  transform: scaleX(-1);
+}
+
+.p4_m1 #stage.bright #lightOverlay {
+  opacity: 0;
+}

@@ -50,12 +50,14 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 1", title: "가디언즈 최종 점검", ribbon: "그림자 행성 미션 1 골격" },
-  bannerNode: "p4m1_intro",
+  banner: { pill: "미션 1", title: "가디언즈 최종 점검", ribbon: "지금까지의 공감 여정을 돌아보고, 마지막 시험을 통과하라!" },
+  bannerNode: "p4_m1_intro",
+  // 미션1 전 구간 하티를 전신 하티로 통일(play 는 미니게임이라 하티 없음). 타이틀 배너는 인트로만.
+  fullHatiNodes: ["p4_m1_postplay", "p4_m1_end"],
   bg: {
-    states: { main: `${A}/bg/light-planet-stage1-bg.png` },
+    states: { main: `${A}/planet4/shadow-spaceship-bg.png` },
     initial: "main",
-    byNode: { p4m1_intro: "main" },
+    byNode: { p4_m1_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
@@ -71,11 +73,11 @@ export const MISSION01_THEME: MissionTheme = {
 export const MISSION02_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 2", title: "공감 나침반 작전", ribbon: "그림자 행성 미션 2 골격" },
-  bannerNode: "p4m2_intro",
+  bannerNode: "p4_m2_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
     initial: "main",
-    byNode: { p4m2_intro: "main" },
+    byNode: { p4_m2_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
@@ -91,11 +93,11 @@ export const MISSION02_THEME: MissionTheme = {
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 3", title: "마지막 공감 연결하기", ribbon: "그림자 행성 미션 3 골격" },
-  bannerNode: "p4m3_intro",
+  bannerNode: "p4_m3_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
     initial: "main",
-    byNode: { p4m3_intro: "main" },
+    byNode: { p4_m3_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },

@@ -1,22 +1,42 @@
 {
   "id": "mission01",
   "title": "(임시) 미션 1",
-  "start": "p4m1_intro",
+  "start": "p4_m1_intro",
   "nodes": [
     {
-      "id": "p4m1_intro",
+      "id": "p4_m1_intro",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "(임시) 미션1 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
-      "next": "p4m1_end"
+      "sideImageLeft": "/assets/planet4/empathy-showroom.png",
+      "noAuto": true,
+      "text": "축하해!\n지금까지 네 개의 공감 도구를 모두 획득했어.\n하지만 마지막 공감 도구는…\n최종 점검에 통과한 가디언에게만 주어져",
+      "next": "p4_m1_play"
     },
     {
-      "id": "p4m1_end",
+      "id": "p4_m1_play",
+      "type": "minigame",
+      "game": "empathyCompass",
+      "next": "p4_m1_postplay"
+    },
+    {
+      "id": "p4_m1_postplay",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "(임시) 미션1 완료!",
+      "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
+      "noAuto": true,
+      "text": "공감 나침반은 특별한 힘을 가지고 있어.\n하지만 기억해! 이 나침반은 혼자서는 움직이지 않아.\n대원이 용기를 내어 첫 걸음을 내디딜 때만 빛을 낸다구.",
+      "next": "p4_m1_end"
+    },
+    {
+      "id": "p4_m1_end",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
+      "noAuto": true,
+      "text": "이제 그림자 행성으로 첫 걸음을 내디뎌 보자!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null

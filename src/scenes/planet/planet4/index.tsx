@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
+import PlaceholderGameStage from "../planet3/PlaceholderGameStage"; // 미션1 미니게임 자리 임시(추후 실제 게임으로 교체)
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -13,6 +14,7 @@ import {
   MISSION_STEPS,
 } from "./theme";
 import "../planet1/Planet1.css"; // 공용 subscene 페이드 오버레이(.planet-fade) 재사용
+import "./Mission.css"; // planet4 미션1 전용 미세조정 노브(.p4_m1 스코프)
 
 // Planet4(그림자 행성) 컨테이너. prologue → mission1 → mission2 → mission3 → home 상태 머신.
 // 각 미션은 현재 시작·끝 골격.
@@ -65,6 +67,17 @@ export default function Planet4() {
           theme={MISSION01_THEME}
           currentStep={1}
           steps={MISSION_STEPS}
+          scopeClass="p4_m1"
+          games={{
+            // 미션1 미니게임 자리 — 실제 게임 완성 전까지 "다음" 버튼만 있는 임시 팝업.
+            empathyCompass: ({ onDone }) => (
+              <PlaceholderGameStage onDone={onDone} label="공감 나침반 미니게임 (임시)" />
+            ),
+          }}
+          finish={{
+            label: "그림자 행성으로 이동",
+            image: "/assets/planet4/shadow-planet-move-banner.png",
+          }}
           onExit={() => goTo("mission2")}
         />
       )}
