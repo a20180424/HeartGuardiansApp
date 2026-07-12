@@ -127,7 +127,7 @@
   box-shadow: 0 12px 30px #0008;
 }
 .ec-panel-heading {
-  margin: -20px -55px 14px;
+  margin: -20px -55px 22px; /* 헤더↔본문 간격 ↑ */
   padding: 13px 35px 12px;
   border-radius: 31px 31px 0 0;
   background: linear-gradient(100deg, #4a126c, #79289e 55%, #3a115f);
@@ -162,18 +162,19 @@
   font-weight: 800;
 }
 .ec-tool-name {
-  margin: 11px 0 3px;
+  margin: 22px 0 4px; /* chip↔도구명 간격 ↑ */
   color: #3e1162;
   font-size: 29px;
 }
 .ec-keyword {
+  margin-top: 4px;
   color: #e48300;
   font-size: 17px;
   font-weight: 900;
 }
 .ec-question {
   height: 125px;
-  margin-top: 12px;
+  margin-top: 26px; /* 키워드↔문항 간격 ↑ */
   padding: 22px 38px;
   border-radius: 24px;
   background: #fff;
@@ -190,15 +191,19 @@
   display: flex;
   justify-content: center;
   gap: 38px;
-  margin-top: 16px;
+  margin-top: 30px; /* 문항↔버튼 간격 ↑ */
 }
 .ec-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   width: 220px;
   height: 68px;
   border: 0;
   border-radius: 22px;
   color: #fff;
-  font-size: 21px;
+  font-size: 23px; /* 본문(문항)과 동일 크기 */
   font-weight: 900;
   cursor: pointer;
   transition: 0.18s;
@@ -215,8 +220,11 @@
   box-shadow: 0 6px #94151c;
 }
 .ec-choice span {
-  font-size: 31px;
-  margin-right: 8px;
+  font-size: 24px; /* 라벨과 비슷하게(이모지 ⭕/❌) */
+  line-height: 1;
+  /* 흰색 헤일로 — 빨강 ❌가 빨간 버튼에 묻히지 않게 버튼색과 분리 */
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
 }
 .ec-choice:disabled {
   filter: grayscale(0.3);
@@ -245,6 +253,7 @@
   width: 92px;
   height: 92px;
   object-fit: contain;
+  margin-left: -35px;
   margin-right: 24px;
   transform: scale(1.18);
   filter: drop-shadow(0 4px 5px #000);

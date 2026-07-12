@@ -112,14 +112,14 @@ export default function EmpathyCompassStage({ onDone }: { onDone: () => void }) 
               disabled={locked}
               onClick={() => choose("o")}
             >
-              <span>O</span>잘하고 있어요
+              <span>⭕</span>잘하고 있어요
             </button>
             <button
               className="ec-choice x"
               disabled={locked}
               onClick={() => choose("x")}
             >
-              <span>×</span> 노력할게요
+              <span>❌</span>노력할게요
             </button>
           </div>
         </div>
