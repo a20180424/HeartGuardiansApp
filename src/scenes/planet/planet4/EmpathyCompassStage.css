@@ -54,11 +54,11 @@
 /* ── 좌: 공감 도구 스텝 ─────────────────────────── */
 .ec-tool-steps {
   position: absolute;
-  left: 36px;
-  top: 140px;
-  width: 245px;
-  bottom: 38px;
-  padding: 18px 14px;
+  left: 16px;
+  top: 22px; /* 상단 빈 공간 회수(원래 140 → 위로) */
+  width: 385px; /* 245 → ~1.5배 */
+  bottom: 22px;
+  padding: 18px 16px;
   border: 2px solid #7a3dbe;
   border-radius: 28px;
   background: #0d0818d9;
@@ -66,32 +66,32 @@
 }
 .ec-tool-step {
   position: relative;
-  height: 115px;
-  margin-bottom: 7px;
-  padding: 12px 8px 8px 88px;
+  height: 136px; /* 이미지 확대분 수용(115 → 136), 5칸이 세로에 맞도록 */
+  margin-bottom: 8px;
+  padding: 14px 10px 10px 122px; /* 좌: 커진 이미지 폭만큼 확보 */
   border: 1px solid #63407c;
-  border-radius: 18px;
+  border-radius: 20px;
   background: #1d102b;
   color: #9f95a9;
   transition: 0.35s;
 }
 .ec-tool-step img {
   position: absolute;
-  left: 7px;
-  top: 9px;
-  width: 75px;
-  height: 92px;
+  left: 10px;
+  top: 6px;
+  width: 104px; /* 75 → ~1.4배 (object-fit:contain 이라 비율 유지) */
+  height: 124px;
   object-fit: contain;
   filter: grayscale(1) brightness(0.5);
 }
 .ec-tool-step strong {
   display: block;
-  margin-top: 20px;
-  font-size: 16px;
+  margin-top: 22px;
+  font-size: 24px; /* 16 → 1.5배 */
   color: inherit;
 }
 .ec-tool-step small {
-  font-size: 13px;
+  font-size: 20px; /* 13 → ~1.5배 */
 }
 .ec-tool-step.active {
   border-color: #ffe148;
@@ -115,9 +115,9 @@
 /* ── 우: 점검 문항 패널 ─────────────────────────── */
 .ec-quiz-panel {
   position: absolute;
-  left: 315px;
+  left: 437px; /* 넓어진 좌측 패널만큼 오른쪽으로 */
   top: 145px;
-  width: 930px;
+  width: 806px; /* 930 → 축소(좌측 확대분 흡수) */
   height: 530px;
   padding: 20px 55px;
   border: 3px solid #8e54c3;
@@ -227,9 +227,9 @@
 /* ── 하단: 하티 피드백 ─────────────────────────── */
 .ec-feedback {
   position: absolute;
-  left: 315px;
+  left: 437px; /* quiz-panel 과 정렬(좌측 패널 확대로 겹침 방지) */
   top: 685px;
-  width: 930px;
+  width: 806px;
   height: 92px;
   border: 3px solid #f1d47b;
   border-radius: 28px;
