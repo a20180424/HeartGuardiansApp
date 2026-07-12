@@ -7,21 +7,45 @@
   position: absolute;
   inset: 0;
   z-index: 100;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: inherit;
   color: #fff;
-  /* 원본 game 배경(우주선) 위에 checkScreen 그라데이션을 얹은 것과 동일 */
-  background: linear-gradient(#08031a88, #16052caa),
-    #09031b url("/assets/planet4/shadow-spaceship-bg.png") center / 100% 100% no-repeat;
+  background: rgba(0, 0, 0, 0.55); /* placeholder 팝업처럼 나머지 화면 dim */
 }
+
+/* 팝업 창 — 그림자 행성 톤(보라+골드). 미니게임을 이 안에서 실행.
+   창(1632×1020)과 게임(1280×800)의 비율이 1.6:1로 같아 왜곡 없이 채운다.
+   ⚠️ 현재는 .ec-frame(우주선 배경)이 창을 꽉 채워 아래 background 는 가려져 있다.
+   레이아웃 단계에서 게임을 줄이면 이 배경이 드러난다. */
+.ec-window {
+  position: relative;
+  width: 1632px;
+  height: 1020px;
+  border: 3px solid #b083e6; /* 보라 안쪽 테두리(게임 패널 보라와 조화) */
+  border-radius: 30px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1b0c36, #0b0420); /* 노출 시 다크 바이올렛 */
+  box-shadow:
+    0 0 0 5px #5b2f92, /* 보라 외곽 굵은 링 */
+    0 0 0 8px #e4bd40, /* 골드 얇은 액센트 링 */
+    0 26px 64px rgba(0, 0, 0, 0.7), /* 드롭 섀도 */
+    0 0 48px rgba(150, 54, 255, 0.5); /* 보라 글로우 */
+}
+
+/* 게임 좌표계(원본 1280×800). 창을 꽉 채우도록 스케일(1632/1280 = 1020/800 = 1.275).
+   ⚠️ --ec-scale 는 창 안에서 게임 크기 조정용 노브(레이아웃 재조정 시 여기부터). */
 .ec-frame {
+  --ec-scale: 1.275;
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
   width: 1280px;
   height: 800px;
-  transform: scale(1.5);
-  transform-origin: top left;
+  transform: translate(-50%, -50%) scale(var(--ec-scale));
+  background: #09031b url("/assets/planet4/shadow-spaceship-bg.png") center / 100% 100%
+    no-repeat;
 }
 .ec-overlay button {
   font: inherit;

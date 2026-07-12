@@ -70,7 +70,9 @@ export default function EmpathyCompassStage({ onDone }: { onDone: () => void }) 
 
   return (
     <div className="ec-overlay" onClick={(e) => e.stopPropagation()}>
-      <div className="ec-frame">
+      {/* placeholder 팝업(planet3 .pgs-panel)을 계승한 황금 테두리 창. 미니게임은 이 안에서 실행. */}
+      <div className="ec-window">
+        <div className="ec-frame">
         {/* 좌: 공감 도구 스텝 */}
         <aside className="ec-tool-steps">
           {TOOLS.map((t, i) => (
@@ -183,6 +185,7 @@ export default function EmpathyCompassStage({ onDone }: { onDone: () => void }) 
             )}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
