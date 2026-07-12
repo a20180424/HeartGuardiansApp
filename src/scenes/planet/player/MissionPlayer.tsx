@@ -147,6 +147,21 @@ export default function MissionPlayer(props: {
   if (!audioRef.current) audioRef.current = new AudioManager();
   const audio = audioRef.current;
 
+  // 완료/나가기 버튼 더블탭 가드 — onExit이 미션당 한 번만 실행되게 한다.
+  // onExit은 completePlanet(서버 PUT) 후 화면 전환을 하는데, 그 await 동안 버튼이
+  // 활성인 채라 재탭하면 중복 저장·중복 전환이 날 수 있다. scenario가 바뀌면(=다음 미션)
+  // 가드를 풀어 다음 미션의 버튼은 다시 눌리게 한다.
+  const exitingRef = useRef(false);
+  useEffect(() => {
+    exitingRef.current = false;
+  }, [scenario]);
+  const handleExit = () => {
+    if (exitingRef.current) return;
+    exitingRef.current = true;
+    force(); // 버튼을 disabled 상태로 다시 그려 시각 피드백을 준다
+    props.onExit();
+  };
+
   const vm = useRef<VM>({
     mode: "idle",
     bubbleKind: "none",
@@ -1445,9 +1460,10 @@ export default function MissionPlayer(props: {
           <button
             id="nextBtn"
             className={props.finish?.image ? "img-only" : props.finish ? "ship" : ""}
+            disabled={exitingRef.current}
             onClick={(e) => {
               e.stopPropagation();
-              props.onExit();
+              handleExit();
             }}
           >
             {props.finish?.image ? (
@@ -1504,7 +1520,7 @@ export default function MissionPlayer(props: {
       >
         {vm.muted ? "🔇" : "🔊"}
       </button>
-      <button id="missionExit" className="btn ghost" onClick={props.onExit}>
+      <button id="missionExit" className="btn ghost" disabled={exitingRef.current} onClick={handleExit}>
         ← 홈
       </button>
     </div>

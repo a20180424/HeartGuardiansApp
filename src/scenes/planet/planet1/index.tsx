@@ -92,9 +92,9 @@ export default function Planet1() {
           theme={MISSION03_THEME}
           currentStep={3}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
-          onExit={async () => {
-            await completePlanet(1); // 행성1 완료 → 서버+세션에 progress 저장
-            nav("/home");
+          onExit={() => {
+            completePlanet(1); // 낙관적 로컬 갱신 + 백그라운드 저장(논블로킹)
+            nav("/home"); // 저장을 기다리지 않고 즉시 전환
           }}
         />
       )}
