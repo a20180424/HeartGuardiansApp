@@ -1,0 +1,383 @@
+/* 미션1 "가디언즈 최종 점검하기" 미니게임.
+   원본(mytemp/그림자행성 미션1 게임/index.html)의 #checkScreen 3요소 + 서약서·보상 카드를 이식.
+   #stage(1920×1200) 위 1280×800 프레임을 scale(1.5)로 정확히 채운다(1280*1.5=1920, 800*1.5=1200).
+   소스의 px 좌표를 그대로 재사용하려고 프레임 내부는 1280×800 좌표계를 유지한다. */
+
+.ec-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  font-family: inherit;
+  color: #fff;
+  /* 원본 game 배경(우주선) 위에 checkScreen 그라데이션을 얹은 것과 동일 */
+  background: linear-gradient(#08031a88, #16052caa),
+    #09031b url("/assets/planet4/shadow-spaceship-bg.png") center / 100% 100% no-repeat;
+}
+.ec-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1280px;
+  height: 800px;
+  transform: scale(1.5);
+  transform-origin: top left;
+}
+.ec-overlay button {
+  font: inherit;
+}
+
+/* ── 좌: 공감 도구 스텝 ─────────────────────────── */
+.ec-tool-steps {
+  position: absolute;
+  left: 36px;
+  top: 140px;
+  width: 245px;
+  bottom: 38px;
+  padding: 18px 14px;
+  border: 2px solid #7a3dbe;
+  border-radius: 28px;
+  background: #0d0818d9;
+  box-shadow: 0 0 22px #8224de88;
+}
+.ec-tool-step {
+  position: relative;
+  height: 115px;
+  margin-bottom: 7px;
+  padding: 12px 8px 8px 88px;
+  border: 1px solid #63407c;
+  border-radius: 18px;
+  background: #1d102b;
+  color: #9f95a9;
+  transition: 0.35s;
+}
+.ec-tool-step img {
+  position: absolute;
+  left: 7px;
+  top: 9px;
+  width: 75px;
+  height: 92px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.5);
+}
+.ec-tool-step strong {
+  display: block;
+  margin-top: 20px;
+  font-size: 16px;
+  color: inherit;
+}
+.ec-tool-step small {
+  font-size: 13px;
+}
+.ec-tool-step.active {
+  border-color: #ffe148;
+  background: #302044;
+  color: #fff;
+  box-shadow: 0 0 13px #ffd738;
+}
+.ec-tool-step.active img {
+  filter: none;
+}
+.ec-tool-step.done {
+  border-color: #73ff46;
+  color: #baff9e;
+  background: #13301a;
+}
+.ec-tool-step.done img {
+  filter: none;
+  animation: ecToolGlow 1.2s ease-in-out infinite alternate;
+}
+
+/* ── 우: 점검 문항 패널 ─────────────────────────── */
+.ec-quiz-panel {
+  position: absolute;
+  left: 315px;
+  top: 145px;
+  width: 930px;
+  height: 530px;
+  padding: 20px 55px;
+  border: 3px solid #8e54c3;
+  border-radius: 35px;
+  background: linear-gradient(145deg, #fdfaf5, #eee6dc);
+  color: #16131b;
+  box-shadow: 0 12px 30px #0008;
+}
+.ec-panel-heading {
+  margin: -20px -55px 14px;
+  padding: 13px 35px 12px;
+  border-radius: 31px 31px 0 0;
+  background: linear-gradient(100deg, #4a126c, #79289e 55%, #3a115f);
+  color: #fff;
+  text-align: center;
+  border-bottom: 3px solid #e4bd40;
+}
+.ec-panel-heading h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: -1px;
+}
+.ec-panel-heading p {
+  margin: 3px 0 0;
+  color: #ffe565;
+  font-size: 15px;
+  font-weight: 800;
+}
+.ec-step-chip {
+  display: inline-block;
+  padding: 7px 22px;
+  border-radius: 24px;
+  background: #157009;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+}
+.ec-counter {
+  float: right;
+  margin-top: 8px;
+  color: #635b6a;
+  font-weight: 800;
+}
+.ec-tool-name {
+  margin: 11px 0 3px;
+  color: #3e1162;
+  font-size: 29px;
+}
+.ec-keyword {
+  color: #e48300;
+  font-size: 17px;
+  font-weight: 900;
+}
+.ec-question {
+  height: 125px;
+  margin-top: 12px;
+  padding: 22px 38px;
+  border-radius: 24px;
+  background: #fff;
+  border: 2px solid #ded4e5;
+  display: flex;
+  align-items: center;
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 1.5;
+  word-break: keep-all;
+  box-shadow: inset 0 0 15px #ddd6;
+}
+.ec-choices {
+  display: flex;
+  justify-content: center;
+  gap: 38px;
+  margin-top: 16px;
+}
+.ec-choice {
+  width: 220px;
+  height: 68px;
+  border: 0;
+  border-radius: 22px;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.18s;
+}
+.ec-choice:hover:not(:disabled) {
+  transform: translateY(-4px) scale(1.03);
+}
+.ec-choice.o {
+  background: linear-gradient(#46c83e, #158611);
+  box-shadow: 0 6px #075c08;
+}
+.ec-choice.x {
+  background: linear-gradient(#ff7b73, #d92d35);
+  box-shadow: 0 6px #94151c;
+}
+.ec-choice span {
+  font-size: 31px;
+  margin-right: 8px;
+}
+.ec-choice:disabled {
+  filter: grayscale(0.3);
+  cursor: default;
+  transform: none;
+}
+
+/* ── 하단: 하티 피드백 ─────────────────────────── */
+.ec-feedback {
+  position: absolute;
+  left: 315px;
+  top: 685px;
+  width: 930px;
+  height: 92px;
+  border: 3px solid #f1d47b;
+  border-radius: 28px;
+  background: #171025ed;
+  display: flex;
+  align-items: center;
+  padding: 6px 32px;
+  font-size: 27px;
+  font-weight: 900;
+  box-shadow: 0 0 17px #f1d47b55;
+}
+.ec-feedback img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  margin-right: 24px;
+  transform: scale(1.18);
+  filter: drop-shadow(0 4px 5px #000);
+  transition: 0.25s;
+}
+.ec-feedback img.clapping {
+  transform: scale(1.32);
+  filter: drop-shadow(0 0 10px #59dfff);
+  animation: ecClapPop 0.45s ease-out;
+}
+.ec-feedback-text.good {
+  color: #8cff68;
+}
+.ec-feedback-text.try {
+  color: #ffcf63;
+}
+
+/* ── 서약서 → 나침반 보상 카드 ─────────────────── */
+.ec-promise {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: #070311dc;
+}
+.ec-promise-card {
+  position: relative;
+  width: 960px;
+  height: 640px;
+  background: transparent center / 100% 100% no-repeat;
+  color: #23162b;
+  text-align: center;
+  filter: drop-shadow(0 0 28px #9e49e8);
+}
+.ec-promise-actions {
+  position: absolute;
+  left: 50%;
+  bottom: 100px;
+  width: 590px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 14px 23px;
+  border: 2px solid #c18a2b;
+  border-radius: 32px;
+  background: #fff5dfd9;
+  box-shadow: 0 5px 14px #5c301455;
+}
+.ec-promise-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 19px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ec-promise-check input {
+  width: 25px;
+  height: 25px;
+  accent-color: #61228d;
+}
+.ec-confirm {
+  width: 165px;
+  height: 49px;
+  border: 0;
+  border-radius: 26px;
+  background: linear-gradient(#7c31a7, #431069);
+  color: #fff;
+  font-size: 19px;
+  font-weight: 900;
+  box-shadow: 0 5px #260738, 0 0 8px #d993ff;
+  cursor: pointer;
+}
+.ec-confirm:disabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ec-promise-card.reward-card {
+  width: 720px;
+  height: 590px;
+  padding: 38px 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 4px solid #ffd94b;
+  border-radius: 42px;
+  background: linear-gradient(145deg, #fffdf7, #eee6db);
+  filter: drop-shadow(0 0 28px #9e49e8);
+  cursor: pointer;
+}
+.ec-promise-card.reward-card h2 {
+  margin: 0;
+  color: #6d208e;
+  font-size: 38px;
+}
+.ec-heart-mark {
+  font-size: 55px;
+  color: #ff4b75;
+  text-shadow: 0 0 12px #ff7594;
+}
+.ec-reward-compass {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.55);
+  transition: 1s;
+}
+.ec-reward-compass.earned {
+  filter: none;
+  animation: ecReward 1s ease-in-out infinite alternate;
+}
+.ec-reward-title {
+  font-size: 27px;
+  font-weight: 900;
+  color: #4c176b;
+}
+.ec-reward-hint {
+  margin-top: 12px;
+  color: #805395;
+  font-size: 16px;
+  font-weight: 800;
+  animation: ecBlink 1s infinite;
+}
+
+@keyframes ecBlink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes ecClapPop {
+  0% {
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.42);
+  }
+  100% {
+    transform: scale(1.32);
+  }
+}
+@keyframes ecToolGlow {
+  to {
+    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 18px #6cff3f);
+    transform: scale(1.06);
+  }
+}
+@keyframes ecReward {
+  to {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 18px #fff) drop-shadow(0 0 28px #b936ff);
+  }
+}
