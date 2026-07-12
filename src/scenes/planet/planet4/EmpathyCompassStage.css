@@ -155,11 +155,28 @@
   font-size: 18px;
   font-weight: 900;
 }
-.ec-counter {
+/* 현재 도구 안 진행도 — page-dots 스타일(지난 문항=완료, 현재=길쭉한 pill, 남은=회색) */
+.ec-progress {
   float: right;
-  margin-top: 8px;
-  color: #635b6a;
-  font-weight: 800;
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ec-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #cbb8dd; /* 남은 문항 */
+  transition: 0.3s;
+}
+.ec-dot.done {
+  background: #7bc043; /* 지난(완료) 문항 */
+}
+.ec-dot.on {
+  width: 30px;
+  border-radius: 7px;
+  background: #157009; /* 현재 문항(길쭉한 pill, chip 초록과 통일) */
 }
 .ec-tool-name {
   margin: 22px 0 4px; /* chip↔도구명 간격 ↑ */

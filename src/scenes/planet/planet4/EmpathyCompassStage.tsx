@@ -99,13 +99,23 @@ export default function EmpathyCompassStage({ onDone }: { onDone: () => void }) 
           </div>
           <div>
             <span className="ec-step-chip">공감 도구 {toolIndex + 1}</span>
-            <span className="ec-counter">
-              {itemIndex + 1} / {tool.items.length}
+            <span
+              className="ec-progress"
+              aria-label={`${itemIndex + 1} / ${tool.items.length}`}
+            >
+              {tool.items.map((_, i) => (
+                <i
+                  key={i}
+                  className={`ec-dot${i < itemIndex ? " done" : ""}${
+                    i === itemIndex ? " on" : ""
+                  }`}
+                />
+              ))}
             </span>
           </div>
           <h2 className="ec-tool-name">{tool.name}</h2>
           <div className="ec-keyword">핵심 공감 능력 · {tool.key}</div>
-          <div className="ec-question">□ {tool.items[itemIndex]}</div>
+          <div className="ec-question">{tool.items[itemIndex]}</div>
           <div className="ec-choices">
             <button
               className="ec-choice o"
