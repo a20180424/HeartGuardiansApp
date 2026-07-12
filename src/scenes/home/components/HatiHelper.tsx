@@ -37,10 +37,8 @@ export default function HatiHelper({ progress }: HatiHelperProps) {
         className="home-hati__bubble"
         style={{ borderImage: `url(${bubbleUrl}) 44 fill / 28px / 0 stretch` }}
       >
-        {/* 전체 문장으로 말풍선 크기를 미리 확정(안 보임) → 타이핑 중 크기 변화 없음 */}
-        <p className="home-hati__text home-hati__text--ghost" aria-hidden="true">{full}</p>
-        {/* 실제 타이핑 텍스트는 고스트 위에 겹쳐 표시 */}
-        <p className="home-hati__text home-hati__text--typed">{full.slice(0, count)}</p>
+        {/* 문장 길이에 따라 말풍선 세로 크기가 변한다(가로는 CSS로 고정). */}
+        <p className="home-hati__text">{full.slice(0, count)}</p>
       </div>
     </div>
   );

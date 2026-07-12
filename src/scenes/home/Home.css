@@ -288,31 +288,22 @@
   align-items: center;
   gap: 12px;
 }
-/* 콘텐츠(문장)에 맞춰 자동 크기. 9-patch(border-image)는 새 크기에 맞춰 다시 그려짐.
-   가로는 max-width에서 줄바꿈, 세로는 내용만큼 자동. */
+/* 가로 폭은 모든 progress에서 고정(가로로 안 늘어남 → 하티가 옆 메뉴를 침범하지 않음).
+   min-height로 시작/짧은 문장 크기를 통일하고, 문장이 길면 세로로만 늘어난다.
+   9-patch(border-image)는 바뀐 세로 크기에 맞춰 다시 그려진다. */
 .home-hati__bubble {
-  position: relative;
   box-sizing: content-box;
-  width: max-content;
-  max-width: 300px;
+  width: 260px;
+  min-height: 106px;
   border: 28px solid transparent;
+  display: flex;
+  align-items: center;
 }
 .home-hati__text {
   margin: 0;
   font-size: 19px;
   line-height: 1.4;
   font-weight: 600;
-}
-/* 고스트: 전체 문장으로 크기만 확정하고 보이지 않게. */
-.home-hati__text--ghost {
-  visibility: hidden;
-}
-/* 타이핑 텍스트: 고스트 위에 정확히 겹쳐 표시(테두리 안쪽 = 콘텐츠 영역). */
-.home-hati__text--typed {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
 }
 .home-hati__robot {
   width: 200px;
