@@ -115,10 +115,10 @@
 /* ── 우: 점검 문항 패널 ─────────────────────────── */
 .ec-quiz-panel {
   position: absolute;
-  left: 437px; /* 넓어진 좌측 패널만큼 오른쪽으로 */
-  top: 145px;
-  width: 806px; /* 930 → 축소(좌측 확대분 흡수) */
-  height: 530px;
+  left: 418px; /* tool-steps(우측 401) 옆으로 붙임 */
+  top: 22px; /* tool-steps 상단과 정렬 */
+  width: 846px; /* 오른쪽 끝(1264 = 1280-16)까지 남은 폭 채움 */
+  height: 653px; /* 위→feedback 위(bottom 675, feedback top 685)까지 채움 */
   padding: 20px 55px;
   border: 3px solid #8e54c3;
   border-radius: 35px;
@@ -227,9 +227,9 @@
 /* ── 하단: 하티 피드백 ─────────────────────────── */
 .ec-feedback {
   position: absolute;
-  left: 437px; /* quiz-panel 과 정렬(좌측 패널 확대로 겹침 방지) */
+  left: 418px; /* quiz-panel 과 정렬 */
   top: 685px;
-  width: 806px;
+  width: 846px;
   height: 92px;
   border: 3px solid #f1d47b;
   border-radius: 28px;
