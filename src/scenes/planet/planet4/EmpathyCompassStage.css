@@ -1,0 +1,433 @@
+/* 미션1 "가디언즈 최종 점검하기" 미니게임.
+   원본(mytemp/그림자행성 미션1 게임/index.html)의 #checkScreen 3요소 + 서약서·보상 카드를 이식.
+   #stage(1920×1200) 위 1280×800 프레임을 scale(1.5)로 정확히 채운다(1280*1.5=1920, 800*1.5=1200).
+   소스의 px 좌표를 그대로 재사용하려고 프레임 내부는 1280×800 좌표계를 유지한다. */
+
+.ec-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55); /* placeholder 팝업처럼 나머지 화면 dim */
+}
+
+/* 팝업 창 — 그림자 행성 톤(보라+골드). 미니게임을 이 안에서 실행.
+   창(1632×1020)과 게임(1280×800)의 비율이 1.6:1로 같아 왜곡 없이 채운다.
+   ⚠️ 현재는 .ec-frame(우주선 배경)이 창을 꽉 채워 아래 background 는 가려져 있다.
+   레이아웃 단계에서 게임을 줄이면 이 배경이 드러난다. */
+.ec-window {
+  position: relative;
+  width: 1632px;
+  height: 1020px;
+  border: 3px solid #b083e6; /* 보라 안쪽 테두리(게임 패널 보라와 조화) */
+  border-radius: 30px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1b0c36, #0b0420); /* 노출 시 다크 바이올렛 */
+  box-shadow:
+    0 0 0 5px #5b2f92, /* 보라 외곽 굵은 링 */
+    0 0 0 8px #e4bd40, /* 골드 얇은 액센트 링 */
+    0 26px 64px rgba(0, 0, 0, 0.7), /* 드롭 섀도 */
+    0 0 48px rgba(150, 54, 255, 0.5); /* 보라 글로우 */
+}
+
+/* 게임 좌표계(원본 1280×800). 창을 꽉 채우도록 스케일(1632/1280 = 1020/800 = 1.275).
+   ⚠️ --ec-scale 는 창 안에서 게임 크기 조정용 노브(레이아웃 재조정 시 여기부터). */
+.ec-frame {
+  --ec-scale: 1.275;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1280px;
+  height: 800px;
+  transform: translate(-50%, -50%) scale(var(--ec-scale));
+  background: #09031b url("/assets/planet4/shadow-spaceship-bg.png") center / 100% 100%
+    no-repeat;
+}
+.ec-overlay button {
+  font: inherit;
+}
+
+/* ── 좌: 공감 도구 스텝 ─────────────────────────── */
+.ec-tool-steps {
+  position: absolute;
+  left: 16px;
+  top: 22px; /* 상단 빈 공간 회수(원래 140 → 위로) */
+  width: 385px; /* 245 → ~1.5배 */
+  bottom: 22px;
+  padding: 18px 16px;
+  border: 2px solid #7a3dbe;
+  border-radius: 28px;
+  background: #0d0818d9;
+  box-shadow: 0 0 22px #8224de88;
+}
+.ec-tool-step {
+  position: relative;
+  height: 136px; /* 이미지 확대분 수용(115 → 136), 5칸이 세로에 맞도록 */
+  margin-bottom: 8px;
+  padding: 14px 10px 10px 122px; /* 좌: 커진 이미지 폭만큼 확보 */
+  border: 1px solid #63407c;
+  border-radius: 20px;
+  background: #1d102b;
+  color: #9f95a9;
+  transition: 0.35s;
+}
+.ec-tool-step img {
+  position: absolute;
+  left: 10px;
+  top: 6px;
+  width: 104px; /* 75 → ~1.4배 (object-fit:contain 이라 비율 유지) */
+  height: 124px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.5);
+}
+.ec-tool-step strong {
+  display: block;
+  margin-top: 22px;
+  font-size: 24px; /* 16 → 1.5배 */
+  color: inherit;
+}
+.ec-tool-step small {
+  font-size: 20px; /* 13 → ~1.5배 */
+}
+.ec-tool-step.active {
+  border-color: #ffe148;
+  background: #302044;
+  color: #fff;
+  box-shadow: 0 0 13px #ffd738;
+}
+.ec-tool-step.active img {
+  filter: none;
+}
+.ec-tool-step.done {
+  border-color: #73ff46;
+  color: #baff9e;
+  background: #13301a;
+}
+.ec-tool-step.done img {
+  filter: none;
+  animation: ecToolGlow 1.2s ease-in-out infinite alternate;
+}
+
+/* ── 우: 점검 문항 패널 ─────────────────────────── */
+.ec-quiz-panel {
+  position: absolute;
+  left: 418px; /* tool-steps(우측 401) 옆으로 붙임 */
+  top: 22px; /* tool-steps 상단과 정렬 */
+  width: 846px; /* 오른쪽 끝(1264 = 1280-16)까지 남은 폭 채움 */
+  height: 653px; /* 위→feedback 위(bottom 675, feedback top 685)까지 채움 */
+  padding: 20px 55px;
+  border: 3px solid #8e54c3;
+  border-radius: 35px;
+  background: linear-gradient(145deg, #fdfaf5, #eee6dc);
+  color: #16131b;
+  box-shadow: 0 12px 30px #0008;
+}
+.ec-panel-heading {
+  margin: -20px -55px 22px; /* 헤더↔본문 간격 ↑ */
+  padding: 13px 35px 12px;
+  border-radius: 31px 31px 0 0;
+  background: linear-gradient(100deg, #4a126c, #79289e 55%, #3a115f);
+  color: #fff;
+  text-align: center;
+  border-bottom: 3px solid #e4bd40;
+}
+.ec-panel-heading h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: -1px;
+}
+.ec-panel-heading p {
+  margin: 3px 0 0;
+  color: #ffe565;
+  font-size: 15px;
+  font-weight: 800;
+}
+.ec-step-chip {
+  display: inline-block;
+  padding: 7px 22px;
+  border-radius: 24px;
+  background: #157009;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+}
+/* 현재 도구 안 진행도 — page-dots 스타일(지난 문항=완료, 현재=길쭉한 pill, 남은=회색) */
+.ec-progress {
+  float: right;
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ec-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #cbb8dd; /* 남은 문항 */
+  transition: 0.3s;
+}
+.ec-dot.done {
+  background: #7bc043; /* 지난(완료) 문항 */
+}
+.ec-dot.on {
+  width: 30px;
+  border-radius: 7px;
+  background: #157009; /* 현재 문항(길쭉한 pill, chip 초록과 통일) */
+}
+.ec-tool-name {
+  margin: 22px 0 4px; /* chip↔도구명 간격 ↑ */
+  color: #3e1162;
+  font-size: 29px;
+}
+.ec-keyword {
+  margin-top: 4px;
+  color: #e48300;
+  font-size: 17px;
+  font-weight: 900;
+}
+.ec-question {
+  height: 125px;
+  margin-top: 26px; /* 키워드↔문항 간격 ↑ */
+  padding: 22px 38px;
+  border-radius: 24px;
+  background: #fff;
+  border: 2px solid #ded4e5;
+  display: flex;
+  align-items: center;
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 1.5;
+  word-break: keep-all;
+  box-shadow: inset 0 0 15px #ddd6;
+}
+.ec-choices {
+  display: flex;
+  justify-content: center;
+  gap: 38px;
+  margin-top: 30px; /* 문항↔버튼 간격 ↑ */
+}
+.ec-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 220px;
+  height: 68px;
+  border: 0;
+  border-radius: 22px;
+  color: #fff;
+  font-size: 23px; /* 본문(문항)과 동일 크기 */
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.18s;
+}
+.ec-choice:hover:not(:disabled) {
+  transform: translateY(-4px) scale(1.03);
+}
+.ec-choice.o {
+  background: linear-gradient(#46c83e, #158611);
+  box-shadow: 0 6px #075c08;
+}
+.ec-choice.x {
+  background: linear-gradient(#ff7b73, #d92d35);
+  box-shadow: 0 6px #94151c;
+}
+.ec-choice span {
+  font-size: 24px; /* 라벨과 비슷하게(이모지 ⭕/❌) */
+  line-height: 1;
+  /* 흰색 헤일로 — 빨강 ❌가 빨간 버튼에 묻히지 않게 버튼색과 분리 */
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
+}
+.ec-choice:disabled {
+  filter: grayscale(0.3);
+  cursor: default;
+  transform: none;
+}
+
+/* ── 하단: 하티 피드백 ─────────────────────────── */
+.ec-feedback {
+  position: absolute;
+  left: 418px; /* quiz-panel 과 정렬 */
+  top: 685px;
+  width: 846px;
+  height: 92px;
+  border: 3px solid #f1d47b;
+  border-radius: 28px;
+  background: #171025ed;
+  display: flex;
+  align-items: center;
+  padding: 6px 32px;
+  font-size: 27px;
+  font-weight: 900;
+  box-shadow: 0 0 17px #f1d47b55;
+}
+.ec-feedback img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  margin-left: -35px;
+  margin-right: 24px;
+  transform: scale(1.18);
+  filter: drop-shadow(0 4px 5px #000);
+  transition: 0.25s;
+}
+.ec-feedback img.clapping {
+  transform: scale(1.32);
+  filter: drop-shadow(0 0 10px #59dfff);
+  animation: ecClapPop 0.45s ease-out;
+}
+.ec-feedback-text.good {
+  color: #8cff68;
+}
+.ec-feedback-text.try {
+  color: #ffcf63;
+}
+
+/* ── 서약서 → 나침반 보상 카드 ─────────────────── */
+.ec-promise {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: #070311dc;
+}
+.ec-promise-card {
+  position: relative;
+  width: 960px;
+  height: 640px;
+  background: transparent center / 100% 100% no-repeat;
+  color: #23162b;
+  text-align: center;
+  filter: drop-shadow(0 0 28px #9e49e8);
+}
+.ec-promise-actions {
+  position: absolute;
+  left: 50%;
+  bottom: 100px;
+  width: 590px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 14px 23px;
+  border: 2px solid #c18a2b;
+  border-radius: 32px;
+  background: #fff5dfd9;
+  box-shadow: 0 5px 14px #5c301455;
+}
+.ec-promise-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 19px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ec-promise-check input {
+  width: 25px;
+  height: 25px;
+  accent-color: #61228d;
+}
+.ec-confirm {
+  width: 165px;
+  height: 49px;
+  border: 0;
+  border-radius: 26px;
+  background: linear-gradient(#7c31a7, #431069);
+  color: #fff;
+  font-size: 19px;
+  font-weight: 900;
+  box-shadow: 0 5px #260738, 0 0 8px #d993ff;
+  cursor: pointer;
+}
+.ec-confirm:disabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.ec-promise-card.reward-card {
+  width: 720px;
+  height: 590px;
+  padding: 38px 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 4px solid #ffd94b;
+  border-radius: 42px;
+  background: linear-gradient(145deg, #fffdf7, #eee6db);
+  filter: drop-shadow(0 0 28px #9e49e8);
+  cursor: pointer;
+}
+.ec-promise-card.reward-card h2 {
+  margin: 0;
+  color: #6d208e;
+  font-size: 38px;
+}
+.ec-heart-mark {
+  font-size: 55px;
+  color: #ff4b75;
+  text-shadow: 0 0 12px #ff7594;
+}
+.ec-reward-compass {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.55);
+  transition: 1s;
+}
+.ec-reward-compass.earned {
+  filter: none;
+  animation: ecReward 1s ease-in-out infinite alternate;
+}
+.ec-reward-title {
+  font-size: 27px;
+  font-weight: 900;
+  color: #4c176b;
+}
+.ec-reward-hint {
+  margin-top: 12px;
+  color: #805395;
+  font-size: 16px;
+  font-weight: 800;
+  animation: ecBlink 1s infinite;
+}
+
+@keyframes ecBlink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes ecClapPop {
+  0% {
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.42);
+  }
+  100% {
+    transform: scale(1.32);
+  }
+}
+@keyframes ecToolGlow {
+  to {
+    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 18px #6cff3f);
+    transform: scale(1.06);
+  }
+}
+@keyframes ecReward {
+  to {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 18px #fff) drop-shadow(0 0 28px #b936ff);
+  }
+}

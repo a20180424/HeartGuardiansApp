@@ -8,8 +8,8 @@ export const MISSION01_DATA = mission01 as unknown as MissionData;
 export const MISSION02_DATA = mission02 as unknown as MissionData;
 export const MISSION03_DATA = mission03 as unknown as MissionData;
 
-// 미션 이름 — 프롤로그 스텝 목록 + 미션 진행 스테퍼 라벨에서 공유한다(단일 출처).
-export const MISSION_STEPS = ["가디언즈 최종 점검", "공감 나침반 작전", "마지막 공감 연결하기"];
+// 미션 이름 — 프롤로그 스텝 목록 + 미션 진행 스테퍼 라벨 + 각 미션 배너 제목의 단일 출처.
+export const MISSION_STEPS = ["가디언즈 최종 점검", "공감 나침반 작전", "마지막 공감 연결"];
 
 const A = "/assets";
 
@@ -50,7 +50,7 @@ const BADGE_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"];
 
 export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 1", title: "가디언즈 최종 점검", ribbon: "지금까지의 공감 여정을 돌아보고, 마지막 시험을 통과하라!" },
+  banner: { pill: "미션 1", title: MISSION_STEPS[0], ribbon: "지금까지의 공감 여정을 돌아보고, 마지막 시험을 통과하라!" },
   bannerNode: "p4_m1_intro",
   // 미션1 전 구간 하티를 전신 하티로 통일(play 는 미니게임이라 하티 없음). 타이틀 배너는 인트로만.
   fullHatiNodes: ["p4_m1_postplay", "p4_m1_end"],
@@ -72,7 +72,7 @@ export const MISSION01_THEME: MissionTheme = {
 
 export const MISSION02_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 2", title: "공감 나침반 작전", ribbon: "그림자 행성 미션 2 골격" },
+  banner: { pill: "미션 2", title: MISSION_STEPS[1], ribbon: "그림자 행성 미션 2 골격" },
   bannerNode: "p4_m2_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },
@@ -92,7 +92,7 @@ export const MISSION02_THEME: MissionTheme = {
 
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 3", title: "마지막 공감 연결하기", ribbon: "그림자 행성 미션 3 골격" },
+  banner: { pill: "미션 3", title: MISSION_STEPS[2], ribbon: "그림자 행성 미션 3 골격" },
   bannerNode: "p4_m3_intro",
   bg: {
     states: { main: `${A}/bg/light-planet-stage2-bg.png` },

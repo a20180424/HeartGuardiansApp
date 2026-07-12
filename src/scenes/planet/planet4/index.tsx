@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
-import PlaceholderGameStage from "../planet3/PlaceholderGameStage"; // 미션1 미니게임 자리 임시(추후 실제 게임으로 교체)
+import EmpathyCompassStage from "./EmpathyCompassStage"; // 미션1 "가디언즈 최종 점검하기" 미니게임
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -69,10 +69,8 @@ export default function Planet4() {
           steps={MISSION_STEPS}
           scopeClass="p4_m1"
           games={{
-            // 미션1 미니게임 자리 — 실제 게임 완성 전까지 "다음" 버튼만 있는 임시 팝업.
-            empathyCompass: ({ onDone }) => (
-              <PlaceholderGameStage onDone={onDone} label="공감 나침반 미니게임 (임시)" />
-            ),
+            // 미션1 "가디언즈 최종 점검하기" — 11문항 자기점검 → 서약서 → 나침반 획득 → onDone.
+            empathyCompass: ({ onDone }) => <EmpathyCompassStage onDone={onDone} />,
           }}
           finish={{
             label: "그림자 행성으로 이동",

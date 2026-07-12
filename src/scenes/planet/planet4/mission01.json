@@ -10,7 +10,7 @@
       "hideFriend": true,
       "sideImageLeft": "/assets/planet4/empathy-showroom.png",
       "noAuto": true,
-      "text": "축하해!\n지금까지 네 개의 공감 도구를 모두 획득했어.\n하지만 마지막 공감 도구는…\n최종 점검에 통과한 가디언에게만 주어져",
+      "text": "축하해!\n네 개의 도구를 모두 획득했어.\n하지만 마지막 공감 도구는…\n최종 점검에 통과한\n가디언에게만 주어져",
       "next": "p4_m1_play"
     },
     {
@@ -26,7 +26,7 @@
       "hideFriend": true,
       "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
       "noAuto": true,
-      "text": "공감 나침반은 특별한 힘을 가지고 있어.\n하지만 기억해! 이 나침반은 혼자서는 움직이지 않아.\n대원이 용기를 내어 첫 걸음을 내디딜 때만 빛을 낸다구.",
+      "text": "공감 나침반은\n특별한 힘을 가지고 있어.\n하지만 기억해!\n나침반은 혼자서는 움직이지 않아.\n용기를 내어 첫 걸음을\n내디딜 때만 빛을 낸다구.",
       "next": "p4_m1_end"
     },
     {
