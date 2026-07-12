@@ -4,6 +4,7 @@ import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyManualGame from "./EmpathyManualGame";
 import EmpathyFuelGame from "./EmpathyFuelGame";
+import { completePlanet } from "../../../lib/session";
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -107,7 +108,10 @@ export default function Planet3() {
           scopeClass="planet3"
           games={m2Games}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
-          onExit={() => nav("/home")}
+          onExit={async () => {
+            await completePlanet(3); // 행성3 완료 → 서버+세션에 progress 저장
+            nav("/home");
+          }}
         />
       )}
       <div className={`planet-fade${fading ? " show" : ""}`} aria-hidden="true" />

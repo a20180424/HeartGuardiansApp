@@ -5,6 +5,7 @@ import MissionPlayer from "../player/MissionPlayer";
 import EmotionGuideStage from "./EmotionGuideStage";
 import EmpathyRadarStage from "./EmpathyRadarStage";
 import HiddenEmotionStage from "./HiddenEmotionStage";
+import { completePlanet } from "../../../lib/session";
 import type { EmotionGuideResult } from "./emotionGuide.data";
 import {
   MISSION01_THEME,
@@ -114,7 +115,10 @@ export default function Planet2() {
             hiddenEmotion: ({ onDone }) => <HiddenEmotionStage onDone={onDone} />,
           }}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
-          onExit={() => nav("/home")}
+          onExit={async () => {
+            await completePlanet(2); // 행성2 완료 → 서버+세션에 progress 저장
+            nav("/home");
+          }}
         />
       )}
       <div className={`planet-fade${fading ? " show" : ""}`} aria-hidden="true" />
