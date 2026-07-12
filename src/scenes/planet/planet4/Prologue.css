@@ -1,9 +1,10 @@
-/* Planet4(그림자 행성) 프롤로그 placeholder 오버라이드.
-   레이아웃은 공용 prologue/Prologue.css 를 쓰고, 여기선 포인트 색만 그림자톤으로 바꾼다.
-   배경은 공용 기본값을 상속(전용 아트 준비 시 background 추가). */
+/* Planet4(그림자 행성) 프롤로그 오버라이드.
+   레이아웃은 공용 prologue/Prologue.css 를 쓰고, 여기선 포인트 색과 전용 배경만 바꾼다. */
 .prologue.prologue--planet4 {
-  --planet-accent: #8b8fb0;
-  --planet-accent-deep: #3b3f5c;
-  --planet-panel-bg: #f1f1f6;
-  --planet-tab: #7c3aed;
+  --planet-accent: #7c3aed;
+  --planet-accent-deep: #4c1d95;
+  --planet-panel-bg: #f3f0fb;
+  --planet-tab: #a855f7;
+
+  background: url("/assets/planet4/shadow-planet-bg.png") center / cover no-repeat;
 }

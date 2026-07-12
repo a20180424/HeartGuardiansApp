@@ -10,6 +10,7 @@ import {
   MISSION02_DATA,
   MISSION03_THEME,
   MISSION03_DATA,
+  MISSION_STEPS,
 } from "./theme";
 import "../planet1/Planet1.css"; // 공용 subscene 페이드 오버레이(.planet-fade) 재사용
 
@@ -63,6 +64,7 @@ export default function Planet4() {
           scenario={MISSION01_DATA}
           theme={MISSION01_THEME}
           currentStep={1}
+          steps={MISSION_STEPS}
           onExit={() => goTo("mission2")}
         />
       )}
@@ -71,6 +73,7 @@ export default function Planet4() {
           scenario={MISSION02_DATA}
           theme={MISSION02_THEME}
           currentStep={2}
+          steps={MISSION_STEPS}
           onExit={() => goTo("mission3")}
         />
       )}
@@ -79,6 +82,7 @@ export default function Planet4() {
           scenario={MISSION03_DATA}
           theme={MISSION03_THEME}
           currentStep={3}
+          steps={MISSION_STEPS}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
           onExit={() => nav("/home")}
         />
