@@ -15,7 +15,7 @@
       특이도: .p4_m1 #sideImageLeft (1,1,0) 가 base #sideImageLeft (1,0,0) 를 이긴다.
    ───────────────────────────────────────────────────────────── */
 .p4_m1 #sideImageLeft {
-  left: 270px;
+  left: 1150px;
   top: 55%;
   transform: translateY(-50%);
   height: 75%;
@@ -28,8 +28,8 @@
       특이도: .p4_m1 #titleBanner (1,1,0) 가 base #titleBanner (1,0,0) 를 이긴다.
    ───────────────────────────────────────────────────────────── */
 .p4_m1 #titleBanner {
-  top: 100px;
-  left: 912px;
+  top: 200px;
+  left: 250px;
   width: 700px;
 }
 
@@ -51,7 +51,7 @@
       특이도: .p4_m1 #hatiFull (1,1,0) 가 base #hatiFull (1,0,0) 를 이긴다.
    ───────────────────────────────────────────────────────────── */
 .p4_m1 #hatiFull {
-  left: 610px;
+  left: 0px;
   bottom: -18px;
   height: 730px;
 }
@@ -71,8 +71,8 @@
       특이도: .p4_m1 #hatiBubble (1,1,0) 가 base #hatiBubble (1,0,0) 를 이긴다.
    ───────────────────────────────────────────────────────────── */
 .p4_m1 #hatiBubble {
-  left: 1150px;
-  bottom: 440px;
+  left: 570px;
+  bottom: 370px;
   max-width: 600px;
 }
 
@@ -81,3 +81,12 @@
 /*
 .p4_m1 #hatiBubble::after { left: 60px; bottom: -22px; }
 */
+
+/* ─────────────────────────────────────────────────────────────
+   5) 배경 이미지 좌우 반전 (#bg = shadow-spaceship-bg.png)
+      scaleX(-1) 로 좌우 뒤집는다. 되돌리려면 이 블록을 지우거나 주석 처리.
+      특이도: .p4_m1 #bg (1,1,0) 가 base #bg (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m1 #bg {
+  transform: scaleX(-1);
+}
