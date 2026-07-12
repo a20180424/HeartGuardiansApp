@@ -48,6 +48,7 @@ interface VM {
   hideFriend: boolean; // 이 노드에서 친구 캐릭터 레이어를 숨김(하티만 말하는 전환 구간)
   lesson: { title: string; sub: string } | null; // 교훈 배너(있으면 금색 배너 표시)
   sideImage: string; // 우측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
+  sideImageLeft: string; // 좌측 가운데 장식 이미지 경로(있으면 표시, "" 이면 숨김)
   choiceImage: string; // 화면 가운데 크게 띄우는 이미지(node.image, 없으면 "")
   stackImages: string[]; // 화면 가운데 세로로 쌓는 이미지들(node.images, 없으면 [])
   cards: { image: string; top?: string; bottom?: string }[]; // 가운데 가로 카드들(node.cards)
@@ -184,6 +185,7 @@ export default function MissionPlayer(props: {
     hideFriend: false,
     lesson: null,
     sideImage: "",
+    sideImageLeft: "",
     choiceImage: "",
     stackImages: [],
     cards: [],
@@ -343,6 +345,7 @@ export default function MissionPlayer(props: {
       vm.hideFriend = !!node.hideFriend; // 친구 없이 하티만 말하는 전환 노드면 친구 레이어 숨김
       vm.lesson = null; // 노드 전환 시 교훈 배너 해제(라인 노드면 showLine 에서 다시 설정)
       vm.sideImage = node.sideImage || ""; // 우측 장식 이미지(지정 노드에서만)
+      vm.sideImageLeft = node.sideImageLeft || ""; // 좌측 장식 이미지(지정 노드에서만)
       vm.choiceImage = node.image || ""; // 화면 가운데 이미지(node.image, 지정 노드에서만)
       vm.stackImages = node.images || []; // 화면 가운데 세로 스택 이미지들(node.images)
       vm.cards = node.cards || []; // 화면 가운데 가로 카드들(node.cards)
@@ -454,6 +457,7 @@ export default function MissionPlayer(props: {
           hideFriend: false,
           lesson: null,
           sideImage: "",
+          sideImageLeft: "",
           choiceImage: "",
           stackImages: [],
           cards: [],
@@ -1432,6 +1436,18 @@ export default function MissionPlayer(props: {
           <img
             id="sideImage"
             src={vm.sideImage}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
+        )}
+
+        {/* 좌측 가운데 장식 이미지(노드 sideImageLeft) */}
+        {vm.sideImageLeft && (
+          <img
+            id="sideImageLeft"
+            src={vm.sideImageLeft}
             alt=""
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";

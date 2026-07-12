@@ -13,6 +13,7 @@ import {
   MISSION_STEPS,
 } from "./theme";
 import "../planet1/Planet1.css"; // 공용 subscene 페이드 오버레이(.planet-fade) 재사용
+import "./Mission.css"; // planet4 미션1 전용 미세조정 노브(.p4_m1 스코프)
 
 // Planet4(그림자 행성) 컨테이너. prologue → mission1 → mission2 → mission3 → home 상태 머신.
 // 각 미션은 현재 시작·끝 골격.
@@ -65,6 +66,7 @@ export default function Planet4() {
           theme={MISSION01_THEME}
           currentStep={1}
           steps={MISSION_STEPS}
+          scopeClass="p4_m1"
           onExit={() => goTo("mission2")}
         />
       )}

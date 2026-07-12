@@ -47,6 +47,8 @@ export interface MissionNode {
   lesson?: { title: string; sub: string };
   // 화면 우측 가운데에 띄우는 장식 이미지 경로(세로 80% 크기). 지정한 노드에서만 표시.
   sideImage?: string;
+  // 화면 좌측 가운데에 띄우는 장식 이미지 경로(세로 90% 크기). 지정한 노드에서만 표시.
+  sideImageLeft?: string;
   // type: "minigame" 전용 — 렌더할 게임 식별자(games 맵의 키). 예: "emotionGuide".
   game?: string;
   next?: string | null;

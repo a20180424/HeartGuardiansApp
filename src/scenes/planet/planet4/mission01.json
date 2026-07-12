@@ -1,18 +1,20 @@
 {
   "id": "mission01",
   "title": "(임시) 미션 1",
-  "start": "p4m1_intro",
+  "start": "p4_m1_intro",
   "nodes": [
     {
-      "id": "p4m1_intro",
+      "id": "p4_m1_intro",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
-      "text": "(임시) 미션1 시작 대사입니다. 여기에 인트로 흐름이 들어갈 예정이에요.",
-      "next": "p4m1_end"
+      "sideImageLeft": "/assets/planet4/empathy-showroom.png",
+      "noAuto": true,
+      "text": "축하해!\n지금까지 세 개의 공감 도구를 모두 획득했어.\n하지만 마지막 공감 도구는…\n최종 점검에 통과한 가디언에게만 주어져",
+      "next": "p4_m1_end"
     },
     {
-      "id": "p4m1_end",
+      "id": "p4_m1_end",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
