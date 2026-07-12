@@ -17,36 +17,16 @@
       "id": "p4_m1_play",
       "type": "minigame",
       "game": "empathyCompass",
-      "next": "p4_m1_postplay1"
+      "next": "p4_m1_postplay"
     },
     {
-      "id": "p4_m1_postplay1",
+      "id": "p4_m1_postplay",
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
       "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
       "noAuto": true,
-      "text": "공감 나침반은 특별한 힘을 가지고 있어.",
-      "next": "p4_m1_postplay2"
-    },
-    {
-      "id": "p4_m1_postplay2",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
-      "noAuto": true,
-      "text": "하지만 기억해! 이 나침반은 혼자서는 움직이지 않아.",
-      "next": "p4_m1_postplay3"
-    },
-    {
-      "id": "p4_m1_postplay3",
-      "type": "line",
-      "speaker": "hati",
-      "hideFriend": true,
-      "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
-      "noAuto": true,
-      "text": "대원이 용기를 내어 첫 걸음을 내디딜 때만 빛을 낸다구.",
+      "text": "공감 나침반은 특별한 힘을 가지고 있어.\n하지만 기억해! 이 나침반은 혼자서는 움직이지 않아.\n대원이 용기를 내어 첫 걸음을 내디딜 때만 빛을 낸다구.",
       "next": "p4_m1_end"
     },
     {
@@ -56,7 +36,7 @@
       "hideFriend": true,
       "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
       "noAuto": true,
-      "text": "이제 그림자 행성으로 첫 걸음을 내딛어 보자!",
+      "text": "이제 그림자 행성으로 첫 걸음을 내디뎌 보자!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null

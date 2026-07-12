@@ -52,6 +52,8 @@ export const MISSION01_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
   banner: { pill: "미션 1", title: "가디언즈 최종 점검", ribbon: "지금까지의 공감 여정을 돌아보고, 마지막 시험을 통과하라!" },
   bannerNode: "p4_m1_intro",
+  // 미션1 전 구간 하티를 전신 하티로 통일(play 는 미니게임이라 하티 없음). 타이틀 배너는 인트로만.
+  fullHatiNodes: ["p4_m1_postplay", "p4_m1_end"],
   bg: {
     states: { main: `${A}/planet4/shadow-spaceship-bg.png` },
     initial: "main",

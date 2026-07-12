@@ -30,7 +30,8 @@ interface VM {
   mode: "idle" | "typing" | "await" | "choices" | "end";
   bubbleKind: "none" | "hatiBox" | "hatiBubble" | "friendBubble";
   text: string;
-  intro: boolean;
+  intro: boolean; // 타이틀 배너 표시(= bannerNode 노드에서만). 인트로 오디오·루미 숨김도 여기 묶임
+  fullHati: boolean; // 전신 하티(#hatiFull) 표시. bannerNode ∪ fullHatiNodes 에서 켬(타이틀 배너와 분리)
   choices: Choice[];
   choicePrompt: string; // 선택지 카드 위 안내 문구(없으면 "")
   exploredSet: Set<number> | null;
@@ -168,6 +169,7 @@ export default function MissionPlayer(props: {
     bubbleKind: "none",
     text: "",
     intro: false,
+    fullHati: false,
     choices: [],
     choicePrompt: "",
     exploredSet: null,
@@ -351,7 +353,9 @@ export default function MissionPlayer(props: {
       vm.cards = node.cards || []; // 화면 가운데 가로 카드들(node.cards)
       vm.mirrorImage = node.mirrorImage || ""; // 우측 하단 공감 거울(node.mirrorImage)
       vm.completeBanner = node.completeBanner || ""; // 가운데 완료 배너(node.completeBanner)
-      vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너+전신하티 표시, 루미 숨김
+      vm.intro = node.id === theme.bannerNode; // 인트로: 타이틀배너 표시 + 인트로 오디오, 루미 숨김
+      // 전신 하티: bannerNode(인트로) ∪ theme.fullHatiNodes(추가 지정 노드). 타이틀 배너와는 분리.
+      vm.fullHati = vm.intro || !!theme.fullHatiNodes?.includes(node.id);
       if (vm.intro) audio.play("title");
       const s = theme.sfx.byNode[node.id]; // 반응 노드 감정 피드백음(정답/오답)
       if (s) audio.play(s);
@@ -440,6 +444,7 @@ export default function MissionPlayer(props: {
           bubbleKind: "none",
           text: "",
           intro: false,
+          fullHati: false,
           choices: [],
           choicePrompt: "",
           exploredSet: null,
@@ -523,7 +528,8 @@ export default function MissionPlayer(props: {
           vm.dzShow = false; // 라인 진입 시 드래그 dropZone 숨김
           vm.lesson = node.lesson || null; // 교훈 배너 노드면 배너를 띄우고 하티 박스는 숨긴다
           const isHati = node.speaker === "hati";
-          const introHati = isHati && node.id === theme.bannerNode;
+          // 전신 하티(#hatiFull) 노드면 인트로 말풍선(#hatiBubble), 아니면 하단 박스(#hatiBox).
+          const introHati = isHati && vm.fullHati;
           vm.bubbleKind = node.lesson
             ? "none"
             : introHati
@@ -1180,7 +1186,7 @@ export default function MissionPlayer(props: {
         </div>
 
         {/* 인트로 전신 하티 */}
-        <img id="hatiFull" className={vm.intro ? "show" : ""} src={HATI_FULL} alt="하티" />
+        <img id="hatiFull" className={vm.fullHati ? "show" : ""} src={HATI_FULL} alt="하티" />
 
         {/* 인트로 하티 말풍선 */}
         <div id="hatiBubble" className={`bubble${vm.bubbleKind === "hatiBubble" ? " show" : ""}`}>
@@ -1192,7 +1198,7 @@ export default function MissionPlayer(props: {
         <div
           id="friendWrap"
           ref={friendWrapRef}
-          className={`${vm.intro || vm.stage !== "none" || vm.hideFriend ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
+          className={`${vm.fullHati || vm.stage !== "none" || vm.hideFriend ? "hide" : ""}${vm.friendGlow ? " glow" : ""}${vm.dzShow ? " droppable" : ""}`}
         >
           <img
             id="friend"
