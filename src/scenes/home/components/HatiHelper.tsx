@@ -37,6 +37,7 @@ export default function HatiHelper({ progress }: HatiHelperProps) {
         className="home-hati__bubble"
         style={{ borderImage: `url(${bubbleUrl}) 44 fill / 28px / 0 stretch` }}
       >
+        {/* 문장 길이에 따라 말풍선 세로 크기가 변한다(가로는 CSS로 고정). */}
         <p className="home-hati__text">{full.slice(0, count)}</p>
       </div>
     </div>

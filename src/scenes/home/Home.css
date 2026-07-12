@@ -288,9 +288,13 @@
   align-items: center;
   gap: 12px;
 }
+/* 가로 폭은 모든 progress에서 고정(가로로 안 늘어남 → 하티가 옆 메뉴를 침범하지 않음).
+   min-height로 시작/짧은 문장 크기를 통일하고, 문장이 길면 세로로만 늘어난다.
+   9-patch(border-image)는 바뀐 세로 크기에 맞춰 다시 그려진다. */
 .home-hati__bubble {
-  width: 300px;
-  height: 162px;
+  box-sizing: content-box;
+  width: 260px;
+  min-height: 106px;
   border: 28px solid transparent;
   display: flex;
   align-items: center;
