@@ -63,6 +63,7 @@ export default function Auth() {
   async function enter(creds: Credentials) {
     const profile = await verify(creds); // 성공 시 자격증명 저장(api 레이어)
     const { progress } = await getProgress();
+    console.log("[progress] 서버에서 받아온 progress:", progress);
     setSession({ profile, progress });
     nav("/home");
   }

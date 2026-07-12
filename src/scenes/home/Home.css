@@ -46,6 +46,39 @@
   justify-content: center;
 }
 
+/* 공감 도구 도감 팝업 (가디언즈 가방) — 이미지 자체가 완성된 팝업 */
+.empathy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 50;
+}
+.empathy__panel {
+  position: relative;
+  width: 1000px; /* 3:2 → 1000×667, 무대(1280×800) 안에 여백 확보 */
+}
+.empathy__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* 이미지 우측 상단에 그려진 X 원 위에 얹는 투명 클릭영역.
+   손가락 터치 여유를 위해 그려진 X보다 넉넉하게(중심은 X에 맞춤) 잡는다. */
+.empathy__close {
+  position: absolute;
+  top: 10%;
+  right: 0%;
+  width: 13%;
+  height: 18%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
 /* 프로필 카드 (좌상단) */
 .home-profile {
   position: absolute;
