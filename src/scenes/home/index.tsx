@@ -62,7 +62,7 @@ export default function Home() {
         <img className="home-goal__star" src={starUrl} alt="" />
         <span className="home-goal__text">
           학습 목표<br />
-          <small>클릭해서 목표를 완성하세요</small>
+          <small>클릭해서 목표를 확인하세요</small>
         </span>
       </button>
 
