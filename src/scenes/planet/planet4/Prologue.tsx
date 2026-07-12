@@ -1,4 +1,5 @@
 import PrologueTemplate from "../prologue/PrologueTemplate";
+import { MISSION_STEPS } from "./theme"; // 미션 이름(스텝 라벨) 단일 출처
 import "./Prologue.css"; // planet4 전용: 그림자톤 포인트 색
 
 const OBJECTIVES = [
@@ -12,8 +13,6 @@ const REWARDS = [
   { icon: "🧭", name: "공감 나침반", desc: "올바른 공감의 방향을 알려주는 도구예요." },
   { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
-
-const STEPS = ["용기 조각 모으기", "그림자 신전의 빛 찾기", "어둠에 갇힌 마음 마을로"];
 
 export default function Prologue({
   onStart,
@@ -39,7 +38,7 @@ export default function Prologue({
       questSub="용기를 모아 친구들에게 손을 내밀고 그림자를 밝혀보자!"
       questMascot="/assets/planet4/planet4-jiro.png"
       questMascotAlt="지로"
-      steps={STEPS}
+      steps={MISSION_STEPS}
       onStart={onStart}
       onHome={onHome}
     />
