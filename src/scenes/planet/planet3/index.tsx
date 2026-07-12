@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyManualGame from "./EmpathyManualGame";
@@ -25,7 +26,7 @@ const STAGES: Stage[] = ["prologue", "mission1", "mission2"];
 const FADE_MS = 160;
 
 export default function Planet3() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const [params] = useSearchParams();
 
   const m = params.get("m");
@@ -108,9 +109,9 @@ export default function Planet3() {
           scopeClass="planet3"
           games={m2Games}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
-          onExit={async () => {
-            await completePlanet(3); // 행성3 완료 → 서버+세션에 progress 저장
-            nav("/home");
+          onExit={() => {
+            completePlanet(3); // 낙관적 로컬 갱신 + 백그라운드 저장(논블로킹)
+            nav("/home"); // 저장을 기다리지 않고 즉시 전환
           }}
         />
       )}

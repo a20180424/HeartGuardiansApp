@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import { completePlanet } from "../../../lib/session";
@@ -22,7 +23,7 @@ const STAGES: Stage[] = ["prologue", "mission1", "mission2", "mission3"];
 const FADE_MS = 160;
 
 export default function Planet1() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const [params] = useSearchParams();
 
   // 개발용 단축키: 특정 subscene부터 시작.
@@ -91,9 +92,9 @@ export default function Planet1() {
           theme={MISSION03_THEME}
           currentStep={3}
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
-          onExit={async () => {
-            await completePlanet(1); // 행성1 완료 → 서버+세션에 progress 저장
-            nav("/home");
+          onExit={() => {
+            completePlanet(1); // 낙관적 로컬 갱신 + 백그라운드 저장(논블로킹)
+            nav("/home"); // 저장을 기다리지 않고 즉시 전환
           }}
         />
       )}

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useFadeNav } from "../../lib/sceneTransition";
 import { skipSeekTarget } from "./outro.logic";
 import FixedStage from "../../lib/FixedStage";
 import "./Outro.css";
@@ -7,7 +7,7 @@ import "./Outro.css";
 type Status = "playing" | "ended";
 
 export default function Outro() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [status, setStatus] = useState<Status>("playing");
   const [muted, setMuted] = useState(true);

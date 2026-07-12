@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useFadeNav } from "../../lib/sceneTransition";
 import { getSession } from "../../lib/session";
 import { planetState, devProgressOverride } from "./home.logic";
 import ProfileCard from "./components/ProfileCard";
@@ -32,7 +33,7 @@ const MENU_PLATE: Record<MenuKey, string> = {
 };
 
 export default function Home() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const session = getSession();
   const [popup, setPopup] = useState<PopupKey | null>(null);
 

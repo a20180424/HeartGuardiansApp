@@ -1564,6 +1564,14 @@
   display: block;
   filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
 }
+/* 완료/나가기 버튼을 한 번 누르면 disabled — 저장·전환 중 재탭 방지(시각 피드백). */
+#nextBtn:disabled,
+#missionExit:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.4);
+  pointer-events: none;
+  cursor: default;
+}
 
 /* ---------- exit (← 홈) ---------- */
 #missionExit {
