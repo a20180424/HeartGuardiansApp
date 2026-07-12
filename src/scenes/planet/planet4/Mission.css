@@ -90,3 +90,7 @@
 .p4_m1 #bg {
   transform: scaleX(-1);
 }
+
+.p4_m1 #stage.bright #lightOverlay {
+  opacity: 0;
+}

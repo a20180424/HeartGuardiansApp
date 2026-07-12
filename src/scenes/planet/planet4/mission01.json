@@ -46,7 +46,7 @@
       "hideFriend": true,
       "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
       "noAuto": true,
-      "text": "대원이 용기를 내어 첫걸음을 내디딜 때만 빛을 낸다구.",
+      "text": "대원이 용기를 내어 첫 걸음을 내디딜 때만 빛을 낸다구.",
       "next": "p4_m1_end"
     },
     {
@@ -56,7 +56,7 @@
       "hideFriend": true,
       "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
       "noAuto": true,
-      "text": "이제 그림자 행성으로 가보자!",
+      "text": "이제 그림자 행성으로 첫 걸음을 내딛어 보자!",
       "completeBanner": "미션 완료!",
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
