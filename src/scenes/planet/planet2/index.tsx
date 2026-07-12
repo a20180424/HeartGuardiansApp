@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmotionGuideStage from "./EmotionGuideStage";
@@ -27,7 +28,7 @@ const STAGES: Stage[] = ["prologue", "mission1", "mission2", "mission3"];
 const FADE_MS = 160;
 
 export default function Planet2() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const [params] = useSearchParams();
 
   // 개발용 단축키(프로덕션 빌드에선 무시): #/planet/2?stage=mission3 또는 ?m=3 (m=0 → prologue)

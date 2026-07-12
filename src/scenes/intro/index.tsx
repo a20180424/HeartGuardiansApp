@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useFadeNav } from "../../lib/sceneTransition";
 import { skipSeekTarget } from "./intro.logic";
 import FixedStage from "../../lib/FixedStage";
 import "./Intro.css";
@@ -7,7 +7,7 @@ import "./Intro.css";
 type Status = "playing" | "ended";
 
 export default function Intro() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [status, setStatus] = useState<Status>("playing");
   const [muted, setMuted] = useState(true);

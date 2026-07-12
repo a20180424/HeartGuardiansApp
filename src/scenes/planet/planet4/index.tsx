@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import {
@@ -20,7 +21,7 @@ const STAGES: Stage[] = ["prologue", "mission1", "mission2", "mission3"];
 const FADE_MS = 160;
 
 export default function Planet4() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const [params] = useSearchParams();
 
   const m = params.get("m");

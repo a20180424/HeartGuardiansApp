@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useFadeNav } from "../../lib/sceneTransition";
 import Chooser from "./components/Chooser";
 import CredentialForm from "./components/CredentialForm";
 import WelcomePanel from "./components/WelcomePanel";
@@ -16,7 +16,7 @@ import bannerUrl from "../../shared/assets/TitleBanner.png";
 type Screen = "checking" | "welcome" | "chooser" | "login" | "signup";
 
 export default function Auth() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const [screen, setScreen] = useState<Screen>(() =>
     credentialStore.get() ? "checking" : "chooser",
   );

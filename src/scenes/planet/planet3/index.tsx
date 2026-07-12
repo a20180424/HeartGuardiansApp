@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyManualGame from "./EmpathyManualGame";
@@ -25,7 +26,7 @@ const STAGES: Stage[] = ["prologue", "mission1", "mission2"];
 const FADE_MS = 160;
 
 export default function Planet3() {
-  const nav = useNavigate();
+  const nav = useFadeNav();
   const [params] = useSearchParams();
 
   const m = params.get("m");
