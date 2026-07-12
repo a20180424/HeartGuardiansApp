@@ -288,18 +288,31 @@
   align-items: center;
   gap: 12px;
 }
+/* 콘텐츠(문장)에 맞춰 자동 크기. 9-patch(border-image)는 새 크기에 맞춰 다시 그려짐.
+   가로는 max-width에서 줄바꿈, 세로는 내용만큼 자동. */
 .home-hati__bubble {
-  width: 360px;
-  height: 200px;
+  position: relative;
+  box-sizing: content-box;
+  width: max-content;
+  max-width: 300px;
   border: 28px solid transparent;
-  display: flex;
-  align-items: center;
 }
 .home-hati__text {
   margin: 0;
   font-size: 19px;
   line-height: 1.4;
   font-weight: 600;
+}
+/* 고스트: 전체 문장으로 크기만 확정하고 보이지 않게. */
+.home-hati__text--ghost {
+  visibility: hidden;
+}
+/* 타이핑 텍스트: 고스트 위에 정확히 겹쳐 표시(테두리 안쪽 = 콘텐츠 영역). */
+.home-hati__text--typed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 .home-hati__robot {
   width: 200px;
