@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { getSession } from "../../lib/session";
-import { planetState } from "./home.logic";
+import { planetState, devProgressOverride } from "./home.logic";
 import ProfileCard from "./components/ProfileCard";
 import EnergyGauge from "./components/EnergyGauge";
 import Mothership from "./components/Mothership";
 import PlanetButton from "./components/PlanetButton";
 import MenuBar, { type MenuKey } from "./components/MenuBar";
 import HatiHelper from "./components/HatiHelper";
+import EmpathyTools from "./components/EmpathyTools";
+import GemBook from "./components/GemBook";
 import Modal from "../../shared/components/Modal";
 import FixedStage from "../../lib/FixedStage";
 import bannerUrl from "../../shared/assets/TitleBanner.png";
@@ -38,7 +40,9 @@ export default function Home() {
     return <Navigate to="/auth" replace />;
   }
 
-  const { profile, progress } = session;
+  const { profile } = session;
+  // DEV에서는 #/home?prog=N 으로 progress를 덮어써 DB 없이 화면을 테스트할 수 있다.
+  const progress = devProgressOverride(session.progress);
   const popupPlate: string =
     popup && popup !== "goal" ? MENU_PLATE[popup] : goalPlate;
 
@@ -58,7 +62,7 @@ export default function Home() {
         <img className="home-goal__star" src={starUrl} alt="" />
         <span className="home-goal__text">
           학습 목표<br />
-          <small>클릭해서 목표를 완성하세요</small>
+          <small>클릭해서 목표를 확인하세요</small>
         </span>
       </button>
 
@@ -79,8 +83,15 @@ export default function Home() {
       <MenuBar onOpen={(key) => setPopup(key)} />
       <HatiHelper progress={progress} />
 
-      {/* 팝업 내용은 추후 채움 (지금은 빈 모달) */}
-      <Modal open={popup !== null} onClose={() => setPopup(null)} plateUrl={popupPlate} />
+      {/* 도감형 이미지 팝업: 가디언즈 가방=공감 도구, 원석 도감=원석 */}
+      {popup === "inventory" ? (
+        <EmpathyTools progress={progress} onClose={() => setPopup(null)} />
+      ) : popup === "gem" ? (
+        <GemBook progress={progress} onClose={() => setPopup(null)} />
+      ) : (
+        /* 나머지 메뉴/목표 팝업 내용은 추후 채움 (지금은 빈 모달) */
+        <Modal open={popup !== null} onClose={() => setPopup(null)} plateUrl={popupPlate} />
+      )}
     </div>
     </FixedStage>
   );

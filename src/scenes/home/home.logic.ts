@@ -13,6 +13,20 @@ function clampIndex(n: number, len: number): number {
   return Math.max(0, Math.min(len - 1, n));
 }
 
+/**
+ * DEV 전용: 해시 URL의 `?prog=N`으로 progress를 덮어써 DB 없이 Home 상태를 테스트한다.
+ * 예) #/home?prog=3. production 빌드에서는 항상 원본 progress를 그대로 돌려준다.
+ */
+export function devProgressOverride(progress: number): number {
+  if (!import.meta.env.DEV) return progress;
+  const query = window.location.hash.split("?")[1] ?? "";
+  const raw = new URLSearchParams(query).get("prog");
+  if (raw === null || raw === "") return progress;
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return progress;
+  return Math.max(0, Math.min(4, Math.trunc(n)));
+}
+
 /** progress(0~4)에 대응하는 별명. 범위를 벗어나면 양 끝으로 clamp. */
 export function nicknameFor(progress: number): string {
   return NICKNAMES[clampIndex(progress, NICKNAMES.length)];
