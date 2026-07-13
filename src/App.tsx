@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { App as CapApp } from "@capacitor/app";
 import { SceneTransitionProvider } from "./lib/sceneTransition";
+import { BgmProvider } from "./lib/bgm";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
 import Home from "./scenes/home";
@@ -29,17 +30,19 @@ export default function App() {
 
   return (
     <SceneTransitionProvider>
-      <Routes>
-        <Route path="/" element={<Navigate to="/intro" replace />} />
-        <Route path="/intro" element={<Intro />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/planet/1" element={<Planet1 />} />
-        <Route path="/planet/2" element={<Planet2 />} />
-        <Route path="/planet/3" element={<Planet3 />} />
-        <Route path="/planet/4" element={<Planet4 />} />
-        <Route path="/outro" element={<Outro />} />
-      </Routes>
+      <BgmProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/intro" replace />} />
+          <Route path="/intro" element={<Intro />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/planet/1" element={<Planet1 />} />
+          <Route path="/planet/2" element={<Planet2 />} />
+          <Route path="/planet/3" element={<Planet3 />} />
+          <Route path="/planet/4" element={<Planet4 />} />
+          <Route path="/outro" element={<Outro />} />
+        </Routes>
+      </BgmProvider>
     </SceneTransitionProvider>
   );
 }
