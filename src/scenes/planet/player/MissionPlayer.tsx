@@ -102,6 +102,7 @@ interface VM {
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
+  debugShown: boolean; // 오버레이 표시 여부 — 기본 숨김, 'n' 키로 토글
 }
 
 const HATI_FULL = "/assets/char/Hati/hati_robot_explaining.png";
@@ -226,6 +227,7 @@ export default function MissionPlayer(props: {
     debug: "",
     debugId: "",
     debugCopied: false,
+    debugShown: false,
   }).current;
 
   const timers = useRef<{
@@ -729,6 +731,18 @@ export default function MissionPlayer(props: {
     window.addEventListener("pointerdown", unlock);
     return () => window.removeEventListener("pointerdown", unlock);
   }, [audio]);
+
+  // 디버그 노드 오버레이 토글: 'n'(node) 키로 표시/숨김. 기본은 숨김.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "n" || e.key === "N") {
+        vm.debugShown = !vm.debugShown;
+        force();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [vm]);
 
   const onStageClick = () => {
     // 동영상 중 화면 탭은 무시(재생은 '재생 시작' 버튼으로만, 건너뛰기 없음).
@@ -1496,8 +1510,8 @@ export default function MissionPlayer(props: {
           </button>
         )}
 
-        {/* 디버그 노드 오버레이 (개발용 — production 제거 예정). 클릭 시 node id 복사 */}
-        {vm.debug && (
+        {/* 디버그 노드 오버레이 (개발용 — production 제거 예정). 'n' 키로 토글, 클릭 시 node id 복사 */}
+        {vm.debug && vm.debugShown && (
           <div
             id="debug"
             className={vm.debugCopied ? "copied" : ""}
