@@ -1,0 +1,26 @@
+/* planet1 전용 미션 오버라이드(.planet1 스코프).
+   #viewport 에 scopeClass="planet1" 이 붙고, #stage 에 현재 노드 id 가 node-<id> 로 붙는다. */
+
+/* ── end 노드(m3_end) — 리워드 카드 위 "탐험 성공!" 리본 ─────────────────────
+   node.image(→ #choiceImage, 가로 중앙)를 리본으로 재사용. 리워드 카드는 node.cards(#cardStage).
+   base #choiceImage(top:110px, height:64%, 페더 마스크)는 화면 절반 크기라 리본엔 과하게 커서
+   width 로 크기를 다시 잡는다. #cardStage(z-index:5) 위에 오도록 z-index 를 올린다.
+   planet2/Mission.css 의 p2_m3_end 규칙과 동일. */
+.planet1 #stage.node-m3_end #choiceImage {
+  top: 140px; /* 위로/아래로 이동(값↑ 내려감) */
+  height: auto; /* width 로 크기 제어하려고 해제 */
+  width: 720px; /* 리본 가로 크기 */
+  max-width: 90%;
+  z-index: 6; /* 리워드 카드(5)보다 위 */
+  -webkit-mask: none; /* base 가장자리 페더 끄기 */
+  mask: none;
+}
+
+/* 미션3 완료 "빛 복귀" 오버레이(#lightOverlay, fx_light_return→.bright) 끄기.
+   리워드 카드 위로 우측 노란빛이 뿌옇게 떠서 미션3(m3_end)에서만 제거한다.
+   미션1·2 의 end 오버레이는 그대로 두고, node-m3_end 로만 조준한다.
+   순수 시각 효과라 "다음" 버튼 로직에는 영향 없음.
+   (.planet1 #stage.node-m3_end #lightOverlay = 특이도 2,2,0 로 base(2,1,0) 을 이긴다.) */
+.planet1 #stage.node-m3_end #lightOverlay {
+  opacity: 0;
+}
