@@ -1580,21 +1580,12 @@
   display: block;
   filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
 }
-/* 완료/나가기 버튼을 한 번 누르면 disabled — 저장·전환 중 재탭 방지(시각 피드백). */
-#nextBtn:disabled,
-#missionExit:disabled {
+/* 완료 버튼을 한 번 누르면 disabled — 저장·전환 중 재탭 방지(시각 피드백). */
+#nextBtn:disabled {
   opacity: 0.5;
   filter: grayscale(0.4);
   pointer-events: none;
   cursor: default;
-}
-
-/* ---------- exit (← 홈) ---------- */
-#missionExit {
-  position: absolute;
-  top: 36px;
-  right: 50px;
-  z-index: 9;
 }
 
 /* ---------- debug node overlay (개발용, production 제거 예정) ---------- */
@@ -1630,33 +1621,6 @@
   color: #fff;
   background: rgba(22, 163, 74, 0.85);
   border-color: rgba(220, 252, 231, 0.7);
-}
-
-/* ---------- mute toggle (always visible, left of 홈) ---------- */
-#muteBtn {
-  position: absolute;
-  top: 36px;
-  right: 170px;
-  z-index: 9;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.9);
-  font-size: 26px;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-  display: grid;
-  place-items: center;
-}
-#muteBtn:active {
-  transform: scale(0.94);
-}
-#muteBtn.off {
-  background: rgba(220, 225, 235, 0.85);
-  filter: grayscale(0.4);
-  opacity: 0.85;
 }
 
 /* ---------- sparkle fx layer ---------- */

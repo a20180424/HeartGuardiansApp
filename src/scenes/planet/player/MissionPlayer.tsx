@@ -64,7 +64,6 @@ interface VM {
   showNext: boolean;
   ended: boolean;
   sparks: Spark[];
-  muted: boolean;
   dragNode: boolean;
   dzShow: boolean;
   // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge / reveal: 긁어서 드러내기)
@@ -202,7 +201,6 @@ export default function MissionPlayer(props: {
     showNext: false,
     ended: false,
     sparks: [],
-    muted: audioRef.current.muted,
     dragNode: false,
     dzShow: false,
     stage: "none",
@@ -746,13 +744,6 @@ export default function MissionPlayer(props: {
       timers.resolve = undefined;
       r?.();
     }
-  };
-
-  const toggleMute = (e: MouseEvent) => {
-    e.stopPropagation();
-    audio.unlock();
-    vm.muted = audio.toggleMute();
-    force();
   };
 
   // 디버그 오버레이 클릭 → node id 클립보드 복사(개발용). 비보안 컨텍스트 fallback 포함.
@@ -1533,18 +1524,6 @@ export default function MissionPlayer(props: {
           ))}
         </div>
       </div>
-
-      <button
-        id="muteBtn"
-        className={vm.muted ? "off" : ""}
-        onClick={toggleMute}
-        aria-label="소리 켜기/끄기"
-      >
-        {vm.muted ? "🔇" : "🔊"}
-      </button>
-      <button id="missionExit" className="btn ghost" disabled={exitingRef.current} onClick={handleExit}>
-        ← 홈
-      </button>
     </div>
   );
 }
