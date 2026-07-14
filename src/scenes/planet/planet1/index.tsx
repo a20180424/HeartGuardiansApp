@@ -13,6 +13,7 @@ import {
   MISSION03_DATA,
 } from "./theme";
 import "./Planet1.css";
+import "./Mission.css"; // planet1 전용 미션 오버라이드(.planet1 스코프) — end 배너 크기 등
 
 // Planet1 컨테이너. subscene들을 순서대로 진행한다(내부 상태 머신).
 // 목표: prologue → mission1 → mission2 → mission3 → epilogue.
@@ -73,6 +74,7 @@ export default function Planet1() {
           scenario={MISSION01_DATA}
           theme={MISSION01_THEME}
           currentStep={1}
+          scopeClass="planet1"
           onExit={() => goTo("mission2")}
         />
       )}
@@ -82,6 +84,7 @@ export default function Planet1() {
           scenario={MISSION02_DATA}
           theme={MISSION02_THEME}
           currentStep={2}
+          scopeClass="planet1"
           onExit={() => goTo("mission3")}
         />
       )}
@@ -91,6 +94,7 @@ export default function Planet1() {
           scenario={MISSION03_DATA}
           theme={MISSION03_THEME}
           currentStep={3}
+          scopeClass="planet1"
           finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
           onExit={() => {
             completePlanet(1); // 낙관적 로컬 갱신 + 백그라운드 저장(논블로킹)
