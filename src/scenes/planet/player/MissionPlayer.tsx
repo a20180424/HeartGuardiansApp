@@ -64,7 +64,6 @@ interface VM {
   showNext: boolean;
   ended: boolean;
   sparks: Spark[];
-  muted: boolean;
   dragNode: boolean;
   dzShow: boolean;
   // 공감 거울 특별 파트(화면 A: mirrors / 화면 B: gauge / reveal: 긁어서 드러내기)
@@ -103,6 +102,7 @@ interface VM {
   debug: string;
   debugId: string;
   debugCopied: boolean; // 노드 id 오버레이(디버깅용, production 제거 예정)
+  debugShown: boolean; // 오버레이 표시 여부 — 기본 숨김, 'n' 키로 토글
 }
 
 const HATI_FULL = "/assets/char/Hati/hati_robot_explaining.png";
@@ -202,7 +202,6 @@ export default function MissionPlayer(props: {
     showNext: false,
     ended: false,
     sparks: [],
-    muted: audioRef.current.muted,
     dragNode: false,
     dzShow: false,
     stage: "none",
@@ -228,6 +227,7 @@ export default function MissionPlayer(props: {
     debug: "",
     debugId: "",
     debugCopied: false,
+    debugShown: false,
   }).current;
 
   const timers = useRef<{
@@ -732,6 +732,18 @@ export default function MissionPlayer(props: {
     return () => window.removeEventListener("pointerdown", unlock);
   }, [audio]);
 
+  // 디버그 노드 오버레이 토글: 'n'(node) 키로 표시/숨김. 기본은 숨김.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "n" || e.key === "N") {
+        vm.debugShown = !vm.debugShown;
+        force();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [vm]);
+
   const onStageClick = () => {
     // 동영상 중 화면 탭은 무시(재생은 '재생 시작' 버튼으로만, 건너뛰기 없음).
     if (vm.videoSrc) return;
@@ -746,13 +758,6 @@ export default function MissionPlayer(props: {
       timers.resolve = undefined;
       r?.();
     }
-  };
-
-  const toggleMute = (e: MouseEvent) => {
-    e.stopPropagation();
-    audio.unlock();
-    vm.muted = audio.toggleMute();
-    force();
   };
 
   // 디버그 오버레이 클릭 → node id 클립보드 복사(개발용). 비보안 컨텍스트 fallback 포함.
@@ -1505,8 +1510,8 @@ export default function MissionPlayer(props: {
           </button>
         )}
 
-        {/* 디버그 노드 오버레이 (개발용 — production 제거 예정). 클릭 시 node id 복사 */}
-        {vm.debug && (
+        {/* 디버그 노드 오버레이 (개발용 — production 제거 예정). 'n' 키로 토글, 클릭 시 node id 복사 */}
+        {vm.debug && vm.debugShown && (
           <div
             id="debug"
             className={vm.debugCopied ? "copied" : ""}
@@ -1533,18 +1538,6 @@ export default function MissionPlayer(props: {
           ))}
         </div>
       </div>
-
-      <button
-        id="muteBtn"
-        className={vm.muted ? "off" : ""}
-        onClick={toggleMute}
-        aria-label="소리 켜기/끄기"
-      >
-        {vm.muted ? "🔇" : "🔊"}
-      </button>
-      <button id="missionExit" className="btn ghost" disabled={exitingRef.current} onClick={handleExit}>
-        ← 홈
-      </button>
     </div>
   );
 }

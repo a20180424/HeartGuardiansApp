@@ -14,6 +14,10 @@ import { useLocation } from "react-router-dom";
 //
 // 크로스페이드는 <audio> 2개(deck)를 번갈아 쓰며 볼륨을 램프하는 단순 방식.
 
+// 배경음악 전역 on/off. 일단 기본은 꺼둔다(모든 존에서 무음).
+// 다시 켜려면 true로만 바꾸면 hub/planet 재생이 복구된다.
+const BGM_ENABLED = false;
+
 const BGM_VOLUME = 0.6; // 배경음이라 풀볼륨보다 낮게
 const CROSSFADE_MS = 1000;
 const CROSSFADE_SEC = CROSSFADE_MS / 1000;
@@ -163,6 +167,7 @@ export function BgmProvider({ children }: { children: ReactNode }) {
   }
 
   function applyZone(z: Zone) {
+    if (!BGM_ENABLED) z = "silent"; // 전역 off면 어떤 존이든 무음 처리
     if (z === "hub") {
       if (currentKeyRef.current === "hub") return;
       clearPlanetSchedule();

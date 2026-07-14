@@ -63,6 +63,7 @@
       "type": "line",
       "speaker": "hati",
       "hideFriend": true,
+      "noAuto": true,
       "text": "축하해! 대원은 이제 두 번째 공감 원석인 관찰의 호박석을 얻었어! 이 원석은 다른 사람들의 숨겨진 감정 신호를 찾아주는 힘을 담고 있단다.",
       "image": "/assets/ui/explore-success.png",
       "cards": [{ "image": "/assets/ui/planet2-reward-card.png" }],
