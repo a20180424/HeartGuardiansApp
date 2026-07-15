@@ -13,6 +13,14 @@
   height: 100%;
   object-fit: contain;
   background: #000;
+  /* 첫 프레임 준비 전엔 숨겨 WebView 기본 회색 플레이스홀더를 가린다.
+     뒤의 .intro 검은 배경만 보이다가, 준비되면 페이드 인. */
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.intro__video.is-ready {
+  opacity: 1;
 }
 
 /* 영상 위를 덮는 투명 탭 레이어 (탭하면 소리 켜기) */

@@ -11,6 +11,9 @@ export default function Intro() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [status, setStatus] = useState<Status>("playing");
   const [muted, setMuted] = useState(true);
+  // 첫 프레임 디코드 전까지 WebView 기본 회색 플레이스홀더가 보이는 걸 막는다.
+  // 준비되면 검은 배경 위로 페이드 인.
+  const [ready, setReady] = useState(false);
 
   // 영상 탭: 소리 켜기 (+ 자동재생이 막혀 멈춰 있으면 재생도 시도)
   const handleTapToSound = () => {
@@ -36,11 +39,13 @@ export default function Intro() {
     <div className="intro">
       <video
         ref={videoRef}
-        className="intro__video"
+        className={"intro__video" + (ready ? " is-ready" : "")}
         src="/video/Intro_v2.mp4"
         autoPlay
         playsInline
         muted={muted}
+        onLoadedData={() => setReady(true)}
+        onPlaying={() => setReady(true)}
         onEnded={() => setStatus("ended")}
       />
 
