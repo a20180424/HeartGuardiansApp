@@ -16,6 +16,7 @@
   "dependencies": {
     "@capacitor/android": "^8.4.1",
     "@capacitor/app": "^8.1.0",
+    "@capacitor/app-launcher": "^8.0.1",
     "@capacitor/core": "^8.4.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",

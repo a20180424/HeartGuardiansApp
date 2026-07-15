@@ -6,6 +6,7 @@ import WelcomePanel from "./components/WelcomePanel";
 import { classifyVerifyError } from "./auth.logic";
 import { getSchools, verify, logout, signup, type School, type Gender } from "../../lib/auth";
 import { getProgress } from "../../lib/progress";
+import { getClassBoard } from "../../lib/classBoard";
 import { setSession, clearSession } from "../../lib/session";
 import { credentialStore } from "../../lib/api";
 import type { Credentials } from "../../lib/api";
@@ -62,9 +63,14 @@ export default function Auth() {
   // 로그인 성공 공통 처리: 세션 채우고 Home으로.
   async function enter(creds: Credentials) {
     const profile = await verify(creds); // 성공 시 자격증명 저장(api 레이어)
-    const { progress } = await getProgress();
+    // progress는 필수(실패 시 로그인 실패). board는 부가 정보라 실패해도 null로 넘어가 로그인을 막지 않는다.
+    const [{ progress }, board] = await Promise.all([
+      getProgress(),
+      getClassBoard().catch(() => null),
+    ]);
     console.log("[progress] 서버에서 받아온 progress:", progress);
-    setSession({ profile, progress });
+    console.log("[class-board] 서버에서 받아온 board:", board);
+    setSession({ profile, progress, board });
     nav("/home");
   }
 

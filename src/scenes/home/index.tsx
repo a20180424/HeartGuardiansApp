@@ -12,6 +12,7 @@ import HatiHelper from "./components/HatiHelper";
 import EmpathyTools from "./components/EmpathyTools";
 import GemBook from "./components/GemBook";
 import GoalBook from "./components/GoalBook";
+import HistoryBoard from "./components/HistoryBoard";
 import Modal from "../../shared/components/Modal";
 import FixedStage from "../../lib/FixedStage";
 import bannerUrl from "../../shared/assets/TitleBanner.png";
@@ -92,8 +93,12 @@ export default function Home() {
         <GemBook progress={progress} onClose={() => setPopup(null)} />
       ) : popup === "goal" ? (
         <GoalBook onClose={() => setPopup(null)} />
+      ) : popup === "history" ? (
+        <Modal open onClose={() => setPopup(null)} plateUrl={popupPlate}>
+          <HistoryBoard board={session.board} />
+        </Modal>
       ) : (
-        /* 나머지 메뉴/목표 팝업 내용은 추후 채움 (지금은 빈 모달) */
+        /* 나머지 메뉴 팝업 내용은 추후 채움 (지금은 빈 모달) */
         <Modal open={popup !== null} onClose={() => setPopup(null)} plateUrl={popupPlate} />
       )}
     </div>
