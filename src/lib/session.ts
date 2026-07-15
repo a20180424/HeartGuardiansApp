@@ -5,11 +5,15 @@
 // 서버 저장(completePlanet API)과 로컬 세션 갱신을 세션 저장소가 함께 처리한다.
 
 import type { Profile } from "./auth";
+import type { ClassBoardResponse } from "./classBoard";
 import { completePlanet as apiCompletePlanet } from "./progress";
 
 export interface SessionData {
   profile: Profile;
   progress: number; // 0~4, 완료한 Planet 수
+  // 학교·학년·반 게시판 URL(planet1~3). 자주 안 바뀌어 로그인 시 한 번 받아 보관.
+  // 조회 실패 시 null (게시판은 부가 정보라 로그인을 막지 않는다).
+  board: ClassBoardResponse | null;
 }
 
 let current: SessionData | null = null;

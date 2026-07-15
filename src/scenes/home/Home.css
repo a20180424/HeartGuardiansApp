@@ -46,6 +46,50 @@
   justify-content: center;
 }
 
+/* 탐험 일지 팝업: 학급 게시판(행성1~3) 링크 목록 */
+.home-history {
+  width: 100%;
+  padding: 0 12px;
+  color: #2a2320;
+}
+.home-history__title {
+  margin: 0 0 16px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+}
+.home-history__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.home-history__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.home-history__label {
+  flex: 0 0 72px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.home-history__link {
+  flex: 1;
+  min-width: 0;
+  color: #1a5fd0;
+  font-size: 15px;
+  word-break: break-all;
+  text-decoration: underline;
+}
+.home-history__empty {
+  flex: 1;
+  color: #8a8078;
+  font-size: 15px;
+}
+
 /* 단계별 도감 팝업 (공감 도구 / 원석 도감 공용) — 이미지 자체가 완성된 팝업 */
 .book-popup {
   position: absolute;

@@ -11,7 +11,7 @@ const profile: Profile = {
   gender: "male",
   school: { id: "s1", name: "행복초등학교" },
 };
-const data: SessionData = { profile, progress: 2 };
+const data: SessionData = { profile, progress: 2, board: null };
 
 describe("session store", () => {
   beforeEach(() => clearSession());
