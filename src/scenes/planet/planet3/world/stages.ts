@@ -42,6 +42,9 @@ export function createStageManager(ctx: {
   let npcs: Awaited<ReturnType<typeof createNpcs>> | null = null;
   let npcGame: ReturnType<typeof createNpcGame> | null = null;
   let npcCooldown = 0; // 이 시각(elapsed) 이전엔 대화를 다시 열지 않음(피드백 노출용)
+  // 이미 끝낸 NPC에게 "다 녹았어" 피드백을 이번 접근에서 이미 보여준 NPC id.
+  // 반경을 벗어나면 null로 풀려서, 다시 다가오면 한 번 더 보여준다(서 있는 동안 도배 방지).
+  let doneGreetedId: number | null = null;
 
   async function start(opts?: { startStage?: 1 | 2 }): Promise<void> {
     // DEV 편의: stage1을 건너뛰고 stage2로 바로 진입(?m=2&stage2=1). stage1 셋업/인트로
@@ -152,6 +155,9 @@ export function createStageManager(ctx: {
       ctx.setInputLocked(false);
       npcCooldown = elapsed + 1.2; // 피드백이 보이도록 잠시 재오픈 지연
       if (r.accepted) {
+        // 방금 이 NPC를 끝낸 자리에 그대로 서 있는 경우, 마무리 대사를 닫자마자 "이미 녹았어"가
+        // 겹쳐 뜨지 않도록 이번 접근은 인사한 것으로 처리한다(멀어졌다 오면 다시 뜬다).
+        if (r.npcDone) doneGreetedId = def.id;
         npcs!.setLevel(def.id, r.level);
         if (r.feedback) showFeedback(ctx.uiRoot, true, r.feedback); // 중간 라운드는 피드백 없이 다음 대사로
         if (r.allDone) onAllNpcsDone();
@@ -188,7 +194,14 @@ export function createStageManager(ctx: {
       if (popupOpen || elapsed < npcCooldown) return;
       const p = ctx.camera.position;
       const near = npcs.nearest(p.x, p.z, PROXIMITY, (d) => !npcGame!.isDone(d.id));
-      if (near) openNpcDialogue(near);
+      if (near) { openNpcDialogue(near); return; }
+      // 이미 마음이 녹은 친구는 대화를 다시 열지 않는다. 다만 아무 반응이 없으면 '끝난 친구'와
+      // '고장난 친구'가 구분되지 않아, 접근당 한 번 짧은 피드백으로 끝났음을 알린다.
+      const doneNear = npcs.nearest(p.x, p.z, PROXIMITY, (d) => npcGame!.isDone(d.id));
+      if (!doneNear) { doneGreetedId = null; return; }
+      if (doneGreetedId === doneNear.id) return;
+      doneGreetedId = doneNear.id;
+      showFeedback(ctx.uiRoot, true, '이 친구의 마음은 이미 녹았어 🌱');
       return;
     }
     // Stage 1: 말풍선 근접.
