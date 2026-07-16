@@ -1,5 +1,7 @@
 ext {
-    minSdkVersion = 24
+    // 26(Android 8.0) — @capacitor/inappbrowser가 쓰는 ioninappbrowser-android가 최소 26을 요구.
+    // Capacitor 기본값은 24지만, 대상 기기(Galaxy Tab A9+)는 Android 13+라 영향 없음.
+    minSdkVersion = 26
     compileSdkVersion = 36
     targetSdkVersion = 36
     androidxActivityVersion = '1.11.0'
