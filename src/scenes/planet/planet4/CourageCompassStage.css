@@ -135,6 +135,8 @@
   text-shadow: 0 0 15px #bb76ff;
 }
 
+/* 원본의 .situation 은 규칙이 여러 겹으로 쌓여 있다 — 아래는 그 최종 계산값.
+   overflow:visible 이라 상황 이미지(원형 메달)가 왼쪽 테두리 밖으로 걸쳐 나온다. */
 .cc-situation {
   position: absolute;
   z-index: 1;
@@ -143,32 +145,47 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 18px;
-  width: 720px;
-  min-height: 116px;
-  padding: 16px 30px;
+  justify-content: center;
+  width: 900px;
+  min-height: 122px;
+  padding: 10px 28px;
   border: 3px solid #a953ff;
   border-radius: 25px;
   background: linear-gradient(145deg, rgba(8, 4, 28, 0.97), rgba(29, 10, 61, 0.94));
+  font-size: 25px;
+  text-align: left;
+  overflow: visible;
   box-shadow: 0 0 10px #fff, 0 0 30px #9a35ff, inset 0 0 30px #54219b66;
 }
+/* 원형 메달 — 패널 왼쪽 밖(left:-78px)으로 절반쯤 걸쳐 나오고 흰빛·보라빛 글로우가 있다. */
 .cc-situation-image {
-  width: 104px;
-  height: 104px;
+  position: absolute;
+  z-index: 2;
+  left: -78px;
+  top: 50%;
+  width: 158px;
+  height: 158px;
+  display: block;
   object-fit: cover;
-  border-radius: 16px;
-  border: 2px solid #c79bff;
+  border: 5px solid #d1a9ff;
+  border-radius: 50%;
+  background: #150a35;
+  box-shadow: 0 0 10px #fff, 0 0 28px #963cff, 8px 10px 24px #05000daa;
+  transform: translateY(-50%);
 }
+/* 메달이 왼쪽을 차지하므로 본문은 padding-left 로 비켜 준다. */
 .cc-situation-copy {
-  font-size: 23px;
-  line-height: 1.35;
+  width: 100%;
+  min-width: 0;
+  padding-left: 58px;
+  text-align: center;
   word-break: keep-all;
 }
 .cc-speaker {
   display: block;
-  margin-bottom: 5px;
-  color: #d6b8ff;
-  font-size: 15px;
+  margin-bottom: 6px;
+  color: #e6d3ff;
+  font-size: 18px;
   font-weight: bold;
   letter-spacing: 2px;
 }
