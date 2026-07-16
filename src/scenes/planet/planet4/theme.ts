@@ -75,9 +75,13 @@ export const MISSION02_THEME: MissionTheme = {
   banner: { pill: "미션 2", title: MISSION_STEPS[1], ribbon: "공감 할 용기를 되찾아라" },
   bannerNode: "p4_m2_intro",
   bg: {
-    states: { main: `${A}/planet4/shadow-mission2-bg1.png` },
+    // main = 인트로(나침반이 그림에 박제돼 있다) / stage2 = 미니게임 무대
+    states: {
+      main: `${A}/planet4/shadow-mission2-bg1.png`,
+      stage2: `${A}/planet4/shadow-mission2-bg2.png`,
+    },
     initial: "main",
-    byNode: { p4_m2_intro: "main" },
+    byNode: { p4_m2_intro: "main", p4_m2_play: "stage2" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
