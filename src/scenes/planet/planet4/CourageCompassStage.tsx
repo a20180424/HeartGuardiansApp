@@ -206,7 +206,13 @@ export default function CourageCompassStage({ onDone }: { onDone: () => void }) 
               </div>
             </div>
 
-            <div className="cc-fork">
+            {/* key: 시나리오가 바뀌면 갈림길을 통째로 새로 마운트한다(원본이 loadStage 마다
+                innerHTML 로 다시 그리던 것과 같은 의미).
+                ⚠ 없으면 React 가 같은 DOM 을 재사용해서, 새 시나리오가 시작될 때 바늘이
+                  직전 시나리오의 각도(1035/1125deg)에서 0deg 로 2.1초 동안 되감긴다.
+                  ("나침반을 눌러 주세요" 안내가 떴는데 나침반이 혼자 돌고 있는 상태)
+                  표지판도 마찬가지로 revealed 가 풀리며 새 문구를 보여준 채 되뒤집힌다. */}
+            <div className="cc-fork" key={`${stageIndex}-${scenarioIndex}`}>
               {sign("left")}
               <div className="cc-compass-wrap">
                 <div className={`cc-compass-tip${revealed ? " choose-mode" : ""}`}>
