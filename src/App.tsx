@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { App as CapApp } from "@capacitor/app";
 import { SceneTransitionProvider } from "./lib/sceneTransition";
 import { BgmProvider } from "./lib/bgm";
+import HiddenMenu from "./lib/HiddenMenuOverlay";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
 import Home from "./scenes/home";
@@ -51,6 +52,9 @@ export default function App() {
           <Route path="/planet/4" element={<Keyed><Planet4 /></Keyed>} />
           <Route path="/outro" element={<Outro />} />
         </Routes>
+        {/* 교사용 히든 점프 메뉴. Routes 바깥 = 어느 씬에서도 뜬다.
+            SceneTransitionProvider 안이라 useFadeNav를 쓸 수 있다. */}
+        <HiddenMenu />
       </BgmProvider>
     </SceneTransitionProvider>
   );

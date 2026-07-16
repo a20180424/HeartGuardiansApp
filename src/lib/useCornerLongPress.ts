@@ -1,0 +1,83 @@
+import { useEffect, useRef } from "react";
+
+// 히든 메뉴 진입 제스처: 화면 좌상단 모서리를 두 손가락으로 길게 누른다.
+// 태블릿엔 키보드가 없어 히든 "키"는 터치 제스처여야 한다. 아이가 우연히
+// 두 손가락 롱프레스를 할 확률은 거의 없고, 게임 속 탭·드래그와도 겹치지 않는다.
+// 좌표는 실제 뷰포트 기준이다 — 이 훅은 무대(FixedStage/#stage) 바깥에서 돈다.
+
+const CORNER_PX = 100; // 좌상단 감지 정사각형 한 변
+const HOLD_MS = 2000; // 두 손가락을 유지해야 하는 시간
+const MOVE_TOLERANCE_PX = 24; // 이만큼 움직이면 취소(스크롤·드래그 오인 방지)
+
+export function useCornerLongPress(onTrigger: () => void): void {
+  // 콜백을 ref에 담아 리스너를 매 렌더 다시 붙이지 않는다.
+  const cb = useRef(onTrigger);
+  cb.current = onTrigger;
+
+  useEffect(() => {
+    const points = new Map<number, { x: number; y: number }>();
+    let timer: number | undefined;
+
+    const clearTimer = () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer);
+        timer = undefined;
+      }
+    };
+
+    const onDown = (e: PointerEvent) => {
+      if (e.clientX > CORNER_PX || e.clientY > CORNER_PX) return;
+      points.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (points.size === 2 && timer === undefined) {
+        timer = window.setTimeout(() => {
+          timer = undefined;
+          points.clear();
+          cb.current();
+        }, HOLD_MS);
+      }
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const start = points.get(e.pointerId);
+      if (!start) return;
+      const moved =
+        Math.abs(e.clientX - start.x) > MOVE_TOLERANCE_PX ||
+        Math.abs(e.clientY - start.y) > MOVE_TOLERANCE_PX;
+      if (moved) {
+        points.delete(e.pointerId);
+        clearTimer();
+      }
+    };
+
+    const onUp = (e: PointerEvent) => {
+      if (!points.delete(e.pointerId)) return;
+      clearTimer();
+    };
+
+    // 캡처 단계로 듣되 아무것도 삼키지 않는다 — 감지만 하고 이벤트는 그대로 흘린다.
+    window.addEventListener("pointerdown", onDown, true);
+    window.addEventListener("pointermove", onMove, true);
+    window.addEventListener("pointerup", onUp, true);
+    window.addEventListener("pointercancel", onUp, true);
+    return () => {
+      clearTimer();
+      window.removeEventListener("pointerdown", onDown, true);
+      window.removeEventListener("pointermove", onMove, true);
+      window.removeEventListener("pointerup", onUp, true);
+      window.removeEventListener("pointercancel", onUp, true);
+    };
+  }, []);
+
+  // 브라우저 개발용 단축키. 제스처와 완전히 동일한 흐름을 연다(PIN도 동일하게 요구).
+  // 태블릿엔 키보드가 없어 실질적으로 개발용이다.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") {
+        e.preventDefault();
+        cb.current();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+}

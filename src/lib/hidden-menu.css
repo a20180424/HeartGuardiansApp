@@ -1,0 +1,45 @@
+/* 교사용 히든 점프 메뉴. 앱 루트(무대 바깥)에 뜨는 전역 오버레이라
+   FixedStage(1280×800)·미션 #stage(1920×1200) 좌표계와 무관하다.
+   여기서는 vw/vh를 쓴다 — CLAUDE.md의 vh/vw 금지는 무대 안 씬에 대한 규칙이고
+   이 오버레이는 무대 밖 앱 크롬이다. */
+
+.hidden-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10001; /* sceneTransition 페이드(10000)보다 위 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: system-ui, sans-serif;
+}
+
+.hidden-menu__panel {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #12161f;
+  color: #e8eef8;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hidden-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.hidden-menu__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 16px;
+  cursor: pointer;
+}
