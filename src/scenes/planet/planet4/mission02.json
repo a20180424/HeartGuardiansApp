@@ -37,6 +37,16 @@
           "top": "감정에는 공감할 수 있지만 잘못된 행동에는 공감하지 않는다."
         }
       ],
+      "next": "p4_m2_postplay"
+    },
+    {
+      "id": "p4_m2_postplay",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "공감은 특별한 능력이 아니야.\n매 순간 '공감의 길'을 선택하는 작은 용기야.",
+      "completeBanner": "미션 완료!",
       "next": "p4_m2_end"
     },
     {
@@ -45,8 +55,9 @@
       "speaker": "hati",
       "hideFriend": true,
       "noAuto": true,
-      "text": "(임시) 미션2 완료!",
-      "completeBanner": "미션 완료!",
+      "text": "축하해! 대원은 용기의 에메랄드와 공감 나침반을 얻었어! 이제 먼저 다가갈 용기를 낼 수 있을 거야.",
+      "image": "/assets/ui/explore-success.png",
+      "cards": [{ "image": "/assets/ui/planet4-reward-card.png" }],
       "onEnter": [{ "cmd": "fx", "value": "fx_light_return" }],
       "next": null
     }
