@@ -188,6 +188,8 @@
 }
 
 /* ---------- 표지판(뒷면 → 앞면 3D 뒤집기) ---------- */
+/* ⚠ button 은 글자색·글꼴을 상속하지 않는다(UA 기본값). 원본의 전역 button{font:inherit;color:inherit}
+   에 해당 — 이게 없으면 .cc-sign-copy span 이 검은 시스템 글꼴로 찍혀 표지판에서 안 보인다. */
 .cc-sign {
   position: relative;
   height: 315px;
@@ -195,6 +197,8 @@
   padding: 0;
   border: 0;
   background: transparent;
+  color: inherit;
+  font: inherit;
   cursor: default;
   perspective: 900px;
   filter: drop-shadow(0 0 16px #762cff);
