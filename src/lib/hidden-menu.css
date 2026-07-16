@@ -94,3 +94,56 @@
 .hidden-menu__keys button:active {
   background: #36435c;
 }
+
+.hidden-menu__warn {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #7a5a20;
+  border-radius: 8px;
+  background: #3a2a10;
+  color: #ffd479;
+  font-size: 14px;
+}
+
+.hidden-menu__grid {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.hidden-menu__col,
+.hidden-menu__row {
+  font-size: 13px;
+  color: #9fb0c8;
+}
+
+.hidden-menu__col {
+  text-align: center;
+}
+
+.hidden-menu__grid button {
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hidden-menu__grid button:active {
+  background: #36435c;
+}
+
+.hidden-menu__home {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f5d3a;
+  color: #e8eef8;
+  font-size: 15px;
+  cursor: pointer;
+}

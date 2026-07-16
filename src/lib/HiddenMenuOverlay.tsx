@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { useCornerLongPress } from "./useCornerLongPress";
 import { isMenuAvailable, isUnlocked, unlock } from "./hiddenMenu";
+import { useFadeNav } from "./sceneTransition";
 import "./hidden-menu.css";
 
 // 교사 시연용 히든 점프 메뉴. 앱 루트(무대 바깥)에 마운트되는 전역 오버레이다.
@@ -9,6 +10,17 @@ import "./hidden-menu.css";
 type Phase = "closed" | "pin" | "grid";
 
 const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "clear", "0", "back"];
+
+const PLANETS = [1, 2, 3, 4] as const;
+
+// 네 행성 모두 같은 규칙이다. 행성3은 미션3이 독립 시나리오가 아니라 미션2
+// 미니게임의 stage2지만, devJump의 mission3 → mission2 별칭이 흡수한다.
+const COLUMNS: { label: string; query: string }[] = [
+  { label: "미션1", query: "?m=1" },
+  { label: "미션2", query: "?m=2" },
+  { label: "미션3", query: "?m=3" },
+  { label: "엔딩", query: "?m=3&end=1" },
+];
 
 export default function HiddenMenu() {
   const [phase, setPhase] = useState<Phase>("closed");
@@ -26,6 +38,12 @@ export default function HiddenMenu() {
   useCornerLongPress(open);
 
   const close = () => setPhase("closed");
+
+  const fadeNav = useFadeNav();
+  const go = (to: string) => {
+    setPhase("closed");
+    fadeNav(to);
+  };
 
   // 4자리가 차면 즉시 판정한다 — 확인 버튼을 따로 두지 않는다.
   // press()는 버튼 탭(사용자 이벤트)에만 반응하므로 클로저의 entry를 읽어도 안전하다 —
@@ -76,7 +94,36 @@ export default function HiddenMenu() {
             </div>
           </div>
         ) : (
-          <p>그리드 자리 (Task 6)</p>
+          <div className="hidden-menu__grid-wrap">
+            <p className="hidden-menu__warn">
+              ⚠️ 엔딩에서 "우주선으로 이동"을 누르면 진도가 자동 저장됩니다
+            </p>
+            <div className="hidden-menu__grid">
+              <span />
+              {COLUMNS.map((c) => (
+                <span key={c.label} className="hidden-menu__col">
+                  {c.label}
+                </span>
+              ))}
+              {PLANETS.map((p) => (
+                <Fragment key={p}>
+                  <span className="hidden-menu__row">행성{p}</span>
+                  {COLUMNS.map((c) => (
+                    <button
+                      type="button"
+                      key={c.label}
+                      onClick={() => go(`/planet/${p}${c.query}`)}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </Fragment>
+              ))}
+            </div>
+            <button type="button" className="hidden-menu__home" onClick={() => go("/home")}>
+              홈으로
+            </button>
+          </div>
         )}
       </div>
     </div>
