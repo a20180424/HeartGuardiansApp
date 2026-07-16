@@ -72,10 +72,10 @@ export const MISSION01_THEME: MissionTheme = {
 
 export const MISSION02_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 2", title: MISSION_STEPS[1], ribbon: "그림자 행성 미션 2 골격" },
+  banner: { pill: "미션 2", title: MISSION_STEPS[1], ribbon: "공감 할 용기를 되찾아라" },
   bannerNode: "p4_m2_intro",
   bg: {
-    states: { main: `${A}/bg/light-planet-stage2-bg.png` },
+    states: { main: `${A}/planet4/shadow-mission2-bg1.png` },
     initial: "main",
     byNode: { p4_m2_intro: "main" },
   },
