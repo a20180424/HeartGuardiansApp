@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { configuredPin, isUnlocked, unlock, lock } from "./hiddenMenu";
+import { configuredPin, isMenuAvailable, isUnlocked, unlock, lock } from "./hiddenMenu";
 
 describe("hiddenMenu 잠금 store", () => {
   beforeEach(() => lock());
@@ -50,5 +50,25 @@ describe("hiddenMenu 잠금 store", () => {
     unlock("7402");
     lock();
     expect(isUnlocked()).toBe(false);
+  });
+
+  describe("isMenuAvailable", () => {
+    it("PIN 미설정 + DEV=false면 false (fail closed)", () => {
+      vi.stubEnv("VITE_HG_MENU_PIN", "");
+      vi.stubEnv("DEV", false);
+      expect(isMenuAvailable()).toBe(false);
+    });
+
+    it("유효한 4자리 PIN + DEV=false면 true", () => {
+      vi.stubEnv("VITE_HG_MENU_PIN", "7402");
+      vi.stubEnv("DEV", false);
+      expect(isMenuAvailable()).toBe(true);
+    });
+
+    it("DEV=true면 PIN 없어도 true (개발 편의 우회)", () => {
+      vi.stubEnv("VITE_HG_MENU_PIN", "");
+      vi.stubEnv("DEV", true);
+      expect(isMenuAvailable()).toBe(true);
+    });
   });
 });

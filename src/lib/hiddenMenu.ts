@@ -17,7 +17,13 @@ export function configuredPin(): string | null {
   return typeof raw === "string" && /^\d{4}$/.test(raw) ? raw : null;
 }
 
-/** 이 빌드에서 메뉴를 열 수 있는지. DEV는 PIN 없이도 연다. */
+/**
+ * 이 빌드에서 메뉴를 열 수 있는지. DEV는 PIN 없이도 연다.
+ *
+ * unlock()은 DEV에서도 항상 fail closed지만 모순이 아니다 — 메뉴 컴포넌트가
+ * DEV에서는 PIN 패드 단계를 건너뛰어(그리드로 직행) unlock()을 아예 호출하지
+ * 않기 때문. PROD+PIN없음일 때만 여기서 막힌다.
+ */
 export function isMenuAvailable(): boolean {
   return import.meta.env.DEV || configuredPin() !== null;
 }
