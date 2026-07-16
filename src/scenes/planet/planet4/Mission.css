@@ -181,6 +181,14 @@
       리본이 화면을 덮고 가장자리가 뭉갠다. planet2 p2_m3_end / planet3 p3_m2_end 와 동일한 처리.
       특이도: .p4_m2 #stage.node-p4_m2_end #choiceImage (1,3,1) 가 base #choiceImage (1,0,0) 를 이긴다.
    ───────────────────────────────────────────────────────────── */
+/* p4_m2_end 의 onEnter fx_light_return 이 #stage 에 .bright 를 붙이면 base 가
+   #lightOverlay(따뜻한 노란 빛무리)를 켠다. 보라색 그림자 행성엔 안 어울려서 끈다.
+   미션1도 같은 이유로 꺼져 있다(.p4_m1 #stage.bright #lightOverlay).
+   .bright 의 나머지 효과(#bg 밝기·채도 상승)는 그대로 둔다. */
+.p4_m2 #stage.node-p4_m2_end #lightOverlay {
+  opacity: 0;
+}
+
 .p4_m2 #stage.node-p4_m2_end #choiceImage {
   top: 140px; /* 위로/아래로 이동(값↑ 내려감) */
   height: auto; /* width 로 크기 제어하려고 해제 */
