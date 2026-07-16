@@ -115,12 +115,23 @@
       - 좌우 이동:  left    (값이 클수록 오른쪽)
       - 상하 이동:  bottom  (값이 클수록 위로)
       - 크기:       height  (width 는 auto 로 비율 유지)
+      - 좌우 반전:  아래 transform 의 scaleX(-1)  (되돌리려면 두 줄 다 지운다)
       특이도: .p4_m2 #hatiFull (1,1,0) 가 base #hatiFull (1,0,0) 를 이긴다.
+
+      ⚠ transform 은 등장 애니메이션이 이미 쓰고 있다.
+        base: #hatiFull      → translateY(22px) scale(0.97)  (등장 전)
+              #hatiFull.show → translateY(0) scale(1)        (등장 후)
+        그래서 scaleX(-1) 은 두 상태 모두에 붙여야 한다. 한쪽만 붙이면
+        페이드인이 끝나는 순간 .show 가 덮어써서 반전이 풀린다.
    ───────────────────────────────────────────────────────────── */
 .p4_m2 #hatiFull {
-  left: 510px;
+  left: -100px;
   bottom: -18px;
   height: 730px;
+  transform: translateY(22px) scale(0.97) scaleX(-1);
+}
+.p4_m2 #hatiFull.show {
+  transform: translateY(0) scale(1) scaleX(-1);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -132,8 +143,8 @@
       특이도: .p4_m2 #hatiBubble (1,1,0) 가 base #hatiBubble (1,0,0) 를 이긴다.
    ───────────────────────────────────────────────────────────── */
 .p4_m2 #hatiBubble {
-  left: 1030px;
-  bottom: 452px;
+  left: 400px;
+  bottom: 552px;
   max-width: 600px;
 }
 
