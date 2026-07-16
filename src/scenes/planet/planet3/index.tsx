@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { useFadeNav } from "../../../lib/sceneTransition";
+import { useDevJump } from "../devJump";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyManualGame from "./EmpathyManualGame";
@@ -27,20 +27,20 @@ const FADE_MS = 160;
 
 export default function Planet3() {
   const nav = useFadeNav();
-  const [params] = useSearchParams();
 
-  const m = params.get("m");
-  const wanted =
-    params.get("stage") ?? (m ? (m === "0" ? "prologue" : `mission${m}`) : null);
-  const initialStage: Stage =
-    import.meta.env.DEV && wanted && (STAGES as string[]).includes(wanted)
-      ? (wanted as Stage)
-      : "prologue";
+  // 개발용 점프(파라미터 규격은 ../devJump.ts 참고). 행성3은 미션3이 별도 stage가 아니라
+  // 미션2 미니게임의 stage2라서, ?m=3 을 mission2 + stage2 진입으로 번역한다.
+  const {
+    stage: initialStage,
+    requested,
+    has,
+    startFrom,
+  } = useDevJump(STAGES, { mission3: "mission2" });
 
-  // DEV 편의: ?m=2&stage2=1 이면 미션2 미니게임을 stage2(=미션3)부터 바로 시작한다.
-  const devStage2 = import.meta.env.DEV && params.has("stage2");
-  // DEV 편의: ?m=2&end=1 이면 3D 월드를 통째로 건너뛰고 미션3 엔딩 대사부터 시작한다.
-  const devEnd = import.meta.env.DEV && params.has("end");
+  // ?m=2&stage2=1 (또는 별칭 ?m=3) 이면 미션2 미니게임을 stage2(=미션3)부터 바로 시작한다.
+  const devStage2 = has("stage2") || requested === "mission3";
+  // ?m=2&end=1 (또는 ?m=2&node=…) 이면 3D 월드를 건너뛰고 엔딩 노드부터 시작한다.
+  const devEnd = has("end") || has("node");
 
   const [stage, setStage] = useState<Stage>(initialStage);
   const [fading, setFading] = useState(false);
@@ -48,11 +48,8 @@ export default function Planet3() {
   // 미션2 미니게임이 stage2(=행성3 관점의 미션3)로 넘어가면 상단 스테퍼를 3단계로 올린다.
   const [m2Step, setM2Step] = useState(devStage2 || devEnd ? 3 : 2);
 
-  // devEnd일 때만 시작 노드를 갈아끼운다. 엔진은 data.start로 진입하므로 이걸로 충분하다.
-  const m2Data = useMemo(
-    () => (devEnd ? { ...MISSION02_DATA, start: "p3_m2_postplay" } : MISSION02_DATA),
-    [devEnd],
-  );
+  // 엔진은 data.start로 진입하므로 start만 갈아끼우면 앞 노드들은 통째로 건너뛴다.
+  const m2Data = startFrom(MISSION02_DATA);
 
   // games 맵은 반드시 안정적인 참조여야 한다 — 매 렌더 새 함수를 넘기면 MissionPlayer가
   // 미니게임 컴포넌트를 remount해 3D 월드가 통째로 재생성된다(stage2 전환 시 치명적).
@@ -95,7 +92,7 @@ export default function Planet3() {
       )}
       {stage === "mission1" && (
         <MissionPlayer
-          scenario={MISSION01_DATA}
+          scenario={startFrom(MISSION01_DATA)}
           theme={MISSION01_THEME}
           currentStep={1}
           steps={MISSION_STEPS}
