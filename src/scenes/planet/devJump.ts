@@ -1,10 +1,15 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import { isUnlocked } from "../../lib/hiddenMenu";
 import type { MissionData } from "./engine/types";
 
-// 행성 씬 개발용 점프 파라미터를 한 곳에서 해석한다.
-// 프로덕션 빌드(APK)에선 import.meta.env.DEV 가 false 라 모든 파라미터가 무시되고
-// 항상 stages[0](=prologue)부터 시작한다.
+// 행성 씬의 점프 파라미터를 한 곳에서 해석한다.
+//
+// 개발 중(vite dev)에는 항상 열려 있다. 프로덕션 빌드(APK)에서는 히든 메뉴가
+// PIN으로 해제된 뒤에만(isUnlocked) 파라미터가 해석되고, 그전까지는 전부
+// 무시되어 항상 stages[0](=prologue)부터 시작한다.
+// APK는 주소창 없는 immersive 웹뷰라 URL 파라미터 자체가 학생 손에 닿지 않는다 —
+// 실질 방어선은 히든 메뉴의 제스처 + PIN이다.
 //
 //   #/planet/2?m=3                 미션3부터 (m=0 → prologue)
 //   #/planet/2?stage=mission3      위와 동일(풀네임)
@@ -27,7 +32,8 @@ export function useDevJump<S extends string>(
   alias?: Record<string, S>,
 ): DevJump<S> {
   const [params] = useSearchParams();
-  const dev = import.meta.env.DEV;
+  // DEV는 항상 허용, 프로덕션은 히든 메뉴로 해제된 뒤에만.
+  const dev = import.meta.env.DEV || isUnlocked();
 
   const m = params.get("m");
   const requested = dev
