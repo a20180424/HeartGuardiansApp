@@ -28,22 +28,23 @@ export default function HiddenMenu() {
   const close = () => setPhase("closed");
 
   // 4자리가 차면 즉시 판정한다 — 확인 버튼을 따로 두지 않는다.
+  // press()는 버튼 탭(사용자 이벤트)에만 반응하므로 클로저의 entry를 읽어도 안전하다 —
+  // state updater 안에서 unlock()/setPhase() 같은 부수효과를 실행하지 않기 위해 판정을 밖으로 뺐다.
   const press = (k: string) => {
     setWrong(false);
     if (k === "clear") return setEntry("");
     if (k === "back") return setEntry((s) => s.slice(0, -1));
-    setEntry((s) => {
-      const next = (s + k).slice(0, 4);
-      if (next.length === 4) {
-        if (unlock(next)) {
-          setPhase("grid");
-          return "";
-        }
+    const next = (entry + k).slice(0, 4);
+    if (next.length === 4) {
+      setEntry("");
+      if (unlock(next)) {
+        setPhase("grid");
+      } else {
         setWrong(true);
-        return "";
       }
-      return next;
-    });
+      return;
+    }
+    setEntry(next);
   };
 
   if (phase === "closed") return null;
