@@ -4,6 +4,7 @@ import { useFadeNav } from "../../../lib/sceneTransition";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyCompassStage from "./EmpathyCompassStage"; // 미션1 "가디언즈 최종 점검하기" 미니게임
+import CourageCompassStage from "./CourageCompassStage"; // 미션2 "공감 나침반 작전" 미니게임
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -86,6 +87,11 @@ export default function Planet4() {
           currentStep={2}
           steps={MISSION_STEPS}
           scopeClass="p4_m2"
+          games={{
+            // 미션2 "공감 나침반 작전" — 4스테이지 × 2시나리오(갈림길·대화·용기조각) → onDone.
+            // 공감 카드·엔딩 화면은 미니게임이 아니라 이후 시나리오 노드가 맡는다.
+            courageCompass: ({ onDone }) => <CourageCompassStage onDone={onDone} />,
+          }}
           onExit={() => goTo("mission3")}
         />
       )}
