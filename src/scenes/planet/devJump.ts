@@ -18,7 +18,7 @@ import type { MissionData } from "./engine/types";
 
 type DevJump<S extends string> = {
   stage: S; // 시작할 subscene
-  requested: string | null; // 별칭 적용 전 원본 요청("mission3" 등). DEV 아니면 null
+  requested: string | null; // 별칭 적용 전 원본 요청("mission3" 등). 게이트가 닫혀 있으면 null
   has: (key: string) => boolean; // 행성 전용 플래그(예: planet3 의 stage2)
   // 시나리오의 start 를 ?node= / ?end= 로 갈아끼운 사본. 해당 없으면 원본을 그대로 돌려준다.
   // 반환값은 useMemo 로 캐시되므로 MissionPlayer 에 그대로 넘겨도 안전하다
@@ -48,6 +48,8 @@ export function useDevJump<S extends string>(
   const end = dev && params.has("end");
 
   // data 별로 결과를 캐시한다. node/end 가 없으면 원본 참조를 그대로 유지한다.
+  // node/end 가 바뀌면 캐시를 버리려는 의도적 deps (팩토리가 값을 읽지 않아 린트가 불필요하다고 본다).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cache = useMemo(() => new Map<MissionData, MissionData>(), [node, end]);
   const startFrom = (data: MissionData) => {
     if (!node && !end) return data;

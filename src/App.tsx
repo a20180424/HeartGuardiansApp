@@ -13,13 +13,13 @@ import Planet3 from "./scenes/planet/planet3";
 import Planet4 from "./scenes/planet/planet4";
 import Outro from "./scenes/outro";
 
-// react-router는 같은 라우트에서 search만 바뀌면 컴포넌트를 재사용한다.
-// 각 행성은 useState(initialStage)로 마운트 때 딱 한 번 점프 파라미터를 읽으므로,
-// 히든 메뉴로 같은 행성의 다른 미션에 점프하면 화면이 그대로였다.
-// search를 key로 걸어 파라미터가 바뀌면 리마운트시킨다.
+// 각 행성은 useState(initialStage)로 마운트 때 딱 한 번 점프 파라미터를 읽는다.
+// 씬은 미션 진행(goTo)을 URL이 아닌 내부 상태로만 반영하므로, 같은 ?m=1 칸을
+// 다시 눌러도 search가 바뀌지 않아 search를 key로 쓰면 리마운트가 안 됐다.
+// location.key는 navigate()가 매번(같은 URL이어도) 새로 발급하므로 이걸 쓴다.
 function Keyed({ children }: { children: ReactNode }) {
-  const { search } = useLocation();
-  return <Fragment key={search}>{children}</Fragment>;
+  const { key } = useLocation();
+  return <Fragment key={key}>{children}</Fragment>;
 }
 
 export default function App() {
