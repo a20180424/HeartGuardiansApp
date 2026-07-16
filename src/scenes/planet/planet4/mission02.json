@@ -18,6 +18,25 @@
       "hideFriend": true,
       "noAuto": true,
       "game": "courageCompass",
+      "next": "p4_m2_cards"
+    },
+    {
+      "id": "p4_m2_cards",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "공감하기 어려운 상황도 있어.\n지혜롭게 공감하기를 실천하자!",
+      "cards": [
+        {
+          "image": "/assets/planet4/shadow-planet-empathy-card.png",
+          "top": "먼저 관심을 가지고 다가가려는 용기가 공감의 시작이다."
+        },
+        {
+          "image": "/assets/planet4/shadow-planet-empathy-card.png",
+          "top": "감정에는 공감할 수 있지만 잘못된 행동에는 공감하지 않는다."
+        }
+      ],
       "next": "p4_m2_end"
     },
     {
