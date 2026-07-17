@@ -300,13 +300,6 @@
         </div>
       </div>
 
-      <h2>씬 전환 <span class="tag new">새 소리 · 미검증</span></h2>
-      <div class="note">
-        <code>whooshNav</code>는 시작음에서 끝음으로 미끄러지는(glide) 소리라 "슝" 하고 지나갑니다.
-        폭이 클수록 극적. <b>바로 아래 <code>whoosh</code>(미션용 원본)와 번갈아 들어보세요.</b>
-      </div>
-      <div id="navSec"></div>
-
       <h2>버튼·로그인 <span class="tag mission">미션에서 빌려 쓴 소리</span></h2>
       <div class="note">여기를 바꾸면 <b>미션 소리도 같이 바뀝니다.</b></div>
       <div id="uiSec"></div>
@@ -371,26 +364,9 @@
             { freq: 600, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 },
           ],
         },
-        whooshNav: {
-          sec: "navSec",
-          isNew: 1,
-          desc: "씬 전환 (전용) — 아래 노브로 완전히 새로 만들 수 있다",
-          // adv: 이 소리만 첫 음의 파라미터를 통째로 노브로 연다(초 단위까지).
-          // attack 을 길게 주면 스르륵 차오르는 fade-in, release 를 길게 주면 fade-out 이 된다.
-          adv: [
-            { key: "attack", label: "fade-in", min: 0.005, max: 1.5, step: 0.005, def: 0.005 },
-            { key: "dur", label: "지속", min: 0.05, max: 2.5, step: 0.05, def: 0.18 },
-            { key: "release", label: "fade-out", min: 0.01, max: 1.5, step: 0.01, def: 0.08 },
-            { key: "freq", label: "시작음", min: 60, max: 1200, step: 10, def: 520 },
-            { key: "glideTo", label: "끝음", min: 60, max: 1200, step: 10, def: 150 },
-          ],
-          tones: [
-            { freq: 520, type: "sawtooth", dur: 0.18, gain: 0.13, glideTo: 150, release: 0.08 },
-          ],
-        },
         whoosh: {
-          sec: "navSec",
-          desc: "미션: 카드가 스륵 — 원본. sawtooth 라 0.06 이어도 작지 않다",
+          sec: "misSec",
+          desc: "미션: 카드가 스륵. sawtooth 라 0.06 이어도 작지 않다",
           tones: [
             { freq: 520, type: "sawtooth", dur: 0.14, gain: 0.06, glideTo: 150, release: 0.06 },
           ],
@@ -519,7 +495,9 @@
               ...t,
               type: ST[name].type,
               gain: +(t.gain * scale).toFixed(4),
-              // adv 노브는 첫 음에만 적용한다(whooshNav 는 원래 한 음짜리라 전부 덮인다)
+              // adv(첫 음의 파라미터를 통째로 여는 노브)는 첫 음에만 적용한다.
+              // 지금 adv 를 쓰는 소리는 없다 — 어떤 소리를 처음부터 새로 만들어야 할 때
+              // SPEC 에 adv: [...] 를 얹으면 그 소리만 세부 노브가 열린다.
               ...(ti === 0 ? ST[name].adv : {}),
               // sparkle 은 매번 랜덤 주파수 + i*0.05 간격 (audio.ts 원문과 동일)
               ...(s.rand ? { freq: 1600 + Math.random() * 1100, start: i * 0.05 } : {}),
