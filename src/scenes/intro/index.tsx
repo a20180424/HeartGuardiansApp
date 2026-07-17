@@ -89,7 +89,6 @@ export default function Intro() {
         <button
           type="button"
           className="btn intro__start"
-          data-sfx="none" /* nav()가 whoosh를 울린다 — tap과 겹치면 안 된다 */
           onClick={() => nav("/auth")}
         >
           <PlayIcon />

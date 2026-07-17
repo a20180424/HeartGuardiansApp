@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { audio } from "./audio";
 
 // 라우트(씬) 전환용 전역 페이드-투-블랙.
 //
@@ -11,6 +10,11 @@ import { audio } from "./audio";
 //
 // 사용: const fadeNav = useFadeNav();  fadeNav("/home");
 // (planet 내부 subscene 전환은 각 planet의 goTo를 그대로 쓴다.)
+//
+// 전환음은 넣지 않는다. 한때 whoosh(미션에서 카드가 스륵 지나갈 때 쓰는 소리)를
+// 재사용했다가 사건의 크기가 안 맞아 전용 변종까지 만들었지만, 220ms 짜리 전환에
+// 어울리는 소리를 끝내 못 찾았다. 짧으면 뚝 끊기고, 길게(2~3초 스웰) 가면 화면이
+// 바뀐 뒤에도 울려 다음 씬을 침범한다. 버튼 tap 만으로 충분하다는 결론.
 
 const FADE_MS = 160; // 페이드 지속시간(planet goTo와 동일)
 const HOLD_MS = 60; // 새 씬이 한 프레임 그려질 시간(마운트 깜빡임 가림)
@@ -28,7 +32,6 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
     (to) => {
       if (busy.current) return;
       busy.current = true;
-      audio.play("whooshNav"); // 페이드 시작과 동시에 — 전환음이 화면보다 늦으면 어긋나 들린다
       setFading(true); // 0 → 1 (fade to black)
       window.setTimeout(() => {
         nav(to); // 검은 화면 뒤에서 라우트 교체

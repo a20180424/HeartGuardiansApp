@@ -123,7 +123,6 @@ export default function HiddenMenu() {
                     <button
                       type="button"
                       key={c.label}
-                      data-sfx="none" /* go()가 fadeNav로 whoosh를 울린다 — tap과 겹치면 안 된다 */
                       onClick={() => go(`/planet/${p}${c.query}`)}
                     >
                       {c.label}
@@ -132,12 +131,7 @@ export default function HiddenMenu() {
                 </Fragment>
               ))}
             </div>
-            <button
-              type="button"
-              className="hidden-menu__home"
-              data-sfx="none" /* go()가 fadeNav로 whoosh를 울린다 — tap과 겹치면 안 된다 */
-              onClick={() => go("/home")}
-            >
+            <button type="button" className="hidden-menu__home" onClick={() => go("/home")}>
               홈으로
             </button>
           </div>

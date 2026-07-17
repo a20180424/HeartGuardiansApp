@@ -105,12 +105,7 @@ export default function PrologueTemplate({
         </section>
 
         {/* ⑨ 우주선으로 이동 (홈 복귀) */}
-        <button
-          type="button"
-          className="prologue__home"
-          data-sfx="none" /* onHome이 Home으로 nav()해 whoosh를 울린다 — tap과 겹치면 안 된다 */
-          onClick={onHome}
-        >
+        <button type="button" className="prologue__home" onClick={onHome}>
           <img className="prologue__home-icon" src="/assets/char/SpaceshipIcon.png" alt="" />
           <span>우주선으로 이동</span>
         </button>

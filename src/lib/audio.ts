@@ -161,11 +161,6 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
   },
   whoosh: (a) =>
     a.tone({ freq: 520, type: "sawtooth", dur: 0.14, gain: 0.06, glideTo: 150, release: 0.06 }),
-  // 씬 전환용. whoosh 와 같은 모양이지만 더 크고 길다 — 미션 안에서 카드가 스륵
-  // 지나가는 것과 화면이 통째로 바뀌는 건 사건의 크기가 다르다. whoosh(0.06)는
-  // 미션이 쓰던 값이라 그대로 두고(미션 소리 무변경), 전환은 이 변종을 쓴다.
-  whooshNav: (a) =>
-    a.tone({ freq: 520, type: "sawtooth", dur: 0.18, gain: 0.13, glideTo: 150, release: 0.08 }),
   correct: (a) =>
     [660, 880, 1175].forEach((f, i) =>
       a.tone({ freq: f, type: "triangle", start: i * 0.1, dur: 0.12, gain: 0.15, release: 0.12 }),

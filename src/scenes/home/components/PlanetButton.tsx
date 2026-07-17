@@ -32,7 +32,6 @@ export default function PlanetButton({ id, status, onPlay }: PlanetButtonProps) 
     <button
       type="button"
       className={`home-planet home-planet--${status}`}
-      data-sfx="none" /* 전환음(whoosh)이 이미 울린다 — 겹치면 안 된다 */
       disabled={!playable}
       onClick={() => playable && onPlay(id)}
       aria-label={PLANET_NAMES[id - 1]}

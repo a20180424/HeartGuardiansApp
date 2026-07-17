@@ -89,7 +89,6 @@ export default function Outro() {
         <button
           type="button"
           className="btn outro__home"
-          data-sfx="none" /* nav()가 whoosh를 울린다 — tap과 겹치면 안 된다 */
           onClick={() => nav("/home")}
         >
           <HomeIcon />
