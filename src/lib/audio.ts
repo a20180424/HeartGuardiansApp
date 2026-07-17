@@ -118,12 +118,12 @@ export class AudioManager {
       const lfoGain = this.ctx!.createGain();
       osc.type = "sine";
       osc.frequency.value = f;
-      // 아주 조용하게 — 효과음(gain 0.11~0.16) 밑에 깔려야 한다.
+      // 조용하게 — 효과음(gain 0.11~0.16) 밑에 깔려야 한다.
       gain.gain.value = 0.0001;
-      gain.gain.linearRampToValueAtTime(0.03, t0 + 3); // 3초에 걸쳐 서서히 든다
+      gain.gain.linearRampToValueAtTime(0.05, t0 + 3); // 3초에 걸쳐 서서히 든다
       // 느린 LFO(0.05~0.08Hz = 12~20초 주기)로 뜨고 지게 만든다.
       lfo.frequency.value = 0.05 + i * 0.015;
-      lfoGain.gain.value = 0.015;
+      lfoGain.gain.value = 0.02;
       lfo.connect(lfoGain).connect(gain.gain);
       osc.connect(gain).connect(this.master!);
       osc.start(t0);
@@ -161,6 +161,11 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
   },
   whoosh: (a) =>
     a.tone({ freq: 520, type: "sawtooth", dur: 0.14, gain: 0.06, glideTo: 150, release: 0.06 }),
+  // 씬 전환용. whoosh 와 같은 모양이지만 더 크고 길다 — 미션 안에서 카드가 스륵
+  // 지나가는 것과 화면이 통째로 바뀌는 건 사건의 크기가 다르다. whoosh(0.06)는
+  // 미션이 쓰던 값이라 그대로 두고(미션 소리 무변경), 전환은 이 변종을 쓴다.
+  whooshNav: (a) =>
+    a.tone({ freq: 520, type: "sawtooth", dur: 0.18, gain: 0.13, glideTo: 150, release: 0.08 }),
   correct: (a) =>
     [660, 880, 1175].forEach((f, i) =>
       a.tone({ freq: f, type: "triangle", start: i * 0.1, dur: 0.12, gain: 0.15, release: 0.12 }),
@@ -202,8 +207,8 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
     ),
   // 말풍선 타자기. 초당 ~10회 울리므로 기존 tap(gain 0.11)의 1/3 세기에 훨씬 짧다.
   // 하티(가이드)는 낮고 차분하게, 친구(감정을 말하는 외계인)는 조금 높게.
-  blipHati: (a) => a.tone({ freq: 320, type: "sine", dur: 0.025, gain: 0.04, release: 0.02 }),
-  blipFriend: (a) => a.tone({ freq: 480, type: "sine", dur: 0.025, gain: 0.04, release: 0.02 }),
+  blipHati: (a) => a.tone({ freq: 320, type: "sine", dur: 0.025, gain: 0.06, release: 0.02 }),
+  blipFriend: (a) => a.tone({ freq: 480, type: "sine", dur: 0.025, gain: 0.06, release: 0.02 }),
 };
 
 /* 앱 전역 단일 인스턴스. 예전엔 MissionPlayer가 직접 new 했으나, 그러면 미션이
