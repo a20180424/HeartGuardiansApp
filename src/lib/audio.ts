@@ -101,11 +101,16 @@ export class AudioManager {
   }
 }
 
-/* sound library — name -> function(am). Kept soft (low per-note gain). */
+/* sound library — name -> function(am).
+ *
+ * gain 은 사람이 사운드 벤치(tools/sound-bench.html)에서 번갈아 들으며 맞춘 값이다.
+ * 숫자를 통일한 게 아니라 "같은 크기로 들리게" 맞춘 것이라 값이 들쭉날쭉한 게 정상이다 —
+ * 파형(sawtooth 가 sine 보다 훨씬 큼), 동시에 울리는 음 개수, 주파수별 귀의 민감도가
+ * 전부 다르기 때문. 예: whoosh 0.06 은 sawtooth 라서 그 값이면 충분하다. */
 const SOUNDS: Record<string, (a: AudioManager) => void> = {
-  tap: (a) => a.tone({ freq: 520, type: "sine", dur: 0.05, gain: 0.11, release: 0.05 }),
+  tap: (a) => a.tone({ freq: 520, type: "sine", dur: 0.05, gain: 0.16, release: 0.05 }),
   pop: (a) =>
-    a.tone({ freq: 400, type: "triangle", dur: 0.07, gain: 0.13, glideTo: 680, release: 0.06 }),
+    a.tone({ freq: 400, type: "triangle", dur: 0.07, gain: 0.16, glideTo: 680, release: 0.06 }),
   select: (a) => {
     a.tone({ freq: 600, type: "triangle", dur: 0.06, gain: 0.14 });
     a.tone({ freq: 900, type: "triangle", start: 0.05, dur: 0.07, gain: 0.12 });
@@ -121,11 +126,13 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
       a.tone({ freq: f, type: "triangle", start: i * 0.1, dur: 0.12, gain: 0.15, release: 0.12 }),
     ),
   wrong: (a) =>
-    a.tone({ freq: 320, type: "sine", dur: 0.16, gain: 0.13, glideTo: 200, release: 0.1 }),
+    a.tone({ freq: 320, type: "sine", dur: 0.16, gain: 0.15, glideTo: 200, release: 0.1 }),
   stage: (a) => {
     a.tone({ freq: 600, type: "triangle", dur: 0.08, gain: 0.12 });
     a.tone({ freq: 900, type: "triangle", start: 0.08, dur: 0.1, gain: 0.12 });
   },
+  // 6음이 겹쳐 울리므로 개별 gain 이 작아도 합치면 크다. recover·fanfare 가 이걸
+  // 덧붙여 부르므로 여기를 바꾸면 그 둘도 같이 커진다.
   sparkle: (a) => {
     for (let i = 0; i < 6; i++)
       a.tone({
@@ -133,7 +140,7 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
         type: "triangle",
         start: i * 0.05,
         dur: 0.1,
-        gain: 0.06,
+        gain: 0.07,
         release: 0.12,
       });
   },
@@ -153,16 +160,16 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
   },
   title: (a) =>
     [523, 659, 784, 1047].forEach((f, i) =>
-      a.tone({ freq: f, type: "triangle", start: i * 0.07, dur: 0.14, gain: 0.12, release: 0.12 }),
+      a.tone({ freq: f, type: "triangle", start: i * 0.07, dur: 0.14, gain: 0.13, release: 0.12 }),
     ),
   // 말풍선 타자기. 어절마다 한 번꼴로만 울리므로(typeSound.ts BLIP_EVERY 참조)
   // 또렷하게 들려도 지치지 않는다. 아래 값은 전부 사람이 실제 대사를 들으며 맞춘 것이다.
   // triangle: sine 은 배음이 없어 뭉툭했다 — 약한 홀수 배음이 선명함을 준다.
   // 하티(가이드)는 낮게, 친구(감정을 말하는 외계인)는 높게.
   blipHati: (a) =>
-    a.tone({ freq: 500, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 }),
+    a.tone({ freq: 500, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
   blipFriend: (a) =>
-    a.tone({ freq: 600, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 }),
+    a.tone({ freq: 600, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
 };
 
 /* 앱 전역 단일 인스턴스. 예전엔 MissionPlayer가 직접 new 했으나, 그러면 미션이
