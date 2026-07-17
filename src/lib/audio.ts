@@ -205,10 +205,11 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
     [523, 659, 784, 1047].forEach((f, i) =>
       a.tone({ freq: f, type: "triangle", start: i * 0.07, dur: 0.14, gain: 0.12, release: 0.12 }),
     ),
-  // 말풍선 타자기. 초당 ~10회 울리므로 기존 tap(gain 0.11)의 1/3 세기에 훨씬 짧다.
-  // 하티(가이드)는 낮고 차분하게, 친구(감정을 말하는 외계인)는 조금 높게.
-  blipHati: (a) => a.tone({ freq: 320, type: "sine", dur: 0.025, gain: 0.06, release: 0.02 }),
-  blipFriend: (a) => a.tone({ freq: 480, type: "sine", dur: 0.025, gain: 0.06, release: 0.02 }),
+  // 말풍선 타자기. 어절마다 한 번꼴로만 울리므로(typeSound.ts BLIP_EVERY 참조)
+  // 또렷하게 들려도 지치지 않는다 — 사람이 직접 듣고 맞춘 값이다.
+  // 하티(가이드)는 낮게, 친구(감정을 말하는 외계인)는 높게.
+  blipHati: (a) => a.tone({ freq: 500, type: "sine", dur: 0.025, gain: 0.2, release: 0.02 }),
+  blipFriend: (a) => a.tone({ freq: 600, type: "sine", dur: 0.025, gain: 0.2, release: 0.02 }),
 };
 
 /* 앱 전역 단일 인스턴스. 예전엔 MissionPlayer가 직접 new 했으나, 그러면 미션이

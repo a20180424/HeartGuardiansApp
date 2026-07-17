@@ -6,7 +6,7 @@
 
 export type Speaker = "hati" | "friend";
 
-const BLIP_EVERY = 3;
+const BLIP_EVERY = 4;
 const SILENT_CHAR = /[\s.,!?…·'"“”‘’\-—~()[\]{}:;]/;
 
 export function isSpeakingChar(ch: string): boolean {
