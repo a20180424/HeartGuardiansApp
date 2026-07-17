@@ -374,7 +374,16 @@
         whooshNav: {
           sec: "navSec",
           isNew: 1,
-          desc: "씬 전환 (전용)",
+          desc: "씬 전환 (전용) — 아래 노브로 완전히 새로 만들 수 있다",
+          // adv: 이 소리만 첫 음의 파라미터를 통째로 노브로 연다(초 단위까지).
+          // attack 을 길게 주면 스르륵 차오르는 fade-in, release 를 길게 주면 fade-out 이 된다.
+          adv: [
+            { key: "attack", label: "fade-in", min: 0.005, max: 1.5, step: 0.005, def: 0.005 },
+            { key: "dur", label: "지속", min: 0.05, max: 2.5, step: 0.05, def: 0.18 },
+            { key: "release", label: "fade-out", min: 0.01, max: 1.5, step: 0.01, def: 0.08 },
+            { key: "freq", label: "시작음", min: 60, max: 1200, step: 10, def: 520 },
+            { key: "glideTo", label: "끝음", min: 60, max: 1200, step: 10, def: 150 },
+          ],
           tones: [
             { freq: 520, type: "sawtooth", dur: 0.18, gain: 0.13, glideTo: 150, release: 0.08 },
           ],
@@ -494,8 +503,9 @@
       // 노브 상태: 소리마다 { gain(첫 음 기준), type }. 나머지 음은 원래 비율을 유지한다.
       const ST = {};
       for (const [n, s] of Object.entries(SPEC)) {
-        ST[n] = { gain: s.tones[0].gain, type: s.tones[0].type };
+        ST[n] = { gain: s.tones[0].gain, type: s.tones[0].type, adv: {} };
         s.base = s.tones[0].gain; // 비율 계산 기준
+        (s.adv || []).forEach((a) => (ST[n].adv[a.key] = a.def));
       }
 
       function play(name) {
@@ -504,11 +514,13 @@
         const scale = ST[name].gain / s.base;
         const n = s.rand || 1;
         for (let i = 0; i < n; i++) {
-          s.tones.forEach((t) => {
+          s.tones.forEach((t, ti) => {
             tone({
               ...t,
               type: ST[name].type,
               gain: +(t.gain * scale).toFixed(4),
+              // adv 노브는 첫 음에만 적용한다(whooshNav 는 원래 한 음짜리라 전부 덮인다)
+              ...(ti === 0 ? ST[name].adv : {}),
               // sparkle 은 매번 랜덤 주파수 + i*0.05 간격 (audio.ts 원문과 동일)
               ...(s.rand ? { freq: 1600 + Math.random() * 1100, start: i * 0.05 } : {}),
             });
@@ -629,7 +641,17 @@
                 value="${ST[name].gain}" oninput="setGain('${name}', this.value)" id="g_${name}" />
               <span class="v" id="gv_${name}"></span>
             </div>
+            ${(s.adv || [])
+              .map(
+                (a) => `<div class="knob">
+              <span class="k">${a.label}</span>
+              <input type="range" autocomplete="off" min="${a.min}" max="${a.max}" step="${a.step}"
+                value="${a.def}" oninput="setAdv('${name}','${a.key}',this.value)" id="a_${name}_${a.key}" />
+              <span class="v" id="av_${name}_${a.key}"></span></div>`,
+              )
+              .join("")}
           </div>
+          ${s.adv ? `<div class="meta" id="len_${name}" style="margin-top:8px"></div>` : ""}
         </div>`;
       }
       function drawWaves(name) {
@@ -654,6 +676,30 @@
         ST[name].type = w;
         drawWaves(name);
         play(name);
+      }
+      function setAdv(name, key, v) {
+        ST[name].adv[key] = +v;
+        const a = SPEC[name].adv.find((x) => x.key === key);
+        const el = document.getElementById(`av_${name}_${key}`);
+        const int = key === "freq" || key === "glideTo";
+        el.innerHTML = (int ? +v : (+v).toFixed(3)) + `<small>코드 ${a.def}</small>`;
+        el.classList.toggle("changed", +v !== a.def);
+        showLen(name);
+        play(name);
+      }
+      // 전환음이 화면 전환(220ms)보다 얼마나 긴지 바로 보여준다 — 판단의 핵심이라서.
+      const SCENE_MS = 220; // sceneTransition.tsx: FADE_MS 160 + HOLD_MS 60
+      function showLen(name) {
+        const el = document.getElementById("len_" + name);
+        if (!el) return;
+        const a = ST[name].adv;
+        const ms = Math.round((a.dur + a.release + 0.02) * 1000);
+        const x = (ms / SCENE_MS).toFixed(1);
+        el.innerHTML =
+          `이 소리의 실제 길이 <b style="color:var(--accent)">${ms}ms</b> ` +
+          `(지속 ${a.dur}s + fade-out ${a.release}s + 0.02) · ` +
+          `화면 전환은 <b>${SCENE_MS}ms</b> → <b style="color:${ms > SCENE_MS * 1.5 ? "var(--warn)" : "var(--dim)"}">${x}배</b>` +
+          (ms > SCENE_MS * 1.5 ? " — 화면이 바뀐 뒤에도 계속 울린다" : "");
       }
 
       for (const [name, s] of Object.entries(SPEC)) {
@@ -704,11 +750,20 @@
           setV(id);
         }
         for (const [name, s] of Object.entries(SPEC)) {
-          ST[name] = { gain: s.base, type: s.tones[0].type };
+          ST[name] = { gain: s.base, type: s.tones[0].type, adv: {} };
           document.getElementById("g_" + name).value = s.base;
           const el = document.getElementById("gv_" + name);
           el.innerHTML = s.base.toFixed(3) + `<small>코드 ${s.base}</small>`;
           el.classList.remove("changed");
+          (s.adv || []).forEach((a) => {
+            ST[name].adv[a.key] = a.def;
+            document.getElementById(`a_${name}_${a.key}`).value = a.def;
+            const ae = document.getElementById(`av_${name}_${a.key}`);
+            const int = a.key === "freq" || a.key === "glideTo";
+            ae.innerHTML = (int ? a.def : a.def.toFixed(3)) + `<small>코드 ${a.def}</small>`;
+            ae.classList.remove("changed");
+          });
+          if (s.adv) showLen(name);
           drawWaves(name);
         }
         padOff();
@@ -731,6 +786,10 @@
           }
           if (st.type !== s.tones[0].type)
             rows.push(`${name} 파형: ${s.tones[0].type}  →  ${st.type}`);
+          (s.adv || []).forEach((a) => {
+            if (st.adv[a.key] !== a.def)
+              rows.push(`${name} ${a.label}(${a.key}): ${a.def}  →  ${st.adv[a.key]}`);
+          });
         }
         for (const [id, k] of Object.entries(PADK)) {
           const v = +document.getElementById(id).value;
