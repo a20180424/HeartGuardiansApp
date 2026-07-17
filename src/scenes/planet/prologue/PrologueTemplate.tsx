@@ -11,6 +11,7 @@ export interface PrologueContent {
   planetName: string;
   hatiLines: string[]; // 말풍선 줄들(사이에 <br/> 삽입)
   objectives: string[];
+  // icon 이 "/assets/…" 경로면 이미지로, 아니면 이모지 문자로 렌더한다.
   rewards: { icon: string; name: string; desc: string }[];
   questTitle: string;
   questSub: string;
@@ -81,7 +82,11 @@ export default function PrologueTemplate({
           <ul className="prologue__reward-list">
             {rewards.map((reward) => (
               <li key={reward.name}>
-                <span className="prologue__reward-icon">{reward.icon}</span>
+                {reward.icon.startsWith("/") ? (
+                  <img className="prologue__reward-icon-img" src={reward.icon} alt="" />
+                ) : (
+                  <span className="prologue__reward-icon">{reward.icon}</span>
+                )}
                 <div className="prologue__reward-text">
                   <strong>{reward.name}</strong>
                   <span>{reward.desc}</span>

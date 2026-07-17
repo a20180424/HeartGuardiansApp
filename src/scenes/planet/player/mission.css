@@ -1078,6 +1078,7 @@
   color: #283143;
   line-height: 1.4;
   white-space: pre-line; /* 대사의 \n 을 줄바꿈으로 표시(없으면 자동 줄바꿈) */
+  word-break: keep-all; /* 한글을 어절 단위로만 줄바꿈 — 단어 중간 끊김 방지 */
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
   max-width: 620px;
   opacity: 0;
@@ -1249,6 +1250,7 @@
   font-weight: 700;
   color: #222b3d;
   line-height: 1.45;
+  word-break: keep-all; /* 한글을 어절 단위로만 줄바꿈 — 단어 중간 끊김 방지 */
 }
 #hatiName {
   font-size: 22px;

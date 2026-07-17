@@ -8,9 +8,9 @@ const OBJECTIVES = [
 ];
 
 const REWARDS = [
-  { icon: "💎", name: "이해의 원석", desc: "빛의 행성에서 얻는 첫 번째 원석이에요." },
-  { icon: "🪞", name: "공감 거울", desc: "친구의 마음을 비추어 공감의 말을 만들어줘요." },
-  { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
+  { icon: "/assets/reward/gem-planet1-sapphire.png", name: "이해의 사파이어", desc: "빛의 행성에서 얻는 첫 번째 원석이에요." },
+  { icon: "/assets/reward/tool-planet1-mirror.png", name: "공감 거울", desc: "친구의 마음을 비추어 공감의 말을 만들어줘요." },
+  { icon: "/assets/reward/energy.png", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
 
 const STEPS = ["마음 신호 탐색하기", "얼어붙은 공감 거울 깨우기", "공감없는 세상으로"];

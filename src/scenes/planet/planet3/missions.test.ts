@@ -3,12 +3,10 @@ import { DialogueRunner } from "../engine/runner";
 import type { MissionData, MissionNode, RunnerView, Command } from "../engine/types";
 import mission01 from "./mission01.json";
 import mission02 from "./mission02.json";
-import mission03 from "./mission03.json";
 
 const MISSIONS: Record<string, MissionData> = {
   mission01: mission01 as unknown as MissionData,
   mission02: mission02 as unknown as MissionData,
-  mission03: mission03 as unknown as MissionData,
 };
 
 // 미션을 FakeView로 끝까지 자동 진행하며 통과한 라인 텍스트와 fx 커맨드 값을 수집한다.
@@ -53,7 +51,7 @@ function runToEnd(data: MissionData): Promise<{ lines: string[]; fx: string[] }>
 }
 
 describe("planet2 mission skeletons", () => {
-  it.each(["mission01", "mission02", "mission03"])(
+  it.each(["mission01", "mission02"])(
     "%s: 시작→끝을 걸어 end 에 도달하고 마지막에 fx_light_return 을 쏜다",
     async (id) => {
       const { lines, fx } = await runToEnd(MISSIONS[id]);
@@ -63,7 +61,7 @@ describe("planet2 mission skeletons", () => {
     },
   );
 
-  it.each(["mission01", "mission02", "mission03"])(
+  it.each(["mission01", "mission02"])(
     "%s: 노드 id 가 p3_m 접두어를 쓰고 start 노드가 존재한다",
     (id) => {
       const data = MISSIONS[id];

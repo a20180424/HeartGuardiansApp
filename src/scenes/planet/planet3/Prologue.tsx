@@ -9,9 +9,9 @@ const OBJECTIVES = [
 ];
 
 const REWARDS = [
-  { icon: "💎", name: "따듯함의 원석", desc: "얼음 행성에서 얻는 첫 번째 원석이예요." },
-  { icon: "🌡️", name: "공감 온도계", desc: "차가운 마음을 감지하고 따듯하게 해주는 도구예요." },
-  { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
+  { icon: "/assets/reward/gem-planet3-topaz-ruby.png", name: "경청의 토파즈 / 표현의 루비", desc: "얼음 행성에서 얻는 세 번째 원석이에요." },
+  { icon: "/assets/reward/tool-planet3-transmitter.png", name: "공감 송신기", desc: "따듯한 공감을 말과 행동으로 전하는 도구예요." },
+  { icon: "/assets/reward/energy.png", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
 
 export default function Prologue({

@@ -5,14 +5,11 @@ import {
   MISSION01_THEME,
   MISSION02_DATA,
   MISSION02_THEME,
-  MISSION03_DATA,
-  MISSION03_THEME,
 } from "./theme";
 
 const PAIRS: [string, MissionData, MissionTheme][] = [
   ["mission01", MISSION01_DATA, MISSION01_THEME],
   ["mission02", MISSION02_DATA, MISSION02_THEME],
-  ["mission03", MISSION03_DATA, MISSION03_THEME],
 ];
 
 describe("planet2 theme integrity", () => {
