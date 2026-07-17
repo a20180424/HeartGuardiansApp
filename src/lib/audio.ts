@@ -99,51 +99,6 @@ export class AudioManager {
     const fn = SOUNDS[name];
     if (fn) fn(this);
   }
-
-  private padNodes: { osc: OscillatorNode; lfo: OscillatorNode; gain: GainNode }[] = [];
-
-  /* 앰비언스 패드: 멜로디 없는 저음이 아주 느리게 뜨고 진다.
-   * BGM 은 어울리는 음원을 못 찾아 꺼져 있다 — 패드는 곡이 아니라 공간감이라
-   * "어울리는가" 판단이 필요 없고, 오래 들어도 질리지 않는다.
-   * master gain 을 거치므로 음소거(hg_muted)에 함께 따른다. */
-  startPad(freqs: number[]) {
-    this._ensure();
-    if (!this.ctx || !this.master) return;
-    this.stopPad();
-    const t0 = this.ctx.currentTime;
-    freqs.forEach((f, i) => {
-      const osc = this.ctx!.createOscillator();
-      const gain = this.ctx!.createGain();
-      const lfo = this.ctx!.createOscillator();
-      const lfoGain = this.ctx!.createGain();
-      osc.type = "sine";
-      osc.frequency.value = f;
-      // 조용하게 — 효과음(gain 0.11~0.16) 밑에 깔려야 한다.
-      gain.gain.value = 0.0001;
-      gain.gain.linearRampToValueAtTime(0.05, t0 + 3); // 3초에 걸쳐 서서히 든다
-      // 느린 LFO(0.05~0.08Hz = 12~20초 주기)로 뜨고 지게 만든다.
-      lfo.frequency.value = 0.05 + i * 0.015;
-      lfoGain.gain.value = 0.02;
-      lfo.connect(lfoGain).connect(gain.gain);
-      osc.connect(gain).connect(this.master!);
-      osc.start(t0);
-      lfo.start(t0);
-      this.padNodes.push({ osc, lfo, gain });
-    });
-  }
-
-  stopPad() {
-    if (!this.ctx) return;
-    const t0 = this.ctx.currentTime;
-    this.padNodes.forEach(({ osc, lfo, gain }) => {
-      gain.gain.cancelScheduledValues(t0);
-      gain.gain.setValueAtTime(gain.gain.value, t0);
-      gain.gain.linearRampToValueAtTime(0.0001, t0 + 1.5); // 뚝 끊기지 않게
-      osc.stop(t0 + 1.6);
-      lfo.stop(t0 + 1.6);
-    });
-    this.padNodes = [];
-  }
 }
 
 /* sound library — name -> function(am). Kept soft (low per-note gain). */

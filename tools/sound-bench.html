@@ -212,10 +212,9 @@
     <div class="wrap">
       <h1>하트가디언즈 — 사운드 벤치</h1>
       <div class="sub">
-        게임 코드(<code>src/lib/audio.ts</code>)의
-        <code>tone()</code>·<code>SOUNDS</code>·패드·<code>blipAt</code>을 그대로 복제했다. 여기서
-        들리는 소리 = 게임에서 나는 소리.
-        <b>모든 소리에 노브가 있다.</b>
+        게임 코드(<code>src/lib/audio.ts</code>)의 <code>tone()</code>·<code>SOUNDS</code>와
+        <code>typeSound.ts</code>의 <code>blipAt</code>을 그대로 복제했다. 여기서 들리는 소리 =
+        게임에서 나는 소리. <b>모든 소리에 노브가 있다.</b>
       </div>
 
       <div class="sticky">
@@ -281,24 +280,6 @@
         <div class="meta" id="everyPreview" style="margin-top: 8px"></div>
       </div>
       <div id="typeSec"></div>
-
-      <h2>앰비언스 패드 <span class="tag new">새 소리 · 미검증</span></h2>
-      <div class="note">
-        계속 깔리는 소리라 <b>30초쯤 켜두고 다른 걸 눌러보며</b> 판단하세요 — 효과음을 덮으면 큰
-        겁니다. 값을 바꾸면 즉시 다시 시작됩니다.
-      </div>
-      <div class="card is-new">
-        <div class="ctl">
-          <button onclick="padOn('hub')">▶ hub (로그인·홈)</button>
-          <button onclick="padOn('planet')">▶ planet (행성·미션)</button>
-          <button onclick="padOff()">■ 정지</button>
-          <span class="meta" id="padState">정지</span>
-        </div>
-        <div class="knobs" style="margin-top: 10px" id="padKnobs"></div>
-        <div class="meta" style="margin-top: 8px">
-          두 음은 완전5도(×1.4986). 기본음을 옮기면 5도 위도 따라가 화음이 유지된다. 낮을수록 깊다.
-        </div>
-      </div>
 
       <h2>버튼·로그인 <span class="tag mission">미션에서 빌려 쓴 소리</span></h2>
       <div class="note">여기를 바꾸면 <b>미션 소리도 같이 바뀝니다.</b></div>
@@ -522,57 +503,6 @@
         return n % +blipEvery.value === 1;
       }
 
-      /* ===== 앰비언스 (audio.ts startPad/stopPad) ===== */
-      const FIFTH = 1.4986; // 110→164.81, 98→146.83 = 완전5도
-      const PADK = {
-        padGain: { label: "음량", min: 0.005, max: 0.2, step: 0.005, def: 0.05 },
-        padLfo: { label: "흔들림 깊이", min: 0, max: 0.06, step: 0.005, def: 0.02 },
-        padRate: { label: "흔들림 속도", min: 0.01, max: 0.3, step: 0.005, def: 0.05 },
-        padFade: { label: "페이드인(초)", min: 0.5, max: 8, step: 0.5, def: 3 },
-        padHub: { label: "hub 기본음", min: 55, max: 220, step: 1, def: 110 },
-        padPlanet: { label: "planet 기본음", min: 55, max: 220, step: 1, def: 98 },
-      };
-      let padNodes = [];
-      function padOn(zone) {
-        ensure();
-        if (ctx.state === "suspended") ctx.resume();
-        padOff();
-        const base = zone === "hub" ? +padHub.value : +padPlanet.value;
-        const freqs = [base, Math.round(base * FIFTH * 100) / 100];
-        const t0 = ctx.currentTime;
-        freqs.forEach((f, i) => {
-          const osc = ctx.createOscillator(),
-            g = ctx.createGain(),
-            lfo = ctx.createOscillator(),
-            lg = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.value = f;
-          g.gain.value = 0.0001;
-          g.gain.linearRampToValueAtTime(+padGain.value, t0 + +padFade.value);
-          lfo.frequency.value = +padRate.value + i * 0.015;
-          lg.gain.value = +padLfo.value;
-          lfo.connect(lg).connect(g.gain);
-          osc.connect(g).connect(master);
-          osc.start(t0);
-          lfo.start(t0);
-          padNodes.push({ osc, lfo, g });
-        });
-        padState.textContent = `${zone} — [${freqs.join(", ")}]Hz, ${padFade.value}초 페이드인`;
-      }
-      function padOff() {
-        if (!ctx) return;
-        const t0 = ctx.currentTime;
-        padNodes.forEach(({ osc, lfo, g }) => {
-          g.gain.cancelScheduledValues(t0);
-          g.gain.setValueAtTime(g.gain.value, t0);
-          g.gain.linearRampToValueAtTime(0.0001, t0 + 1.5);
-          osc.stop(t0 + 1.6);
-          lfo.stop(t0 + 1.6);
-        });
-        padNodes = [];
-        padState.textContent = "정지";
-      }
-
       /* ===== 타자기 실연 — 진짜 게임 대사(planet1/mission01.json) ===== */
       const LINES = [
         {
@@ -648,11 +578,13 @@
           (+v).toFixed(3) +
           `<small>코드 ${s.base}${s.tones.length > 1 ? " → " + [...new Set(all)].join("/") : ""}</small>`;
         el.classList.toggle("changed", +v !== s.base);
+        report(); // 아래 "바뀐 값"을 늘 최신으로 — 안 그러면 버튼을 눌러야만 갱신돼 고장으로 보인다
         play(name); // 옮기는 즉시 들려준다
       }
       function setWave(name, w) {
         ST[name].type = w;
         drawWaves(name);
+        report();
         play(name);
       }
       function setAdv(name, key, v) {
@@ -663,6 +595,7 @@
         el.innerHTML = (int ? +v : (+v).toFixed(3)) + `<small>코드 ${a.def}</small>`;
         el.classList.toggle("changed", +v !== a.def);
         showLen(name);
+        report();
         play(name);
       }
       // 전환음이 화면 전환(220ms)보다 얼마나 긴지 바로 보여준다 — 판단의 핵심이라서.
@@ -683,29 +616,17 @@
       for (const [name, s] of Object.entries(SPEC)) {
         document.getElementById(s.sec).insertAdjacentHTML("beforeend", card(name));
       }
-      // 패드 노브
-      padKnobs.innerHTML = Object.entries(PADK)
-        .map(
-          ([id, k]) => `<div class="knob">
-        <span class="k">${k.label}</span>
-        <input id="${id}" type="range" autocomplete="off" min="${k.min}" max="${k.max}" step="${k.step}"
-          value="${k.def}" oninput="setV('${id}')" />
-        <span class="v" id="${id}V"></span></div>`,
-        )
-        .join("");
 
+      // 지금 이 경로를 쓰는 건 BLIP_EVERY 하나뿐이다(typeSound.ts 의 상수).
       function setV(id) {
         const el = document.getElementById(id);
         const out = document.getElementById(id + "V");
-        const def = id === "blipEvery" ? 4 : PADK[id].def;
+        const def = 4; // BLIP_EVERY 코드값
         const v = +el.value;
-        const int = id === "blipEvery" || id === "padHub" || id === "padPlanet" || id === "padFade";
-        out.innerHTML = (int ? v : v.toFixed(3)) + `<small>코드 ${def}</small>`;
+        out.innerHTML = v + `<small>코드 ${def}</small>`;
         out.classList.toggle("changed", v !== def);
-        if (id.startsWith("pad") && padNodes.length) {
-          padOn(padState.textContent.startsWith("planet") ? "planet" : "hub");
-        }
-        if (id === "blipEvery") previewEvery();
+        previewEvery();
+        report();
       }
       function previewEvery() {
         const t = LINES[0].text;
@@ -723,10 +644,6 @@
         mVol.oninput();
         blipEvery.value = 4;
         setV("blipEvery");
-        for (const [id, k] of Object.entries(PADK)) {
-          document.getElementById(id).value = k.def;
-          setV(id);
-        }
         for (const [name, s] of Object.entries(SPEC)) {
           ST[name] = { gain: s.base, type: s.tones[0].type, adv: {} };
           document.getElementById("g_" + name).value = s.base;
@@ -744,7 +661,6 @@
           if (s.adv) showLen(name);
           drawWaves(name);
         }
-        padOff();
         report();
       }
 
@@ -768,10 +684,6 @@
             if (st.adv[a.key] !== a.def)
               rows.push(`${name} ${a.label}(${a.key}): ${a.def}  →  ${st.adv[a.key]}`);
           });
-        }
-        for (const [id, k] of Object.entries(PADK)) {
-          const v = +document.getElementById(id).value;
-          if (v !== k.def) rows.push(`앰비언스 ${k.label}: ${k.def}  →  ${v}`);
         }
         report_.value = rows.length
           ? "바꾼 값:\n\n" + rows.join("\n") + "\n\n(이대로 알려주시면 코드에 반영합니다)"

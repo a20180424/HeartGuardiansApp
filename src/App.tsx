@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { App as CapApp } from "@capacitor/app";
 import { SceneTransitionProvider } from "./lib/sceneTransition";
 import { BgmProvider } from "./lib/bgm";
-import Ambience from "./lib/Ambience";
 import { audio } from "./lib/audio";
 import { sfxNameFor } from "./lib/uiSfx";
 import HiddenMenu from "./lib/HiddenMenuOverlay";
@@ -125,8 +124,6 @@ export default function App() {
         {/* 교사용 히든 점프 메뉴. Routes 바깥 = 어느 씬에서도 뜬다.
             SceneTransitionProvider 안이라 useFadeNav를 쓸 수 있다. */}
         <HiddenMenu />
-        {/* 합성 앰비언스. Routes 바깥 = 씬이 바뀌어도 이어진다. */}
-        <Ambience />
         {/* 전역 음소거. Routes 바깥 = 어느 씬에서도 누를 수 있다(미션 포함). */}
         <MuteButton />
       </BgmProvider>
