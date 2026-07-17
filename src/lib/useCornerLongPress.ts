@@ -68,11 +68,19 @@ export function useCornerLongPress(onTrigger: () => void): void {
     };
   }, []);
 
-  // 브라우저 개발용 단축키. 제스처와 완전히 동일한 흐름을 연다(PIN도 동일하게 요구).
+  // 브라우저 개발용 단축키(Ctrl+Alt+J). 제스처와 완전히 동일한 흐름을 연다(PIN도 동일하게 요구).
   // 태블릿엔 키보드가 없어 실질적으로 개발용이다.
+  //
+  // Ctrl+Shift+J 는 쓰지 않는다 — 브라우저의 DevTools 콘솔 단축키라 페이지가 받지 못한다.
+  // (개발 PC에서 실측: Ctrl+Shift+J 는 Control·Shift 의 keydown 만 도착하고 J 는 아예 오지
+  //  않는다. 같은 Ctrl+Shift 라도 Y 는 정상 도착하므로 조합이 아니라 J 가 가로채이는 것이다.)
+  // Alt+Shift+J 도 피한다 — Alt+Shift 가 Windows 입력 언어 전환 단축키다.
+  //
+  // 판정은 e.key 가 아니라 e.code 로 한다: e.key 는 수식키·IME 에 따라 "j"/"J"/"ㅓ" 로 달라지지만
+  // e.code 는 물리 키 기준이라 자판 배열·한글 입력 상태와 무관하다.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") {
+      if (e.ctrlKey && e.altKey && e.code === "KeyJ") {
         e.preventDefault();
         cb.current();
       }

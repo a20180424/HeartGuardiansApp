@@ -5,7 +5,7 @@ import { useFadeNav } from "./sceneTransition";
 import "./hidden-menu.css";
 
 // 교사 시연용 히든 점프 메뉴. 앱 루트(무대 바깥)에 마운트되는 전역 오버레이다.
-// 진입: 좌상단 두 손가락 2초 롱프레스(또는 개발용 Ctrl+Shift+J) → PIN → 그리드.
+// 진입: 좌상단 두 손가락 2초 롱프레스(또는 개발용 Ctrl+Alt+J) → PIN → 그리드.
 
 type Phase = "closed" | "pin" | "grid";
 
