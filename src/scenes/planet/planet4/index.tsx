@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { useFadeNav } from "../../../lib/sceneTransition";
+import { useDevJump } from "../devJump";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyCompassStage from "./EmpathyCompassStage"; // 미션1 "가디언즈 최종 점검하기" 미니게임
@@ -26,15 +26,9 @@ const FADE_MS = 160;
 
 export default function Planet4() {
   const nav = useFadeNav();
-  const [params] = useSearchParams();
 
-  const m = params.get("m");
-  const wanted =
-    params.get("stage") ?? (m ? (m === "0" ? "prologue" : `mission${m}`) : null);
-  const initialStage: Stage =
-    import.meta.env.DEV && wanted && (STAGES as string[]).includes(wanted)
-      ? (wanted as Stage)
-      : "prologue";
+  // 개발용 점프(#/planet/4?m=3&end=1 등). 파라미터 규격은 ../devJump.ts 참고.
+  const { stage: initialStage, startFrom } = useDevJump(STAGES);
 
   const [stage, setStage] = useState<Stage>(initialStage);
   const [fading, setFading] = useState(false);
@@ -64,7 +58,7 @@ export default function Planet4() {
       )}
       {stage === "mission1" && (
         <MissionPlayer
-          scenario={MISSION01_DATA}
+          scenario={startFrom(MISSION01_DATA)}
           theme={MISSION01_THEME}
           currentStep={1}
           steps={MISSION_STEPS}
@@ -82,7 +76,7 @@ export default function Planet4() {
       )}
       {stage === "mission2" && (
         <MissionPlayer
-          scenario={MISSION02_DATA}
+          scenario={startFrom(MISSION02_DATA)}
           theme={MISSION02_THEME}
           currentStep={2}
           steps={MISSION_STEPS}
@@ -97,7 +91,7 @@ export default function Planet4() {
       )}
       {stage === "mission3" && (
         <MissionPlayer
-          scenario={MISSION03_DATA}
+          scenario={startFrom(MISSION03_DATA)}
           theme={MISSION03_THEME}
           currentStep={3}
           steps={MISSION_STEPS}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { useFadeNav } from "../../../lib/sceneTransition";
+import { useDevJump } from "../devJump";
 import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import { completePlanet } from "../../../lib/session";
@@ -25,19 +25,9 @@ const FADE_MS = 160;
 
 export default function Planet1() {
   const nav = useFadeNav();
-  const [params] = useSearchParams();
 
-  // 개발용 단축키: 특정 subscene부터 시작.
-  //   #/planet/1?stage=mission3  (풀네임)
-  //   #/planet/1?m=3             (짧은 별칭: 숫자만, m=0 은 prologue)
-  // import.meta.env.DEV 가드 → 프로덕션 빌드(APK)에선 항상 prologue.
-  const m = params.get("m"); // "3" → "mission3", "0" → "prologue"
-  const wanted =
-    params.get("stage") ?? (m ? (m === "0" ? "prologue" : `mission${m}`) : null);
-  const initialStage: Stage =
-    import.meta.env.DEV && wanted && (STAGES as string[]).includes(wanted)
-      ? (wanted as Stage)
-      : "prologue";
+  // 개발용 점프(#/planet/1?m=3&end=1 등). 파라미터 규격은 ../devJump.ts 참고.
+  const { stage: initialStage, startFrom } = useDevJump(STAGES);
 
   const [stage, setStage] = useState<Stage>(initialStage);
   const [fading, setFading] = useState(false);
@@ -71,7 +61,7 @@ export default function Planet1() {
       {stage === "mission1" && (
         // mission1 완료(다음 미션으로 버튼) → mission2로 전환.
         <MissionPlayer
-          scenario={MISSION01_DATA}
+          scenario={startFrom(MISSION01_DATA)}
           theme={MISSION01_THEME}
           currentStep={1}
           scopeClass="planet1"
@@ -81,7 +71,7 @@ export default function Planet1() {
       {stage === "mission2" && (
         // mission2 완료 → mission3로 전환.
         <MissionPlayer
-          scenario={MISSION02_DATA}
+          scenario={startFrom(MISSION02_DATA)}
           theme={MISSION02_THEME}
           currentStep={2}
           scopeClass="planet1"
@@ -91,7 +81,7 @@ export default function Planet1() {
       {stage === "mission3" && (
         // 마지막 미션: 완료 시 "다음 미션으로" 대신 우주선 버튼 → 홈으로.
         <MissionPlayer
-          scenario={MISSION03_DATA}
+          scenario={startFrom(MISSION03_DATA)}
           theme={MISSION03_THEME}
           currentStep={3}
           scopeClass="planet1"
