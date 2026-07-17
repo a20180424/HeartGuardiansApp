@@ -11,6 +11,7 @@ import { setSession, clearSession } from "../../lib/session";
 import { credentialStore } from "../../lib/api";
 import type { Credentials } from "../../lib/api";
 import FixedStage from "../../lib/FixedStage";
+import { audio } from "../../lib/audio";
 import "./Auth.css";
 import bannerUrl from "../../shared/assets/TitleBanner.png";
 
@@ -100,10 +101,12 @@ export default function Auth() {
     try {
       await signup({ ...creds, name, gender }); // 가입
       const profile = await verify(creds); // 같은 값으로 자동 로그인(자격증명 저장) + 이름 확인
+      audio.play("title");
       setWelcomeName(profile.name);
       setSubmitting(false);
       setScreen("welcome"); // 로그인과 동일하게 welcome을 거쳐 '계속하기'로 Home
     } catch (err) {
+      audio.play("wrong");
       setErrorMsg(
         classifyVerifyError(err) === "auth"
           ? "이미 등록된 번호이거나 입력이 올바르지 않아요. 선생님께 물어보세요."
@@ -120,10 +123,12 @@ export default function Auth() {
     setErrorMsg(null);
     try {
       const profile = await verify(creds); // 성공 시 자격증명 저장(api 레이어)
+      audio.play("title");
       setWelcomeName(profile.name);
       setSubmitting(false);
       setScreen("welcome");
     } catch (err) {
+      audio.play("wrong");
       setErrorMsg(
         classifyVerifyError(err) === "auth"
           ? "번호나 비밀번호가 맞지 않아요. 선생님께 물어보세요."
