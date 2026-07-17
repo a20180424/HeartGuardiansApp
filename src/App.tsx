@@ -7,6 +7,7 @@ import Ambience from "./lib/Ambience";
 import { audio } from "./lib/audio";
 import { sfxNameFor } from "./lib/uiSfx";
 import HiddenMenu from "./lib/HiddenMenuOverlay";
+import MuteButton from "./lib/MuteButton";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
 import Home from "./scenes/home";
@@ -126,6 +127,8 @@ export default function App() {
         <HiddenMenu />
         {/* 합성 앰비언스. Routes 바깥 = 씬이 바뀌어도 이어진다. */}
         <Ambience />
+        {/* 전역 음소거. Routes 바깥 = 어느 씬에서도 누를 수 있다(미션 포함). */}
+        <MuteButton />
       </BgmProvider>
     </SceneTransitionProvider>
   );
