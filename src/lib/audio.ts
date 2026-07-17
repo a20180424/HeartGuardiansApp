@@ -23,7 +23,9 @@ export class AudioManager {
   readonly VOL = 0.5; // master volume when unmuted
 
   constructor() {
-    this.muted = localStorage.getItem("hg_muted") === "1";
+    // 모듈 로드 시점에 만들어지는 싱글턴이라 localStorage 가 없는 환경(node 테스트)에서도
+    // 생성자가 터지지 않아야 한다. 브라우저가 아니면 기본값(음소거 아님)으로 둔다.
+    this.muted = typeof localStorage !== "undefined" && localStorage.getItem("hg_muted") === "1";
   }
 
   private _ensure() {
@@ -47,7 +49,11 @@ export class AudioManager {
 
   setMuted(m: boolean) {
     this.muted = m;
-    localStorage.setItem("hg_muted", m ? "1" : "0");
+    // localStorage가 없는 환경에서도 in-memory 상태와 master gain은 업데이트한다.
+    // 브라우저 환경에서만 localStorage 에 저장한다.
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("hg_muted", m ? "1" : "0");
+    }
     if (this.master) this.master.gain.value = m ? 0 : this.VOL;
   }
   toggleMute() {
