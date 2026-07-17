@@ -138,3 +138,8 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
       a.tone({ freq: f, type: "triangle", start: i * 0.07, dur: 0.14, gain: 0.12, release: 0.12 }),
     ),
 };
+
+/* 앱 전역 단일 인스턴스. 예전엔 MissionPlayer가 직접 new 했으나, 그러면 미션이
+ * 마운트돼야 오디오가 생기고 unlock 도 미션 안 첫 탭에서만 걸려 홈·로그인이 무음이었다.
+ * 이제 App 이 첫 제스처에서 unlock 하고, 모든 씬이 이 하나를 공유한다. */
+export const audio = new AudioManager();

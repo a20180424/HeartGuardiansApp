@@ -19,7 +19,7 @@ import type {
   MirrorReveal,
 } from "../engine/types";
 import { useFitStage } from "../../../lib/useFitStage";
-import { AudioManager } from "./audio";
+import { audio } from "../../../lib/audio";
 import MirrorStage from "./MirrorStage";
 import RubReveal from "./RubReveal";
 import "./mission.css";
@@ -144,10 +144,6 @@ export default function MissionPlayer(props: {
   const [, force] = useReducer((x) => x + 1, 0);
   const stageRef = useRef<HTMLDivElement>(null);
   useFitStage(stageRef);
-
-  const audioRef = useRef<AudioManager>(null);
-  if (!audioRef.current) audioRef.current = new AudioManager();
-  const audio = audioRef.current;
 
   // 완료/나가기 버튼 더블탭 가드 — onExit이 미션당 한 번만 실행되게 한다.
   // onExit은 completePlanet(서버 PUT) 후 화면 전환을 하는데, 그 await 동안 버튼이
@@ -730,7 +726,7 @@ export default function MissionPlayer(props: {
     };
     window.addEventListener("pointerdown", unlock);
     return () => window.removeEventListener("pointerdown", unlock);
-  }, [audio]);
+  }, []);
 
   // 디버그 노드 오버레이 토글: 'n'(node) 키로 표시/숨김. 기본은 숨김.
   useEffect(() => {

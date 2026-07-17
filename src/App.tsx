@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { App as CapApp } from "@capacitor/app";
 import { SceneTransitionProvider } from "./lib/sceneTransition";
 import { BgmProvider } from "./lib/bgm";
+import { audio } from "./lib/audio";
 import HiddenMenu from "./lib/HiddenMenuOverlay";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
@@ -52,6 +53,15 @@ export default function App() {
     return () => {
       handle.then((h) => h.remove());
     };
+  }, []);
+
+  // 브라우저 자동재생 정책상 첫 사용자 제스처 전에는 소리가 안 난다.
+  // 예전엔 MissionPlayer 의 첫 탭에서만 unlock 해 홈·로그인이 무음이었다.
+  // 캡처 단계로 듣되 아무것도 삼키지 않는다(히든 메뉴 제스처와 같은 방식).
+  useEffect(() => {
+    const onDown = () => audio.unlock();
+    window.addEventListener("pointerdown", onDown, true);
+    return () => window.removeEventListener("pointerdown", onDown, true);
   }, []);
 
   return (
