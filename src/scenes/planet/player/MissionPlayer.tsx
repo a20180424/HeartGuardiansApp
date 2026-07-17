@@ -19,7 +19,8 @@ import type {
   MirrorReveal,
 } from "../engine/types";
 import { useFitStage } from "../../../lib/useFitStage";
-import { AudioManager } from "./audio";
+import { audio } from "../../../lib/audio";
+import { blipAt, blipSound, type Speaker } from "../../../lib/typeSound";
 import MirrorStage from "./MirrorStage";
 import RubReveal from "./RubReveal";
 import "./mission.css";
@@ -144,10 +145,6 @@ export default function MissionPlayer(props: {
   const [, force] = useReducer((x) => x + 1, 0);
   const stageRef = useRef<HTMLDivElement>(null);
   useFitStage(stageRef);
-
-  const audioRef = useRef<AudioManager>(null);
-  if (!audioRef.current) audioRef.current = new AudioManager();
-  const audio = audioRef.current;
 
   // 완료/나가기 버튼 더블탭 가드 — onExit이 미션당 한 번만 실행되게 한다.
   // onExit은 completePlanet(서버 PUT) 후 화면 전환을 하는데, 그 await 동안 버튼이
@@ -405,15 +402,17 @@ export default function MissionPlayer(props: {
       }
     };
 
-    const typeInto = (txt: string, onDone: () => void) => {
+    const typeInto = (txt: string, speaker: Speaker, onDone: () => void) => {
       vm.text = "";
       vm.mode = "typing";
       render();
       let i = 0;
       window.clearInterval(timers.typer);
       timers.typer = window.setInterval(() => {
+        const at = i; // 이번에 새로 찍히는 글자의 인덱스(증가 전)
         vm.text = txt.slice(0, ++i);
         render();
+        if (blipAt(txt, at)) audio.play(blipSound(speaker));
         if (i >= txt.length) {
           window.clearInterval(timers.typer);
           onDone();
@@ -538,7 +537,7 @@ export default function MissionPlayer(props: {
                 ? "hatiBox"
                 : "friendBubble";
           render();
-          typeInto(node.text || "", () => {
+          typeInto(node.text || "", isHati ? "hati" : "friend", () => {
             vm.mode = "await";
             onTyped?.();
             vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
@@ -584,7 +583,7 @@ export default function MissionPlayer(props: {
           vm.bubbleKind = "hatiBox";
           vm.choices = []; // 타이핑 동안 선택지 숨김
           render();
-          typeInto(node.text, showCards);
+          typeInto(node.text, "hati", showCards);
         } else {
           // 직전 하티박스 멘트를 유지(인트로 말풍선/친구 말풍선만 감춤). 즉시 선택지 표시.
           if (vm.bubbleKind !== "hatiBox") vm.bubbleKind = "none";
@@ -721,16 +720,6 @@ export default function MissionPlayer(props: {
       im.src = src;
     });
   }, [theme]);
-
-  // 브라우저 자동재생 정책: 첫 사용자 제스처(탭)에서 오디오 컨텍스트를 깨운다.
-  useEffect(() => {
-    const unlock = () => {
-      audio.unlock();
-      window.removeEventListener("pointerdown", unlock);
-    };
-    window.addEventListener("pointerdown", unlock);
-    return () => window.removeEventListener("pointerdown", unlock);
-  }, [audio]);
 
   // 디버그 노드 오버레이 토글: 'n'(node) 키로 표시/숨김. 기본은 숨김.
   useEffect(() => {

@@ -1,0 +1,23 @@
+/* 전역 음소거 버튼 — 우상단. 좌상단은 히든 메뉴 진입 제스처(200×200)가 쓴다. */
+.mute-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 9000; /* 전환 오버레이(10000)·히든 메뉴보다 아래 */
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.5; /* 아이의 주의를 끌지 않게 — 필요할 때만 보이면 된다 */
+}
+
+.mute-btn:hover,
+.mute-btn:focus-visible {
+  opacity: 1;
+}

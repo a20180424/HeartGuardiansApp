@@ -67,7 +67,7 @@
 /* 건너뛰기 (우상단) — .btn.ghost 확장 */
 .intro__skip {
   position: absolute;
-  top: calc(16px + env(safe-area-inset-top));
+  top: calc(56px + env(safe-area-inset-top));
   right: calc(16px + env(safe-area-inset-right));
   z-index: 3;
   display: inline-flex;

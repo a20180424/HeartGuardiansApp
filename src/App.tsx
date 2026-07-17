@@ -3,7 +3,10 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { App as CapApp } from "@capacitor/app";
 import { SceneTransitionProvider } from "./lib/sceneTransition";
 import { BgmProvider } from "./lib/bgm";
+import { audio } from "./lib/audio";
+import { sfxNameFor } from "./lib/uiSfx";
 import HiddenMenu from "./lib/HiddenMenuOverlay";
+import MuteButton from "./lib/MuteButton";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
 import Home from "./scenes/home";
@@ -54,6 +57,28 @@ export default function App() {
     };
   }, []);
 
+  // 전역 오디오 훅 하나가 두 가지를 한다:
+  //  1) 첫 제스처에서 unlock (브라우저 자동재생 정책)
+  //  2) 버튼 효과음 — data-sfx 속성으로 선언(uiSfx.ts 참조)
+  // 캡처 단계로 듣되 아무것도 삼키지 않는다(히든 메뉴 제스처와 같은 방식).
+  useEffect(() => {
+    const onDown = (e: PointerEvent) => {
+      audio.unlock(); // play() 보다 먼저 — 첫 탭부터 소리가 나야 한다
+
+      const target = e.target as HTMLElement | null;
+      const btn = target?.closest?.("button");
+      if (!btn) return;
+      // 미션 UI(#stage)는 자체 사운드가 이미 배치돼 있다 — 겹치면 안 된다.
+      if (btn.closest("#stage")) return;
+      if ((btn as HTMLButtonElement).disabled) return;
+
+      const name = sfxNameFor(btn.dataset.sfx);
+      if (name) audio.play(name);
+    };
+    window.addEventListener("pointerdown", onDown, true);
+    return () => window.removeEventListener("pointerdown", onDown, true);
+  }, []);
+
   return (
     <SceneTransitionProvider>
       <BgmProvider>
@@ -99,6 +124,8 @@ export default function App() {
         {/* 교사용 히든 점프 메뉴. Routes 바깥 = 어느 씬에서도 뜬다.
             SceneTransitionProvider 안이라 useFadeNav를 쓸 수 있다. */}
         <HiddenMenu />
+        {/* 전역 음소거. Routes 바깥 = 어느 씬에서도 누를 수 있다(미션 포함). */}
+        <MuteButton />
       </BgmProvider>
     </SceneTransitionProvider>
   );
