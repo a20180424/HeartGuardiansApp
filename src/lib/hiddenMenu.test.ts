@@ -53,20 +53,29 @@ describe("hiddenMenu 잠금 store", () => {
   });
 
   describe("isMenuAvailable", () => {
-    it("PIN 미설정 + DEV=false면 false (fail closed)", () => {
+    it("PIN 미설정이면 false (fail closed)", () => {
       vi.stubEnv("VITE_HG_MENU_PIN", "");
       vi.stubEnv("DEV", false);
       expect(isMenuAvailable()).toBe(false);
     });
 
-    it("유효한 4자리 PIN + DEV=false면 true", () => {
+    it("유효한 4자리 PIN이면 true", () => {
       vi.stubEnv("VITE_HG_MENU_PIN", "7402");
       vi.stubEnv("DEV", false);
       expect(isMenuAvailable()).toBe(true);
     });
 
-    it("DEV=true면 PIN 없어도 true (개발 편의 우회)", () => {
+    // 개발에서도 프로덕션과 같은 PIN 흐름을 타므로 DEV 우회가 없다.
+    // DEV에서 PIN 없이 열리면, PIN 패드가 떠도 unlock()이 영영 성공할 수 없어
+    // (unlock은 항상 fail closed) 통과 불가능한 화면에 갇힌다.
+    it("DEV여도 PIN 미설정이면 false — 통과 불가능한 PIN 패드를 띄우지 않는다", () => {
       vi.stubEnv("VITE_HG_MENU_PIN", "");
+      vi.stubEnv("DEV", true);
+      expect(isMenuAvailable()).toBe(false);
+    });
+
+    it("DEV여도 PIN이 있으면 true (프로덕션과 동일 판정)", () => {
+      vi.stubEnv("VITE_HG_MENU_PIN", "7402");
       vi.stubEnv("DEV", true);
       expect(isMenuAvailable()).toBe(true);
     });

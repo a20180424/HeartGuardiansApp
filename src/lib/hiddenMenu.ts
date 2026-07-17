@@ -18,14 +18,18 @@ export function configuredPin(): string | null {
 }
 
 /**
- * 이 빌드에서 메뉴를 열 수 있는지. DEV는 PIN 없이도 연다.
+ * 이 빌드에서 메뉴를 열 수 있는지. DEV 우회가 없다 — 개발에서도 프로덕션과
+ * 똑같이 PIN을 요구하므로, 교사가 볼 화면을 개발 중에 그대로 확인할 수 있다.
  *
- * unlock()은 DEV에서도 항상 fail closed지만 모순이 아니다 — 메뉴 컴포넌트가
- * DEV에서는 PIN 패드 단계를 건너뛰어(그리드로 직행) unlock()을 아예 호출하지
- * 않기 때문. PROD+PIN없음일 때만 여기서 막힌다.
+ * DEV라고 PIN 없이 열어주면 안 된다: unlock()은 PIN 미설정 시 항상 false라
+ * (fail closed) 통과할 수 없는 PIN 패드에 갇힌다. 게이팅 규칙을 한 곳으로
+ * 모아 두 함수가 어긋나지 않게 한다.
+ *
+ * ※ 점프 파라미터 게이트(devJump)는 별개로 DEV 우회를 유지한다 — 개발 중
+ *   주소창으로 #/planet/1?m=3 을 바로 여는 동선을 막지 않기 위해서다.
  */
 export function isMenuAvailable(): boolean {
-  return import.meta.env.DEV || configuredPin() !== null;
+  return configuredPin() !== null;
 }
 
 /** 현재 세션이 해제되었는지. devJump가 점프 파라미터 허용 여부를 판단할 때 쓴다. */

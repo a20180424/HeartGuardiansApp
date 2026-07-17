@@ -13,13 +13,22 @@ import Planet3 from "./scenes/planet/planet3";
 import Planet4 from "./scenes/planet/planet4";
 import Outro from "./scenes/outro";
 
-// 각 행성은 useState(initialStage)로 마운트 때 딱 한 번 점프 파라미터를 읽는다.
-// 씬은 미션 진행(goTo)을 URL이 아닌 내부 상태로만 반영하므로, 같은 ?m=1 칸을
-// 다시 눌러도 search가 바뀌지 않아 search를 key로 쓰면 리마운트가 안 됐다.
-// location.key는 navigate()가 매번(같은 URL이어도) 새로 발급하므로 이걸 쓴다.
+// 각 행성은 useState(initialStage)로 마운트 때 딱 한 번 점프 파라미터를 읽으므로,
+// 점프하려면 리마운트가 필요하다. key 하나만으로는 두 진입 경로 중 하나가 새는데,
+// 둘 다 실측으로 확인했다:
+//
+//  · 히든 메뉴로 같은 칸 재점프 — 씬은 미션 진행(goTo)을 URL이 아닌 내부 상태로만
+//    반영해서 URL이 ?m=1 인 채 화면만 미션2일 수 있다. 이때 search 는 안 바뀌므로
+//    search 만으로는 리마운트가 안 된다. location.key 는 navigate()가 같은 URL에도
+//    매번 새로 발급하므로 이 경우를 잡는다.
+//  · 주소창에서 해시 편집(#/planet/1?m=1 → ?m=3&end=1) — 같은 문서 내 이동이라
+//    location.key 가 그대로다. key 만으로는 리마운트가 안 돼 이전 미션의 엔딩으로
+//    가버렸다(m3_end 대신 m1_end3). search 가 이 경우를 잡는다.
+//
+// 정상 플레이는 둘 다 안 바뀌므로(Home이 파라미터 없이 nav) 리마운트되지 않는다.
 function Keyed({ children }: { children: ReactNode }) {
-  const { key } = useLocation();
-  return <Fragment key={key}>{children}</Fragment>;
+  const { key, search } = useLocation();
+  return <Fragment key={`${key}|${search}`}>{children}</Fragment>;
 }
 
 export default function App() {

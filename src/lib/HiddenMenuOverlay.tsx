@@ -28,11 +28,13 @@ export default function HiddenMenu() {
   const [wrong, setWrong] = useState(false);
 
   const open = useCallback(() => {
-    if (!isMenuAvailable()) return; // PIN 미설정 프로덕션 빌드 — fail closed
+    if (!isMenuAvailable()) return; // PIN 미설정 빌드 — fail closed
     setEntry("");
     setWrong(false);
-    // DEV에서는 PIN을 건너뛴다. devJump 게이트도 어차피 DEV면 열려 있다.
-    setPhase(import.meta.env.DEV || isUnlocked() ? "grid" : "pin");
+    // 개발에서도 프로덕션과 같은 흐름을 탄다(DEV 우회 없음) — 교사가 볼 화면을
+    // 개발 중에 그대로 확인하기 위해서다. 해제는 앱 실행당 1회라 두 번째부터는
+    // 바로 그리드로 간다.
+    setPhase(isUnlocked() ? "grid" : "pin");
   }, []);
 
   useCornerLongPress(open);
