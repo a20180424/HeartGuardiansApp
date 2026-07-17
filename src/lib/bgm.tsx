@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
+import { zoneForPath, type Zone } from "./zone";
 
 // 전역 BGM 재생 컨트롤러.
 //
@@ -26,14 +27,6 @@ const asset = (name: string) => `${import.meta.env.BASE_URL}assets/audio/${name}
 const HUB_SRC = asset("bgm-hub.ogg");
 // 재생 순서: 긴 곡부터 (planet-1이 가장 긴 곡)
 const PLANET_SRCS = [1, 2, 3, 4, 5].map((n) => asset(`bgm-planet-${n}.ogg`));
-
-type Zone = "hub" | "planet" | "silent";
-
-function zoneForPath(pathname: string): Zone {
-  if (pathname.startsWith("/planet")) return "planet";
-  if (pathname === "/auth" || pathname === "/home") return "hub";
-  return "silent";
-}
 
 export function BgmProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
