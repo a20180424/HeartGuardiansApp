@@ -80,7 +80,17 @@ export const MISSION01_THEME: MissionTheme = {
   banner: { pill: "미션 1", title: "감정 설명서", ribbon: "마음의 차이를 발견하라!" },
   bannerNode: "p2_m1_intro",
   bg: BG,
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
+  // 인트로(bannerNode)는 전신 하티(고정 이미지)라 스프라이트 미표시 → 하단 박스가 보이는 노드만 지정.
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      p2_m1_preplay: "suggesting",
+      p2_m1_result: "cheering",
+      p2_m1_cards: "explaining",
+      p2_m1_end: "proud",
+    },
+  },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
   radar: RADAR,
@@ -96,7 +106,21 @@ export const MISSION02_THEME: MissionTheme = {
   banner: { pill: "미션 2", title: "공감 레이더 만들기", ribbon: "공감 레이더 부품을 조립하라!" },
   bannerNode: "p2_m2_intro",
   bg: BG,
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
+  // 인트로(bannerNode)는 전신 하티라 스프라이트 미표시 → 하단 박스가 보이는 노드만 지정.
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      p2_m2_brief1: "explaining",
+      p2_m2_brief2: "suggesting",
+      p2_m2_preplay1: "suggesting",
+      p2_m2_preplay2: "suggesting",
+      p2_m2_complete: "praising",
+      p2_m2_outro: "cheering",
+      p2_m2_cards: "explaining",
+      p2_m2_end: "suggesting",
+    },
+  },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
   radar: RADAR_M2,
@@ -129,7 +153,17 @@ export const MISSION03_THEME: MissionTheme = {
   banner: { pill: "미션 3", title: "숨은 감정 찾기", ribbon: "안개 속 진짜 진심을 해독하라" },
   bannerNode: "p2_m3_intro",
   bg: BG,
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
+  // 인트로(bannerNode)는 전신 하티라 스프라이트 미표시 → 하단 박스가 보이는 노드만 지정.
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      p2_m3_cards: "explaining",
+      p2_m3_result: "praising",
+      p2_m3_result2: "celebrating",
+      p2_m3_end: "proud",
+    },
+  },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
   radar: RADAR,

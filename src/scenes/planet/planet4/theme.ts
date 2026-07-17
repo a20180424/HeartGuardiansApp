@@ -59,6 +59,7 @@ export const MISSION01_THEME: MissionTheme = {
     initial: "main",
     byNode: { p4_m1_intro: "main" },
   },
+  // 미션1은 하티 노드가 전부 전신 하티(위 fullHatiNodes)라 하단 박스 스프라이트가 안 보인다 → byNode 불필요.
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
@@ -84,7 +85,16 @@ export const MISSION02_THEME: MissionTheme = {
     initial: "main",
     byNode: { p4_m2_intro: "main", p4_m2_play: "stage2", p4_m2_cards: "stage3" },
   },
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
+  // 인트로(bannerNode)는 전신 하티라 스프라이트 미표시 → 하단 박스가 보이는 노드만 지정.
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      p4_m2_cards: "explaining",
+      p4_m2_postplay: "proud",
+      p4_m2_end: "celebrating",
+    },
+  },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
   radar: RADAR,

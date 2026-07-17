@@ -58,7 +58,15 @@ export const MISSION01_THEME: MissionTheme = {
     initial: "main",
     byNode: { p3_m1_intro: "main" },
   },
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
+  // 인트로(bannerNode)는 전신 하티라 스프라이트 미표시 → 하단 박스가 보이는 노드만 지정.
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      p3_m1_postplay: "cheering",
+      p3_m1_end: "suggesting",
+    },
+  },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
   radar: RADAR,
@@ -78,7 +86,15 @@ export const MISSION02_THEME: MissionTheme = {
     initial: "main",
     byNode: {},
   },
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
+  // 미션2는 인트로 배너가 없어(bannerNode:"") 하티 노드가 전부 하단 박스로 보인다.
+  hatiSprites: {
+    char: HATI_CHAR,
+    initial: "thinking",
+    byNode: {
+      p3_m2_postplay: "praising",
+      p3_m2_end: "celebrating",
+    },
+  },
   friends: { placeholder: PLACEHOLDER_FRIEND },
   initialFriend: "placeholder",
   radar: RADAR,
