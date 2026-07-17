@@ -213,9 +213,12 @@ export const audio = new AudioManager();
 
 /** 현재 음소거 상태를 구독하는 훅. MuteButton뿐 아니라 인트로/아웃트로처럼
  * 앱 음소거에 맞춰 자신의 볼륨(예: 영상 muted)도 함께 바꿔야 하는 곳에서 쓴다. */
+// useSyncExternalStore 는 subscribe 의 identity 가 바뀌면 재구독한다.
+// 훅 안에서 화살표 함수를 만들면 매 렌더마다 구독을 끊고 다시 걸게 되므로
+// 모듈 최상단에 고정해 둔다. getSnapshot 은 원시값(boolean)이라 그대로 안전하다.
+const subscribeMute = (onStoreChange: () => void) => audio.onMuteChange(onStoreChange);
+const getMutedSnapshot = () => audio.muted;
+
 export function useMuted(): boolean {
-  return useSyncExternalStore(
-    (onStoreChange) => audio.onMuteChange(() => onStoreChange()),
-    () => audio.muted,
-  );
+  return useSyncExternalStore(subscribeMute, getMutedSnapshot);
 }

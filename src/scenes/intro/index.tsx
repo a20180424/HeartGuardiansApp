@@ -22,11 +22,17 @@ export default function Intro() {
   const effectiveMuted = muted || appMuted;
 
   // 영상 탭: 소리 켜기 (+ 자동재생이 막혀 멈춰 있으면 재생도 시도)
+  //
+  // muted 를 DOM 에 직접 쓰는 이유: WebView 자동재생 정책 때문에 제스처 핸들러
+  // 안에서 바로 풀어야 소리가 붙는다(setMuted 는 리렌더 뒤에나 반영된다).
+  // 다만 그 값은 반드시 effectiveMuted 와 같아야 한다 — false 를 박아버리면
+  // 앱이 이미 음소거일 때 React 가 muted prop 을 다시 쓰지 않아(값이 안 바뀌므로)
+  // 이 명령형 쓰기가 그대로 남아 교사의 🔇를 이긴다.
   const handleTapToSound = () => {
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) v.play().catch(() => {});
-    v.muted = false;
+    v.muted = appMuted; // 앱이 음소거면 탭해도 무음 유지
     setMuted(false);
   };
 
