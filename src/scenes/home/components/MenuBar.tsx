@@ -24,6 +24,7 @@ export default function MenuBar({ onOpen }: MenuBarProps) {
           key={it.key}
           type="button"
           className="home-menu__btn"
+          data-sfx="pop"
           onClick={() => onOpen(it.key)}
           aria-label={it.label}
         >

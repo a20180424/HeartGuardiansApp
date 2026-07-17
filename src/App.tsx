@@ -4,6 +4,7 @@ import { App as CapApp } from "@capacitor/app";
 import { SceneTransitionProvider } from "./lib/sceneTransition";
 import { BgmProvider } from "./lib/bgm";
 import { audio } from "./lib/audio";
+import { sfxNameFor } from "./lib/uiSfx";
 import HiddenMenu from "./lib/HiddenMenuOverlay";
 import Intro from "./scenes/intro";
 import Auth from "./scenes/auth";
@@ -55,11 +56,24 @@ export default function App() {
     };
   }, []);
 
-  // 브라우저 자동재생 정책상 첫 사용자 제스처 전에는 소리가 안 난다.
-  // 예전엔 MissionPlayer 의 첫 탭에서만 unlock 해 홈·로그인이 무음이었다.
+  // 전역 오디오 훅 하나가 두 가지를 한다:
+  //  1) 첫 제스처에서 unlock (브라우저 자동재생 정책)
+  //  2) 버튼 효과음 — data-sfx 속성으로 선언(uiSfx.ts 참조)
   // 캡처 단계로 듣되 아무것도 삼키지 않는다(히든 메뉴 제스처와 같은 방식).
   useEffect(() => {
-    const onDown = () => audio.unlock();
+    const onDown = (e: PointerEvent) => {
+      audio.unlock(); // play() 보다 먼저 — 첫 탭부터 소리가 나야 한다
+
+      const target = e.target as HTMLElement | null;
+      const btn = target?.closest?.("button");
+      if (!btn) return;
+      // 미션 UI(#stage)는 자체 사운드가 이미 배치돼 있다 — 겹치면 안 된다.
+      if (btn.closest("#stage")) return;
+      if ((btn as HTMLButtonElement).disabled) return;
+
+      const name = sfxNameFor(btn.dataset.sfx);
+      if (name) audio.play(name);
+    };
     window.addEventListener("pointerdown", onDown, true);
     return () => window.removeEventListener("pointerdown", onDown, true);
   }, []);

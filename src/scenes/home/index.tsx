@@ -59,6 +59,7 @@ export default function Home() {
       <button
         type="button"
         className="home-goal"
+        data-sfx="pop"
         style={{ backgroundImage: `url(${goalPlate})` }}
         onClick={() => setPopup("goal")}
       >
