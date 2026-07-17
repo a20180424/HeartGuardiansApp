@@ -51,8 +51,21 @@ export function getProgressValue(): number {
  *  생기면 이 기본값을 실제 입력으로 교체한다.)
  */
 export function completePlanet(planet: number): void {
+  // 0) 세션이 없으면 저장하지 않는다.
+  //    로그인하지 않았는데 여기 닿을 수 있다 — 교사용 히든 점프 메뉴로 auth 화면에서
+  //    바로 미션 엔딩에 갈 수 있기 때문이다. 가드가 없으면 두 가지가 터진다:
+  //     · 자격증명이 없는 기기: authHeaders()가 동기적으로 throw 한다(progress.ts가
+  //       headers: authHeaders() 를 인자로 먼저 평가한다). 아래 .catch()는 프로미스
+  //       거절만 잡으므로 이 예외는 호출부(onExit) 밖으로 새고, 뒤따르는 nav()가
+  //       실행되지 않아 완료 화면에 갇힌다.
+  //     · 자격증명이 남아있는 기기: 저장이 "성공"해서 마지막에 로그인했던 학생 계정에
+  //       엉뚱한 진도가 올라간다. 조용해서 더 나쁘다.
+  if (!current) {
+    console.warn(`[session] 세션 없음 — 행성 ${planet} 진도 저장을 건너뛴다`);
+    return;
+  }
   // 1) 낙관적 로컬 갱신 — 네트워크와 무관하게 홈 잠금 해제를 즉시 반영.
-  if (current && current.progress < planet) {
+  if (current.progress < planet) {
     current = { ...current, progress: planet };
   }
   // 2) 서버 저장은 백그라운드(await 없음). 성공 시 서버값으로 동기화, 실패 시 로그만.
