@@ -1,8 +1,8 @@
 /* 전역 음소거 버튼 — 우상단. 좌상단은 히든 메뉴 진입 제스처(200×200)가 쓴다. */
 .mute-btn {
   position: fixed;
-  top: 12px;
-  right: 12px;
+  top: 0px;
+  right: 0px;
   z-index: 9000; /* 전환 오버레이(10000)·히든 메뉴보다 아래 */
   width: 44px;
   height: 44px;
