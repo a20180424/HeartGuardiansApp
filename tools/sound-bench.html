@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>하트가디언즈 — 사운드 벤치</title>
+    <style>
+      :root {
+        --bg: #0f1117;
+        --panel: #181b24;
+        --panel2: #1f2430;
+        --line: #2c3242;
+        --text: #e7eaf0;
+        --dim: #98a1b3;
+        --accent: #6ee7b7;
+        --warn: #fbbf24;
+        --new: #a78bfa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          15px/1.6 system-ui,
+          "Segoe UI",
+          "Malgun Gothic",
+          sans-serif;
+        padding: 20px 16px 80px;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 21px;
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: var(--dim);
+        font-size: 13px;
+        margin-bottom: 16px;
+      }
+      h2 {
+        font-size: 15px;
+        margin: 24px 0 6px;
+      }
+      .tag {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-left: 6px;
+      }
+      .tag.new {
+        background: rgba(167, 139, 250, 0.18);
+        color: var(--new);
+      }
+      .tag.mission {
+        background: rgba(152, 161, 179, 0.15);
+        color: var(--dim);
+      }
+      .note {
+        color: var(--dim);
+        font-size: 13px;
+        margin: 0 0 10px;
+      }
+      .sticky {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: linear-gradient(var(--bg) 72%, transparent);
+        padding: 10px 0 14px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+      }
+      .card.is-new {
+        border-color: rgba(167, 139, 250, 0.45);
+      }
+      .head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .nm {
+        font-family: ui-monospace, Consolas, monospace;
+        font-weight: 700;
+        min-width: 96px;
+      }
+      .desc {
+        color: var(--dim);
+        font-size: 12px;
+        flex: 1;
+      }
+      button {
+        font: inherit;
+        color: var(--text);
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 6px 11px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      button.on {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      button.wv {
+        padding: 4px 9px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .knobs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 8px 14px;
+        margin-top: 10px;
+      }
+      .knob {
+        display: grid;
+        grid-template-columns: 74px 1fr 76px;
+        gap: 8px;
+        align-items: center;
+      }
+      .knob span.k {
+        font-size: 12px;
+        color: var(--dim);
+        font-family: ui-monospace, Consolas, monospace;
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+      .v {
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 12px;
+        text-align: right;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .v small {
+        display: block;
+        color: var(--dim);
+        font-weight: 400;
+        font-size: 10px;
+      }
+      .v.changed {
+        color: var(--warn);
+      }
+      .hint {
+        background: rgba(251, 191, 36, 0.1);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        color: #fde68a;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        margin: 12px 0;
+      }
+      .bubble {
+        background: #fff;
+        color: #1a1a1a;
+        border-radius: 12px;
+        padding: 12px 14px;
+        min-height: 68px;
+        font-size: 16px;
+        margin: 8px 0;
+      }
+      .bubble b {
+        display: block;
+        font-size: 11px;
+        color: #6b7280;
+      }
+      .ctl {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      #report {
+        width: 100%;
+        min-height: 140px;
+        background: var(--panel2);
+        color: var(--accent);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 12px;
+        white-space: pre;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--dim);
+        font-family: ui-monospace, Consolas, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>하트가디언즈 — 사운드 벤치</h1>
+      <div class="sub">
+        게임 코드(<code>src/lib/audio.ts</code>)의
+        <code>tone()</code>·<code>SOUNDS</code>·패드·<code>blipAt</code>을 그대로 복제했다. 여기서
+        들리는 소리 = 게임에서 나는 소리.
+        <b>모든 소리에 노브가 있다.</b>
+      </div>
+
+      <div class="sticky">
+        <div class="card" style="margin: 0">
+          <div class="head">
+            <b class="nm">🔊 마스터</b>
+            <input
+              id="mVol"
+              type="range"
+              autocomplete="off"
+              min="0"
+              max="1"
+              step="0.05"
+              value="0.5"
+              style="flex: 1"
+            />
+            <span class="v" id="mVolV">0.50<small>코드 0.5</small></span>
+            <button onclick="report()">🔄 정리</button>
+            <button onclick="copyReport()">📋 복사</button>
+            <button onclick="resetAll()">↺ 되돌리기</button>
+            <span class="meta" id="copyState"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint">
+        <b>gain 을 같은 숫자로 맞춘다고 같은 크기로 들리지 않습니다.</b> 파형(sawtooth 가 sine 보다
+        훨씬 큼), 동시에 울리는 음 개수, 주파수별 귀의 민감도가 전부 다르기 때문입니다. 숫자를
+        맞추지 말고 <b>번갈아 들으며 같은 크기로 들리게</b> 맞추세요 — 그게 진짜 통일입니다.<br />
+        각 소리의 <b>gain 노브는 그 소리 전체를 비례로 키웁니다</b>(여러 음으로 된 소리는 음끼리의
+        균형을 유지). 바뀐 값은 <span style="color: var(--warn)">노란색</span>.
+      </div>
+
+      <h2>말풍선 타자기 <span class="tag new">새 소리 · 청취 튜닝 완료</span></h2>
+      <div class="note">
+        단발로는 판단이 안 됩니다. <b>실제 게임 대사를 실제 속도(30ms/글자)로</b> 재생하세요.
+      </div>
+      <div class="card is-new">
+        <div class="bubble"><b id="bSpk">하티</b><span id="bTxt"></span></div>
+        <div class="ctl">
+          <button onclick="typeLine(0)">▶ 하티 긴 대사</button>
+          <button onclick="typeLine(1)">▶ 루미(친구) 짧은 대사</button>
+          <button onclick="typeLine(2)">▶ 하티 짧은 대사</button>
+          <button onclick="typeLine(3)">▶ 물음표·따옴표</button>
+          <button onclick="stopType()">■ 정지</button>
+        </div>
+        <div class="knobs" style="margin-top: 10px">
+          <div class="knob">
+            <span class="k">BLIP_EVERY</span>
+            <input
+              id="blipEvery"
+              type="range"
+              autocomplete="off"
+              min="2"
+              max="4"
+              step="1"
+              value="4"
+              oninput="setV('blipEvery')"
+            />
+            <span class="v" id="blipEveryV">4<small>코드 4</small></span>
+          </div>
+        </div>
+        <div class="meta" id="everyPreview" style="margin-top: 8px"></div>
+      </div>
+      <div id="typeSec"></div>
+
+      <h2>앰비언스 패드 <span class="tag new">새 소리 · 미검증</span></h2>
+      <div class="note">
+        계속 깔리는 소리라 <b>30초쯤 켜두고 다른 걸 눌러보며</b> 판단하세요 — 효과음을 덮으면 큰
+        겁니다. 값을 바꾸면 즉시 다시 시작됩니다.
+      </div>
+      <div class="card is-new">
+        <div class="ctl">
+          <button onclick="padOn('hub')">▶ hub (로그인·홈)</button>
+          <button onclick="padOn('planet')">▶ planet (행성·미션)</button>
+          <button onclick="padOff()">■ 정지</button>
+          <span class="meta" id="padState">정지</span>
+        </div>
+        <div class="knobs" style="margin-top: 10px" id="padKnobs"></div>
+        <div class="meta" style="margin-top: 8px">
+          두 음은 완전5도(×1.4986). 기본음을 옮기면 5도 위도 따라가 화음이 유지된다. 낮을수록 깊다.
+        </div>
+      </div>
+
+      <h2>씬 전환 <span class="tag new">새 소리 · 미검증</span></h2>
+      <div class="note">
+        <code>whooshNav</code>는 시작음에서 끝음으로 미끄러지는(glide) 소리라 "슝" 하고 지나갑니다.
+        폭이 클수록 극적. <b>바로 아래 <code>whoosh</code>(미션용 원본)와 번갈아 들어보세요.</b>
+      </div>
+      <div id="navSec"></div>
+
+      <h2>버튼·로그인 <span class="tag mission">미션에서 빌려 쓴 소리</span></h2>
+      <div class="note">여기를 바꾸면 <b>미션 소리도 같이 바뀝니다.</b></div>
+      <div id="uiSec"></div>
+
+      <h2>미션 전용 <span class="tag mission">이번 작업에서 안 건드림</span></h2>
+      <div class="note">기준선. 새 소리가 이것들과 비슷한 크기로 들리는지 비교하세요.</div>
+      <div id="misSec"></div>
+
+      <h2>바뀐 값</h2>
+      <textarea id="report" readonly></textarea>
+    </div>
+
+    <script>
+      /* ===== audio.ts 의 tone() 을 그대로 옮김 ===== */
+      let ctx = null,
+        master = null;
+      function ensure() {
+        if (ctx) return;
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        master = ctx.createGain();
+        master.gain.value = +mVol.value;
+        master.connect(ctx.destination);
+      }
+      function tone(o) {
+        ensure();
+        if (ctx.state === "suspended") ctx.resume();
+        const t0 = ctx.currentTime + (o.start || 0);
+        const dur = o.dur || 0.15,
+          rel = o.release || 0.08,
+          gain = o.gain || 0.15;
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = o.type || "sine";
+        osc.frequency.setValueAtTime(o.freq, t0);
+        if (o.glideTo) osc.frequency.exponentialRampToValueAtTime(o.glideTo, t0 + dur);
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.linearRampToValueAtTime(gain, t0 + (o.attack || 0.005));
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + rel);
+        osc.connect(g).connect(master);
+        osc.start(t0);
+        osc.stop(t0 + dur + rel + 0.02);
+      }
+
+      /* ===== SOUNDS 를 "데이터"로 옮겼다 — 노브를 자동 생성하려고. =====
+         tones: audio.ts 의 각 a.tone({...}) 인자 그대로.
+         plus:  그 소리가 덧붙여 부르는 다른 소리(SOUNDS.sparkle(a) 같은 것).
+         rand:  sparkle 처럼 freq 가 매번 랜덤인 경우.                       */
+      const SPEC = {
+        blipHati: {
+          sec: "typeSec",
+          isNew: 1,
+          desc: "하티 타자기 (가이드)",
+          tones: [
+            { freq: 500, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 },
+          ],
+        },
+        blipFriend: {
+          sec: "typeSec",
+          isNew: 1,
+          desc: "친구 타자기 (감정을 말하는 외계인)",
+          tones: [
+            { freq: 600, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 },
+          ],
+        },
+        whooshNav: {
+          sec: "navSec",
+          isNew: 1,
+          desc: "씬 전환 (전용)",
+          tones: [
+            { freq: 520, type: "sawtooth", dur: 0.18, gain: 0.13, glideTo: 150, release: 0.08 },
+          ],
+        },
+        whoosh: {
+          sec: "navSec",
+          desc: "미션: 카드가 스륵 — 원본. sawtooth 라 0.06 이어도 작지 않다",
+          tones: [
+            { freq: 520, type: "sawtooth", dur: 0.14, gain: 0.06, glideTo: 150, release: 0.06 },
+          ],
+        },
+        tap: {
+          sec: "uiSec",
+          desc: "버튼 기본 — 미션 탭과 같은 소리",
+          tones: [{ freq: 520, type: "sine", dur: 0.05, gain: 0.11, release: 0.05 }],
+        },
+        pop: {
+          sec: "uiSec",
+          desc: "팝업 열기",
+          tones: [
+            { freq: 400, type: "triangle", dur: 0.07, gain: 0.13, glideTo: 680, release: 0.06 },
+          ],
+        },
+        title: {
+          sec: "uiSec",
+          desc: "로그인 성공 / 미션 인트로 (도-미-솔-도)",
+          tones: [523, 659, 784, 1047].map((f, i) => ({
+            freq: f,
+            type: "triangle",
+            start: i * 0.07,
+            dur: 0.14,
+            gain: 0.12,
+            release: 0.12,
+          })),
+        },
+        wrong: {
+          sec: "uiSec",
+          desc: "로그인 실패 / 미션 오답",
+          tones: [{ freq: 320, type: "sine", dur: 0.16, gain: 0.13, glideTo: 200, release: 0.1 }],
+        },
+        select: {
+          sec: "misSec",
+          desc: "선택지 카드 고르기 (2음)",
+          tones: [
+            { freq: 600, type: "triangle", dur: 0.06, gain: 0.14 },
+            { freq: 900, type: "triangle", start: 0.05, dur: 0.07, gain: 0.12 },
+          ],
+        },
+        drop: {
+          sec: "misSec",
+          desc: "카드 놓기 (2음)",
+          tones: [
+            { freq: 880, type: "sine", dur: 0.08, gain: 0.16 },
+            { freq: 1320, type: "sine", start: 0.06, dur: 0.14, gain: 0.13, release: 0.12 },
+          ],
+        },
+        correct: {
+          sec: "misSec",
+          desc: "정답 (3음 상승)",
+          tones: [660, 880, 1175].map((f, i) => ({
+            freq: f,
+            type: "triangle",
+            start: i * 0.1,
+            dur: 0.12,
+            gain: 0.15,
+            release: 0.12,
+          })),
+        },
+        stage: {
+          sec: "misSec",
+          desc: "스테이지 전환 (2음)",
+          tones: [
+            { freq: 600, type: "triangle", dur: 0.08, gain: 0.12 },
+            { freq: 900, type: "triangle", start: 0.08, dur: 0.1, gain: 0.12 },
+          ],
+        },
+        sparkle: {
+          sec: "misSec",
+          desc: "반짝임 — 1600~2700Hz 랜덤 6음이 겹친다(합치면 사실상 0.36)",
+          rand: 6,
+          tones: [{ freq: 1600, type: "triangle", dur: 0.1, gain: 0.06, release: 0.12 }],
+        },
+        recover: {
+          sec: "misSec",
+          desc: "회복 — 자기 소리 + sparkle 을 덧붙인다",
+          plus: "sparkle",
+          tones: [
+            { freq: 200, type: "sawtooth", dur: 0.4, gain: 0.11, glideTo: 900, release: 0.15 },
+          ],
+        },
+        reveal: {
+          sec: "misSec",
+          desc: "공개 (3음 동시)",
+          tones: [784, 988, 1318].map((f) => ({
+            freq: f,
+            type: "triangle",
+            dur: 0.3,
+            gain: 0.1,
+            release: 0.25,
+          })),
+        },
+        fanfare: {
+          sec: "misSec",
+          desc: "미션 완료 팡파르 — 4음 + sparkle",
+          plus: "sparkle",
+          tones: [523, 659, 784, 1047].map((f, i) => ({
+            freq: f,
+            type: "triangle",
+            start: i * 0.1,
+            dur: 0.16,
+            gain: 0.14,
+            release: 0.14,
+          })),
+        },
+      };
+
+      // 노브 상태: 소리마다 { gain(첫 음 기준), type }. 나머지 음은 원래 비율을 유지한다.
+      const ST = {};
+      for (const [n, s] of Object.entries(SPEC)) {
+        ST[n] = { gain: s.tones[0].gain, type: s.tones[0].type };
+        s.base = s.tones[0].gain; // 비율 계산 기준
+      }
+
+      function play(name) {
+        const s = SPEC[name];
+        if (!s) return;
+        const scale = ST[name].gain / s.base;
+        const n = s.rand || 1;
+        for (let i = 0; i < n; i++) {
+          s.tones.forEach((t) => {
+            tone({
+              ...t,
+              type: ST[name].type,
+              gain: +(t.gain * scale).toFixed(4),
+              // sparkle 은 매번 랜덤 주파수 + i*0.05 간격 (audio.ts 원문과 동일)
+              ...(s.rand ? { freq: 1600 + Math.random() * 1100, start: i * 0.05 } : {}),
+            });
+          });
+        }
+        if (s.plus) play(s.plus);
+      }
+
+      /* ===== typeSound.ts 의 blipAt 를 그대로 옮김 ===== */
+      const SILENT = /[\s.,!?…·'"“”‘’\-—~()[\]{}:;]/;
+      const isSp = (c) => !SILENT.test(c);
+      function blipAt(text, index) {
+        const ch = text[index];
+        if (ch === undefined || !isSp(ch)) return false;
+        let n = 0;
+        for (let i = 0; i <= index; i++) {
+          if (isSp(text[i]))
+            n++; // 말하는 글자면 센다
+          else n = 0; // 공백·문장부호를 만나면 리셋 (쉼 뒤 첫 글자는 늘 울리게)
+        }
+        return n % +blipEvery.value === 1;
+      }
+
+      /* ===== 앰비언스 (audio.ts startPad/stopPad) ===== */
+      const FIFTH = 1.4986; // 110→164.81, 98→146.83 = 완전5도
+      const PADK = {
+        padGain: { label: "음량", min: 0.005, max: 0.2, step: 0.005, def: 0.05 },
+        padLfo: { label: "흔들림 깊이", min: 0, max: 0.06, step: 0.005, def: 0.02 },
+        padRate: { label: "흔들림 속도", min: 0.01, max: 0.3, step: 0.005, def: 0.05 },
+        padFade: { label: "페이드인(초)", min: 0.5, max: 8, step: 0.5, def: 3 },
+        padHub: { label: "hub 기본음", min: 55, max: 220, step: 1, def: 110 },
+        padPlanet: { label: "planet 기본음", min: 55, max: 220, step: 1, def: 98 },
+      };
+      let padNodes = [];
+      function padOn(zone) {
+        ensure();
+        if (ctx.state === "suspended") ctx.resume();
+        padOff();
+        const base = zone === "hub" ? +padHub.value : +padPlanet.value;
+        const freqs = [base, Math.round(base * FIFTH * 100) / 100];
+        const t0 = ctx.currentTime;
+        freqs.forEach((f, i) => {
+          const osc = ctx.createOscillator(),
+            g = ctx.createGain(),
+            lfo = ctx.createOscillator(),
+            lg = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = f;
+          g.gain.value = 0.0001;
+          g.gain.linearRampToValueAtTime(+padGain.value, t0 + +padFade.value);
+          lfo.frequency.value = +padRate.value + i * 0.015;
+          lg.gain.value = +padLfo.value;
+          lfo.connect(lg).connect(g.gain);
+          osc.connect(g).connect(master);
+          osc.start(t0);
+          lfo.start(t0);
+          padNodes.push({ osc, lfo, g });
+        });
+        padState.textContent = `${zone} — [${freqs.join(", ")}]Hz, ${padFade.value}초 페이드인`;
+      }
+      function padOff() {
+        if (!ctx) return;
+        const t0 = ctx.currentTime;
+        padNodes.forEach(({ osc, lfo, g }) => {
+          g.gain.cancelScheduledValues(t0);
+          g.gain.setValueAtTime(g.gain.value, t0);
+          g.gain.linearRampToValueAtTime(0.0001, t0 + 1.5);
+          osc.stop(t0 + 1.6);
+          lfo.stop(t0 + 1.6);
+        });
+        padNodes = [];
+        padState.textContent = "정지";
+      }
+
+      /* ===== 타자기 실연 — 진짜 게임 대사(planet1/mission01.json) ===== */
+      const LINES = [
+        {
+          speaker: "hati",
+          text: "친구의 마음은 보이지 않아. 하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어! 친구의 마음 신호를 찾아보자",
+        },
+        { speaker: "lumi", text: "오늘은 놀기 싫어" },
+        { speaker: "hati", text: "루미의 마음 신호가 흐릿해. 어떤 마음일까?" },
+        { speaker: "hati", text: '"왜 그래?"는 좋은 질문이 아닌 것 같아' },
+      ];
+      let typer = null;
+      const stopType = () => (clearInterval(typer), (typer = null));
+      function typeLine(i) {
+        stopType();
+        const { speaker, text } = LINES[i];
+        const isHati = speaker === "hati";
+        bSpk.textContent = isHati ? "하티 (가이드)" : "루미 (친구)";
+        bTxt.textContent = "";
+        let k = 0;
+        typer = setInterval(() => {
+          const at = k;
+          bTxt.textContent = text.slice(0, ++k);
+          if (blipAt(text, at)) play(isHati ? "blipHati" : "blipFriend");
+          if (k >= text.length) stopType();
+        }, 30); // MissionPlayer.typeInto 와 동일
+      }
+
+      /* ===== UI 생성 ===== */
+      const WAVES = ["sine", "triangle", "square", "sawtooth"];
+      const WDESC = { sine: "둥글", triangle: "밝음", square: "선명", sawtooth: "날카" };
+      function card(name) {
+        const s = SPEC[name];
+        const multi = s.tones.length > 1 || s.rand;
+        return `<div class="card ${s.isNew ? "is-new" : ""}">
+          <div class="head">
+            <button class="nm" onclick="play('${name}')">▶ ${name}</button>
+            <span class="desc">${s.desc}</span>
+            <span class="ctl" id="w_${name}"></span>
+          </div>
+          <div class="knobs">
+            <div class="knob">
+              <span class="k">gain${multi ? " (전체)" : ""}</span>
+              <input type="range" autocomplete="off" min="0.01" max="0.4" step="0.005"
+                value="${ST[name].gain}" oninput="setGain('${name}', this.value)" id="g_${name}" />
+              <span class="v" id="gv_${name}"></span>
+            </div>
+          </div>
+        </div>`;
+      }
+      function drawWaves(name) {
+        document.getElementById("w_" + name).innerHTML = WAVES.map(
+          (w) =>
+            `<button class="wv ${ST[name].type === w ? "on" : ""}" onclick="setWave('${name}','${w}')">${w}<br><small style="color:var(--dim);font-weight:400">${WDESC[w]}</small></button>`,
+        ).join("");
+      }
+      function setGain(name, v) {
+        ST[name].gain = +v;
+        const el = document.getElementById("gv_" + name);
+        const s = SPEC[name];
+        const scale = +v / s.base;
+        const all = s.tones.map((t) => +(t.gain * scale).toFixed(3));
+        el.innerHTML =
+          (+v).toFixed(3) +
+          `<small>코드 ${s.base}${s.tones.length > 1 ? " → " + [...new Set(all)].join("/") : ""}</small>`;
+        el.classList.toggle("changed", +v !== s.base);
+        play(name); // 옮기는 즉시 들려준다
+      }
+      function setWave(name, w) {
+        ST[name].type = w;
+        drawWaves(name);
+        play(name);
+      }
+
+      for (const [name, s] of Object.entries(SPEC)) {
+        document.getElementById(s.sec).insertAdjacentHTML("beforeend", card(name));
+      }
+      // 패드 노브
+      padKnobs.innerHTML = Object.entries(PADK)
+        .map(
+          ([id, k]) => `<div class="knob">
+        <span class="k">${k.label}</span>
+        <input id="${id}" type="range" autocomplete="off" min="${k.min}" max="${k.max}" step="${k.step}"
+          value="${k.def}" oninput="setV('${id}')" />
+        <span class="v" id="${id}V"></span></div>`,
+        )
+        .join("");
+
+      function setV(id) {
+        const el = document.getElementById(id);
+        const out = document.getElementById(id + "V");
+        const def = id === "blipEvery" ? 4 : PADK[id].def;
+        const v = +el.value;
+        const int = id === "blipEvery" || id === "padHub" || id === "padPlanet" || id === "padFade";
+        out.innerHTML = (int ? v : v.toFixed(3)) + `<small>코드 ${def}</small>`;
+        out.classList.toggle("changed", v !== def);
+        if (id.startsWith("pad") && padNodes.length) {
+          padOn(padState.textContent.startsWith("planet") ? "planet" : "hub");
+        }
+        if (id === "blipEvery") previewEvery();
+      }
+      function previewEvery() {
+        const t = LINES[0].text;
+        const hits = [...t].map((_, i) => (blipAt(t, i) ? t[i] : null)).filter(Boolean);
+        everyPreview.innerHTML = `위 "하티 긴 대사" 기준 → <b style="color:var(--accent)">${hits.length}회</b> [${hits.join(" ")}]`;
+      }
+      mVol.oninput = () => {
+        mVolV.innerHTML = (+mVol.value).toFixed(2) + "<small>코드 0.5</small>";
+        mVolV.classList.toggle("changed", +mVol.value !== 0.5);
+        if (master) master.gain.value = +mVol.value;
+      };
+
+      function resetAll() {
+        mVol.value = 0.5;
+        mVol.oninput();
+        blipEvery.value = 4;
+        setV("blipEvery");
+        for (const [id, k] of Object.entries(PADK)) {
+          document.getElementById(id).value = k.def;
+          setV(id);
+        }
+        for (const [name, s] of Object.entries(SPEC)) {
+          ST[name] = { gain: s.base, type: s.tones[0].type };
+          document.getElementById("g_" + name).value = s.base;
+          const el = document.getElementById("gv_" + name);
+          el.innerHTML = s.base.toFixed(3) + `<small>코드 ${s.base}</small>`;
+          el.classList.remove("changed");
+          drawWaves(name);
+        }
+        padOff();
+        report();
+      }
+
+      function report() {
+        const rows = [];
+        if (+mVol.value !== 0.5) rows.push(`마스터 VOL: 0.5  →  ${+mVol.value}`);
+        if (+blipEvery.value !== 4)
+          rows.push(`BLIP_EVERY (typeSound.ts): 4  →  ${+blipEvery.value}`);
+        for (const [name, s] of Object.entries(SPEC)) {
+          const st = ST[name];
+          if (st.gain !== s.base) {
+            const scale = st.gain / s.base;
+            const all = [...new Set(s.tones.map((t) => +(t.gain * scale).toFixed(3)))];
+            rows.push(
+              `${name} gain: ${[...new Set(s.tones.map((t) => t.gain))].join("/")}  →  ${all.join("/")}`,
+            );
+          }
+          if (st.type !== s.tones[0].type)
+            rows.push(`${name} 파형: ${s.tones[0].type}  →  ${st.type}`);
+        }
+        for (const [id, k] of Object.entries(PADK)) {
+          const v = +document.getElementById(id).value;
+          if (v !== k.def) rows.push(`앰비언스 ${k.label}: ${k.def}  →  ${v}`);
+        }
+        report_.value = rows.length
+          ? "바꾼 값:\n\n" + rows.join("\n") + "\n\n(이대로 알려주시면 코드에 반영합니다)"
+          : "코드값 그대로입니다 — 바뀐 항목 없음.";
+      }
+      async function copyReport() {
+        report();
+        const ok = (m) => (
+          (copyState.textContent = m),
+          (copyState.style.color = "var(--accent)"),
+          setTimeout(() => (copyState.textContent = ""), 2500)
+        );
+        try {
+          await navigator.clipboard.writeText(report_.value);
+          return ok("✅ 복사됨");
+        } catch (e) {}
+        try {
+          report_.removeAttribute("readonly");
+          report_.select();
+          const d = document.execCommand("copy");
+          report_.setAttribute("readonly", "");
+          window.getSelection().removeAllRanges();
+          ok(d ? "✅ 복사됨" : "복사 실패 — 직접 선택하세요");
+        } catch (e) {
+          copyState.textContent = "복사 실패 — 직접 선택하세요";
+        }
+      }
+      const report_ = document.getElementById("report");
+      resetAll();
+      previewEvery();
+    </script>
+  </body>
+</html>
