@@ -55,13 +55,11 @@ describe("hiddenMenu 잠금 store", () => {
   describe("isMenuAvailable", () => {
     it("PIN 미설정이면 false (fail closed)", () => {
       vi.stubEnv("VITE_HG_MENU_PIN", "");
-      vi.stubEnv("DEV", false);
       expect(isMenuAvailable()).toBe(false);
     });
 
     it("유효한 4자리 PIN이면 true", () => {
       vi.stubEnv("VITE_HG_MENU_PIN", "7402");
-      vi.stubEnv("DEV", false);
       expect(isMenuAvailable()).toBe(true);
     });
 

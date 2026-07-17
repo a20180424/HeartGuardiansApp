@@ -40,10 +40,16 @@
 
 ```
 let unlocked = false;
+export function configuredPin(): string | null  // 빌드에 주입된 4자리 PIN, 아니면 null
+export function isMenuAvailable(): boolean      // 이 빌드에서 메뉴를 열 수 있는지
 export function isUnlocked(): boolean
-export function unlock(pin: string): boolean   // 성공 시 true
-export function useUnlocked(): boolean         // 구독 훅
+export function unlock(pin: string): boolean    // 성공 시 true
+export function lock(): void                    // 다시 잠금
 ```
+
+구독 훅은 두지 않았다(YAGNI) — 해제 후 메뉴가 곧바로 navigate 하고, 그 이동이
+행성을 리마운트하므로 `devJump`가 최신 `isUnlocked()`를 다시 읽는다. 오버레이는
+자기 `useState`로 충분하다.
 
 - PIN 출처: `import.meta.env.VITE_HG_MENU_PIN`. 값은 `.env.local`에만 둔다
   (`.gitignore`의 `*.local` 규칙으로 이미 커밋되지 않는다).
@@ -61,8 +67,12 @@ export function useUnlocked(): boolean         // 구독 훅
   교실의 초등학생이지 리버서가 아니므로 수용한다.
 
 **PIN 값 선정 주의**: 학생들도 이미 4자리 PIN으로 로그인한다(auth: school_id/grade/
-class/number/pin). 아이들이 반사적으로 찍는 목록 — `1234` `0000` `1111` `2580`
-`1379` `4321` `2026` — 과 학생 본인 로그인 PIN 패턴을 피한다. 값은 이 문서에 적지 않는다.
+class/number/pin). 값은 이 문서에 적지 않는다. 피해야 할 것:
+
+- 아이들이 반사적으로 찍는 목록 — `1234` `0000` `1111` `2580` `1379` `4321` `2026`
+- **`7402`** — 테스트 픽스처라 저장소(`src/lib/hiddenMenu.test.ts`)에 **공개돼 있다.**
+  위 목록과 성격이 다르다(아이가 찍을 값이 아니라 이미 유출된 값).
+- 학생 본인 로그인 PIN 패턴
 
 ### 2. 게이트 교체 — `src/scenes/planet/devJump.ts` (수정)
 
@@ -90,7 +100,14 @@ function Keyed({ children }: { children: ReactNode }) {
 파라미터가 바뀌면 행성 컴포넌트가 리마운트되어 `useState(initialStage)`가 다시 읽힌다.
 URL이 단일 진실 공급원으로 남아 브라우저 개발 중 주소 입력도 계속 통한다.
 
-### 4. 오버레이 — `src/shared/components/HiddenMenu.tsx` (신규)
+### 4. 오버레이 — `src/lib/HiddenMenuOverlay.tsx` (신규)
+
+> 파일명 주의: 컴포넌트 이름은 `HiddenMenu`(default export)지만 **파일은
+> `HiddenMenuOverlay.tsx`** 다. Windows(대소문자 비구분 FS)에서 `HiddenMenu.tsx`로
+> 두면 `import "./lib/HiddenMenu"`가 확장자 프로브 순서상 잠금 store `hiddenMenu.ts`로
+> 해석돼 tsc가 TS1192/TS1261로 깨진다. `shared/components/`가 아니라 `lib/`인 이유는
+> 이 오버레이가 씬 UI(`Modal`)가 아니라 App에 마운트되는 앱 인프라(`FixedStage`,
+> `sceneTransition`, `bgm`)와 같은 부류이기 때문이다.
 
 App 루트(`Routes` 바깥, `Router` 안쪽 — `useNavigate`가 필요)에 마운트.
 
@@ -124,7 +141,8 @@ App 루트에서 `pointerdown` 캡처 리스너.
   - **교훈**: CSS px 상수를 실기기 물리 치수로 환산하지 않으면 이런 결함이 난다.
     브라우저 자동화는 키보드 단축키로만 검증해 이 경로를 한 번도 밟지 않았다.
 - 포인터가 임계값 이상 움직이거나 하나라도 떼면 취소.
-- `preventDefault`는 발동 시점에만. 그 전엔 아무것도 삼키지 않는다.
+- **pointer 이벤트에는 `preventDefault`를 아예 걸지 않는다.** 감지만 하고 그대로
+  흘린다(캡처 단계로 듣되 삼키지 않음). 키보드 단축키에만 `preventDefault`를 쓴다.
 - 미션 화면 좌상단의 "탐험 진행도" 버튼은 단일 탭만 반응하므로 충돌하지 않는다.
 - 키보드 단축키 `Ctrl+Alt+J` 병행 — 제스처와 **완전히 동일한 흐름**을 연다
   (프로덕션에서도 등록되지만 PIN을 똑같이 요구한다. 태블릿엔 키보드가 없어

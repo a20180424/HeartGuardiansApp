@@ -21,11 +21,18 @@ import Outro from "./scenes/outro";
 //    반영해서 URL이 ?m=1 인 채 화면만 미션2일 수 있다. 이때 search 는 안 바뀌므로
 //    search 만으로는 리마운트가 안 된다. location.key 는 navigate()가 같은 URL에도
 //    매번 새로 발급하므로 이 경우를 잡는다.
-//  · 주소창에서 해시 편집(#/planet/1?m=1 → ?m=3&end=1) — 같은 문서 내 이동이라
-//    location.key 가 그대로다. key 만으로는 리마운트가 안 돼 이전 미션의 엔딩으로
-//    가버렸다(m3_end 대신 m1_end3). search 가 이 경우를 잡는다.
+//  · 주소창에서 해시 편집(#/planet/1?m=1 → ?m=3&end=1) — popstate 로 들어와
+//    history state 가 없어 location.key 가 "default" 로 고정된다. key 만으로는
+//    리마운트가 안 돼 이전 미션의 엔딩으로 가버렸다(m3_end 대신 m1_end3).
+//    search 가 이 경우를 잡는다.
 //
-// 정상 플레이는 둘 다 안 바뀌므로(Home이 파라미터 없이 nav) 리마운트되지 않는다.
+// 정상 플레이에는 영향이 없다: 행성 씬 안에서는 자기 자신으로 이동하는 경로가
+// 없어(planet/* 은 nav("/home") 만 호출) 미션 내내 key·search 가 둘 다 고정된다.
+// Home → /planet/N 은 라우트 자체가 바뀌는 최초 마운트라 Keyed 와 무관하다.
+//
+// 남는 틈(개발 전용, 방치): 주소창에서 같은 search 로 두 번 편집하면 key 가
+// "default" 로 고정된 채 search 도 같아 리마운트가 안 된다. APK 엔 주소창이
+// 없고 메뉴 경로는 key 가 잡으므로 실사용에 닿지 않는다.
 function Keyed({ children }: { children: ReactNode }) {
   const { key, search } = useLocation();
   return <Fragment key={`${key}|${search}`}>{children}</Fragment>;
@@ -55,10 +62,38 @@ export default function App() {
           <Route path="/intro" element={<Intro />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/planet/1" element={<Keyed><Planet1 /></Keyed>} />
-          <Route path="/planet/2" element={<Keyed><Planet2 /></Keyed>} />
-          <Route path="/planet/3" element={<Keyed><Planet3 /></Keyed>} />
-          <Route path="/planet/4" element={<Keyed><Planet4 /></Keyed>} />
+          <Route
+            path="/planet/1"
+            element={
+              <Keyed>
+                <Planet1 />
+              </Keyed>
+            }
+          />
+          <Route
+            path="/planet/2"
+            element={
+              <Keyed>
+                <Planet2 />
+              </Keyed>
+            }
+          />
+          <Route
+            path="/planet/3"
+            element={
+              <Keyed>
+                <Planet3 />
+              </Keyed>
+            }
+          />
+          <Route
+            path="/planet/4"
+            element={
+              <Keyed>
+                <Planet4 />
+              </Keyed>
+            }
+          />
           <Route path="/outro" element={<Outro />} />
         </Routes>
         {/* 교사용 히든 점프 메뉴. Routes 바깥 = 어느 씬에서도 뜬다.

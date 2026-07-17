@@ -28,7 +28,16 @@ export default function HiddenMenu() {
   const [wrong, setWrong] = useState(false);
 
   const open = useCallback(() => {
-    if (!isMenuAvailable()) return; // PIN 미설정 빌드 — fail closed
+    if (!isMenuAvailable()) {
+      // PIN 미설정 빌드 — fail closed. 개발에서는 왜 아무 일도 안 일어나는지
+      // 알려준다(조용한 무반응은 새로 클론한 개발자가 진단하기 어렵다).
+      if (import.meta.env.DEV) {
+        console.warn(
+          "[hiddenMenu] VITE_HG_MENU_PIN 미설정 — .env.local 에 4자리 PIN을 넣어야 메뉴가 열린다",
+        );
+      }
+      return;
+    }
     setEntry("");
     setWrong(false);
     // 개발에서도 프로덕션과 같은 흐름을 탄다(DEV 우회 없음) — 교사가 볼 화면을
