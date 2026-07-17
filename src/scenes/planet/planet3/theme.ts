@@ -1,12 +1,12 @@
 import type { MissionData, MissionTheme, SpriteSet } from "../engine/types";
 import mission01 from "./mission01.json";
 import mission02 from "./mission02.json";
-import mission03 from "./mission03.json";
 
 // JSON 추론 타입은 union(type/next 등)과 안 맞아 단언한다(planet1 관례).
 export const MISSION01_DATA = mission01 as unknown as MissionData;
 export const MISSION02_DATA = mission02 as unknown as MissionData;
-export const MISSION03_DATA = mission03 as unknown as MissionData;
+// 행성3은 미션3이 별도 미션이 아니다 — 미션2 미니게임(3D 월드)의 stage2가 미션3이다.
+// (index.tsx 상단 설계 주석 참고.) 그래서 mission03.json / MISSION03_THEME 은 없다.
 
 const A = "/assets";
 
@@ -77,26 +77,6 @@ export const MISSION02_THEME: MissionTheme = {
     states: { main: `${A}/planet3/ice-planet-bg.png` },
     initial: "main",
     byNode: {},
-  },
-  hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
-  friends: { placeholder: PLACEHOLDER_FRIEND },
-  initialFriend: "placeholder",
-  radar: RADAR,
-  showRadar: false,
-  badgeColors: BADGE_COLORS,
-  choiceIcons: {},
-  fx: { fx_light_return: "lightReturn" },
-  sfx: { byNode: {} },
-};
-
-export const MISSION03_THEME: MissionTheme = {
-  speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 3", title: "(임시) 미션 3", ribbon: "안개 행성 미션 3 골격" },
-  bannerNode: "p3_m3_intro",
-  bg: {
-    states: { main: `${A}/planet3/ice-planet-bg.png` },
-    initial: "main",
-    byNode: { p3_m3_intro: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },

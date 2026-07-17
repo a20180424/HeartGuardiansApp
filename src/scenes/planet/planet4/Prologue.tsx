@@ -9,9 +9,9 @@ const OBJECTIVES = [
 ];
 
 const REWARDS = [
-  { icon: "💎", name: "용기의 원석", desc: "그림자 행성에서 얻는 첫 번째 원석이에요." },
-  { icon: "🧭", name: "공감 나침반", desc: "올바른 공감의 방향을 알려주는 도구예요." },
-  { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
+  { icon: "/assets/reward/gem-planet4-emerald.png", name: "용기의 에메랄드", desc: "그림자 행성에서 얻는 네 번째 원석이에요." },
+  { icon: "/assets/reward/tool-planet4-compass.png", name: "공감 나침반", desc: "올바른 공감의 방향을 알려주는 도구예요." },
+  { icon: "/assets/reward/energy.png", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
 
 export default function Prologue({

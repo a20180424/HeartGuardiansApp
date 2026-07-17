@@ -9,9 +9,9 @@ const OBJECTIVES = [
 ];
 
 const REWARDS = [
-  { icon: "💎", name: "관찰의 원석", desc: "안개 행성에서 얻는 첫 번째 원석이에요." },
-  { icon: "📡", name: "마음 신호 탐색기", desc: "보이지 않는 마음 신호를 찾아내는 도구예요." },
-  { icon: "❤️", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
+  { icon: "/assets/reward/gem-planet2-amber.png", name: "관찰의 호박석", desc: "안개 행성에서 얻는 두 번째 원석이에요." },
+  { icon: "/assets/reward/tool-planet2-radar.png", name: "공감 레이더", desc: "친구의 숨은 감정을 찾아내는 도구예요." },
+  { icon: "/assets/reward/energy.png", name: "공감 에너지 경험치", desc: "공감 에너지를 모아 레벨을 올릴 수 있어요." },
 ];
 
 export default function Prologue({
