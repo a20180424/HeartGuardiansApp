@@ -334,7 +334,7 @@
           isNew: 1,
           desc: "하티 타자기 (가이드)",
           tones: [
-            { freq: 500, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 },
+            { freq: 500, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 },
           ],
         },
         blipFriend: {
@@ -342,7 +342,7 @@
           isNew: 1,
           desc: "친구 타자기 (감정을 말하는 외계인)",
           tones: [
-            { freq: 600, type: "triangle", dur: 0.05, gain: 0.25, attack: 0.01, release: 0.04 },
+            { freq: 600, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 },
           ],
         },
         whoosh: {
@@ -355,13 +355,13 @@
         tap: {
           sec: "uiSec",
           desc: "버튼 기본 — 미션 탭과 같은 소리",
-          tones: [{ freq: 520, type: "sine", dur: 0.05, gain: 0.11, release: 0.05 }],
+          tones: [{ freq: 520, type: "sine", dur: 0.05, gain: 0.16, release: 0.05 }],
         },
         pop: {
           sec: "uiSec",
           desc: "팝업 열기",
           tones: [
-            { freq: 400, type: "triangle", dur: 0.07, gain: 0.13, glideTo: 680, release: 0.06 },
+            { freq: 400, type: "triangle", dur: 0.07, gain: 0.16, glideTo: 680, release: 0.06 },
           ],
         },
         title: {
@@ -372,14 +372,14 @@
             type: "triangle",
             start: i * 0.07,
             dur: 0.14,
-            gain: 0.12,
+            gain: 0.13,
             release: 0.12,
           })),
         },
         wrong: {
           sec: "uiSec",
           desc: "로그인 실패 / 미션 오답",
-          tones: [{ freq: 320, type: "sine", dur: 0.16, gain: 0.13, glideTo: 200, release: 0.1 }],
+          tones: [{ freq: 320, type: "sine", dur: 0.16, gain: 0.15, glideTo: 200, release: 0.1 }],
         },
         select: {
           sec: "misSec",
@@ -421,7 +421,7 @@
           sec: "misSec",
           desc: "반짝임 — 1600~2700Hz 랜덤 6음이 겹친다(합치면 사실상 0.36)",
           rand: 6,
-          tones: [{ freq: 1600, type: "triangle", dur: 0.1, gain: 0.06, release: 0.12 }],
+          tones: [{ freq: 1600, type: "triangle", dur: 0.1, gain: 0.07, release: 0.12 }],
         },
         recover: {
           sec: "misSec",

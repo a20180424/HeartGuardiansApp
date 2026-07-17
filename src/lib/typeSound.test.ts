@@ -22,7 +22,13 @@ describe("blipAt", () => {
   it("쉼 없는 긴 단어에서는 BLIP_EVERY(현재 4)마다 한 번 울린다", () => {
     const t = "가나다라마바사";
     expect([0, 1, 2, 3, 4, 5, 6].map((i) => blipAt(t, i))).toEqual([
-      true, false, false, false, true, false, false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
     ]);
   });
 
@@ -49,13 +55,22 @@ describe("blipAt", () => {
     const t = "안녕하세요 오늘 기분이 어때요";
     const result = Array.from({ length: t.length }, (_, i) => blipAt(t, i));
     expect(result).toEqual([
-      true, false, false, false, true, // 안녕하세요 — 5글자라 중간(요)에서 한 번 더
+      true,
+      false,
+      false,
+      false,
+      true, // 안녕하세요 — 5글자라 중간(요)에서 한 번 더
       false, // " "
-      true, false, // 오늘
+      true,
+      false, // 오늘
       false, // " "
-      true, false, false, // 기분이
+      true,
+      false,
+      false, // 기분이
       false, // " "
-      true, false, false, // 어때요
+      true,
+      false,
+      false, // 어때요
     ]);
   });
 
