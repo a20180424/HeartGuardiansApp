@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useFadeNav } from "../../lib/sceneTransition";
 import { skipSeekTarget } from "./outro.logic";
 import FixedStage from "../../lib/FixedStage";
+import { useMuted } from "../../lib/audio";
 import "./Outro.css";
 
 type Status = "playing" | "ended";
@@ -14,6 +15,11 @@ export default function Outro() {
   // 첫 프레임 디코드 전까지 WebView 기본 회색 플레이스홀더가 보이는 걸 막는다.
   // 준비되면 검은 배경 위로 페이드 인.
   const [ready, setReady] = useState(false);
+  // 앱 전역 음소거(🔇)도 영상에 반영한다 — 교사가 🔇를 눌렀는데 영상만 크게
+  // 나면 안 된다. 로컬 muted(자동재생 정책용)와 앱 음소거 중 하나라도 켜져
+  // 있으면 실제로 무음이어야 한다.
+  const appMuted = useMuted();
+  const effectiveMuted = muted || appMuted;
 
   // 영상 탭: 소리 켜기 (+ 자동재생이 막혀 멈춰 있으면 재생도 시도)
   const handleTapToSound = () => {
@@ -43,7 +49,7 @@ export default function Outro() {
         src="/video/Intro_v2.mp4"
         autoPlay
         playsInline
-        muted={muted}
+        muted={effectiveMuted}
         onLoadedData={() => setReady(true)}
         onPlaying={() => setReady(true)}
         onEnded={() => setStatus("ended")}
@@ -54,6 +60,7 @@ export default function Outro() {
           <button
             type="button"
             className="outro__tap-layer"
+            data-sfx="none" /* 영상 전체를 덮는 탭 레이어 — 탭할 때마다 tap이 울리면 영화 위에 계속 비프음이 겹친다 */
             aria-label="탭하여 소리 켜기"
             onClick={handleTapToSound}
           />
@@ -73,7 +80,12 @@ export default function Outro() {
       )}
 
       {status === "ended" && (
-        <button type="button" className="btn outro__home" onClick={() => nav("/home")}>
+        <button
+          type="button"
+          className="btn outro__home"
+          data-sfx="none" /* nav()가 whoosh를 울린다 — tap과 겹치면 안 된다 */
+          onClick={() => nav("/home")}
+        >
           <HomeIcon />
           홈으로
         </button>

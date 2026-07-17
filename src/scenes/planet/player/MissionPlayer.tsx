@@ -721,16 +721,6 @@ export default function MissionPlayer(props: {
     });
   }, [theme]);
 
-  // 브라우저 자동재생 정책: 첫 사용자 제스처(탭)에서 오디오 컨텍스트를 깨운다.
-  useEffect(() => {
-    const unlock = () => {
-      audio.unlock();
-      window.removeEventListener("pointerdown", unlock);
-    };
-    window.addEventListener("pointerdown", unlock);
-    return () => window.removeEventListener("pointerdown", unlock);
-  }, []);
-
   // 디버그 노드 오버레이 토글: 'n'(node) 키로 표시/숨김. 기본은 숨김.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

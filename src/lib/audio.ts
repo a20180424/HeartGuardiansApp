@@ -4,6 +4,8 @@
  * 브라우저 자동재생 정책상 첫 사용자 제스처(탭) 전에는 소리가 나지 않으므로,
  * MissionPlayer가 첫 pointerdown에서 unlock()을 호출한다. 음소거(master gain 0)는
  * localStorage(hg_muted)에 저장된다. */
+import { useSyncExternalStore } from "react";
+
 type ToneOpts = {
   freq: number;
   type?: OscillatorType;
@@ -21,6 +23,15 @@ export class AudioManager {
   muted: boolean;
   private _unlocked = false;
   readonly VOL = 0.5; // master volume when unmuted
+  // 음소거 상태 구독자들. useMuted()(useSyncExternalStore)가 여기 매달려
+  // MuteButton뿐 아니라 인트로/아웃트로 영상 등도 음소거 변경에 반응하게 한다.
+  private muteListeners = new Set<(m: boolean) => void>();
+
+  /** 음소거 상태가 바뀔 때마다 fn을 호출한다. 구독 해제 함수를 반환한다. */
+  onMuteChange(fn: (m: boolean) => void): () => void {
+    this.muteListeners.add(fn);
+    return () => this.muteListeners.delete(fn);
+  }
 
   constructor() {
     // 모듈 로드 시점에 만들어지는 싱글턴이라 localStorage 가 없는 환경(node 테스트)에서도
@@ -55,6 +66,7 @@ export class AudioManager {
       localStorage.setItem("hg_muted", m ? "1" : "0");
     }
     if (this.master) this.master.gain.value = m ? 0 : this.VOL;
+    this.muteListeners.forEach((fn) => fn(m));
   }
   toggleMute() {
     this.setMuted(!this.muted);
@@ -198,3 +210,12 @@ const SOUNDS: Record<string, (a: AudioManager) => void> = {
  * 마운트돼야 오디오가 생기고 unlock 도 미션 안 첫 탭에서만 걸려 홈·로그인이 무음이었다.
  * 이제 App 이 첫 제스처에서 unlock 하고, 모든 씬이 이 하나를 공유한다. */
 export const audio = new AudioManager();
+
+/** 현재 음소거 상태를 구독하는 훅. MuteButton뿐 아니라 인트로/아웃트로처럼
+ * 앱 음소거에 맞춰 자신의 볼륨(예: 영상 muted)도 함께 바꿔야 하는 곳에서 쓴다. */
+export function useMuted(): boolean {
+  return useSyncExternalStore(
+    (onStoreChange) => audio.onMuteChange(() => onStoreChange()),
+    () => audio.muted,
+  );
+}

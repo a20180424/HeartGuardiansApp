@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { audio } from "./audio";
+import { audio, useMuted } from "./audio";
 import "./mute-button.css";
 
 // 전역 음소거 토글. HiddenMenu 와 같은 자리(<Routes> 바깥)에 살아 어느 씬에서도 뜬다.
@@ -9,14 +8,18 @@ import "./mute-button.css";
 // 200×200 을 쓴다. 교사용 히든 제스처 자리에 아이가 반복해 누르는 버튼을 겹치지 않는다.
 //
 // data-sfx="none": 음소거를 켜는 순간 tap 이 나면 앞뒤가 안 맞는다.
+//
+// 상태는 자체 useState로 미러링하지 않는다 — audio.setMuted()를 부르는 다른
+// 경로(예: 없음, 지금은 이 버튼뿐)와 어긋날 위험이 있어 useMuted()(구독 기반)로
+// AudioManager의 상태를 그대로 읽는다.
 export default function MuteButton() {
-  const [muted, setMuted] = useState(() => audio.muted);
+  const muted = useMuted();
   return (
     <button
       type="button"
       className="mute-btn"
       data-sfx="none"
-      onClick={() => setMuted(audio.toggleMute())}
+      onClick={() => audio.toggleMute()}
       aria-label={muted ? "소리 켜기" : "소리 끄기"}
     >
       {muted ? "🔇" : "🔊"}

@@ -14,7 +14,13 @@ export default function WelcomePanel({ name, onContinue, onSwitch, busy }: Props
         <br />
         환영해요!
       </p>
-      <button type="button" className="btn auth-bigbtn" disabled={busy} onClick={onContinue}>
+      <button
+        type="button"
+        className="btn auth-bigbtn"
+        data-sfx="none" /* onContinue가 Home으로 nav()해 whoosh를 울린다 — tap과 겹치면 안 된다 */
+        disabled={busy}
+        onClick={onContinue}
+      >
         {busy ? "잠시만요…" : "계속하기"}
       </button>
       <button type="button" className="btn ghost auth-bigbtn" disabled={busy} onClick={onSwitch}>
