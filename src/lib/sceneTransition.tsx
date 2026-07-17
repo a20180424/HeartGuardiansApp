@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { audio } from "./audio";
 
 // 라우트(씬) 전환용 전역 페이드-투-블랙.
 //
@@ -27,6 +28,7 @@ export function SceneTransitionProvider({ children }: { children: ReactNode }) {
     (to) => {
       if (busy.current) return;
       busy.current = true;
+      audio.play("whoosh"); // 페이드 시작과 동시에 — 전환음이 화면보다 늦으면 어긋나 들린다
       setFading(true); // 0 → 1 (fade to black)
       window.setTimeout(() => {
         nav(to); // 검은 화면 뒤에서 라우트 교체
