@@ -158,3 +158,12 @@
   -webkit-mask: none; /* base 가장자리 페더 끄기 */
   mask: none;
 }
+
+/* 미션3 완료 "빛 복귀" 오버레이(#lightOverlay, fx_light_return→.bright) 끄기.
+   리워드 카드 위로 우측 노란빛이 뿌옇게 떠서 미션3(p2_m3_end)에서만 제거한다.
+   미션1·2 의 end 오버레이는 그대로 두고, node-p2_m3_end 로만 조준한다.
+   순수 시각 효과라 "다음" 버튼 로직에는 영향 없음. (planet1 m3_end 와 동일 처리.)
+   (.planet2 #stage.node-p2_m3_end #lightOverlay = 특이도 2,2,0 로 base(2,1,0) 을 이긴다.) */
+.planet2 #stage.node-p2_m3_end #lightOverlay {
+  opacity: 0;
+}
