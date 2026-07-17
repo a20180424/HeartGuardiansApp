@@ -17,6 +17,7 @@ const HATI_CHAR: Record<string, string> = {
   explaining: `${A}/char/Hati/hati_explaining.png`,
   suggesting: `${A}/char/Hati/hati_suggesting.png`,
   worried: `${A}/char/Hati/hati_worried.png`,
+  surprised: `${A}/char/Hati/hati_surprised.png`,
   praising: `${A}/char/Hati/hati_praising.png`,
   cheering: `${A}/char/Hati/hati_cheering.png`,
   proud: `${A}/char/Hati/hati_proud.png`,
@@ -153,7 +154,8 @@ const LALA_SPRITES: SpriteSet = {
     m2_lala_intro: "anxious",
     m2_q2_wrongA_lala: "thinking",
     m2_q2_wrongB_lala: "thinking",
-    m2_q2_correct_lala: "smiling",
+    // "응. 계속 그 생각이 나." — 이해받았지만 걱정이 남은 대사라 웃는(smiling) 대신 곰곰이(thinking).
+    m2_q2_correct_lala: "thinking",
   },
 };
 
@@ -246,6 +248,14 @@ export const MISSION02_THEME: MissionTheme = {
       m2_q4_wrongB_hati: "worried",
       m2_q4_retry: "suggesting",
       m2_q4_correct_hati: "praising",
+      // 비밀 파트: 지정이 없으면 위 praising(엄지척)이 계속 물려 놀람·설명 대사에도 칭찬 표정이 뜬다.
+      // 하티 아바타가 보이는 노드만 지정한다(사이의 lesson/gauge 노드는 하티 박스가 숨겨져 불필요).
+      m2_secret_intro1: "explaining", // "공감은 …선택하는 것" 정의 설명
+      m2_secret_intro2: "surprised", // "앗, 공감 거울이 깨어나려고 해! 하지만 아직…" 놀람+우려
+      m2_secret_intro3: "suggesting", // "마지막 비밀을 알아내야 해!" 재촉
+      m2_mirror_ab: "suggesting", // 드래그 안내(거울 스테이지에서 하티 아바타 표시)
+      m2_secret_wake: "cheering", // "공감 거울이 깨어났어!"
+      m2_secret_lesson: "explaining", // 마무리 교훈 설명
       m2_end1: "cheering",
       m2_end2: "proud",
       m2_end3: "celebrating",
