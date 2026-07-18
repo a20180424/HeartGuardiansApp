@@ -870,12 +870,268 @@ function submitEmotionGuideAnswers(answers) {
   });
 }
 
-/* EmotionGuideStage.tsx 이식 — "play" 단계(10문항)만. 반 결과 대시보드는 범위 밖. */
+/* emotionGuide.api.ts 이식 — GET /api/planet2/emotion-guide/class-answers.
+   오늘(KST) 우리 반의 모든 답변을 flat 배열로 조회(ClassResultsBoard 10초 폴링에서 호출). */
+function fetchClassAnswers() {
+  const creds = credentialStore.get();
+  if (!creds) return Promise.reject(apiError(401, "No stored credentials", null));
+  return apiRequest("/api/planet2/emotion-guide/class-answers", {
+    headers: authHeaders(creds),
+  }).then((res) => res.votes);
+}
+
+/* ==========================================================================
+   반 결과 대시보드 (ClassResultsBoard.tsx + classResults.{logic,source}.ts 이식).
+   emotionGuide.data.ts 의 EMOTIONS/COPING_ACTIONS 는 위 EG_EMOTIONS/EG_COPING(이
+   미션1 데이터 인라인 블록에서 이미 선언됨)을 그대로 재사용한다 — 별도 정의 없음.
+   EmotionGuideStage 가 10문항 완료 후 자신의 패널(eg-panel) 안에 이 모듈을 mount 한다.
+   ========================================================================== */
+const ClassResultsBoard = (function () {
+  const POLL_MS = 10000; // 서버 "오늘 우리 반" 조회 폴링 간격(원본과 동일 10초)
+  const RANK_BADGE = ["👑", "🥈", "🥉"];
+
+  let mountEl = null;
+  let onComplete = null;
+  let snap = { votes: [] };
+  let situationId = 1;
+  let emotionId = EG_EMOTIONS[0].id;
+  let pollTimer = 0;
+  let doneBusy = false; // "다음으로" 재진입 가드 — 폴링 중에도 중복 클릭으로 onComplete 이중 발사 방지
+
+  function el(tag, props, children) {
+    const n = document.createElement(tag);
+    if (props) {
+      for (const k in props) {
+        if (k === "class") n.className = props[k];
+        else if (k === "text") n.textContent = props[k];
+        else n.setAttribute(k, props[k]);
+      }
+    }
+    (children || []).forEach((c) => {
+      if (c) n.appendChild(c);
+    });
+    return n;
+  }
+
+  function emotionName(id) {
+    const e = EG_EMOTIONS.find((x) => x.id === id);
+    return e ? e.name : id;
+  }
+  function emotionEmoji(id) {
+    const e = EG_EMOTIONS.find((x) => x.id === id);
+    return e ? e.emoji : "";
+  }
+
+  // classResults.logic.ts 이식 — 순수 집계 함수(ClassVote[] 만 받는다).
+  function votesFor(votes, sid) {
+    return votes.filter((v) => v.situationId === sid);
+  }
+  function emotionDistribution(votes, sid) {
+    const sit = votesFor(votes, sid);
+    const total = sit.length || 1;
+    return EG_EMOTIONS.map((e) => {
+      const count = sit.filter((v) => v.emotionId === e.id).length;
+      return { emotionId: e.id, count: count, pct: Math.round((count / total) * 100) };
+    });
+  }
+  function leaderboard(votes, sid) {
+    const sorted = emotionDistribution(votes, sid).slice().sort((a, b) => b.count - a.count);
+    const top = sorted.slice(0, 3);
+    while (top.length < 3) top.push({ emotionId: "", count: 0, pct: 0 });
+    return top;
+  }
+  function actionBreakdown(votes, sid, eid) {
+    const matching = votesFor(votes, sid).filter((v) => v.emotionId === eid);
+    const actions = (EG_COPING[eid] && EG_COPING[eid].actions) || [];
+    return actions.map((a) => {
+      const picked = matching.filter((v) => v.actionId === a.id);
+      return { actionId: a.id, count: picked.length, voterNames: picked.map((v) => v.studentName) };
+    });
+  }
+
+  function render() {
+    if (!mountEl) return;
+    mountEl.innerHTML = "";
+
+    const dist = emotionDistribution(snap.votes, situationId);
+    const maxCount = Math.max(1, ...dist.map((d) => d.count));
+    const respondedCount = new Set(snap.votes.map((v) => v.studentId)).size;
+    const board = leaderboard(snap.votes, situationId);
+    const actions = actionBreakdown(snap.votes, situationId, emotionId);
+
+    const doneBtn = el("button", { class: "crb-done", text: "다음으로 ➡️" });
+    doneBtn.type = "button";
+    doneBtn.addEventListener("click", () => {
+      // 재진입 가드 — 폴링(10초)이 계속 돌아 보드가 즉시 unmount 되지 않으므로
+      // 클릭 연타로 onComplete(→ 다음 노드 진행)가 이중 발사되지 않게 막는다.
+      if (doneBusy) return;
+      doneBusy = true;
+      doneBtn.disabled = true;
+      if (onComplete) onComplete();
+    });
+
+    const top = el("div", { class: "crb-top" }, [
+      el("div", { class: "crb-hati" }, [
+        el("span", { class: "crb-hati-name", text: "🛰️ 하티" }),
+        el("span", {
+          class: "crb-hati-line",
+          text: "우리 반 친구들은 어떤 대답을 했는지 알아보자. 결과가 실시간으로 채워지고 있어!",
+        }),
+      ]),
+      el("div", { class: "crb-count" }, [
+        el("span", { class: "crb-count-label", text: "응답한 친구" }),
+        el("span", { class: "crb-count-num", text: respondedCount + "명" }),
+      ]),
+      doneBtn,
+    ]);
+
+    // 왼쪽: 상황 선택 + 감정 분포 막대 + 순위표
+    const select = document.createElement("select");
+    select.className = "crb-select";
+    EG_SITUATIONS.forEach((s) => {
+      const opt = document.createElement("option");
+      opt.value = String(s.id);
+      opt.textContent = s.id + ". " + s.title;
+      if (s.id === situationId) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", () => {
+      situationId = Number(select.value);
+      render();
+    });
+    const selectRow = el("div", { class: "crb-select-row" }, [
+      el("span", { class: "crb-select-label", text: "🔍 감정 상황" }),
+    ]);
+    selectRow.appendChild(select);
+
+    const chart = el("div", { class: "crb-chart" });
+    dist.forEach((d) => {
+      const row = el("button", { class: "crb-bar-row" + (d.emotionId === emotionId ? " sel" : "") }, [
+        el("span", { class: "crb-bar-name", text: emotionEmoji(d.emotionId) + " " + emotionName(d.emotionId) }),
+        el("span", { class: "crb-bar-track" }, [
+          el("span", { class: "crb-bar-fill", style: "width:" + (d.count / maxCount) * 100 + "%" }),
+          el("span", { class: "crb-bar-num", text: d.count + "명 (" + d.pct + "%)" }),
+        ]),
+      ]);
+      row.type = "button";
+      row.addEventListener("click", () => {
+        emotionId = d.emotionId;
+        render();
+      });
+      chart.appendChild(row);
+    });
+
+    const leaderboardEl = el("div", { class: "crb-leaderboard" });
+    board.forEach((item, i) => {
+      if (item.count > 0) {
+        leaderboardEl.appendChild(
+          el("div", { class: "crb-rank" }, [
+            el("span", { class: "crb-rank-badge", text: RANK_BADGE[i] }),
+            el("span", {
+              class: "crb-rank-name",
+              text: emotionEmoji(item.emotionId) + " " + emotionName(item.emotionId).split("/")[0],
+            }),
+            el("span", { class: "crb-rank-count", text: item.count + "명 (" + item.pct + "%)" }),
+          ]),
+        );
+      } else {
+        leaderboardEl.appendChild(
+          el("div", { class: "crb-rank empty" }, [el("span", { class: "crb-rank-wait", text: "기록 대기" })]),
+        );
+      }
+    });
+
+    const leftCol = el("div", { class: "crb-col crb-left" }, [
+      selectRow,
+      el("div", { class: "crb-section-label", text: "📊 감정 분포 (감정을 누르면 대처가 보여요)" }),
+      chart,
+      el("div", { class: "crb-section-label", text: "🏆 감정 분포 순위 (1~3위)" }),
+      leaderboardEl,
+    ]);
+
+    // 오른쪽: 선택 감정의 해소 & 공감 분석
+    const actionsEl = el("div", { class: "crb-actions" });
+    actions.forEach((a) => {
+      const meta = (EG_COPING[emotionId] && EG_COPING[emotionId].actions.find((x) => x.id === a.actionId)) || {};
+      const isSelf = a.actionId <= 3;
+      actionsEl.appendChild(
+        el("div", { class: "crb-action" }, [
+          el("div", { class: "crb-action-head" }, [
+            el("span", { class: "crb-action-emoji", text: meta.emoji || "" }),
+            el("span", { class: "crb-action-text", text: meta.text || "" }),
+            el("span", {
+              class: "crb-action-badge " + (isSelf ? "self" : "wish"),
+              text: isSelf ? "스스로 해소" : "바라는 공감",
+            }),
+            el("span", { class: "crb-action-count", text: a.count + "명" }),
+          ]),
+          el("div", { class: "crb-action-voters" }, [
+            el("span", { class: "crb-voters-label", text: "📝 선택 대원:" }),
+            document.createTextNode(" " + (a.voterNames.length ? a.voterNames.join(", ") : "아직 없어요")),
+          ]),
+        ]),
+      );
+    });
+
+    const rightCol = el("div", { class: "crb-col crb-right" }, [
+      el("div", { class: "crb-section-label" }, [
+        document.createTextNode("🛡️ 해소 & 공감 분석 · "),
+        el("span", { class: "crb-sel-emotion", text: emotionEmoji(emotionId) + " " + emotionName(emotionId) }),
+      ]),
+      actionsEl,
+    ]);
+
+    const body = el("div", { class: "crb-body" }, [leftCol, rightCol]);
+
+    mountEl.appendChild(el("div", { class: "crb" }, [top, body]));
+  }
+
+  function tick() {
+    fetchClassAnswers()
+      .then((votes) => {
+        snap = { votes: votes };
+        render();
+      })
+      .catch((e) => {
+        console.error("[classResults] 조회 실패", e);
+      });
+  }
+
+  // 서버의 10초 폴링 모델과 동일: mount 즉시 + POLL_MS 마다 fetch.
+  function mount(containerEl, opts) {
+    mountEl = containerEl;
+    onComplete = (opts && opts.onComplete) || null;
+    snap = { votes: [] };
+    situationId = 1;
+    emotionId = EG_EMOTIONS[0].id;
+    doneBusy = false;
+    render();
+    tick();
+    pollTimer = window.setInterval(tick, POLL_MS);
+  }
+
+  function unmount() {
+    window.clearInterval(pollTimer);
+    pollTimer = 0;
+    mountEl = null;
+    onComplete = null;
+  }
+
+  return { mount: mount, unmount: unmount };
+})();
+
+/* EmotionGuideStage.tsx 이식 — 10문항 플레이 → 반 결과 대시보드(ClassResultsBoard). */
 const EmotionGuideStage = (function () {
   let state = egInitialState();
   let container = null;
   let root = null;
   let onFinish = null;
+  // 게임 단계: 10문항 플레이 → 반 결과 대시보드(phase "board" 는 eg-panel 안에 CRB 를 mount).
+  let phase = "play"; // play | board
+  let finalResults = [];
+  // 재진입 가드 — CRB 는 즉시 unmount 되지 않으므로(10초 폴링 유지) "done" 전이가
+  // 두 번 실행돼 서버 제출(submitEmotionGuideAnswers)이 이중 발사되지 않도록 막는다.
+  let submitted = false;
 
   function situation() {
     return EG_SITUATIONS[state.step - 1];
@@ -907,6 +1163,26 @@ const EmotionGuideStage = (function () {
   function render() {
     if (!root) return;
     root.innerHTML = "";
+
+    if (phase === "board") {
+      // 반 결과 대시보드 — 패널의 네 귀퉁이 경첩/책등은 유지하고 본문만 CRB 에 위임.
+      const boardMount = el("div", { class: "eg-board-mount" });
+      const panel = el("div", { class: "eg-panel" }, [
+        el("span", { class: "eg-hinge tl" }),
+        el("span", { class: "eg-hinge tr" }),
+        el("span", { class: "eg-hinge bl" }),
+        el("span", { class: "eg-hinge br" }),
+        el("span", { class: "eg-spine" }),
+        boardMount,
+      ]);
+      root.appendChild(panel);
+      ClassResultsBoard.mount(boardMount, {
+        onComplete: () => {
+          if (onFinish) onFinish(finalResults);
+        },
+      });
+      return;
+    }
 
     const sit = situation();
     const cop = coping();
@@ -1043,12 +1319,16 @@ const EmotionGuideStage = (function () {
     if (!egCanAdvance(state)) return;
     const r = egAdvance(state);
     if (r.kind === "done") {
-      // 10문항 완료 — 서버에 제출(논블로킹, 원본과 동일하게 실패해도 진행 막지 않음).
+      if (submitted) return; // 재진입 가드 — 이미 제출·전환된 done 을 다시 처리하지 않는다.
+      submitted = true;
+      finalResults = r.results;
+      // 10문항 완료 → 반 결과 대시보드로 전환(아직 미션 진행 아님).
+      // 서버에 내 답 제출(upsert). 실패해도 대시보드는 진행 — 다음 폴링에 내 표가 합류한다.
       submitEmotionGuideAnswers(r.results).catch((e) => {
         console.error("[emotionGuide] 답변 제출 실패", e);
       });
-      // 범위 축소: 반 결과 대시보드(ClassResultsBoard) 대신 바로 완료 콜백 호출.
-      if (onFinish) onFinish();
+      phase = "board";
+      render();
     } else {
       state = r.state;
       render();
@@ -1057,6 +1337,9 @@ const EmotionGuideStage = (function () {
 
   function mount(containerEl, finishCb) {
     state = egInitialState();
+    phase = "play";
+    finalResults = [];
+    submitted = false;
     container = containerEl;
     onFinish = finishCb;
     root = el("div", { class: "eg-overlay" });
@@ -1066,6 +1349,7 @@ const EmotionGuideStage = (function () {
   }
 
   function unmount() {
+    ClassResultsBoard.unmount(); // 보드가 떠 있었다면 폴링 인터벌 정리(방어적 — 보통은 이미 unmount됨)
     if (root) root.remove();
     root = null;
     container = null;
