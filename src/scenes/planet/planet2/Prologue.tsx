@@ -3,9 +3,8 @@ import { MISSION_STEPS } from "./theme"; // 미션 이름(스텝 라벨) 단일 
 import "./Prologue.css"; // planet2 전용: 포인트 색 + 배경 오버라이드(prologue--planet2)
 
 const OBJECTIVES = [
-  "다른 사람의 감정을 관찰하고 알아차리는 방법을 배운다.",
-  "상황과 표정을 통해 마음을 이해하려고 노력한다.",
-  "관찰과 관심이 공감의 시작임을 이해한다.",
+  "사람마다 느끼는 감정과 감정을 해소하는 방법, 공감받고 싶은 방법이 서로 다를 수 있음을 이해한다.",
+  "표정, 말투, 행동, 상황을 종합하여 친구의 감정을 이해한다.",
 ];
 
 const REWARDS = [
@@ -26,15 +25,17 @@ export default function Prologue({
       modifier="prologue--planet2"
       planetName="안개 행성"
       hatiLines={[
-        "안개 때문에 마을이",
-        "잘 보이지 않아. 친구들의",
-        "마음 신호를 찾아주면",
-        "길이 열릴거야!",
+        "안개 행성이 짙은 안개에",
+        "뒤덮였어! 주민들이 겉모습만",
+        "보고 서로를 판단하면서",
+        "진짜 감정을 잃어버렸어.",
+        "표정과 행동, 상황의 단서를",
+        "찾아 숨겨진 감정을 밝혀 보자!",
       ]}
       objectives={OBJECTIVES}
       rewards={REWARDS}
-      questTitle="숨겨진 마음 신호를 찾아라!"
-      questSub="친구들의 마음 신호를 관찰하고 안개를 걷어내자!"
+      questTitle="안개 속 숨겨진 감정을 찾아라!"
+      questSub="감정의 단서를 찾아 친구의 진짜 마음을 알아보세요!"
       questMascot="/assets/char/planet2_arji.png"
       questMascotAlt="아르지"
       steps={MISSION_STEPS}
