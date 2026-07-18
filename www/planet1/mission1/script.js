@@ -991,7 +991,7 @@ function blipSound(speaker) {
     if (exiting) return;
     exiting = true;
     els.nextBtn.disabled = true;
-    fadeNav("../mission2/"); // 다음 미션(Task 7에서 구현 — 현재 404 예상)
+    fadeNav("../mission2/"); // 다음 미션으로
   });
 
   // ---------- q4 카드 드래그 (MissionPlayer _enableCardDrag 이식) ----------

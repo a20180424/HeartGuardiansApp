@@ -1161,7 +1161,7 @@ function blipSound(speaker) {
     if (exiting) return;
     exiting = true;
     els.nextBtn.disabled = true;
-    fadeNav("../mission3/"); // 다음 미션(Task 8에서 구현 — 현재 404 예상)
+    fadeNav("../mission3/"); // 다음 미션으로
   });
 
   // ---------- 공감 거울 스테이지 DOM (MirrorStage.tsx 이식) ----------

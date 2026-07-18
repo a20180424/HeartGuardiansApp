@@ -1088,7 +1088,7 @@ const EmpathyManualGame = (function () {
 
   // ---------- 다음 미션 버튼 ----------
   // 원본 planet3/index.tsx: mission1 onExit → goTo("mission2")(=mission23; 미션2·3이
-  // 하나의 3D 월드로 묶여 있다 — 후속 태스크에서 구현, 현재 404 예상).
+  // 하나의 3D 월드로 묶여 있다).
   els.nextBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (exiting) return;

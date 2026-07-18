@@ -1112,7 +1112,7 @@ const EmpathyCompassStage = (function () {
     if (exiting) return;
     exiting = true;
     els.nextBtn.disabled = true;
-    fadeNav("../mission2/"); // 다음 미션(후속 태스크에서 구현 — 현재 404 예상)
+    fadeNav("../mission2/"); // 다음 미션으로
   });
 
   // ---------- 렌더 ----------

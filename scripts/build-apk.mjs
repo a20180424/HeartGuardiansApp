@@ -1,7 +1,8 @@
 // Build a debug APK and install it on the connected device.
-//   npm run apk              build web -> sync -> assembleDebug -> adb install -> launch
-//   npm run apk -- --skip-web    reuse existing dist/ (skip `npm run build`)
+//   npm run apk              sync www/ -> assembleDebug -> adb install -> launch
 //   npm run apk -- --no-launch   install but don't auto-launch
+//
+// 무빌드: www/ 의 정적 파일이 곧 앱이다 (webDir: "www"). 웹 빌드 단계 없음.
 //
 // JAVA_HOME: uses the env var if set, else auto-detects Android Studio's bundled JDK.
 // Windows-focused (matches this project's dev setup) but falls back sensibly elsewhere.
@@ -10,7 +11,6 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 
 const args = process.argv.slice(2);
-const skipWeb = args.includes("--skip-web");
 const noLaunch = args.includes("--no-launch");
 
 const APP_ID = "com.heartguardians.app";
@@ -69,7 +69,6 @@ const run = (cmd, opts = {}) => {
 
 console.log(`JAVA_HOME    = ${javaHome}`);
 console.log(`ANDROID_HOME = ${androidHome}`);
-if (!skipWeb) run("npm run build");
 run("npx cap sync android");
 run(gradlew + " assembleDebug", { cwd: "android" });
 

@@ -595,6 +595,6 @@ document.body.appendChild(muteBtn);
     updateHint();
   }
 
-  // 시작하기 → auth 로 이동(페이드 아웃). Task 3 전이라 404 예상.
+  // 시작하기 → auth 로 이동(페이드 아웃).
   startBtn.addEventListener("click", () => fadeNav(ROOT + "auth/"));
 })();

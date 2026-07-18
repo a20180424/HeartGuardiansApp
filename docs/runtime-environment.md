@@ -66,9 +66,16 @@ Mozilla/5.0 (Linux; Android 14; SM-X210 Build/...; wv) AppleWebKit/537.36 (KHTML
 
 ## 빌드
 
-- 웹 빌드: `npm run build` (tsc + vite → `dist`)
-- 네이티브 반영: `npx cap sync android` 후 Android Studio / Gradle로 APK 빌드.
+- 웹 빌드 없음 — `www/`의 정적 파일이 곧 앱이다 (무빌드).
+- APK: `npm run apk` = `npx cap sync android` → `gradlew assembleDebug` → `adb install` (+실행).
+
+## DevTools 계측 주의 (innerWidth)
+
+DPR 에뮬레이션·OS 배율 환경에서 `window.innerWidth`가 페이지 로드 직후 CSS 뷰포트의
+1.25~1.5배로 잘못 보고되는 간헐 현상이 있다(2026-07-19 계측·확인). 레이아웃 계산은
+`document.documentElement.clientWidth`를 쓸 것 — 전 페이지의 `fitStage()`가 이미 이 방식이다.
 
 ## 스택
 
-Capacitor 8.4.1 + React 19 + Vite. `webDir: dist`, appId `com.heartguardians.app`.
+순수 vanilla HTML/JS/CSS 무빌드 MPA + Capacitor 8.4.1. `webDir: "www"`, appId `com.heartguardians.app`.
+(2026-07: React 19 + Vite에서 전환 — docs/superpowers/plans/2026-07-18-vanilla-mpa-conversion.md)
