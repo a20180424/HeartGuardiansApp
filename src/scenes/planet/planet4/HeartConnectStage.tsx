@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import {
   EPILOGUE_BG,
+  FINAL_LINES,
   HATI_DEFAULT,
   IMG_DIAMOND,
+  IMG_SUCCESS_BANNER,
+  IMG_SUCCESS_BG,
+  IMG_TITLE_BANNER,
   IMG_VIDEO,
   MISSIONS,
   POST_LINES,
@@ -27,16 +31,7 @@ export default function HeartConnectStage({ onDone }: { onDone: () => void }) {
         {phase === "quiz" && <QuizPhase onDone={() => setPhase("video")} />}
         {phase === "video" && <VideoPhase onDone={() => setPhase("epilogue")} />}
         {phase === "epilogue" && <EpiloguePhase onDone={() => setPhase("success")} />}
-        {/* 임시 success 배선(Task 8에서 <SuccessPhase onDone={onDone} /> 로 교체).
-            지금은 onDone 을 소비해 noUnusedParameters 오류를 막고, phase 가 success 로 갈 때 홈 이동을 검증한다. */}
-        {phase === "success" && (
-          <button
-            style={{ position: "absolute", left: 540, top: 380, padding: "16px 30px" }}
-            onClick={onDone}
-          >
-            (임시) 우주선으로 이동
-          </button>
-        )}
+        {phase === "success" && <SuccessPhase onDone={onDone} />}
       </div>
     </div>
   );
@@ -453,6 +448,93 @@ function EpiloguePhase({ onDone }: { onDone: () => void }) {
         <span className="hc-post-speaker">하티</span>
         <p className={`hc-post-text${typing ? " typing" : ""}`}>{renderText()}</p>
         <span className="hc-post-next">▶</span>
+      </div>
+    </div>
+  );
+}
+
+const FINAL_TYPE_MS = 58; // 원본 typeFinalLine() 타자 속도
+const FINAL_FIRST_DELAY_MS = 650; // 원본 startFinalTyping() 진입 지연
+const FINAL_SECOND_DELAY_MS = 380; // 원본 startFinalTyping() 1→2번째 줄 사이 지연
+
+// 원본 #endingScreen(.success-ending) 이식: startFinalTyping()/typeFinalLine().
+// 전체화면 불투명(z-index 110)으로 엔진 스테퍼까지 덮는다(video/epilogue phase 와 동일한 관례).
+function SuccessPhase({ onDone }: { onDone: () => void }) {
+  const [line1, setLine1] = useState("");
+  const [line2, setLine2] = useState("");
+  const [typing1, setTyping1] = useState(false);
+  const [typing2, setTyping2] = useState(false);
+
+  const delayTimerRef = useRef<number | null>(null);
+  const typeIntervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const typeLine = (
+      text: string,
+      setText: (v: string) => void,
+      setTyping: (v: boolean) => void,
+      onComplete?: () => void,
+    ) => {
+      const chars = Array.from(text);
+      let i = 0;
+      setText("");
+      setTyping(true);
+      typeIntervalRef.current = window.setInterval(() => {
+        i += 1;
+        setText(chars.slice(0, i).join(""));
+        if (i >= chars.length) {
+          window.clearInterval(typeIntervalRef.current!);
+          typeIntervalRef.current = null;
+          setTyping(false);
+          onComplete?.();
+        }
+      }, FINAL_TYPE_MS);
+    };
+
+    delayTimerRef.current = window.setTimeout(() => {
+      delayTimerRef.current = null;
+      typeLine(FINAL_LINES[0], setLine1, setTyping1, () => {
+        delayTimerRef.current = window.setTimeout(() => {
+          delayTimerRef.current = null;
+          typeLine(FINAL_LINES[1], setLine2, setTyping2);
+        }, FINAL_SECOND_DELAY_MS);
+      });
+    }, FINAL_FIRST_DELAY_MS);
+
+    return () => {
+      if (delayTimerRef.current !== null) window.clearTimeout(delayTimerRef.current);
+      if (typeIntervalRef.current !== null) window.clearInterval(typeIntervalRef.current);
+    };
+  }, []);
+
+  return (
+    <div className="hc-success-root" style={{ backgroundImage: `url(${IMG_SUCCESS_BG})` }}>
+      <img
+        className="hc-success-logo"
+        src={IMG_TITLE_BANNER}
+        alt="하트 가디언즈 우주 공감 탐험대"
+      />
+      <div className="hc-success-burst">
+        <img className="hc-success-banner-img" src={IMG_SUCCESS_BANNER} alt="탐험대 성공!" />
+        <div className="hc-success-sparkles">
+          <span>✦</span>
+          <span>★</span>
+          <span>✦</span>
+          <span>★</span>
+          <span>✦</span>
+          <span>✦</span>
+          <span>★</span>
+          <span>✦</span>
+        </div>
+      </div>
+      <div className="hc-success-message">
+        <p className={`hc-final-typed-line${typing1 ? " typing" : ""}`}>{line1}</p>
+        <p className={`hc-final-typed-line hc-final-line-two${typing2 ? " typing" : ""}`}>
+          {line2}
+        </p>
+        <button type="button" className="hc-restart" onClick={onDone}>
+          우주선으로 이동
+        </button>
       </div>
     </div>
   );
