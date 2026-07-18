@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하트가디언즈 — 얼음 행성 미션2·3</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- three.js(r0.185.0) + addon 로더를 www/libs 에서 bare specifier 로 매핑.
+         world/*.js 는 원본 그대로 `import * as THREE from 'three'` /
+         'three/addons/loaders/GLTFLoader.js' 를 쓴다 — 여기서 실제 파일로 해석한다.
+         (import map 경로는 이 문서 URL 기준. GLTFLoader 내부의 '../utils/...' 상대 import 도
+          www/libs/utils/ 실파일로 그대로 해석되도록 libs 디렉터리 구조를 보존했다.) -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../../libs/three.module.js",
+          "three/addons/loaders/GLTFLoader.js": "../../libs/loaders/GLTFLoader.js",
+          "three/addons/utils/BufferGeometryUtils.js": "../../libs/utils/BufferGeometryUtils.js",
+          "three/addons/utils/SkeletonUtils.js": "../../libs/utils/SkeletonUtils.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- #stage: 미션 무대는 1920×1200 좌표계(원본 useFitStage 기본값 = player/ 엔진 관례), px 절대배치.
+         ⚠ 이 페이지는 planet3 의 미션2·3 을 하나로 묶은 three.js 3D 월드다.
+         mission02.json 은 minigame(1) → line(3) 노드로, 미니게임이 stage1(연료 채우기=미션2) →
+         stage2(NPC=미션3)까지 한 번에 진행한다. stage2 진입 시 상단 스테퍼가 미션3 으로 올라간다.
+         미션2 는 인트로 타이틀 배너가 없다(theme.bannerNode="") — 미니게임으로 바로 시작. -->
+    <div id="stage">
+      <!-- 배경(얼음 행성 — 미니게임 로딩 전/후 라인 노드에서 보이는 배경) -->
+      <img id="bg" src="" alt="" />
+      <div id="lightOverlay"></div>
+
+      <!-- 진행 스테퍼(좌상단) — 라벨은 MISSION_STEPS(theme.ts) 그대로.
+           이 페이지는 미션2(active)로 시작해 stage2 진입 시 미션3(active)로 올라간다. -->
+      <div id="progress">
+        <div class="prog-title">
+          <span class="star">⭐</span>
+          <span>탐험 진행도</span>
+        </div>
+        <div class="stepper">
+          <div class="pnode" id="mission1">
+            <div class="circle"><span class="num">1</span></div>
+            <div class="label">가디언즈 작전회의</div>
+          </div>
+          <div class="connector" id="conn1"></div>
+          <div class="pnode" id="mission2">
+            <div class="circle"><span class="num">2</span></div>
+            <div class="label">공감 송신기 연료 채우기</div>
+          </div>
+          <div class="connector" id="conn2"></div>
+          <div class="pnode" id="mission3">
+            <div class="circle"><span class="num">3</span></div>
+            <div class="label">얼어붙은 마음 녹이기</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 인트로 타이틀 배너(이 미션은 bannerNode 없음 — 표시되지 않지만 엔진 호환 위해 유지) -->
+      <div id="titleBanner">
+        <div class="tb-badge">
+          <span class="tb-star">★</span>
+          <span class="tb-pill">미션 2</span>
+          <span class="tb-star">★</span>
+        </div>
+        <div class="tb-title">공감 송신기 연료 채우기</div>
+        <div class="tb-ribbon">
+          <span class="tb-spark">✦</span>
+          <span>따듯한 말을 모아 송신기를 충전하라!</span>
+          <span class="tb-spark">✦</span>
+        </div>
+      </div>
+
+      <!-- 인트로 전신 하티(이 미션은 미사용) -->
+      <img id="hatiFull" src="../../assets/char/Hati/hati_robot_explaining.png" alt="하티" />
+
+      <!-- 인트로 하티 말풍선(이 미션은 미사용) -->
+      <div id="hatiBubble" class="bubble">
+        <div class="bubble-name">하티</div>
+        <span></span>
+      </div>
+
+      <!-- 친구(placeholder) — mission02.json 전 노드가 hideFriend:true 라 실제로는 안 보인다. -->
+      <div id="friendWrap">
+        <img id="friend" class="pop" src="" alt="루미" />
+      </div>
+      <div id="friendBubble" class="bubble"><span></span></div>
+
+      <!-- 화면 가운데 큰 이미지(노드 image) — end 노드(탐험 성공 이미지) -->
+      <img id="choiceImage" src="" alt="" />
+
+      <!-- 화면 가운데 카드들(공감 카드 / 보상 카드) -->
+      <div id="cardStage"></div>
+
+      <!-- 미니게임(3D 겨울 숲: 연료 채우기 → 얼어붙은 마음 녹이기) 마운트 지점 — world/mountWorld.js -->
+      <div id="minigameLayer"></div>
+
+      <!-- 하티 가이드 박스 -->
+      <div id="hatiBox">
+        <img id="hatiAvatar" class="pop" src="" alt="하티" />
+        <div>
+          <div id="hatiName">하티</div>
+          <div id="hatiText"></div>
+        </div>
+      </div>
+
+      <!-- 마지막 미션 완료 → 우주선으로 홈 이동(엔딩). theme.finish(label/icon) 적용. -->
+      <button id="nextBtn" class="ship" type="button" data-sfx="none">
+        <img class="nb-ship-icon" src="../../assets/char/SpaceshipIcon.png" alt="" />
+        <span>우주선으로 이동</span>
+      </button>
+
+      <!-- 탭 힌트 -->
+      <div id="tapHint"></div>
+
+      <!-- 반짝임 fx 레이어 -->
+      <div id="fxLayer"></div>
+    </div>
+
+    <!-- DEV 전용 테스트 계정. gitignore된 www/dev-config.js가 있을 때만 로드(없으면 무시). -->
+    <script src="../../dev-config.js" onerror="this.remove()"></script>
+    <!-- 페이지 스크립트는 ES 모듈(world/*.js 를 import). 모듈은 항상 defer 라 위 classic dev-config 이후 실행된다. -->
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
