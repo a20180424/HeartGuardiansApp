@@ -97,12 +97,12 @@ export const MISSION02_THEME: MissionTheme = {
 
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 3", title: MISSION_STEPS[2], ribbon: "그림자 행성 미션 3 골격" },
+  banner: { pill: "미션 3", title: MISSION_STEPS[2], ribbon: "다섯 공감 원석을 이어 하트 커넥트를 복원하라!" },
   bannerNode: "p4_m3_intro",
   bg: {
-    states: { main: `${A}/bg/light-planet-stage2-bg.png` },
+    states: { main: `${A}/planet4/heart-connect-interior-bg.png` },
     initial: "main",
-    byNode: { p4_m3_intro: "main" },
+    byNode: { p4_m3_intro: "main", p4_m3_play: "main" },
   },
   hatiSprites: { char: HATI_CHAR, initial: "thinking", byNode: {} },
   friends: { placeholder: PLACEHOLDER_FRIEND },

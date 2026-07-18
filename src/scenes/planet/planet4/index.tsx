@@ -5,6 +5,8 @@ import Prologue from "./Prologue";
 import MissionPlayer from "../player/MissionPlayer";
 import EmpathyCompassStage from "./EmpathyCompassStage"; // 미션1 "가디언즈 최종 점검하기" 미니게임
 import CourageCompassStage from "./CourageCompassStage"; // 미션2 "공감 나침반 작전" 미니게임
+import HeartConnectStage from "./HeartConnectStage"; // 미션3 "마지막 공감 연결" 미니게임
+import { completePlanet } from "../../../lib/session";
 import {
   MISSION01_THEME,
   MISSION01_DATA,
@@ -51,6 +53,12 @@ export default function Planet4() {
     }, FADE_MS);
   };
 
+  // 미션3 = 최종 행성 마지막 미션 = 게임 전체 완료 지점. 낙관적 로컬 갱신 + 백그라운드 저장.
+  const exitToHome = () => {
+    completePlanet(4);
+    nav("/home");
+  };
+
   return (
     <>
       {stage === "prologue" && (
@@ -95,8 +103,14 @@ export default function Planet4() {
           theme={MISSION03_THEME}
           currentStep={3}
           steps={MISSION_STEPS}
-          finish={{ label: "우주선으로 이동", icon: "/assets/char/SpaceshipIcon.png" }}
-          onExit={() => nav("/home")}
+          scopeClass="p4_m3"
+          games={{
+            // 미션3 "마지막 공감 연결" — story→quiz→video→epilogue→success 전체를 미니게임이 소유.
+            // 미션이 미니게임에서 끝나 이후 엔진 화면이 없다. 엔진 finishMinigame(showNext 미점등)이 아니라
+            // 성공 화면 "우주선으로 이동" 버튼이 exitToHome 을 직접 호출한다.
+            heartConnect: () => <HeartConnectStage onDone={exitToHome} />,
+          }}
+          onExit={exitToHome}
         />
       )}
       <div className={`planet-fade${fading ? " show" : ""}`} aria-hidden="true" />

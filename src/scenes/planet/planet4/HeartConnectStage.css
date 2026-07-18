@@ -1,0 +1,20 @@
+/* 행성4 미션3 "하트 커넥트" 미니게임.
+   엔진 #stage(1920×1200) 위 1280×800 프레임을 scale(1.5)로 채운다(원본 px 좌표 재사용).
+   퀴즈 배경은 깔지 않는다 — 엔진 #bg(heart-connect-interior-bg.png)가 비쳐야 한다. */
+.hc-root {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  color: #fff;
+  font-family: inherit;
+}
+.hc-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1280px;
+  height: 800px;
+  transform: scale(1.5);
+  transform-origin: 0 0;
+  overflow: hidden;
+}
