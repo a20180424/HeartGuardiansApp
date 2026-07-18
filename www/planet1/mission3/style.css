@@ -1,0 +1,1378 @@
+/* ==========================================================================
+   R1 공통 뼈대 (페이지마다 복사) — FixedStage 인라인.
+   ⚠ 미션 페이지는 무대가 1920×1200(원본 useFitStage 기본값 = player/ 엔진 관례).
+      1280×800 씬 뼈대에서 숫자만 교체했다.
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+/* 미션 폰트 — mission.css #viewport 와 동일(BMJUA 아님). Pretendard 미설치 시 시스템 고딕. */
+body {
+  color: #fff;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  touch-action: manipulation;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1920px;
+  height: 1200px;
+  transform-origin: center center;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #15244a;
+  user-select: none;
+}
+/* 동영상/공감 거울 구간(theme.bg = "black") — #bg 이미지 없이 무대를 검게. */
+#stage.blackbg {
+  background: #000;
+}
+
+/* ==========================================================================
+   미션 화면 (src/scenes/planet/player/mission.css 이식 — 미션3가 실제 쓰는 규칙만 추출).
+   좌표계는 #stage(1920×1200) 기준. 경로: /assets/... 는 script.js 가 ../../assets/... 로.
+   ========================================================================== */
+
+/* ---------- background ---------- */
+#bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: filter 1.2s ease;
+}
+#stage.bright #bg {
+  filter: brightness(1.18) saturate(1.12);
+}
+
+#lightOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle at 72% 46%,
+    rgba(255, 224, 150, 0.55),
+    rgba(255, 224, 150, 0) 55%
+  );
+  transition: opacity 1.4s ease;
+}
+#stage.bright #lightOverlay {
+  opacity: 1;
+}
+/* 미션3 엔딩(m3_end)에선 리워드 카드 위로 노란빛이 뿌옇게 떠서 빛 복귀 오버레이를 끈다
+   (원본 planet1/Mission.css 의 .planet1 #stage.node-m3_end #lightOverlay 규칙 이식). */
+#stage.node-m3_end #lightOverlay {
+  opacity: 0;
+}
+
+/* ---------- progress stepper (top-left) ---------- */
+#progress {
+  position: absolute;
+  top: 34px;
+  left: 44px;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  gap: 34px;
+}
+.prog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  background: #fff;
+  border-radius: 40px;
+  padding: 14px 26px 14px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+  font-size: 26px;
+  color: #1f2937;
+  white-space: nowrap;
+}
+.prog-title .star {
+  font-size: 30px;
+}
+.stepper {
+  display: flex;
+  align-items: flex-start;
+}
+.pnode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 162px;
+}
+.pnode .circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 38px;
+  line-height: 1;
+  background: #2b3550;
+  color: #aab4c8;
+  border: 4px solid #4a5570;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+.pnode .label {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  color: #cdd6e8;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.pnode.active .circle {
+  background: linear-gradient(160deg, #a3e635, #5fae00);
+  color: #1e2b00;
+  border-color: #d6ff8a;
+  box-shadow:
+    0 0 26px rgba(150, 230, 40, 0.7),
+    0 6px 14px rgba(0, 0, 0, 0.3);
+  animation: pnodePulse 1.8s ease-in-out infinite;
+}
+.pnode.active .label {
+  color: #d9ff9c;
+}
+@keyframes pnodePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+.pnode.done .circle {
+  background: linear-gradient(160deg, #7dd3fc, #2563eb);
+  color: #fff;
+  border-color: #bfdbfe;
+  box-shadow:
+    0 0 18px rgba(80, 160, 255, 0.5),
+    0 6px 14px rgba(0, 0, 0, 0.3);
+}
+.pnode.done .circle .num {
+  display: none;
+}
+.pnode.done .circle::after {
+  content: "✓";
+  font-size: 46px;
+  font-weight: 900;
+}
+.pnode.done .label {
+  color: #bfe3ff;
+}
+.pnode.locked .circle {
+  opacity: 0.55;
+}
+.pnode.locked .circle::after {
+  content: "🔒";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  font-size: 24px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+.pnode.locked .label {
+  opacity: 0.55;
+}
+.connector {
+  width: 70px;
+  height: 8px;
+  border-radius: 6px;
+  margin-top: 38px;
+  background: rgba(255, 255, 255, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+.connector::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: linear-gradient(90deg, #a3e635, #65c20a);
+  border-radius: 6px;
+  transition: width 1s ease;
+}
+.connector.filled::after {
+  width: 100%;
+}
+
+/* ⚠ 미션3는 마음 신호 탐색기 HUD(radar)를 쓰지 않는다 → 관련 CSS 미포함. */
+
+/* ---------- mission title banner (intro only) ---------- */
+#titleBanner {
+  position: absolute;
+  top: 90px;
+  left: 712px;
+  width: 700px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-14px) scale(0.96);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+#titleBanner.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.tb-badge {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.tb-star {
+  color: #f7c948;
+  font-size: 36px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+.tb-pill {
+  background: linear-gradient(160deg, #7cb342, #558b2f);
+  color: #fff;
+  font-weight: 900;
+  font-size: 31px;
+  letter-spacing: 3px;
+  padding: 10px 36px;
+  border-radius: 30px;
+  border: 3px solid #aed581;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+}
+.tb-title {
+  font-size: 78px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-shadow:
+    0 3px 0 rgba(35, 50, 20, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.45),
+    0 0 32px rgba(0, 0, 0, 0.35);
+}
+.tb-ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(180deg, #f8eed4, #eed9ab);
+  color: #4a8a2e;
+  font-weight: 800;
+  font-size: 30px;
+  padding: 11px 46px;
+  clip-path: polygon(
+    22px 0,
+    calc(100% - 22px) 0,
+    100% 50%,
+    calc(100% - 22px) 100%,
+    22px 100%,
+    0 50%
+  );
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.tb-spark {
+  color: #c79a3a;
+  font-size: 24px;
+}
+
+/* ---------- full-body Hati (intro only) ---------- */
+#hatiFull {
+  position: absolute;
+  left: 510px;
+  bottom: -18px;
+  z-index: 4;
+  height: 730px;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
+  opacity: 0;
+  transform: translateY(22px) scale(0.97);
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+#hatiFull.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#hatiBubble {
+  left: 1030px;
+  bottom: 452px;
+  max-width: 600px;
+}
+#hatiBubble .bubble-name {
+  color: #3f8a2e;
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+#hatiBubble::after {
+  content: "";
+  position: absolute;
+  left: 60px;
+  bottom: -22px;
+  border: 18px solid transparent;
+  border-top-color: #fff;
+  border-bottom: 0;
+}
+
+/* ---------- Friend (right) — 미션3는 항상 hideFriend 라 실제 표시 안 됨 ---------- */
+#friendWrap {
+  position: absolute;
+  right: 120px;
+  bottom: 30px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.4s ease;
+}
+#friendWrap.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+#friend {
+  height: 660px;
+  max-height: 660px;
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.4));
+  transition:
+    transform 0.35s ease,
+    filter 0.6s ease;
+}
+@keyframes friendPop {
+  0% {
+    transform: scale(0.96);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+#friend.pop {
+  animation: friendPop 0.4s ease;
+}
+
+/* ---------- speech bubbles ---------- */
+.bubble {
+  position: absolute;
+  z-index: 4;
+  background: #fff;
+  border-radius: 28px;
+  padding: 26px 34px;
+  font-size: 34px;
+  font-weight: 700;
+  color: #283143;
+  line-height: 1.4;
+  white-space: pre-line;
+  word-break: keep-all;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+  max-width: 620px;
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: none;
+}
+.bubble.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+#friendBubble {
+  right: 600px;
+  bottom: 470px;
+}
+#friendBubble::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  bottom: 60px;
+  border: 18px solid transparent;
+  border-left-color: #fff;
+  border-right: 0;
+}
+
+/* ---------- Hati guidance box (bottom-left) ---------- */
+#hatiBox {
+  position: absolute;
+  left: 100px;
+  bottom: 40px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 34px;
+  padding: 26px 48px 26px 170px;
+  min-height: 186px;
+  width: 1040px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+#hatiBox.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+#hatiAvatar {
+  position: absolute;
+  left: -85px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 240px;
+  height: 240px;
+  object-fit: cover;
+}
+@keyframes hatiPop {
+  0% {
+    transform: translateY(-50%) scale(0.86);
+  }
+  60% {
+    transform: translateY(-50%) scale(1.06);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}
+#hatiAvatar.pop {
+  animation: hatiPop 0.35s ease;
+}
+#hatiText {
+  font-size: 36px;
+  font-weight: 700;
+  color: #222b3d;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+#hatiName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #2f6fe0;
+  margin-bottom: 4px;
+}
+
+#tapHint {
+  position: absolute;
+  right: 56px;
+  bottom: 30px;
+  z-index: 6;
+  color: #dfe7ff;
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.3s;
+  animation: bob 1.3s ease infinite;
+}
+#tapHint.show {
+  opacity: 0.9;
+}
+@keyframes bob {
+  50% {
+    transform: translateY(-6px);
+    opacity: 0.5;
+  }
+}
+
+/* ---------- choice cards ---------- */
+#choicePanel {
+  position: absolute;
+  top: 162px;
+  left: 530px;
+  right: 44px;
+  width: fit-content;
+  margin: 0 auto;
+  z-index: 4;
+  padding: 20px 30px 30px;
+  border-radius: 36px;
+  background: rgba(244, 242, 255, 0.92);
+  border: 3px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 16px 44px rgba(60, 40, 120, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: none;
+}
+#choicePanel.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+/* 이미지가 있는 선택(미션3): 이미지 아래(우측 하단)에 버튼 패널 배치 → 세로 스택.
+   left/right:0 + margin:0 auto 로 가로 중앙(transform 은 슬라이드 애니메이션용으로 보존). */
+#choicePanel.img-choice {
+  top: auto;
+  bottom: 40px;
+  left: auto;
+  right: 40px; /* 우측 하단 배치 */
+  background: transparent; /* 어두운 카드가 배경에 직접 놓이도록 패널 배경 제거 */
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+/* 미션3 이미지-선택: 버튼(카드)을 약 2/3 크기로 축소 */
+#choicePanel.img-choice #choices {
+  gap: 18px;
+  max-width: 680px; /* 한 줄 ~4개 → 7개는 2줄(4+3) */
+}
+/* 어두운 글래스 카드 + 컬러 3D 이모지 얼굴(레퍼런스 느낌) */
+#choicePanel.img-choice .card {
+  width: 152px;
+  min-height: 138px;
+  padding: 20px 14px 16px;
+  gap: 12px;
+  border-radius: 20px;
+  background: rgba(17, 19, 30, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+#choicePanel.img-choice .card:hover {
+  border-color: rgba(160, 190, 255, 0.6);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(160, 190, 255, 0.35);
+}
+#choicePanel.img-choice .card .badge {
+  display: none; /* 레퍼런스엔 번호 없음 */
+}
+#choicePanel.img-choice .card .icon {
+  width: 76px;
+  height: 76px;
+  background: transparent;
+  box-shadow: none;
+}
+#choicePanel.img-choice .card .icon .icon-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
+}
+#choicePanel.img-choice .card .ctext {
+  font-size: 19px;
+  color: #eef1fb;
+}
+#choicePrompt {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: #2a2350;
+}
+#choicePrompt:empty {
+  display: none;
+}
+#choices {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 26px;
+}
+.card {
+  position: relative;
+  width: 300px;
+  min-height: 240px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 26px;
+  border: 4px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 30px 22px 26px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.12s;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.card:hover {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.32);
+  border-color: #c7d2fe;
+}
+.card.picked {
+  animation: cardPick 0.22s ease;
+}
+@keyframes cardPick {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-12px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+.card .badge {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 800;
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.card .icon {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 52px;
+  box-shadow:
+    inset 0 0 0 4px rgba(255, 255, 255, 0.7),
+    0 4px 12px rgba(0, 0, 0, 0.18);
+}
+.card .ctext {
+  font-size: 28px;
+  font-weight: 700;
+  color: #283143;
+  text-align: center;
+  line-height: 1.35;
+}
+.card.smaller {
+  width: 230px;
+  min-height: 214px;
+}
+
+/* ---------- 화면 가운데 큰 이미지(노드 image) ----------
+   이미지(위) + 선택지 버튼(아래) 세로 스택. q1·q2 루나, m3_end 리본. */
+#choiceImage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto; /* 가로 중앙 */
+  top: 110px;
+  height: 64%;
+  width: auto;
+  max-width: 90%;
+  object-fit: contain;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* 가장자리 페더: 가로·세로 그라디언트를 교차(intersect)해 네 변을 배경에 부드럽게 녹인다 */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+#choiceImage.show {
+  opacity: 1;
+}
+/* m3_end — 리워드 카드 위 "탐험 성공!" 리본. #choiceImage 를 리본으로 재사용.
+   base 는 화면 절반 크기라 리본엔 과하게 커서 width 로 다시 잡고 페더를 끈다.
+   (원본 planet1/Mission.css 의 .planet1 #stage.node-m3_end #choiceImage 규칙 이식.) */
+#stage.node-m3_end #choiceImage {
+  top: 140px;
+  height: auto;
+  width: 720px;
+  max-width: 90%;
+  z-index: 6; /* 리워드 카드(#cardStage z:5)보다 위 */
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* 화면 가운데 이미지(노드 images) — 여러 장을 가로로 나란히, 각 장 가장자리 페더 */
+#imageStack {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 96px 40px 40px; /* 상단 스테퍼 아래로 */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#imageStack.show {
+  opacity: 1;
+}
+#imageStack img {
+  display: block;
+  width: 46%; /* reveal(.rr-slot)과 동일 고정 폭 → 리빌 전환 시 어긋남 방지 */
+  height: auto;
+  object-fit: contain;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* ---------- 동영상(노드 video) — 까만 화면 위 가운데 크게(전체화면 아님) ---------- */
+#missionVideo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 84%;
+  max-height: 84%;
+  width: auto;
+  height: auto;
+  z-index: 5;
+  background: #000;
+  /* 가장자리 페더 — 네 변을 까만 배경에 부드럽게 녹인다(q1 이미지와 동일 방식) */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+/* 동영상 '재생 시작' 버튼(화면 하단 중앙) — 누르면 재생 + 버튼 사라짐 */
+#videoPlayBtn {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+  transform: translateX(-50%);
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 62px;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 60px;
+  background: linear-gradient(160deg, #7a86a3, #49546c);
+  color: #eef2fb;
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow:
+    0 11px 0 #2c3446,
+    0 18px 30px rgba(0, 0, 0, 0.5);
+}
+#videoPlayBtn:active {
+  transform: translateX(-50%) translateY(6px);
+  box-shadow:
+    0 5px 0 #2c3446,
+    0 10px 18px rgba(0, 0, 0, 0.45);
+}
+#videoPlayBtn .vpb-icon {
+  font-size: 30px;
+}
+
+/* 화면 가운데 카드들(공감 카드 / 리워드 카드) — 가로로 나란히, 높이 기준 + 등장 애니 */
+#cardStage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 96px 40px 40px;
+  pointer-events: none;
+}
+.card-item {
+  position: relative;
+  height: 58%;
+  animation: cardIn 0.5s ease-out both;
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
+}
+.card-item:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.card-item img {
+  height: 100%;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+@keyframes cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- 미션 완료 배너(노드 completeBanner) — 금색 오너먼트 플라크 ---------- */
+#completeBanner {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  animation: cbPop 0.5s ease-out;
+}
+.cb-star {
+  width: 132px;
+  height: 132px;
+  object-fit: contain;
+  margin-bottom: -36px; /* 플라크 위로 살짝 겹침 */
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+  position: relative;
+  z-index: 1;
+}
+.cb-plaque {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 36px 92px;
+  border-radius: 28px;
+  background: linear-gradient(165deg, #4a3a1e, #221a0c);
+  border: 6px solid #e9c65a;
+  box-shadow:
+    inset 0 0 0 3px #7a5b22,
+    inset 0 3px 22px rgba(0, 0, 0, 0.6),
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 72px rgba(255, 205, 110, 0.45);
+}
+.cb-text {
+  font-size: 96px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #ffe08a;
+  text-shadow:
+    0 3px 0 #b8842a,
+    0 6px 2px #7a5518,
+    0 9px 16px rgba(0, 0, 0, 0.55);
+}
+.cb-spark {
+  font-size: 46px;
+  color: #ffd970;
+  text-shadow: 0 0 16px rgba(255, 215, 120, 0.9);
+}
+@keyframes cbPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ---------- reveal (공감 거울 긁어서 드러내기) — RubReveal.tsx 이식 ---------- */
+#rubStage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+#rubImages {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 96px 40px 40px;
+}
+.rr-slot {
+  position: relative;
+  width: 46%;
+  aspect-ratio: 1672 / 941;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+.rr-after,
+.rr-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+}
+.rr-canvas {
+  touch-action: none;
+}
+.rr-mirror {
+  position: absolute;
+  right: 48px;
+  bottom: 40px;
+  height: 29%;
+  width: auto;
+  object-fit: contain;
+  z-index: 6;
+  cursor: grab;
+  touch-action: none;
+  filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+}
+.rr-mirror:active {
+  cursor: grabbing;
+}
+/* 등장 연출: 팝인 + 글로우 펄스 */
+#rubStage.rr-enter .rr-mirror {
+  animation:
+    rrMirrorIn 0.5s ease-out,
+    rrGlow 1.2s ease-in-out 0.2s;
+}
+@keyframes rrMirrorIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes rrGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 26px rgba(190, 160, 255, 0.95))
+      drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+  }
+}
+/* 완료 시 강한 반짝 */
+.rr-mirror.rr-mirror-done {
+  animation: rrDoneGlow 0.7s ease-in-out;
+}
+@keyframes rrDoneGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 40px rgba(255, 240, 180, 1))
+      drop-shadow(0 0 70px rgba(255, 220, 130, 0.8));
+  }
+}
+/* 등장 반짝이 파티클(거울 초기 위치 근처) */
+.rr-sparks {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  width: 380px;
+  height: 380px;
+  z-index: 6;
+  pointer-events: none;
+}
+.rr-spark {
+  position: absolute;
+  font-size: 34px;
+  color: #ffe9a8;
+  opacity: 0;
+  animation: rrSpark 1s ease-out forwards;
+}
+.rr-spark.s0 {
+  left: 12%;
+  top: 18%;
+  animation-delay: 0.05s;
+}
+.rr-spark.s1 {
+  left: 62%;
+  top: 8%;
+  animation-delay: 0.18s;
+}
+.rr-spark.s2 {
+  left: 82%;
+  top: 46%;
+  animation-delay: 0.3s;
+}
+.rr-spark.s3 {
+  left: 24%;
+  top: 64%;
+  animation-delay: 0.12s;
+}
+.rr-spark.s4 {
+  left: 54%;
+  top: 74%;
+  animation-delay: 0.24s;
+}
+.rr-spark.s5 {
+  left: 38%;
+  top: 34%;
+  animation-delay: 0.4s;
+}
+@keyframes rrSpark {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-32px) scale(1.1);
+  }
+}
+
+/* ---------- next mission button ---------- */
+#nextBtn {
+  position: absolute;
+  right: 120px;
+  bottom: 70px;
+  z-index: 8;
+  background: linear-gradient(160deg, #9be319, #5aa800);
+  color: #fff;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 26px;
+  padding: 26px 60px;
+  cursor: pointer;
+  box-shadow:
+    0 14px 0 #3c7400,
+    0 20px 30px rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  gap: 18px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+#nextBtn.show {
+  display: flex;
+}
+#nextBtn:active {
+  transform: translateY(6px);
+  box-shadow:
+    0 8px 0 #3c7400,
+    0 12px 20px rgba(0, 0, 0, 0.4);
+}
+/* 우주선 변형(마지막 미션 완료 → 홈): 프롤로그의 흰 알약형 버튼과 톤을 맞춘다 */
+#nextBtn.ship {
+  background: #fff;
+  color: #1f2937;
+  font-size: 36px;
+  gap: 14px;
+  padding: 16px 40px 16px 22px;
+  border-radius: 60px;
+  text-shadow: none;
+  box-shadow:
+    0 12px 0 #b9c2cf,
+    0 18px 28px rgba(0, 0, 0, 0.35);
+}
+#nextBtn.ship:active {
+  transform: translateY(6px);
+  box-shadow:
+    0 6px 0 #b9c2cf,
+    0 10px 18px rgba(0, 0, 0, 0.35);
+}
+#nextBtn.ship .nb-ship-icon {
+  width: 96px;
+  height: 70px;
+  object-fit: contain;
+}
+#nextBtn:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.4);
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ---------- sparkle fx layer ---------- */
+#fxLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  overflow: hidden;
+}
+.spark {
+  position: absolute;
+  font-size: 40px;
+  opacity: 0;
+  animation: sparkle 1.3s ease forwards;
+}
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.2) rotate(40deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) translateY(-40px) rotate(120deg);
+  }
+}
+
+/* ==========================================================================
+   공통 블록 A — 씬 전환 페이드 오버레이 (script.js fadeNav 가 토글) — 검증본 복사
+   ========================================================================== */
+#scene-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+#scene-fade.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   공통 블록 B — 음소거 버튼 (src/lib/mute-button.css 이식) — 검증본 복사
+   ========================================================================== */
+.mute-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 9000;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.mute-btn:hover,
+.mute-btn:focus-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   공통 블록 C — 교사용 히든 점프 메뉴 (src/lib/hidden-menu.css 이식) — 검증본 복사
+   무대 바깥 전역 오버레이라 #stage 좌표계와 무관(vw/vh 예외 — 공통 블록).
+   ========================================================================== */
+.hidden-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: system-ui, sans-serif;
+}
+.hidden-menu__panel {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #12161f;
+  color: #e8eef8;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.hidden-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+.hidden-menu__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 16px;
+  cursor: pointer;
+}
+.hidden-menu__pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+}
+.hidden-menu__dots {
+  display: flex;
+  gap: 12px;
+}
+.hidden-menu__dots span {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #4a5a70;
+  border-radius: 50%;
+}
+.hidden-menu__dots span.on {
+  background: #e8eef8;
+  border-color: #e8eef8;
+}
+.hidden-menu__wrong {
+  margin: 0;
+  color: #ff8a8a;
+  font-size: 14px;
+}
+.hidden-menu__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+}
+.hidden-menu__keys button {
+  height: 56px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 18px;
+  cursor: pointer;
+}
+.hidden-menu__keys button:active {
+  background: #36435c;
+}
+.hidden-menu__warn {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #7a5a20;
+  border-radius: 8px;
+  background: #3a2a10;
+  color: #ffd479;
+  font-size: 14px;
+}
+.hidden-menu__grid {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+.hidden-menu__col,
+.hidden-menu__row {
+  font-size: 13px;
+  color: #9fb0c8;
+}
+.hidden-menu__col {
+  text-align: center;
+}
+.hidden-menu__grid button {
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__grid button:active {
+  background: #36435c;
+}
+.hidden-menu__grid .hidden-menu__empty {
+  height: 48px;
+}
+.hidden-menu__common {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hidden-menu__common button {
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__common button:active {
+  background: #36435c;
+}
+.hidden-menu__home {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f5d3a;
+  color: #e8eef8;
+  font-size: 15px;
+  cursor: pointer;
+}

@@ -79,6 +79,7 @@ fitStage();
 | `hg_muted` | `"1"` / 없음 | 음소거 버튼 | 전 페이지 |
 
 - intro(`www/index.html`)는 **앱 시작 초기화 지점**: 세션 관련 임시 키를 여기서 정리한다 (진도는 유지 — 기존 동작과 동일하게 서버/로컬 병합).
+- **표시 진도 = `max(hg_session.progress, hg_progress)`** (Task 4 확정): home은 두 키를 병합해 표시하므로 행성 완료 태스크가 어느 키를 갱신하든 반영된다. `hg_progress` 형식은 auth의 mergeProgress가 확정한 `{ planetN: true }` — 소비처는 이 형식을 따를 것.
 - intro·auth 이외 페이지는 최상단에 세션 가드: `if (!localStorage.getItem("hg_session")) location.href = "<상대경로>/auth/";`
 - 정확한 필드 구성은 각 태스크에서 [src/lib/session.ts](../../../src/lib/session.ts), [src/lib/progress.ts](../../../src/lib/progress.ts), [src/lib/classBoard.ts](../../../src/lib/classBoard.ts)를 읽고 맞춘다.
 
