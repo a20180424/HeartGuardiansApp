@@ -12,6 +12,9 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 인트로 오프닝 영상을 소리와 함께 자동재생 (제스처 없이).
+        // WebView 기본은 미디어 재생에 사용자 제스처를 요구하므로 꺼준다.
+        getBridge().getWebView().getSettings().setMediaPlaybackRequiresUserGesture(false);
         enableImmersive();
     }
 

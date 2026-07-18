@@ -528,13 +528,17 @@ document.body.appendChild(muteBtn);
 (function intro() {
   const video = document.getElementById("intro-video");
   const playing = document.getElementById("intro-playing");
-  const soundHint = document.getElementById("intro-sound-hint");
   const startBtn = document.getElementById("intro-start");
   const skipBtn = document.getElementById("intro-skip");
   const tapLayer = document.getElementById("intro-tap");
 
+  // APK(WebView)는 MainActivity 에서 mediaPlaybackRequiresUserGesture=false 로 열어
+  // 처음부터 유음 자동재생이 된다 → 무음 시작이 필요 없다.
+  // 웹(브라우저·Cloudflare Pages)은 자동재생 정책상 여전히 muted 로만 재생되므로,
+  // muted 로 시작하고 화면 탭으로 소리를 켜는 폴백을 남긴다(힌트 UI는 제거됨).
+  const isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
   // 로컬 muted(자동재생 정책용) + 앱 음소거(hg_muted) 중 하나라도 켜져 있으면 실제 무음.
-  let localMuted = true;
+  let localMuted = !isNative;
   let appMuted = audio.isMuted();
   let status = "playing"; // playing | ended
 
@@ -556,21 +560,14 @@ document.body.appendChild(muteBtn);
   video.addEventListener("loadeddata", markReady);
   video.addEventListener("playing", markReady);
 
-  // 힌트는 로컬 muted 인 동안만 보인다.
-  function updateHint() {
-    soundHint.style.display = status === "playing" && localMuted ? "" : "none";
-  }
-  updateHint();
-
-  // 영상 탭: 소리 켜기 (+ 자동재생이 막혀 멈춰 있으면 재생도 시도).
-  // muted 를 DOM 에 직접 쓰는 이유: WebView 자동재생 정책상 제스처 핸들러 안에서
+  // 영상 탭: 소리 켜기 (웹 폴백 — 자동재생이 막혀 멈춰 있으면 재생도 시도).
+  // muted 를 DOM 에 직접 쓰는 이유: 브라우저 자동재생 정책상 제스처 핸들러 안에서
   // 바로 풀어야 소리가 붙는다. 다만 그 값은 appMuted 와 같아야 한다 — false 를
   // 박아버리면 앱이 이미 음소거일 때 교사의 🔇를 이긴다.
   tapLayer.addEventListener("click", () => {
     if (video.paused) video.play().catch(() => {});
     video.muted = appMuted; // 앱이 음소거면 탭해도 무음 유지
     localMuted = false;
-    updateHint();
   });
 
   // 건너뛰기: 마지막 프레임 근처(끝에서 0.1초 전)로 보내 정지 → ended.
@@ -592,7 +589,6 @@ document.body.appendChild(muteBtn);
     status = "ended";
     playing.hidden = true;
     startBtn.hidden = false;
-    updateHint();
   }
 
   // 시작하기 → auth 로 이동(페이드 아웃).
