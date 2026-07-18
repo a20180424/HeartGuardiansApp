@@ -27,6 +27,19 @@
       "sideImageLeft": "/assets/planet4/empathy-showroom-complete.png",
       "noAuto": true,
       "text": "공감 나침반은\n특별한 힘을 가지고 있어.\n하지만 기억해!\n나침반은 혼자서는 움직이지 않아.\n용기를 내어 첫 걸음을\n내디딜 때만 빛을 낸다구.",
+      "next": "p4_m1_cards"
+    },
+    {
+      "id": "p4_m1_cards",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "공감의 시작은 용기야.\n마음으로 느낀 공감을 말과 행동으로 실천해 보자!",
+      "cards": [
+        { "image": "/assets/planet4/shadow-planet-empathy-card-1.png" },
+        { "image": "/assets/planet4/shadow-planet-empathy-card-2.png" }
+      ],
       "next": "p4_m1_end"
     },
     {
