@@ -770,9 +770,20 @@ function devProgressOverride(progress) {
   // 타이핑 효과 (45ms/글자, 원본과 동일).
   (function typeHati() {
     const full = commentFor(progress);
+    // 타이핑 중 발화음(blip) — 미션 페이지 typeInto 와 같은 관례:
+    // 발화 문자(공백·문장부호 제외) 4개마다 한 번 blipHati.
+    const SILENT_CHAR = /[\s.,!?…·'"“”‘’\-—~()[\]{}:;]/;
     let count = 0;
+    let speak = 0; // 연속 발화 문자 카운터
     const id = setInterval(() => {
       count += 1;
+      const ch = full[count - 1];
+      if (ch !== undefined && !SILENT_CHAR.test(ch)) {
+        speak += 1;
+        if (speak % 4 === 1) audio.play("blipHati");
+      } else {
+        speak = 0;
+      }
       hatiText.textContent = full.slice(0, count);
       if (count >= full.length) clearInterval(id);
     }, 45);
