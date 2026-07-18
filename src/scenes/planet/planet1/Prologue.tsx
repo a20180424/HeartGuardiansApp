@@ -2,9 +2,8 @@ import PrologueTemplate from "../prologue/PrologueTemplate";
 // planet1은 기본 색이라 전용 override CSS가 없다(공용 Prologue.css의 기본값 사용).
 
 const OBJECTIVES = [
-  "공감이 왜 필요한지 이해한다.",
-  "다른 사람의 마음을 이해하려고 노력하는 방법을 배운다.",
-  "공감이 사람들을 연결하고 행복하게 만든다는 것을 깨닫는다.",
+  "공감의 뜻과 공감이 필요한 까닭을 이해한다.",
+  "공감하는 말과 행동이 상황에 따라 다르게 받아들여질 수도 있음을 이해한다.",
 ];
 
 const REWARDS = [
@@ -25,11 +24,19 @@ export default function Prologue({
   return (
     <PrologueTemplate
       planetName="빛의 행성"
-      hatiLines={["이해의 빛이 사라졌어…", "친구들의 마음을 이해하면", "빛을 되찾을 수 있어!"]}
+      hatiLines={[
+        "빛의 행성이 어두워졌어!",
+        "주민들이 서로의 마음 신호를",
+        "알아채지 못해 '이해의 빛'이",
+        "점점 사라지고 있어. 친구의",
+        "마음을 이해하는 방법을 배우고,",
+        "미션을 해결해서 빛의 행성의",
+        "밝은 빛을 되찾아 보자!",
+      ]}
       objectives={OBJECTIVES}
       rewards={REWARDS}
       questTitle="사라진 이해의 빛을 찾아라!"
-      questSub="친구들의 마음을 이해하고 빛을 되찾아보자!"
+      questSub="친구의 마음을 이해하며 공감의 첫걸음을 시작해 보세요!"
       questMascot="/assets/char/planet1-lumi.png"
       questMascotAlt="루미"
       steps={STEPS}

@@ -65,7 +65,7 @@
   position: relative;
   margin-top: 66px;
   margin-left: -78px;
-  max-width: 270px;
+  max-width: 360px;
   background: #fff;
   border-radius: 20px;
   padding: 20px 22px 18px;
@@ -94,9 +94,9 @@
 }
 .prologue__bubble-text {
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.45;
   color: #2b2b2b;
 }
 
