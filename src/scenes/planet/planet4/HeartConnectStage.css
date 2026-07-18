@@ -150,3 +150,315 @@
   text-shadow: 0 0 10px rgba(76, 255, 196, 0.75);
   background: rgba(73, 235, 182, 0.08);
 }
+
+/* ── quiz phase: 원본 #gameScreen(.game-layout/.space/.core/.link/.node/.mission) 이식 ── */
+.hc-quiz {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  /* 배경을 칠하지 않는다 — 엔진 #bg(heart-connect-interior-bg.png)와 상단 스테퍼가 비쳐야 한다. */
+  --hc-green: #64f6ad;
+  --hc-mint: #caffdf;
+  --hc-blue: #58b9ff;
+  --hc-panel: rgba(7, 22, 38, 0.88);
+}
+
+.hc-game-layout {
+  width: 1120px;
+  display: grid;
+  grid-template-columns: 650px 1fr;
+  gap: 38px;
+  align-items: center;
+}
+
+.hc-space {
+  position: relative;
+  height: 540px;
+  border: 1px solid rgba(100, 246, 173, 0.13);
+  border-radius: 36px;
+  background: radial-gradient(circle, rgba(54, 220, 153, 0.09), transparent 60%);
+}
+
+.hc-phase-badge {
+  position: absolute;
+  left: 22px;
+  top: 18px;
+  z-index: 6;
+  padding: 7px 12px;
+  border-radius: 99px;
+  color: var(--hc-mint);
+  font-size: 13px;
+  font-weight: 900;
+  background: #071b22dd;
+}
+
+.hc-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: 138px;
+  height: 138px;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  transition: 1s;
+}
+.hc-core img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.18;
+  filter: grayscale(1) brightness(0.5);
+  transition: 1s;
+}
+.hc-core.on img {
+  opacity: 1;
+  filter: drop-shadow(0 0 12px #fff) drop-shadow(0 0 28px #54bfff);
+}
+.hc-core.on {
+  animation: hc-pulse 1.5s infinite;
+}
+@keyframes hc-pulse {
+  50% {
+    transform: translate(-50%, -50%) scale(1.07);
+  }
+}
+
+.hc-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hc-link {
+  stroke: #64f6ad22;
+  stroke-width: 2;
+  stroke-dasharray: 7 8;
+  transition: 0.8s;
+}
+.hc-link.on {
+  stroke: var(--hc-green);
+  stroke-dasharray: 0;
+  filter: drop-shadow(0 0 6px var(--hc-green));
+}
+
+.hc-node {
+  position: absolute;
+  z-index: 5;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff20;
+  border-radius: 50%;
+  font-size: 32px;
+  background: #091a20;
+  filter: grayscale(1);
+  opacity: 0.48;
+  transition: 0.7s;
+}
+.hc-node.connected {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.1);
+  border-color: var(--hc-glow, var(--hc-green));
+  box-shadow: 0 0 24px var(--hc-glow, var(--hc-green));
+}
+.hc-node small {
+  position: absolute;
+  top: 76px;
+  width: 140px;
+  text-align: center;
+  color: #dfffee;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.hc-node.hc-gem {
+  width: 88px;
+  height: 88px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.hc-node.hc-gem img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.65));
+}
+.hc-node.hc-gem.connected {
+  box-shadow: none;
+  filter: none;
+}
+.hc-node.hc-gem.connected img {
+  filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 18px var(--hc-gem-glow, #65cfff));
+}
+.hc-node.hc-gem small {
+  top: 88px;
+  text-shadow: 0 2px 4px #000;
+}
+
+.hc-g1 {
+  left: calc(50% - 44px);
+  top: 28px;
+  --hc-gem-glow: #248cff;
+}
+.hc-g2 {
+  right: 66px;
+  top: 134px;
+  --hc-gem-glow: #ffc52c;
+}
+.hc-g3 {
+  right: 111px;
+  bottom: 34px;
+  --hc-gem-glow: #ff9f1a;
+}
+.hc-g4 {
+  left: 111px;
+  bottom: 34px;
+  --hc-gem-glow: #ff174f;
+}
+.hc-g5 {
+  left: 66px;
+  top: 134px;
+  --hc-gem-glow: #76e63b;
+}
+
+.hc-mission {
+  padding: 28px;
+  border: 1px solid #ffffff18;
+  border-radius: 28px;
+  background: var(--hc-panel);
+  box-shadow: 0 24px 70px #0005;
+}
+.hc-progress-label {
+  display: flex;
+  justify-content: space-between;
+  color: #bbd2dd;
+  font-size: 13px;
+  font-weight: 800;
+}
+.hc-progress {
+  height: 8px;
+  margin: 10px 0 22px;
+  border-radius: 99px;
+  background: #ffffff14;
+  overflow: hidden;
+}
+.hc-progress div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--hc-green), var(--hc-blue));
+  transition: 0.6s;
+}
+.hc-stage-title {
+  margin: 0 0 8px;
+  color: var(--hc-mint);
+  font-size: 14px;
+  font-weight: 900;
+}
+.hc-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  margin: 0 0 8px;
+  font-size: 34px;
+}
+.hc-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 9px rgba(104, 194, 255, 0.65));
+}
+.hc-prompt {
+  min-height: 68px;
+  margin: 0 0 18px;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.hc-choices {
+  display: grid;
+  gap: 9px;
+}
+.hc-choice {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ffffff18;
+  border-radius: 14px;
+  color: #eaf8ff;
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff0b;
+}
+.hc-choice:hover {
+  border-color: var(--hc-green);
+  transform: translateX(4px);
+}
+.hc-choice:disabled {
+  cursor: default;
+}
+.hc-choice.correct {
+  color: #052318;
+  border-color: var(--hc-green);
+  background: var(--hc-green);
+}
+.hc-choice.wrong {
+  border-color: #ff7790;
+  background: #ff46641f;
+}
+.hc-hati-feedback {
+  position: relative;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.hc-feedback-hati {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  object-fit: cover;
+  object-position: 50% 3%;
+  border: 2px solid #86f9d0;
+  border-radius: 50%;
+  background: #071b22;
+  filter: drop-shadow(0 0 8px rgba(100, 246, 173, 0.55));
+}
+.hc-feedback {
+  position: relative;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid rgba(134, 249, 208, 0.55);
+  border-radius: 13px;
+  color: var(--hc-mint);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
+  background: rgba(8, 35, 43, 0.92);
+  box-shadow: 0 0 14px rgba(51, 221, 164, 0.12);
+}
+.hc-feedback:before {
+  position: absolute;
+  left: -9px;
+  top: 20px;
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-left: 1px solid rgba(134, 249, 208, 0.55);
+  border-bottom: 1px solid rgba(134, 249, 208, 0.55);
+  background: rgba(8, 35, 43, 0.92);
+  transform: rotate(45deg);
+}
