@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하트가디언즈 — 빛의 행성 미션2</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- #stage: 미션 무대는 1920×1200 좌표계(원본 useFitStage 기본값과 동일), px 절대배치.
+         player/ 엔진 관례를 그대로 따른다(R1 뼈대의 숫자만 1280×800 → 1920×1200 교체). -->
+    <div id="stage">
+      <!-- 배경(노드별 교체) -->
+      <img id="bg" src="" alt="" />
+      <div id="lightOverlay"></div>
+
+      <!-- 진행 스테퍼(좌상단) — 정적 3단계 (미션2 = step 2, script 가 클래스 적용) -->
+      <div id="progress">
+        <div class="prog-title">
+          <span class="star">⭐</span>
+          <span>탐험 진행도</span>
+        </div>
+        <div class="stepper">
+          <div class="pnode" id="mission1">
+            <div class="circle"><span class="num">1</span></div>
+            <div class="label">마음 신호<br />탐색기</div>
+          </div>
+          <div class="connector" id="conn1"></div>
+          <div class="pnode" id="mission2">
+            <div class="circle"><span class="num">2</span></div>
+            <div class="label">공감 거울<br />깨우기</div>
+          </div>
+          <div class="connector" id="conn2"></div>
+          <div class="pnode" id="mission3">
+            <div class="circle"><span class="num">3</span></div>
+            <div class="label">공감 없는<br />세상으로</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⚠ 미션2는 마음 신호 탐색기 HUD(#radarHud)를 쓰지 않는다(theme.showRadar:false). -->
+
+      <!-- 인트로 타이틀 배너 -->
+      <div id="titleBanner">
+        <div class="tb-badge">
+          <span class="tb-star">★</span>
+          <span class="tb-pill">미션 2</span>
+          <span class="tb-star">★</span>
+        </div>
+        <div class="tb-title">얼어붙은 공감 거울 깨우기</div>
+        <div class="tb-ribbon">
+          <span class="tb-spark">✦</span>
+          <span>친구들의 마음을 이해해 거울을 깨워라!</span>
+          <span class="tb-spark">✦</span>
+        </div>
+      </div>
+
+      <!-- 인트로 전신 하티 -->
+      <img id="hatiFull" src="../../assets/char/Hati/hati_robot_explaining.png" alt="하티" />
+
+      <!-- 인트로 하티 말풍선 -->
+      <div id="hatiBubble" class="bubble">
+        <div class="bubble-name">하티</div>
+        <span></span>
+      </div>
+
+      <!-- 친구(라라 → 솔라) -->
+      <div id="friendWrap">
+        <img id="friend" class="pop" src="" alt="친구" />
+      </div>
+
+      <!-- 친구 말풍선 -->
+      <div id="friendBubble" class="bubble"><span></span></div>
+
+      <!-- 선택지 패널 -->
+      <div id="choicePanel">
+        <div id="choicePrompt"></div>
+        <div id="choices"></div>
+      </div>
+
+      <!-- 화면 가운데 카드들(엔딩 공감 카드) -->
+      <div id="cardStage"></div>
+
+      <!-- 공감 거울 특별 파트 (화면 A: mirrors / 화면 B: gauge) — 내용은 script 가 동적 생성 -->
+      <div id="mirrorStage"></div>
+
+      <!-- 교훈 배너(금색 오너먼트) — lesson 노드에서 표시 -->
+      <div id="lessonBanner">
+        <img class="lb-star" src="../../assets/ui/star_gold.png" alt="" />
+        <div class="lb-text">
+          <div class="lb-title"></div>
+          <div class="lb-sub"></div>
+        </div>
+      </div>
+
+      <!-- 우측 가운데 장식 이미지(노드 sideImage) -->
+      <img id="sideImage" src="" alt="" />
+
+      <!-- 하티 가이드 박스 -->
+      <div id="hatiBox">
+        <img id="hatiAvatar" class="pop" src="" alt="하티" />
+        <div>
+          <div id="hatiName">하티</div>
+          <div id="hatiText"></div>
+        </div>
+      </div>
+
+      <!-- 다음 미션으로 버튼(엔딩) -->
+      <button id="nextBtn" type="button" data-sfx="none">다음 미션으로 <span>➜</span></button>
+
+      <!-- 탭 힌트 -->
+      <div id="tapHint"></div>
+
+      <!-- 반짝임 fx 레이어 -->
+      <div id="fxLayer"></div>
+    </div>
+
+    <!-- DEV 전용 테스트 계정. gitignore된 www/dev-config.js가 있을 때만 로드(없으면 무시). -->
+    <script src="../../dev-config.js" onerror="this.remove()"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
