@@ -1,0 +1,449 @@
+/* ==========================================================================
+   R1 공통 뼈대 (페이지마다 복사) — FixedStage 인라인
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* hidden 속성이 author display 규칙을 확실히 이기게 한다. */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1280px;
+  height: 800px;
+  transform-origin: center;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   공통 폰트/버튼 (React 앱 global.css 이식) — 씬 텍스트·버튼 룩
+   ========================================================================== */
+@font-face {
+  font-family: "BMJUA";
+  src: url("../assets/font/BMJUA.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  color: #fff;
+  font-family: "BMJUA", "Pretendard", system-ui, -apple-system, sans-serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  font-size: 22px;
+  box-shadow: 0 6px 0 #5b21b6;
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #5b21b6;
+}
+.btn.ghost {
+  background: #1e293b;
+  box-shadow: 0 6px 0 #0f172a;
+}
+
+/* ==========================================================================
+   auth 씬 (src/scenes/auth/Auth.css 이식)
+   경로: ./assets/Background01.png → ../assets/auth/Background01.png,
+         ../../shared/assets/PanelBackground01.png → ../assets/ui/PanelBackground01.png
+   ========================================================================== */
+.auth {
+  /* #stage(1280×800) 무대를 채운다. 무대 높이가 항상 800px 고정이라
+     기존 vh/vw 반응형은 불필요해졌고, 값은 전부 800h/1280w 기준 px로 확정한다. */
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    url("../assets/auth/Background01.png") center / cover no-repeat,
+    #0b1020;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 44px;
+  gap: 18px;
+}
+
+.auth__banner {
+  width: 666px;
+  height: auto;
+  margin-top: calc(env(safe-area-inset-top) + 8px);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* 패널: PanelBackground01.png을 9-slice(border-image)로 사용. */
+.auth__panel {
+  position: relative;
+  width: 600px;
+  height: 480px;
+  border: 34px solid transparent;
+  border-image: url("../assets/ui/PanelBackground01.png") 44 fill / 34px / 0 stretch;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-panel__title {
+  font-size: 51px;
+  font-weight: 800;
+  margin: 0 0 19px;
+  text-align: center;
+}
+
+.auth-chooser {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 21px;
+  width: 100%;
+}
+
+.auth-bigbtn {
+  width: min(74%, 340px);
+  font-size: 19px;
+  padding: 14px;
+  border-radius: 999px;
+}
+
+/* ── 로그인/회원가입 폼 (1단 세로) ── */
+.auth-form-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.auth-back {
+  align-self: flex-start;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 999px;
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* 한 줄에 필드 여러 개를 균등 분배. */
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+.field-row > .field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.field--school,
+.field--name,
+.field--select,
+.field--pin,
+.field--gender {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.field__label {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+.field__select,
+.field__input {
+  font: inherit;
+  font-size: 18px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #0f172a;
+  color: #fff;
+}
+
+.auth-error {
+  color: #fca5a5;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+.auth-submit {
+  align-self: center;
+  width: min(70%, 360px);
+  font-size: 21px;
+  border-radius: 999px;
+}
+.auth-submit:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+/* 성별 세그먼트 토글. */
+.gender-toggle {
+  display: flex;
+  gap: 6px;
+}
+.gender-toggle__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  font: inherit;
+  font-size: 18px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  border: none;
+  background: #0f172a;
+  color: #fff;
+  opacity: 0.55;
+  cursor: pointer;
+}
+.gender-toggle__btn.is-selected {
+  opacity: 1;
+  background: #2563eb;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   공통 블록 A — 씬 전환 페이드 오버레이 (script.js fadeNav 가 토글)
+   ========================================================================== */
+#scene-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* 히든 메뉴(10001)보다 아래, 그 외 모두 위 */
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease; /* FADE_MS = 160 (원본과 동일) */
+}
+#scene-fade.is-on {
+  opacity: 1;
+  pointer-events: auto; /* 전환 중 입력 차단 */
+}
+
+/* ==========================================================================
+   공통 블록 B — 음소거 버튼 (src/lib/mute-button.css 이식)
+   ========================================================================== */
+.mute-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 9000;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.mute-btn:hover,
+.mute-btn:focus-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   공통 블록 C — 교사용 히든 점프 메뉴 (src/lib/hidden-menu.css 이식)
+   앱 루트(무대 바깥)에 뜨는 전역 오버레이라 #stage 좌표계와 무관하다.
+   ========================================================================== */
+.hidden-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: system-ui, sans-serif;
+}
+
+.hidden-menu__panel {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #12161f;
+  color: #e8eef8;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hidden-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.hidden-menu__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hidden-menu__pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+}
+
+.hidden-menu__dots {
+  display: flex;
+  gap: 12px;
+}
+
+.hidden-menu__dots span {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #4a5a70;
+  border-radius: 50%;
+}
+
+.hidden-menu__dots span.on {
+  background: #e8eef8;
+  border-color: #e8eef8;
+}
+
+.hidden-menu__wrong {
+  margin: 0;
+  color: #ff8a8a;
+  font-size: 14px;
+}
+
+.hidden-menu__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+}
+
+.hidden-menu__keys button {
+  height: 56px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.hidden-menu__keys button:active {
+  background: #36435c;
+}
+
+.hidden-menu__warn {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #7a5a20;
+  border-radius: 8px;
+  background: #3a2a10;
+  color: #ffd479;
+  font-size: 14px;
+}
+
+.hidden-menu__grid {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.hidden-menu__col,
+.hidden-menu__row {
+  font-size: 13px;
+  color: #9fb0c8;
+}
+
+.hidden-menu__col {
+  text-align: center;
+}
+
+.hidden-menu__grid button {
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hidden-menu__grid button:active {
+  background: #36435c;
+}
+
+.hidden-menu__grid .hidden-menu__empty {
+  height: 48px;
+}
+
+.hidden-menu__common {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hidden-menu__common button {
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__common button:active {
+  background: #36435c;
+}
+
+.hidden-menu__home {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f5d3a;
+  color: #e8eef8;
+  font-size: 15px;
+  cursor: pointer;
+}
