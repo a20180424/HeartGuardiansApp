@@ -682,6 +682,7 @@ const EmpathyManualGame = (function () {
     if (stepDone || chosen.indexOf(idx) !== -1) return;
 
     if (!correct) {
+      audio.play("wrong");
       wrongIdx = idx;
       feedback = "다시 생각해 보세요. 친구를 공감하는 행동을 골라야 해요.";
       render();
@@ -694,6 +695,7 @@ const EmpathyManualGame = (function () {
     }
 
     chosen = chosen.concat([idx]);
+    audio.play("correct");
 
     if (chosen.length < EM_NEEDED) {
       feedback = "좋아요! 정답 " + chosen.length + "개를 찾았습니다.";
@@ -714,6 +716,7 @@ const EmpathyManualGame = (function () {
       return;
     }
     currentStep += 1;
+    audio.play("stage"); // 다음 매뉴얼 단계로
     chosen = [];
     wrongIdx = null;
     feedback = EM_DEFAULT_FEEDBACK;
