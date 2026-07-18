@@ -52,7 +52,7 @@ export default function Intro() {
       <video
         ref={videoRef}
         className={"intro__video" + (ready ? " is-ready" : "")}
-        src="/video/Intro_v2.mp4"
+        src="/video/Opening_final.mp4"
         autoPlay
         playsInline
         muted={effectiveMuted}
