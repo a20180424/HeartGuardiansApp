@@ -1165,6 +1165,11 @@ function blipSound(speaker) {
     video.setAttribute("playsinline", "");
     video.preload = "auto";
     video.addEventListener("ended", onVideoEnded);
+    // 첫 프레임 준비 전엔 video 를 숨겨 회색 Play 플레이스홀더를 가린다(intro is-ready 패턴).
+    // '재생 시작' 버튼(z-index 8)은 위에 그대로 보인다.
+    const markReady = () => video.classList.add("is-ready");
+    video.addEventListener("loadeddata", markReady);
+    video.addEventListener("playing", markReady);
     stage.appendChild(video);
     // 자동재생하지 않고 '재생 시작' 버튼(사용자 제스처)으로만 재생 → 자동재생 정책과 무관, hang 없음.
     const btn = document.createElement("button");
