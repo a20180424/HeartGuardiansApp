@@ -52,13 +52,14 @@ function runToEnd(data: MissionData): Promise<{ lines: string[]; fx: string[] }>
   });
 }
 
-describe("planet2 mission skeletons", () => {
-  it.each(["mission01", "mission02", "mission03"])(
+describe("planet4 mission skeletons", () => {
+  // mission01·02는 엔진 end 노드에서 fx_light_return 을 쏜다. mission03은 미니게임이 종착이라 제외.
+  it.each(["mission01", "mission02"])(
     "%s: 시작→끝을 걸어 end 에 도달하고 마지막에 fx_light_return 을 쏜다",
     async (id) => {
       const { lines, fx } = await runToEnd(MISSIONS[id]);
-      expect(lines.length).toBeGreaterThanOrEqual(2); // intro + end
-      expect(fx).toContain("fx_light_return"); // 다음 버튼 조건
+      expect(lines.length).toBeGreaterThanOrEqual(2);
+      expect(fx).toContain("fx_light_return");
     },
   );
 
@@ -70,4 +71,18 @@ describe("planet2 mission skeletons", () => {
       expect(data.nodes.every((n) => n.id.startsWith("p4_m"))).toBe(true);
     },
   );
+
+  it("mission03: 인트로 배너 line + heartConnect 미니게임(종착)으로 끝난다", async () => {
+    const data = MISSIONS["mission03"];
+    expect(data.start).toBe("p4_m3_intro");
+    const intro = data.nodes.find((n) => n.id === "p4_m3_intro");
+    const play = data.nodes.find((n) => n.id === "p4_m3_play");
+    expect(intro?.type).toBe("line");
+    expect(play?.type).toBe("minigame");
+    expect(play?.game).toBe("heartConnect");
+    expect(play?.next ?? null).toBeNull();
+    // FakeView 로 끝까지 걸으면 end 에 도달(showMinigame 이 done 호출).
+    const { lines } = await runToEnd(data);
+    expect(lines).toContain(intro?.text || "");
+  });
 });

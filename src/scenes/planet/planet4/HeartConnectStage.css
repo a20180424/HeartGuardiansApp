@@ -1,0 +1,923 @@
+/* 행성4 미션3 "하트 커넥트" 미니게임.
+   엔진 #stage(1920×1200) 위 1280×800 프레임을 scale(1.5)로 채운다(원본 px 좌표 재사용).
+   퀴즈 배경은 깔지 않는다 — 엔진 #bg(heart-connect-interior-bg.png)가 비쳐야 한다. */
+.hc-root {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  color: #fff;
+  font-family: inherit;
+}
+.hc-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1280px;
+  height: 800px;
+  transform: scale(1.5);
+  transform-origin: 0 0;
+  overflow: hidden;
+}
+
+/* ── story phase: 원본 #storyScreen / .story-card 이식 ───────────── */
+.hc-story {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.35), transparent 55%);
+}
+
+.hc-story-hati {
+  position: absolute;
+  left: 50%;
+  bottom: 272px;
+  z-index: 4;
+  width: 245px;
+  height: 245px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.72));
+  transform: translateX(-50%);
+  animation: hc-hatiEnter 0.55s ease-out both;
+}
+@keyframes hc-hatiEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-28px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+.hc-story-box {
+  position: absolute;
+  left: 150px;
+  right: 150px;
+  bottom: 62px;
+  min-height: 255px;
+  padding: 76px 58px 34px;
+  border: 2px solid rgba(111, 238, 255, 0.72);
+  border-radius: 32px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(8, 26, 61, 0.97), rgba(13, 13, 48, 0.97));
+  box-shadow: 0 0 30px rgba(49, 150, 255, 0.4), inset 0 0 30px rgba(70, 180, 255, 0.09);
+}
+.hc-story-box:before {
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  content: "";
+  width: 280px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(48, 164, 255, 0.22);
+  box-shadow: 0 0 22px rgba(72, 204, 255, 0.55);
+  transform: translateX(-50%);
+}
+
+.hc-speaker {
+  position: absolute;
+  left: 38px;
+  top: 24px;
+  display: inline-block;
+  padding: 8px 24px;
+  border: 2px solid #7af8d1;
+  border-radius: 99px;
+  color: #062319;
+  font-size: 17px;
+  font-weight: 950;
+  background: linear-gradient(#d9fff2, #65e8bc);
+  box-shadow: 0 0 17px rgba(75, 244, 191, 0.6);
+}
+
+.hc-story-progress {
+  position: absolute;
+  right: 36px;
+  top: 33px;
+  color: #9ed9ff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.hc-dialogue {
+  min-height: 92px;
+  margin: 0;
+  text-align: center;
+  white-space: pre-line;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.65;
+  word-break: keep-all;
+  text-shadow: 0 2px 4px #000;
+}
+.hc-dialogue.typing:after {
+  content: "▌";
+  margin-left: 3px;
+  color: #78f3ff;
+  animation: hc-cursorBlink 0.6s step-end infinite;
+}
+@keyframes hc-cursorBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hc-story-next {
+  position: absolute;
+  right: 28px;
+  bottom: 22px;
+  color: #7cf2ff;
+  font-size: 20px;
+  animation: hc-nextPulse 1s infinite;
+}
+@keyframes hc-nextPulse {
+  50% {
+    transform: translateX(5px);
+    opacity: 0.55;
+  }
+}
+
+.hc-story-emphasis {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 4px 18px;
+  border-radius: 10px;
+  color: #8effd6;
+  font-size: 27px;
+  font-weight: 950;
+  text-shadow: 0 0 10px rgba(76, 255, 196, 0.75);
+  background: rgba(73, 235, 182, 0.08);
+}
+
+/* ── quiz phase: 원본 #gameScreen(.game-layout/.space/.core/.link/.node/.mission) 이식 ── */
+.hc-quiz {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  /* 배경을 칠하지 않는다 — 엔진 #bg(heart-connect-interior-bg.png)와 상단 스테퍼가 비쳐야 한다. */
+  --hc-green: #64f6ad;
+  --hc-mint: #caffdf;
+  --hc-blue: #58b9ff;
+  --hc-panel: rgba(7, 22, 38, 0.88);
+}
+
+.hc-game-layout {
+  width: 1120px;
+  display: grid;
+  grid-template-columns: 650px 1fr;
+  gap: 38px;
+  align-items: center;
+}
+
+.hc-space {
+  position: relative;
+  height: 540px;
+  border: 1px solid rgba(100, 246, 173, 0.13);
+  border-radius: 36px;
+  background: radial-gradient(circle, rgba(54, 220, 153, 0.09), transparent 60%);
+}
+
+.hc-phase-badge {
+  position: absolute;
+  left: 22px;
+  top: 18px;
+  z-index: 6;
+  padding: 7px 12px;
+  border-radius: 99px;
+  color: var(--hc-mint);
+  font-size: 13px;
+  font-weight: 900;
+  background: #071b22dd;
+}
+
+.hc-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: 138px;
+  height: 138px;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  transition: 1s;
+}
+.hc-core img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.18;
+  filter: grayscale(1) brightness(0.5);
+  transition: 1s;
+}
+.hc-core.on img {
+  opacity: 1;
+  filter: drop-shadow(0 0 12px #fff) drop-shadow(0 0 28px #54bfff);
+}
+.hc-core.on {
+  animation: hc-pulse 1.5s infinite;
+}
+@keyframes hc-pulse {
+  50% {
+    transform: translate(-50%, -50%) scale(1.07);
+  }
+}
+
+.hc-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hc-link {
+  stroke: #64f6ad22;
+  stroke-width: 2;
+  stroke-dasharray: 7 8;
+  transition: 0.8s;
+}
+.hc-link.on {
+  stroke: var(--hc-green);
+  stroke-dasharray: 0;
+  filter: drop-shadow(0 0 6px var(--hc-green));
+}
+
+.hc-node {
+  position: absolute;
+  z-index: 5;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff20;
+  border-radius: 50%;
+  font-size: 32px;
+  background: #091a20;
+  filter: grayscale(1);
+  opacity: 0.48;
+  transition: 0.7s;
+}
+.hc-node.connected {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.1);
+  border-color: var(--hc-glow, var(--hc-green));
+  box-shadow: 0 0 24px var(--hc-glow, var(--hc-green));
+}
+.hc-node small {
+  position: absolute;
+  top: 76px;
+  width: 140px;
+  text-align: center;
+  color: #dfffee;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.hc-node.hc-gem {
+  width: 88px;
+  height: 88px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.hc-node.hc-gem img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.65));
+}
+.hc-node.hc-gem.connected {
+  box-shadow: none;
+  filter: none;
+}
+.hc-node.hc-gem.connected img {
+  filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 18px var(--hc-gem-glow, #65cfff));
+}
+.hc-node.hc-gem small {
+  top: 88px;
+  text-shadow: 0 2px 4px #000;
+}
+
+.hc-g1 {
+  left: calc(50% - 44px);
+  top: 28px;
+  --hc-gem-glow: #248cff;
+}
+.hc-g2 {
+  right: 66px;
+  top: 134px;
+  --hc-gem-glow: #ffc52c;
+}
+.hc-g3 {
+  right: 111px;
+  bottom: 34px;
+  --hc-gem-glow: #ff9f1a;
+}
+.hc-g4 {
+  left: 111px;
+  bottom: 34px;
+  --hc-gem-glow: #ff174f;
+}
+.hc-g5 {
+  left: 66px;
+  top: 134px;
+  --hc-gem-glow: #76e63b;
+}
+
+.hc-mission {
+  padding: 28px;
+  border: 1px solid #ffffff18;
+  border-radius: 28px;
+  background: var(--hc-panel);
+  box-shadow: 0 24px 70px #0005;
+}
+.hc-progress-label {
+  display: flex;
+  justify-content: space-between;
+  color: #bbd2dd;
+  font-size: 13px;
+  font-weight: 800;
+}
+.hc-progress {
+  height: 8px;
+  margin: 10px 0 22px;
+  border-radius: 99px;
+  background: #ffffff14;
+  overflow: hidden;
+}
+.hc-progress div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--hc-green), var(--hc-blue));
+  transition: 0.6s;
+}
+.hc-stage-title {
+  margin: 0 0 8px;
+  color: var(--hc-mint);
+  font-size: 14px;
+  font-weight: 900;
+}
+.hc-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  margin: 0 0 8px;
+  font-size: 34px;
+}
+.hc-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 9px rgba(104, 194, 255, 0.65));
+}
+.hc-prompt {
+  min-height: 68px;
+  margin: 0 0 18px;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.hc-choices {
+  display: grid;
+  gap: 9px;
+}
+.hc-choice {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ffffff18;
+  border-radius: 14px;
+  color: #eaf8ff;
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff0b;
+}
+.hc-choice:hover {
+  border-color: var(--hc-green);
+  transform: translateX(4px);
+}
+.hc-choice:disabled {
+  cursor: default;
+}
+.hc-choice.correct {
+  color: #052318;
+  border-color: var(--hc-green);
+  background: var(--hc-green);
+}
+.hc-choice.wrong {
+  border-color: #ff7790;
+  background: #ff46641f;
+}
+/* 원본 .flash/.flash.go/@keyframes flash 이식(5번째 정답 시 코어 점등과 함께 재생되는
+   전체 화이트 플래시). 좌표계는 quiz phase 프레임(.hc-quiz) 기준. */
+.hc-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  background: #fff;
+}
+.hc-flash.go {
+  animation: hc-flash-anim 0.9s;
+}
+@keyframes hc-flash-anim {
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.hc-hati-feedback {
+  position: relative;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.hc-feedback-hati {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  object-fit: cover;
+  object-position: 50% 3%;
+  border: 2px solid #86f9d0;
+  border-radius: 50%;
+  background: #071b22;
+  filter: drop-shadow(0 0 8px rgba(100, 246, 173, 0.55));
+}
+.hc-feedback {
+  position: relative;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid rgba(134, 249, 208, 0.55);
+  border-radius: 13px;
+  color: var(--hc-mint);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
+  background: rgba(8, 35, 43, 0.92);
+  box-shadow: 0 0 14px rgba(51, 221, 164, 0.12);
+}
+.hc-feedback:before {
+  position: absolute;
+  left: -9px;
+  top: 20px;
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-left: 1px solid rgba(134, 249, 208, 0.55);
+  border-bottom: 1px solid rgba(134, 249, 208, 0.55);
+  background: rgba(8, 35, 43, 0.92);
+  transform: rotate(45deg);
+}
+
+/* ── video phase: 원본 #videoScreen / .ending-video / .video-shade / .video-complete 이식 ──
+   전체화면 불투명(z-index 110) — hc-root(z-index 100, 이미 엔진 스테퍼 z-index 5 위) 스태킹
+   컨텍스트 안에서 이 phase 를 투명한 quiz phase 보다 위로 쌓기 위한 순서다. */
+.hc-video-root {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  background: #000;
+}
+.hc-ending-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+.hc-video-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.68), transparent 32%);
+  opacity: 0;
+  transition: opacity 0.7s;
+}
+.hc-video-shade.ready {
+  opacity: 1;
+}
+.hc-video-complete {
+  position: absolute;
+  left: 50%;
+  bottom: 42px;
+  z-index: 3;
+  min-width: 260px;
+  padding: 16px 30px;
+  border: 2px solid #bff8ff;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 950;
+  cursor: pointer;
+  background: linear-gradient(180deg, rgba(44, 137, 220, 0.95), rgba(18, 59, 137, 0.98));
+  box-shadow: 0 0 24px rgba(76, 211, 255, 0.8);
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+}
+.hc-video-complete.show {
+  opacity: 1;
+  visibility: visible;
+}
+.hc-video-complete:hover {
+  transform: translateX(-50%) translateY(-4px);
+  box-shadow: 0 0 34px #76ecff;
+}
+
+/* ── epilogue phase: 원본 #postRecoveryScreen(.post-bg/.post-dialogue/.post-blackout) 이식 ──
+   전체화면 불투명(z-index 110) — video phase 와 동일하게 hc-root 스태킹 컨텍스트 안에서
+   quiz phase 보다 위로 쌓기 위한 순서다. */
+.hc-epilogue-root {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  cursor: pointer;
+  overflow: hidden;
+  background: #01030b;
+}
+
+.hc-post-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transform: scale(1.035);
+  transition: opacity 3.2s ease, transform 7s ease;
+}
+.hc-post-bg.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.hc-post-bg:after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.54), transparent 55%);
+}
+
+.hc-post-blackout {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: #000;
+  opacity: 1;
+}
+.hc-post-blackout.go {
+  animation: hc-blackReveal 1.5s ease forwards;
+}
+@keyframes hc-blackReveal {
+  0%,
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.hc-post-dialogue {
+  position: absolute;
+  left: 145px;
+  right: 145px;
+  bottom: 42px;
+  z-index: 6;
+  min-height: 210px;
+  padding: 70px 55px 30px;
+  border: 2px solid rgba(111, 238, 255, 0.76);
+  border-radius: 30px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(8, 26, 61, 0.96), rgba(13, 13, 48, 0.96));
+  box-shadow: 0 0 30px rgba(49, 150, 255, 0.45);
+}
+.hc-post-hati {
+  position: absolute;
+  left: 50%;
+  top: -160px;
+  width: 210px;
+  height: 210px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 13px #000b);
+  transform: translateX(-50%);
+}
+.hc-post-speaker {
+  position: absolute;
+  left: 35px;
+  top: 22px;
+  padding: 7px 22px;
+  border: 2px solid #7af8d1;
+  border-radius: 99px;
+  color: #062319;
+  font-weight: 950;
+  background: linear-gradient(#d9fff2, #65e8bc);
+}
+.hc-post-text {
+  min-height: 58px;
+  margin: 0;
+  color: #fff;
+  font-size: 27px;
+  font-weight: 850;
+  line-height: 1.6;
+  text-shadow: 0 2px 4px #000;
+}
+.hc-post-text.typing:after {
+  content: "▌";
+  margin-left: 3px;
+  color: #78f3ff;
+  animation: hc-cursorBlink 0.6s step-end infinite;
+}
+.hc-post-next {
+  position: absolute;
+  right: 27px;
+  bottom: 18px;
+  color: #7cf2ff;
+  font-size: 20px;
+  animation: hc-nextPulse 1s infinite;
+}
+.hc-post-emphasis {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 18px;
+  border-radius: 10px;
+  color: #91ffdc;
+  font-size: 29px;
+  font-weight: 950;
+  text-shadow: 0 0 12px rgba(76, 255, 196, 0.9);
+  background: rgba(73, 235, 182, 0.1);
+}
+
+/* ── success phase: 원본 #endingScreen/.success-ending 이식 ──
+   line29(베이스) + line31(리파인 오버라이드) 정본을 병합한 "최종 유효 스타일"이다.
+   유의: .success-message p:last-of-type{color:#aef8ff}(line29, 명시도 0,2,1)가
+   .final-line-two{color:#bdfcff}(line31, 명시도 0,2,0)보다 명시도가 높아 실제로는
+   line29의 색이 적용된다 — 두 번째 줄은 .final-line-two의 크기/굵기/그림자는 그대로 쓰되
+   색상만 #aef8ff로 이식한다(원본 캔버스 그대로의 결과).
+   전체화면 불투명(z-index 110) — video/epilogue phase 와 동일하게 hc-root 스태킹 컨텍스트
+   안에서 quiz phase 보다 위로 쌓기 위한 순서다. */
+.hc-success-root {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  text-align: center;
+  background: #05051d center / cover no-repeat;
+}
+.hc-success-root:before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: radial-gradient(
+    circle at 50% 48%,
+    rgba(60, 86, 255, 0.08),
+    rgba(2, 2, 18, 0.22) 68%,
+    rgba(0, 0, 8, 0.62)
+  );
+  pointer-events: none;
+}
+
+.hc-success-logo {
+  position: absolute;
+  left: 50%;
+  top: 88px;
+  width: 650px;
+  height: 155px;
+  object-fit: contain;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 0 17px rgba(103, 147, 255, 0.8));
+  mix-blend-mode: screen;
+  animation: hc-logoArrive 1s 0.05s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+@keyframes hc-logoArrive {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -18px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.hc-success-burst {
+  position: absolute;
+  left: 50%;
+  top: 49%;
+  width: 850px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  animation: hc-refinedSuccess 1.25s cubic-bezier(0.16, 0.9, 0.24, 1) 0.15s both;
+}
+.hc-success-burst:before,
+.hc-success-burst:after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  content: "";
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hc-success-burst:before {
+  width: 840px;
+  height: 230px;
+  background: radial-gradient(ellipse, rgba(91, 157, 255, 0.24) 0%, rgba(115, 77, 255, 0.1) 42%, transparent 73%);
+  animation: hc-softGlow 3.6s ease-in-out infinite;
+}
+.hc-success-burst:after {
+  top: 50%;
+  width: 700px;
+  height: 190px;
+  border: 1px solid rgba(169, 226, 255, 0.62);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(111, 194, 255, 0.4), inset 0 0 18px rgba(255, 240, 169, 0.1);
+  opacity: 0;
+  animation: hc-impactWave 1.6s 0.35s ease-out both;
+}
+@keyframes hc-refinedSuccess {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.72);
+    filter: blur(12px);
+  }
+  65% {
+    opacity: 1;
+    transform: translate(-50%, -52%) scale(1.035);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0);
+  }
+}
+@keyframes hc-softGlow {
+  50% {
+    opacity: 0.62;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+@keyframes hc-impactWave {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+}
+
+.hc-success-banner-img {
+  position: relative;
+  z-index: 3;
+  width: 790px;
+  height: auto;
+  display: block;
+  margin: auto;
+  filter: drop-shadow(0 13px 15px rgba(0, 0, 20, 0.7)) drop-shadow(0 0 12px rgba(76, 139, 255, 0.5));
+}
+
+.hc-success-sparkles {
+  position: absolute;
+  inset: -40px -10px;
+  z-index: 4;
+  pointer-events: none;
+}
+.hc-success-sparkles span {
+  position: absolute;
+  color: #fff3a0;
+  font-size: 28px;
+  text-shadow: 0 0 7px #fff, 0 0 15px #ffd84d;
+  animation: hc-refinedTwinkle 1.8s ease-in-out infinite;
+}
+.hc-success-sparkles span:nth-child(1) {
+  left: 5%;
+  top: 15%;
+}
+.hc-success-sparkles span:nth-child(2) {
+  left: 13%;
+  bottom: 7%;
+  font-size: 19px;
+  animation-delay: 0.3s;
+}
+.hc-success-sparkles span:nth-child(3) {
+  right: 6%;
+  top: 12%;
+  font-size: 22px;
+  animation-delay: 0.65s;
+}
+.hc-success-sparkles span:nth-child(4) {
+  right: 13%;
+  bottom: 4%;
+  font-size: 32px;
+  animation-delay: 1s;
+}
+.hc-success-sparkles span:nth-child(5) {
+  left: 29%;
+  top: -4%;
+  font-size: 17px;
+  animation-delay: 1.3s;
+}
+.hc-success-sparkles span:nth-child(6) {
+  right: 28%;
+  top: -5%;
+  font-size: 18px;
+  animation-delay: 0.85s;
+}
+.hc-success-sparkles span:nth-child(7) {
+  left: 1%;
+  top: 53%;
+  font-size: 16px;
+  animation-delay: 1.5s;
+}
+.hc-success-sparkles span:nth-child(8) {
+  right: 1%;
+  top: 50%;
+  font-size: 17px;
+  animation-delay: 0.15s;
+}
+@keyframes hc-refinedTwinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.55) rotate(0);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.18) rotate(18deg);
+  }
+  70% {
+    opacity: 0.55;
+    transform: scale(0.85) rotate(28deg);
+  }
+}
+
+.hc-success-message {
+  position: absolute;
+  left: 50%;
+  bottom: 74px;
+  width: 850px;
+  padding: 22px 30px;
+  border: 1px solid rgba(166, 214, 255, 0.55);
+  border-radius: 24px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, rgba(8, 20, 65, 0.82), rgba(28, 15, 78, 0.86), rgba(8, 20, 65, 0.82));
+  box-shadow: 0 0 24px rgba(77, 121, 255, 0.35);
+}
+.hc-success-message p {
+  margin: 5px 0;
+  color: #f2f8ff;
+  font-size: 23px;
+  font-weight: 850;
+  line-height: 1.55;
+  text-shadow: 0 2px 5px #000;
+}
+.hc-success-message p:last-of-type {
+  color: #aef8ff;
+}
+.hc-final-typed-line {
+  min-height: 36px;
+}
+.hc-final-typed-line.typing:after {
+  content: "▌";
+  margin-left: 3px;
+  color: #8feaff;
+  animation: hc-cursorBlink 0.6s step-end infinite;
+}
+.hc-success-message .hc-final-line-two {
+  min-height: 44px;
+  margin-top: 7px;
+  font-size: 30px;
+  font-weight: 950;
+  text-shadow: 0 0 11px rgba(102, 224, 255, 0.58);
+}
+.hc-success-message .hc-restart {
+  margin-top: 12px;
+  border: 0;
+  color: #dffbff;
+  font: inherit;
+  cursor: pointer;
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
