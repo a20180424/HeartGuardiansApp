@@ -3,14 +3,69 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>하트가디언즈</title>
+    <title>하트가디언즈 — 인트로</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- #stage: 1280×800 좌표계, px 절대배치 (R1) -->
     <div id="stage">
-      <p style="color: #fff; font-family: sans-serif; text-align: center">vanilla 전환 준비 중</p>
+      <div class="intro">
+        <!-- 오프닝 영상. 자동재생 정책상 muted 로 시작하고, 준비되면 is-ready 로 페이드 인. -->
+        <video
+          id="intro-video"
+          class="intro__video"
+          src="video/Opening_final.mp4"
+          autoplay
+          playsinline
+          muted
+        ></video>
+
+        <!-- status="playing" 동안 보이는 것들 -->
+        <div id="intro-playing">
+          <!-- 영상 전체를 덮는 탭 레이어 — 탭하면 소리 켜기. data-sfx="none": 영화 위에 tap 이 겹치면 안 된다. -->
+          <button
+            type="button"
+            id="intro-tap"
+            class="intro__tap-layer"
+            data-sfx="none"
+            aria-label="탭하여 소리 켜기"
+          ></button>
+
+          <!-- 소리 켜기 힌트 (하단 중앙) — 로컬 muted 인 동안만 보인다 -->
+          <div id="intro-sound-hint" class="intro__sound-hint" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor" />
+              <path
+                d="M16 9l5 6M21 9l-5 6"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span>탭하여 소리 켜기</span>
+          </div>
+
+          <!-- 건너뛰기 (우상단) -->
+          <button type="button" id="intro-skip" class="btn ghost intro__skip">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M4 5l9 7-9 7zM12 5l7 7-7 7zM19 5h2v14h-2z" />
+            </svg>
+            건너뛰기
+          </button>
+        </div>
+
+        <!-- status="ended": 시작하기 (auth 로 이동) -->
+        <button type="button" id="intro-start" class="btn intro__start" hidden>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          시작하기
+        </button>
+      </div>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>
