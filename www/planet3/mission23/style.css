@@ -533,6 +533,18 @@ button {
 #choiceImage.show {
   opacity: 1;
 }
+/* p3_m2_end — 리워드 카드 위 "탐험 성공!" 리본. #choiceImage 를 리본으로 재사용.
+   base 는 화면 절반 크기라 리본엔 과하게 커서 width 로 다시 잡고 페더를 끈다.
+   (다른 행성 엔딩(planet1/mission3 등)의 #stage.node-m3_end 규칙과 크기 통일.) */
+#stage.node-p3_m2_end #choiceImage {
+  top: 140px;
+  height: auto;
+  width: 720px;
+  max-width: 90%;
+  z-index: 6; /* 리워드 카드(#cardStage z:5)보다 위 */
+  -webkit-mask: none;
+  mask: none;
+}
 
 /* 화면 가운데 카드들(공감 카드 / 보상 카드) — 가로로 나란히, 높이 기준 + 등장 애니 */
 #cardStage {

@@ -269,7 +269,7 @@ document.body.appendChild(muteBtn);
   const PLANETS = [
     { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
     { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
-    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", "planet3/mission23/index.html?stage2=1"] },
     { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
@@ -389,7 +389,7 @@ document.body.appendChild(muteBtn);
             grid.appendChild(el("span", { class: "hidden-menu__empty" }));
             return;
           }
-          const label = href.indexOf("mission23") !== -1 ? "미션2·3" : COL_HEAD[i];
+          const label = COL_HEAD[i];
           const b = el("button", { type: "button", text: label });
           b.addEventListener("click", () => go(ROOT + href));
           grid.appendChild(b);
