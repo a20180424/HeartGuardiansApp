@@ -1048,7 +1048,7 @@ const devStage2 = PARAMS.has("stage2");
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.webp";
+        star.src = A + "/icon/star.svg";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");
