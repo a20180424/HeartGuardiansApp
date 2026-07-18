@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하트가디언즈 — 얼음 행성 프롤로그</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- #stage: 1280×800 좌표계, px 절대배치 (R1) -->
+    <div id="stage">
+      <!-- 프롤로그 — 정적 레이아웃(PrologueTemplate.tsx 이식, planet3 값 인라인).
+           색/배경은 .prologue--planet3 modifier(style.css)로 오버라이드. -->
+      <div class="prologue prologue--planet3">
+        <!-- ① 타이틀 배너 -->
+        <div class="prologue__title">
+          <img class="prologue__title-star" src="../../assets/icon/star.png" alt="" />
+          <span class="prologue__title-text">얼음 행성</span>
+        </div>
+
+        <!-- ③ 하티 + 말풍선 -->
+        <div class="prologue__hati">
+          <img
+            class="prologue__hati-img"
+            src="../../assets/char/Hati/hati_robot_worried.png"
+            alt="하티"
+          />
+          <div class="prologue__bubble">
+            <span class="prologue__nametag">하티</span>
+            <p class="prologue__bubble-text">
+              얼음 행성 주민의 마음이<br />꽁꽁 얼어붙었어! 주민들은<br />서로의 이야기를 듣지 않고<br />마음도 전하지 못해서<br />따뜻한 공감이 사라졌어.<br />따뜻한 말과 행동으로<br />얼어붙은 마음을 녹여 보자!
+            </p>
+          </div>
+        </div>
+
+        <!-- ② 학습 목표 -->
+        <section class="info-panel prologue__goals">
+          <header class="info-panel__head">🎯 학습 목표</header>
+          <ul class="prologue__goal-list">
+            <li>
+              <span class="prologue__goal-star">⭐</span>
+              <span>친구의 이야기를 끝까지 귀 기울여 듣고, 적절하게 반응한다.</span>
+            </li>
+            <li>
+              <span class="prologue__goal-star">⭐</span>
+              <span>상황에 맞는 따뜻한 말과 행동으로 공감을 표현한다.</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ⑤ 획득 가능한 보상 -->
+        <section class="info-panel prologue__rewards">
+          <header class="info-panel__head">✨ 획득 가능한 보상</header>
+          <ul class="prologue__reward-list">
+            <li>
+              <img class="prologue__reward-icon-img" src="../../assets/reward/gem-planet3-topaz-ruby.png" alt="" />
+              <div class="prologue__reward-text">
+                <strong>경청의 토파즈 / 표현의 루비</strong>
+                <span>얼음 행성에서 얻는 세 번째 원석이에요.</span>
+              </div>
+            </li>
+            <li>
+              <img class="prologue__reward-icon-img" src="../../assets/reward/tool-planet3-transmitter.png" alt="" />
+              <div class="prologue__reward-text">
+                <strong>공감 송신기</strong>
+                <span>따듯한 공감을 말과 행동으로 전하는 도구예요.</span>
+              </div>
+            </li>
+            <li>
+              <img class="prologue__reward-icon-img" src="../../assets/reward/energy.png" alt="" />
+              <div class="prologue__reward-text">
+                <strong>공감 에너지 경험치</strong>
+                <span>공감 에너지를 모아 레벨을 올릴 수 있어요.</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ⑥ 오늘의 탐험 패널 (+ ⑦ 시작 버튼) -->
+        <section class="prologue__quest">
+          <span class="prologue__quest-tab">오늘의 탐험</span>
+          <img class="prologue__quest-mascot" src="../../assets/planet3/planet3-bunny.png" alt="마스코트" />
+          <div class="prologue__quest-body">
+            <h2 class="prologue__quest-title">얼어붙은 마음을 녹여라!</h2>
+            <p class="prologue__quest-sub">따뜻한 말과 행동으로 얼어붙은 친구의 마음을 녹여 보세요!</p>
+            <button type="button" class="btn prologue__start" id="prologue-start">탐험 시작!</button>
+          </div>
+        </section>
+
+        <!-- ⑨ 우주선으로 이동 (홈 복귀) -->
+        <button type="button" class="prologue__home" id="prologue-home">
+          <img class="prologue__home-icon" src="../../assets/char/SpaceshipIcon.png" alt="" />
+          <span>우주선으로 이동</span>
+        </button>
+
+        <!-- ⑧ 미션 흐름(스텝) 인디케이터 -->
+        <ol class="prologue__steps">
+          <li class="prologue__step">
+            <span class="prologue__step-num">1</span>
+            <span class="prologue__step-label">가디언즈 작전회의</span>
+            <span class="prologue__step-arrow" aria-hidden="true">➔</span>
+          </li>
+          <li class="prologue__step">
+            <span class="prologue__step-num">2</span>
+            <span class="prologue__step-label">공감 송신기 연료 채우기</span>
+            <span class="prologue__step-arrow" aria-hidden="true">➔</span>
+          </li>
+          <li class="prologue__step">
+            <span class="prologue__step-num">3</span>
+            <span class="prologue__step-label">얼어붙은 마음 녹이기</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- DEV 전용 테스트 계정. gitignore된 www/dev-config.js가 있을 때만 로드(없으면 무시). -->
+    <script src="../../dev-config.js" onerror="this.remove()"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
