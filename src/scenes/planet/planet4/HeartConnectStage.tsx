@@ -70,14 +70,15 @@ function StoryPhase({ onDone }: { onDone: () => void }) {
     else setIndex(index + 1);
   };
 
-  // 클릭/Enter/Space 로 진행
+  // 클릭/Enter/Space 로 진행. advance() 가 참조하는 상태를 의존성으로 둬 재렌더마다(타자
+  // 인터벌 42ms 틱마다) 리바인딩되지 않게 한다(EpiloguePhase 의 동일 패턴과 동일).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") advance();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  });
+  }, [typing, index]);
 
   // 마지막 줄은 완성 시 '\n' 뒤를 강조 span 으로
   const renderText = () => {
@@ -127,15 +128,19 @@ function QuizPhase({ onDone }: { onDone: () => void }) {
   const [feedback, setFeedback] = useState(DEFAULT_FEEDBACK);
   const [wrongIndex, setWrongIndex] = useState<number | null>(null);
   const [coreOn, setCoreOn] = useState(false);
+  const [flashing, setFlashing] = useState(false);
 
   const wrongTimerRef = useRef<number | null>(null);
   const advanceTimerRef = useRef<number | null>(null);
+  // 원본 finish(): 코어 점등 + flash 재생 후 700ms 뒤에 video phase 로 전환.
+  const finishTimerRef = useRef<number | null>(null);
 
   // 타이머 정리(언마운트 시).
   useEffect(() => {
     return () => {
       if (wrongTimerRef.current !== null) window.clearTimeout(wrongTimerRef.current);
       if (advanceTimerRef.current !== null) window.clearTimeout(advanceTimerRef.current);
+      if (finishTimerRef.current !== null) window.clearTimeout(finishTimerRef.current);
     };
   }, []);
 
@@ -176,14 +181,22 @@ function QuizPhase({ onDone }: { onDone: () => void }) {
         setLocked(false);
         setFeedback(DEFAULT_FEEDBACK);
       } else {
+        // 원본 choose()→finish(): 코어 점등 + flash 재생을 먼저 보여주고, 700ms 뒤에
+        // video phase 로 전환한다(같은 틱에 onDone 을 부르면 점등된 코어가 렌더될 새 없이
+        // 즉시 컷 되어 버린다).
         setCoreOn(true);
-        onDone();
+        setFlashing(true);
+        finishTimerRef.current = window.setTimeout(() => {
+          finishTimerRef.current = null;
+          onDone();
+        }, 700);
       }
     }, 1150);
   };
 
   return (
     <div className="hc-quiz">
+      <div className={`hc-flash${flashing ? " go" : ""}`} />
       <div className="hc-game-layout">
         <div className="hc-space">
           <span className="hc-phase-badge">최종 미션 · 공감 원석 연결</span>
@@ -249,7 +262,9 @@ function QuizPhase({ onDone }: { onDone: () => void }) {
 }
 
 // 원본 finish()(영상 재생 + muted 폴백) + #endingVideo 의 ended 리스너 이식.
-// 전체화면 불투명(z-index 110)으로 엔진 스테퍼까지 덮는다("피날레 = 스테퍼 페이드아웃" 효과).
+// 전체화면 불투명(z-index 110): hc-root(z-index 100) 는 이미 엔진 스테퍼(z-index 5) 위에
+// 있으므로, 110은 hc-root 스태킹 컨텍스트 안에서 이 불투명 phase 들을 투명한 quiz phase
+// 보다 위로 쌓기 위한 순서일 뿐이다("피날레 = 스테퍼 페이드아웃" 효과는 hc-root 자체가 준다).
 function VideoPhase({ onDone }: { onDone: () => void }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [ended, setEnded] = useState(false);
@@ -257,9 +272,13 @@ function VideoPhase({ onDone }: { onDone: () => void }) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    let cancelled = false;
     // 원본 finish(): const attempt = video.play(); if(attempt) attempt.catch(()=>{video.muted=true; video.play()})
     const attempt = video.play();
     if (attempt) attempt.catch(() => {
+      // 언마운트와 자동재생 거부(rejection)가 경합하면 이미 분리된 video 엘리먼트에
+      // muted/play() 를 호출하지 않도록 가드한다.
+      if (cancelled) return;
       video.muted = true;
       video.play().catch(() => {});
     });
@@ -272,6 +291,7 @@ function VideoPhase({ onDone }: { onDone: () => void }) {
     };
     video.addEventListener("ended", onEnded);
     return () => {
+      cancelled = true;
       video.removeEventListener("ended", onEnded);
       video.pause();
     };
@@ -303,7 +323,8 @@ type EpilogueBgKey = keyof typeof EPILOGUE_BG;
 const EPILOGUE_BG_ORDER: EpilogueBgKey[] = ["earth1", "earth2", "earth3", "school", "classroom"];
 
 // 원본 startPostRecovery()/typePostLine()/completePostTyping()/advancePost() 이식.
-// 전체화면 불투명(z-index 110)으로 엔진 스테퍼까지 덮는다(video phase 와 동일한 관례).
+// 전체화면 불투명(z-index 110): video phase 와 동일하게, hc-root 스태킹 컨텍스트 안에서
+// 이 phase 를 quiz phase 보다 위로 쌓기 위한 순서다(엔진 스테퍼는 hc-root 자체가 덮는다).
 function EpiloguePhase({ onDone }: { onDone: () => void }) {
   const [postIndex, setPostIndex] = useState(0);
   const [typed, setTyped] = useState("");
@@ -458,7 +479,8 @@ const FINAL_FIRST_DELAY_MS = 650; // 원본 startFinalTyping() 진입 지연
 const FINAL_SECOND_DELAY_MS = 380; // 원본 startFinalTyping() 1→2번째 줄 사이 지연
 
 // 원본 #endingScreen(.success-ending) 이식: startFinalTyping()/typeFinalLine().
-// 전체화면 불투명(z-index 110)으로 엔진 스테퍼까지 덮는다(video/epilogue phase 와 동일한 관례).
+// 전체화면 불투명(z-index 110): video/epilogue phase 와 동일하게, hc-root 스태킹 컨텍스트
+// 안에서 이 phase 를 quiz phase 보다 위로 쌓기 위한 순서다(엔진 스테퍼는 hc-root 자체가 덮는다).
 function SuccessPhase({ onDone }: { onDone: () => void }) {
   const [line1, setLine1] = useState("");
   const [line2, setLine2] = useState("");

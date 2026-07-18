@@ -414,6 +414,28 @@
   border-color: #ff7790;
   background: #ff46641f;
 }
+/* 원본 .flash/.flash.go/@keyframes flash 이식(5번째 정답 시 코어 점등과 함께 재생되는
+   전체 화이트 플래시). 좌표계는 quiz phase 프레임(.hc-quiz) 기준. */
+.hc-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  background: #fff;
+}
+.hc-flash.go {
+  animation: hc-flash-anim 0.9s;
+}
+@keyframes hc-flash-anim {
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .hc-hati-feedback {
   position: relative;
   min-height: 66px;
@@ -464,7 +486,8 @@
 }
 
 /* ── video phase: 원본 #videoScreen / .ending-video / .video-shade / .video-complete 이식 ──
-   전체화면 불투명(z-index 110) — 엔진 스테퍼까지 덮는다("피날레 = 스테퍼 페이드아웃" 효과). */
+   전체화면 불투명(z-index 110) — hc-root(z-index 100, 이미 엔진 스테퍼 z-index 5 위) 스태킹
+   컨텍스트 안에서 이 phase 를 투명한 quiz phase 보다 위로 쌓기 위한 순서다. */
 .hc-video-root {
   position: absolute;
   inset: 0;
@@ -521,7 +544,8 @@
 }
 
 /* ── epilogue phase: 원본 #postRecoveryScreen(.post-bg/.post-dialogue/.post-blackout) 이식 ──
-   전체화면 불투명(z-index 110) — 엔진 스테퍼까지 덮는다(video phase 와 동일한 관례). */
+   전체화면 불투명(z-index 110) — video phase 와 동일하게 hc-root 스태킹 컨텍스트 안에서
+   quiz phase 보다 위로 쌓기 위한 순서다. */
 .hc-epilogue-root {
   position: absolute;
   inset: 0;
@@ -649,7 +673,8 @@
    .final-line-two{color:#bdfcff}(line31, 명시도 0,2,0)보다 명시도가 높아 실제로는
    line29의 색이 적용된다 — 두 번째 줄은 .final-line-two의 크기/굵기/그림자는 그대로 쓰되
    색상만 #aef8ff로 이식한다(원본 캔버스 그대로의 결과).
-   전체화면 불투명(z-index 110) — video/epilogue phase 와 동일하게 엔진 스테퍼를 덮는다. */
+   전체화면 불투명(z-index 110) — video/epilogue phase 와 동일하게 hc-root 스태킹 컨텍스트
+   안에서 quiz phase 보다 위로 쌓기 위한 순서다. */
 .hc-success-root {
   position: absolute;
   inset: 0;
