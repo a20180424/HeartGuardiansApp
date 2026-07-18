@@ -28,6 +28,20 @@
       "noAuto": true,
       "text": "공감 송신기 사용 설명서가 완성 되었어!!!",
       "image": "/assets/planet3/empathy-transmitter-manual.png",
+      "next": "p3_m1_cards"
+    },
+    {
+      "id": "p3_m1_cards",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "공감하는 방법은 3단계로 기억하면 돼!",
+      "cards": [
+        { "image": "/assets/planet3/ice-planet-empathy-card-1.png" },
+        { "image": "/assets/planet3/ice-planet-empathy-card-2.png" },
+        { "image": "/assets/planet3/ice-planet-empathy-card-3.png" }
+      ],
       "next": "p3_m1_end"
     },
     {

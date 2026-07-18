@@ -194,8 +194,12 @@
       "id": "m1_end2",
       "type": "line", "noAuto": true,
       "speaker": "hati",
+      "hideFriend": true,
       "text": "공감은 친구의 마음을 함부로 판단하지 않고, 알려고 노력하고, 그 마음을 이해해 주는 것이란다",
-      "onComplete": [{ "cmd": "fx", "value": "fx_ending_2" }],
+      "cards": [
+        { "image": "/assets/planet1/light-planet-empathy-card-1.png" },
+        { "image": "/assets/planet1/light-planet-empathy-card-2.png" }
+      ],
       "next": "m1_end3"
     },
     {
