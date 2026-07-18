@@ -24,6 +24,10 @@ export default function HeartConnectStage({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<Phase>("story");
   // 타이머 정리는 각 phase 하위 컴포넌트가 자신의 useEffect cleanup 에서 담당한다.
 
+  // 위치 HUD(원본 #locationHud) — story·quiz 동안만 우측 상단에 상시 표시(영상 진입 후엔 숨김).
+  // 원본은 좌측이지만 엔진 스테퍼(좌상단)와 겹치지 않게 우측으로 옮겼다.
+  const showHud = phase === "story" || phase === "quiz";
+
   return (
     <div className="hc-root">
       <div className="hc-frame">
@@ -32,6 +36,15 @@ export default function HeartConnectStage({ onDone }: { onDone: () => void }) {
         {phase === "video" && <VideoPhase onDone={() => setPhase("epilogue")} />}
         {phase === "epilogue" && <EpiloguePhase onDone={() => setPhase("success")} />}
         {phase === "success" && <SuccessPhase onDone={onDone} />}
+
+        {showHud && (
+          <div className="hc-location-hud">
+            <div className="hc-location-title">우주 중앙 · 하트 커넥트 내부</div>
+            <div className="hc-location-status">
+              <span className="hc-status-dot" />현재 상태 · 비활성화
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
