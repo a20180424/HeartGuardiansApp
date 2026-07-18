@@ -3,7 +3,7 @@
 > 출처: `src/App.tsx`의 `<Routes>` 정의. Scene 컴포넌트는 `src/scenes/`에 위치.
 > 자주 바뀌지 않는 구조 정보다. 라우트를 추가/변경하면 이 문서도 함께 갱신할 것.
 
-앱은 **8개의 Scene**으로 구성되며, 각 Scene은 1개의 라우트에 매핑된다.
+앱은 **7개의 Scene**으로 구성되며, 각 Scene은 1개의 라우트에 매핑된다.
 
 | #   | Scene   | URL         | 컴포넌트                 |
 | --- | ------- | ----------- | ------------------------ |
@@ -14,7 +14,6 @@
 | 5   | Planet2 | `/planet/2` | `src/scenes/Planet2.tsx` |
 | 6   | Planet3 | `/planet/3` | `src/scenes/Planet3.tsx` |
 | 7   | Planet4 | `/planet/4` | `src/scenes/Planet4.tsx` |
-| 8   | Outro   | `/outro`    | `src/scenes/Outro.tsx`   |
 
 ## 진입 처리
 
@@ -23,14 +22,14 @@
 ## 흐름
 
 ```
-Intro → Auth → Home → Planet 1~4 → Outro
+Intro → Auth → Home → Planet 1~4
 ```
 
 ## Planet 내부 구성
 
 각 Planet은 하나의 라우트(`/planet/N`)로 진입하지만, 내부적으로 여러 단계(stage)로 구성된다.
 
-> **용어 주의**: Planet 내부의 도입/마무리 단계는 전체 앱의 `Intro`/`Outro` Scene과 다르다.
+> **용어 주의**: Planet 내부의 도입/마무리 단계는 전체 앱의 `Intro` Scene과 다르다.
 > 혼동을 막기 위해 Planet 내부 단계는 **프롤로그(prologue)** / **에필로그(epilogue)**로 부른다.
 
 전체 구성(목표):

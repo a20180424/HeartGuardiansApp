@@ -2,7 +2,7 @@
  *
  *  hub    (/auth, /home)      : 허브
  *  planet (/planet/*)         : 행성·미션
- *  silent (/intro, /outro, 그 외) : 무음 — 동영상은 자체 사운드가 있다 */
+ *  silent (/intro, 그 외)     : 무음 — 동영상은 자체 사운드가 있다 */
 
 export type Zone = "hub" | "planet" | "silent";
 

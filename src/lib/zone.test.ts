@@ -12,9 +12,8 @@ describe("zoneForPath", () => {
     expect(zoneForPath("/planet/4")).toBe("planet");
   });
 
-  it("인트로·아웃트로는 silent (동영상 자체 사운드가 있다)", () => {
+  it("인트로는 silent (동영상 자체 사운드가 있다)", () => {
     expect(zoneForPath("/intro")).toBe("silent");
-    expect(zoneForPath("/outro")).toBe("silent");
   });
 
   it("모르는 경로는 silent", () => {
