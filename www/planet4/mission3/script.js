@@ -1110,6 +1110,13 @@ const HeartConnectStage = (function () {
     const wrap = el("div", { class: "hc-video-root" }, [video, shade, btn]);
     frame.appendChild(wrap);
 
+    // 첫 프레임 준비 전엔 video 를 숨겨 회색 Play 플레이스홀더를 가린다(intro is-ready 패턴).
+    function markReady() {
+      video.classList.add("is-ready");
+    }
+    video.addEventListener("loadeddata", markReady);
+    video.addEventListener("playing", markReady);
+
     let cancelled = false;
     // 원본: const attempt = video.play(); if(attempt) attempt.catch(()=>{video.muted=true; video.play()})
     const attempt = video.play();
@@ -1134,6 +1141,8 @@ const HeartConnectStage = (function () {
     return function cleanup() {
       cancelled = true;
       video.removeEventListener("ended", onEnded);
+      video.removeEventListener("loadeddata", markReady);
+      video.removeEventListener("playing", markReady);
       video.pause();
     };
   }
