@@ -486,6 +486,9 @@ function openExternal(url) {
       .openInWebView({
         url,
         options: {
+          // 원본(openExternal.ts)의 DefaultWebViewOptions/DefaultAndroidWebViewOptions
+          // 스프레드는 의도적으로 생략 — no-build라 패키지 상수를 import할 수 없고,
+          // 플러그인이 미지정 옵션에 같은 기본값을 채워 동작은 동일하다.
           showURL: false, // 주소창은 초등 사용자에게 불필요한 노이즈
           closeButtonText: "닫기",
           // 기본값이 true라 열 때마다 쿠키가 지워져 로그인이 필요한 게시판이면
@@ -592,8 +595,28 @@ function devProgressOverride(progress) {
   const profile = session.profile;
   // classBoard: [planet1_url, planet2_url, planet3_url] 배열 (Task 3 형식).
   const classBoard = Array.isArray(session.classBoard) ? session.classBoard : [];
+
+  /* hg_progress(행성 불리언 — auth의 mergeProgress가 쓰는 형식 그대로) → 0~4 숫자.
+     파싱 실패/부재 시 0. 진행이 순차라 true인 가장 높은 행성 번호가 곧 진도다. */
+  function readLocalProgress() {
+    let obj = {};
+    try {
+      obj = JSON.parse(localStorage.getItem("hg_progress") || "{}") || {};
+    } catch (_) {
+      obj = {};
+    }
+    let p = 0;
+    for (let n = 1; n <= 4; n++) {
+      if (obj["planet" + n]) p = n;
+    }
+    return p;
+  }
+
+  // 표시 진도 = max(세션, hg_progress) — 행성 완료가 어느 키를 갱신하든 home에 반영.
+  // (R2: hg_progress는 서버/로컬 병합 진도, 읽는 곳이 home이다.) 결과는 0~4로 클램프.
+  const sessionProgress = typeof session.progress === "number" ? session.progress : 0;
   const progress = devProgressOverride(
-    typeof session.progress === "number" ? session.progress : 0,
+    Math.max(0, Math.min(4, Math.max(sessionProgress, readLocalProgress()))),
   );
 
   const A = ROOT + "assets/"; // 에셋 접두어
