@@ -468,7 +468,7 @@ const MISSION = {
       type: "line",
       speaker: "hati",
       hideFriend: true,
-      sideImageLeft: A + "/planet4/empathy-showroom.png",
+      sideImageLeft: A + "/planet4/empathy-showroom.webp",
       noAuto: true,
       text: "축하해!\n네 개의 도구를 모두 획득했어.\n하지만 마지막 공감 도구는…\n최종 점검에 통과한\n가디언에게만 주어져",
       next: "p4_m1_play",
@@ -479,7 +479,7 @@ const MISSION = {
       type: "line",
       speaker: "hati",
       hideFriend: true,
-      sideImageLeft: A + "/planet4/empathy-showroom-complete.png",
+      sideImageLeft: A + "/planet4/empathy-showroom-complete.webp",
       noAuto: true,
       text: "공감 나침반은\n특별한 힘을 가지고 있어.\n하지만 기억해!\n나침반은 혼자서는 움직이지 않아.\n용기를 내어 첫 걸음을\n내디딜 때만 빛을 낸다구.",
       next: "p4_m1_cards",
@@ -492,8 +492,8 @@ const MISSION = {
       noAuto: true,
       text: "공감의 시작은 용기야.\n마음으로 느낀 공감을 말과 행동으로 실천해 보자!",
       cards: [
-        { image: A + "/planet4/shadow-planet-empathy-card-1.png" },
-        { image: A + "/planet4/shadow-planet-empathy-card-2.png" },
+        { image: A + "/planet4/shadow-planet-empathy-card-1.webp" },
+        { image: A + "/planet4/shadow-planet-empathy-card-2.webp" },
       ],
       next: "p4_m1_end",
     },
@@ -502,7 +502,7 @@ const MISSION = {
       type: "line",
       speaker: "hati",
       hideFriend: true,
-      sideImageLeft: A + "/planet4/empathy-showroom-complete.png",
+      sideImageLeft: A + "/planet4/empathy-showroom-complete.webp",
       noAuto: true,
       text: "이제 그림자 행성으로 첫 걸음을 내디뎌 보자!",
       completeBanner: "미션 완료!",
@@ -524,27 +524,27 @@ const THEME = {
   fullHatiNodes: ["p4_m1_postplay", "p4_m1_end"],
   initialFriend: "placeholder",
   bg: {
-    states: { main: A + "/planet4/shadow-spaceship-bg.png" },
+    states: { main: A + "/planet4/shadow-spaceship-bg.webp" },
     initial: "main",
     byNode: { p4_m1_intro: "main" },
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {},
   },
   friends: {
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -588,13 +588,13 @@ const EC_TOOLS = [
   {
     name: "마음 신호 탐색기",
     key: "관심",
-    img: EC_ASSET + "/tool-signal-detector.png",
+    img: EC_ASSET + "/tool-signal-detector.webp",
     items: ["친구에게 평소 관심을 가지고 살펴봅니다."],
   },
   {
     name: "공감 거울",
     key: "이해",
-    img: EC_ASSET + "/tool-empathy-mirror.png",
+    img: EC_ASSET + "/tool-empathy-mirror.webp",
     items: [
       "내 마음보다 친구의 마음을 먼저 이해하려고 노력합니다.",
       "같은 상황에서도 사람마다 느끼는 감정이 다를 수 있음을 이해합니다.",
@@ -603,7 +603,7 @@ const EC_TOOLS = [
   {
     name: "공감 레이더",
     key: "관찰",
-    img: EC_ASSET + "/tool-empathy-radar.png",
+    img: EC_ASSET + "/tool-empathy-radar.webp",
     items: [
       "친구가 처한 상황, 표정, 행동을 자세히 살펴봅니다.",
       "한 가지 모습만 보고 감정을 결정하지 않습니다.",
@@ -612,7 +612,7 @@ const EC_TOOLS = [
   {
     name: "공감 송신기",
     key: "표현",
-    img: EC_ASSET + "/tool-empathy-transmitter.png",
+    img: EC_ASSET + "/tool-empathy-transmitter.webp",
     items: [
       "친구와 눈을 마주치고 친구의 말에 귀를 기울여 듣습니다.",
       "친구의 말을 들을 때 고개를 끄덕이거나 친구와 같은 표정을 지어 줍니다.",
@@ -623,17 +623,17 @@ const EC_TOOLS = [
   {
     name: "공감 나침반",
     key: "실천",
-    img: EC_ASSET + "/tool-empathy-compass.png",
+    img: EC_ASSET + "/tool-empathy-compass.webp",
     items: [
       "도움이 필요한 친구에게 용기를 내어 먼저 다가갑니다.",
       "공감은 완벽하게 잘하는 것이 아니라, 계속 실천하려고 노력하는 것임을 알고 있습니다.",
     ],
   },
 ];
-const EC_HATI_DEFAULT = EC_ASSET + "/hati-default.png";
-const EC_HATI_CLAP = EC_ASSET + "/hati-clap.png";
-const EC_PLEDGE_SHEET = EC_ASSET + "/guardians-pledge.png";
-const EC_COMPASS_IMG = EC_ASSET + "/tool-empathy-compass.png";
+const EC_HATI_DEFAULT = EC_ASSET + "/hati-default.webp";
+const EC_HATI_CLAP = EC_ASSET + "/hati-clap.webp";
+const EC_PLEDGE_SHEET = EC_ASSET + "/guardians-pledge.webp";
+const EC_COMPASS_IMG = EC_ASSET + "/tool-empathy-compass.webp";
 
 const EmpathyCompassStage = (function () {
   const ADVANCE_MS = 1150; // 답변 피드백을 보여준 뒤 다음 문항으로
@@ -1142,7 +1142,7 @@ const EmpathyCompassStage = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

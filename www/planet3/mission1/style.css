@@ -723,7 +723,7 @@ button {
     0 8px 0 #3c7400,
     0 12px 20px rgba(0, 0, 0, 0.4);
 }
-/* 이미지 전용 버튼(finish.image = ice-planet-move-tab.png): 버튼 크롬(배경·패딩·그림자)
+/* 이미지 전용 버튼(finish.image = ice-planet-move-tab.webp): 버튼 크롬(배경·패딩·그림자)
    제거하고 이미지 하나만 — 이미지 자체에 라벨 텍스트가 그려져 있다. */
 #nextBtn.img-only {
   background: none;

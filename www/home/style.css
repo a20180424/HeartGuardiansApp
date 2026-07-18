@@ -53,9 +53,9 @@ button {
 
 /* ==========================================================================
    home 씬 (src/scenes/home/Home.css 이식)
-   경로: ./assets/X.png → ../assets/home/X.png,
-         ../../shared/assets/TitleBanner.png → ../assets/ui/TitleBanner.png,
-         ../../shared/assets/PanelBackground01.png → ../assets/ui/PanelBackground01.png
+   경로: ./assets/X.webp → ../assets/home/X.webp,
+         ../../shared/assets/TitleBanner.webp → ../assets/ui/TitleBanner.webp,
+         ../../shared/assets/PanelBackground01.webp → ../assets/ui/PanelBackground01.webp
    ========================================================================== */
 /* 1280×800 CSS px 기준. FixedStage 무대를 채움 + 배경 cover. 요소는 위에 절대배치. */
 .home {
@@ -63,7 +63,7 @@ button {
   inset: 0;
   overflow: hidden;
   background:
-    url("../assets/home/SpaceshipBackground.png") center / cover no-repeat,
+    url("../assets/home/SpaceshipBackground.webp") center / cover no-repeat,
     #050a18;
   color: #fff;
   user-select: none;
@@ -400,7 +400,7 @@ button {
   width: 260px;
   min-height: 106px;
   border: 28px solid transparent;
-  border-image: url("../assets/ui/PanelBackground01.png") 44 fill / 28px / 0 stretch;
+  border-image: url("../assets/ui/PanelBackground01.webp") 44 fill / 28px / 0 stretch;
   display: flex;
   align-items: center;
 }

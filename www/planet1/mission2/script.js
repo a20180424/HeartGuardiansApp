@@ -588,8 +588,8 @@ const MISSION = {
       id: "m2_secret_lesson", type: "line", noAuto: true, speaker: "hati", hideFriend: true,
       text: "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.",
       cards: [
-        { image: A + "/planet1/light-planet-empathy-card-3.png" },
-        { image: A + "/planet1/light-planet-empathy-card-4.png" },
+        { image: A + "/planet1/light-planet-empathy-card-3.webp" },
+        { image: A + "/planet1/light-planet-empathy-card-4.webp" },
       ],
       next: "m2_end1",
     },
@@ -603,7 +603,7 @@ const MISSION = {
     {
       id: "m2_end2", type: "line", noAuto: true, speaker: "hati", hideFriend: true,
       text: "겨울 속 가장 깊은 곳에서 마지막 질문이 떠올랐어.",
-      sideImage: A + "/ui/empathy-mirror3.png",
+      sideImage: A + "/ui/empathy-mirror3.webp",
       next: "m2_end3",
     },
     {
@@ -627,13 +627,13 @@ const THEME = {
   showRadar: false,
   bg: {
     states: {
-      stage2: A + "/bg/light-planet-stage2-bg.png",
-      stage3: A + "/bg/light-planet-stage3.png",
-      mirror1: A + "/bg/empathy-mirror-stage1.png",
-      mirror2: A + "/bg/empathy-mirror-stage2.png",
-      mirror3: A + "/bg/empathy-mirror-stage3.png",
-      mirror4: A + "/bg/empathy-mirror-stage4.png",
-      secret1: A + "/bg/empathy-mirror-broken-heart.png",
+      stage2: A + "/bg/light-planet-stage2-bg.webp",
+      stage3: A + "/bg/light-planet-stage3.webp",
+      mirror1: A + "/bg/empathy-mirror-stage1.webp",
+      mirror2: A + "/bg/empathy-mirror-stage2.webp",
+      mirror3: A + "/bg/empathy-mirror-stage3.webp",
+      mirror4: A + "/bg/empathy-mirror-stage4.webp",
+      secret1: A + "/bg/empathy-mirror-broken-heart.webp",
       secret2: A + "/bg/empathy-mirror-twin.webp",
     },
     initial: "mirror1",
@@ -649,14 +649,14 @@ const THEME = {
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {
@@ -689,10 +689,10 @@ const THEME = {
   friends: {
     lala: {
       char: {
-        anxious: A + "/char/Lala/lala_anxious.png",
-        thinking: A + "/char/Lala/lala_thinking.png",
-        smiling: A + "/char/Lala/lala_smiling.png",
-        happy: A + "/char/Lala/lala_happy.png",
+        anxious: A + "/char/Lala/lala_anxious.webp",
+        thinking: A + "/char/Lala/lala_thinking.webp",
+        smiling: A + "/char/Lala/lala_smiling.webp",
+        happy: A + "/char/Lala/lala_happy.webp",
       },
       initial: "anxious",
       byNode: {
@@ -704,10 +704,10 @@ const THEME = {
     },
     sola: {
       char: {
-        sad: A + "/char/Sola/sola_sad.png",
-        sad2: A + "/char/Sola/sola_sad2.png",
-        serious: A + "/char/Sola/sola_serious.png",
-        thankful: A + "/char/Sola/sola_thankful.png",
+        sad: A + "/char/Sola/sola_sad.webp",
+        sad2: A + "/char/Sola/sola_sad2.webp",
+        serious: A + "/char/Sola/sola_serious.webp",
+        thankful: A + "/char/Sola/sola_thankful.webp",
       },
       initial: "sad",
       byNode: {
@@ -720,9 +720,9 @@ const THEME = {
     },
     lumi: {
       char: {
-        sad: A + "/char/Lumi/lumi_sad.png",
-        confused: A + "/char/Lumi/lumi_confused.png",
-        happy: A + "/char/Lumi/lumi_happy.png",
+        sad: A + "/char/Lumi/lumi_sad.webp",
+        confused: A + "/char/Lumi/lumi_confused.webp",
+        happy: A + "/char/Lumi/lumi_happy.webp",
       },
       initial: "sad",
       byNode: {},
@@ -1279,7 +1279,7 @@ function blipSound(speaker) {
     // 하티 가이드바 (일반 하티 박스와 동일 룩)
     const guidebar = ce("div", "ms-guidebar");
     const hati = ce("img", "ms-hati");
-    hati.src = A + "/char/Hati/hati_explaining.png";
+    hati.src = A + "/char/Hati/hati_explaining.webp";
     hati.alt = "하티";
     hati.addEventListener("error", () => (hati.style.visibility = "hidden"));
     const gbody = ce("div", "ms-guide-body");

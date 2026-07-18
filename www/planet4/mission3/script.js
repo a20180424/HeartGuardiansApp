@@ -630,7 +630,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      sideImageLeft: A + "/planet4/heart-connect-space.png",
+      sideImageLeft: A + "/planet4/heart-connect-space.webp",
       text: "하트 커넥트를 복원하라!다섯 공감 원석을 깨워서 공감 다이아몬드를 완성하자!\n누군가의 마음과 또 다른 마음이 연결될 때 비로소 하트 커넥트는 빛날 수 있어!",
       next: "p4_m3_play",
     },
@@ -676,22 +676,22 @@ function blipAt(text, index) {
    (React useEffect cleanup 과 동일 의미 — setPhase 가 이전 phase 의 cleanup 을 먼저 호출).
    ========================================================================== */
 const HC_ASSET = A + "/planet4";
-const HC_IMG_DIAMOND = HC_ASSET + "/empathy-diamond.png";
+const HC_IMG_DIAMOND = HC_ASSET + "/empathy-diamond.webp";
 const HC_IMG_VIDEO = HC_ASSET + "/heart-connect-ending.mp4";
-const HC_IMG_SUCCESS_BG = HC_ASSET + "/success-bg.png";
-const HC_IMG_TITLE_BANNER = HC_ASSET + "/title-banner.png";
-const HC_IMG_SUCCESS_BANNER = HC_ASSET + "/mission-success-banner.png";
-const HC_HATI_PONDERING = HC_ASSET + "/hati-pondering.png";
-const HC_HATI_PROPOSING = HC_ASSET + "/hati-proposing.png";
-const HC_HATI_DEFAULT = HC_ASSET + "/hati-default.png";
+const HC_IMG_SUCCESS_BG = HC_ASSET + "/success-bg.webp";
+const HC_IMG_TITLE_BANNER = HC_ASSET + "/title-banner.webp";
+const HC_IMG_SUCCESS_BANNER = HC_ASSET + "/mission-success-banner.webp";
+const HC_HATI_PONDERING = HC_ASSET + "/hati-pondering.webp";
+const HC_HATI_PROPOSING = HC_ASSET + "/hati-proposing.webp";
+const HC_HATI_DEFAULT = HC_ASSET + "/hati-default.webp";
 
 // 후일담 배경(크로스페이드 순서: earth1→2→3 → school → classroom)
 const HC_EPILOGUE_BG = {
-  earth1: HC_ASSET + "/earth-1.png",
-  earth2: HC_ASSET + "/earth-2.png",
-  earth3: HC_ASSET + "/earth-3.png",
-  school: HC_ASSET + "/school.png",
-  classroom: HC_ASSET + "/classroom.png",
+  earth1: HC_ASSET + "/earth-1.webp",
+  earth2: HC_ASSET + "/earth-2.webp",
+  earth3: HC_ASSET + "/earth-3.webp",
+  school: HC_ASSET + "/school.webp",
+  classroom: HC_ASSET + "/classroom.webp",
 };
 const HC_EPILOGUE_BG_ORDER = ["earth1", "earth2", "earth3", "school", "classroom"];
 
@@ -712,35 +712,35 @@ const HC_STORY_LINES = [
 const HC_MISSIONS = [
   {
     gem: "이해의 사파이어",
-    image: HC_ASSET + "/gem-sapphire-understanding.png",
+    image: HC_ASSET + "/gem-sapphire-understanding.webp",
     text: "친구가 발표를 앞두고 손을 떨고 있어. 어떤 마음인지 이해해 볼까?",
     options: ["발표가 싫은가 봐.", "많이 긴장되고 떨리겠구나.", "연습을 안 했나 봐."],
     correct: 1,
   },
   {
     gem: "관찰의 호박석",
-    image: HC_ASSET + "/gem-amber-observation.png",
+    image: HC_ASSET + "/gem-amber-observation.webp",
     text: "쉬는 시간, 한 친구가 혼자 창밖만 보고 있어. 어떻게 말하는 것이 좋을까?",
     options: ["표정이 조금 어두워 보여. 무슨 일 있어?", "왜 혼자 있어?", "같이 놀기 싫은가 봐."],
     correct: 0,
   },
   {
     gem: "경청의 토파즈",
-    image: HC_ASSET + "/gem-topaz-listening.png",
+    image: HC_ASSET + "/gem-topaz-listening.webp",
     text: "친구가 속상한 일을 이야기하기 시작했어.",
     options: ["내 이야기도 들어 봐.", "그건 별일 아니야.", "응, 천천히 말해 줘. 내가 듣고 있어."],
     correct: 2,
   },
   {
     gem: "표현의 루비",
-    image: HC_ASSET + "/gem-ruby-expression.png",
+    image: HC_ASSET + "/gem-ruby-expression.webp",
     text: "열심히 준비했지만 결과가 좋지 않아 속상하다는 친구에게 어떻게 말할까?",
     options: ["많이 노력했는데 속상했겠다.", "다음엔 잘하면 되지.", "울지 마."],
     correct: 0,
   },
   {
     gem: "용기의 에메랄드",
-    image: HC_ASSET + "/gem-emerald-courage.png",
+    image: HC_ASSET + "/gem-emerald-courage.webp",
     text: "전학 온 친구에게 먼저 다가가고 싶지만 망설여져.",
     options: ["괜히 어색해질 거야.", "용기 내서 함께 인사해 보자.", "그냥 기다리면 돼."],
     correct: 1,
@@ -1385,7 +1385,7 @@ const HeartConnectStage = (function () {
   };
 
   // 배경은 정적(theme.bg.byNode 가 전 노드에서 동일한 "main" 을 가리킨다) — 1회만 세팅.
-  els.bg.src = A + "/planet4/heart-connect-interior-bg.png";
+  els.bg.src = A + "/planet4/heart-connect-interior-bg.webp";
 
   // ---------- 상태(vm) — MissionPlayer VM 중 이 미션이 쓰는 필드만 ----------
   const vm = {

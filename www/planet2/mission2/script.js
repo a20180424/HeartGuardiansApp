@@ -535,8 +535,8 @@ const MISSION = {
       noAuto: true,
       text: "내 감정을 다양한 말로 표현할수록 내 마음을 더 잘 이해하게 되고, 친구의 마음도 더 잘 알아차려 공감할 수 있어!",
       cards: [
-        { image: A + "/planet2/fog-planet-empathy-card-3.png" },
-        { image: A + "/planet2/fog-planet-empathy-card-4.png" },
+        { image: A + "/planet2/fog-planet-empathy-card-3.webp" },
+        { image: A + "/planet2/fog-planet-empathy-card-4.webp" },
       ],
       next: "p2_m2_end",
     },
@@ -562,27 +562,27 @@ const THEME = {
   bannerNode: "p2_m2_intro",
   initialFriend: "placeholder",
   bg: {
-    states: { main: A + "/bg/fog-planet-stage1.png" },
+    states: { main: A + "/bg/fog-planet-stage1.webp" },
     initial: "main",
     byNode: {},
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {},
   },
   friends: {
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -848,7 +848,7 @@ const EmpathyRadarStage = (function () {
 
   function buildInventory() {
     const inv = el("div", { class: "er-inventory" });
-    inv.appendChild(el("img", { class: "er-assembler", src: ER_ASSET + "/radar-assembler.png", alt: "공감 레이더 조립기" }));
+    inv.appendChild(el("img", { class: "er-assembler", src: ER_ASSET + "/radar-assembler.webp", alt: "공감 레이더 조립기" }));
     partEls = {};
     ER_SLOT_POS.forEach((pos, i) => {
       const partId = i + 1;
@@ -856,7 +856,7 @@ const EmpathyRadarStage = (function () {
       wrap.appendChild(
         el("img", {
           class: "er-part-img",
-          src: ER_ASSET + "/radar-part-" + partId + ".png",
+          src: ER_ASSET + "/radar-part-" + partId + ".webp",
           alt: "부품 " + partId,
           style: "animation-delay:" + (i % 4) * 0.3 + "s",
         }),
@@ -1348,7 +1348,7 @@ const EmpathyRadarStage = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

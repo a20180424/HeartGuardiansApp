@@ -676,7 +676,7 @@ button {
     0 8px 0 #3c7400,
     0 12px 20px rgba(0, 0, 0, 0.4);
 }
-/* 이미지 전용 버튼(finish.image = shadow-planet-move-banner.png): 버튼 크롬(배경·패딩·그림자)
+/* 이미지 전용 버튼(finish.image = shadow-planet-move-banner.webp): 버튼 크롬(배경·패딩·그림자)
    제거하고 이미지 하나만 — 이미지 자체에 라벨 텍스트가 그려져 있다. */
 #nextBtn.img-only {
   background: none;
@@ -774,7 +774,7 @@ button {
   width: 1280px;
   height: 800px;
   transform: translate(-50%, -50%) scale(var(--ec-scale));
-  background: #09031b url("/assets/planet4/shadow-spaceship-bg.png") center / 100% 100%
+  background: #09031b url("/assets/planet4/shadow-spaceship-bg.webp") center / 100% 100%
     no-repeat;
 }
 .ec-overlay button {

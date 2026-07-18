@@ -726,7 +726,7 @@ button {
    "/assets/planet4/..." 절대경로 그대로 유지해도 사이트 루트 기준으로 정상 동작한다).
    #minigameLayer(#stage 자식) 안에 .cc-root 를 마운트한다.
    원본: #stage(1920×1200) 위 1280×800 프레임을 scale(1.5)로 정확히 채운다.
-   배경은 깔지 않는다 — 엔진 #bg(shadow-mission2-bg2.png)가 그대로 비쳐야 한다.
+   배경은 깔지 않는다 — 엔진 #bg(shadow-mission2-bg2.webp)가 그대로 비쳐야 한다.
    ========================================================================== */
 .cc-root {
   position: absolute;
@@ -1035,7 +1035,7 @@ button {
   height: 255px;
   padding: 0;
   border: 0;
-  background: url("/assets/planet4/compass-dial.png") center/contain no-repeat;
+  background: url("/assets/planet4/compass-dial.webp") center/contain no-repeat;
   cursor: pointer;
   filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 24px #913bff);
 }

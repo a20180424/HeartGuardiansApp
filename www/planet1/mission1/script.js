@@ -529,8 +529,8 @@ const MISSION = {
       id: "m1_end2", type: "line", noAuto: true, speaker: "hati", hideFriend: true,
       text: "공감은 친구의 마음을 함부로 판단하지 않고, 알려고 노력하고, 그 마음을 이해해 주는 것이란다",
       cards: [
-        { image: A + "/planet1/light-planet-empathy-card-1.png" },
-        { image: A + "/planet1/light-planet-empathy-card-2.png" },
+        { image: A + "/planet1/light-planet-empathy-card-1.webp" },
+        { image: A + "/planet1/light-planet-empathy-card-2.webp" },
       ],
       next: "m1_end3",
     },
@@ -545,20 +545,20 @@ const THEME = {
   initialFriend: "lumi",
   drag: { node: "m1_q4_choice" }, // q4: 카드를 루미에게 드래그(탭도 fallback)
   bg: {
-    states: { stage1: A + "/bg/light-planet-stage1-bg.png", stage2: A + "/bg/light-planet-stage2.png" },
+    states: { stage1: A + "/bg/light-planet-stage1-bg.webp", stage2: A + "/bg/light-planet-stage2.webp" },
     initial: "stage1",
     byNode: { m1_intro: "stage1", m1_end3: "stage2" },
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {
@@ -582,11 +582,11 @@ const THEME = {
   friends: {
     lumi: {
       char: {
-        sad: A + "/char/Lumi/lumi_sad.png",
-        confused: A + "/char/Lumi/lumi_confused.png",
-        sick: A + "/char/Lumi/lumi_sick.png",
-        happy: A + "/char/Lumi/lumi_happy.png",
-        recovered: A + "/char/Lumi/lumi_recovered.png",
+        sad: A + "/char/Lumi/lumi_sad.webp",
+        confused: A + "/char/Lumi/lumi_confused.webp",
+        sick: A + "/char/Lumi/lumi_sick.webp",
+        happy: A + "/char/Lumi/lumi_happy.webp",
+        recovered: A + "/char/Lumi/lumi_recovered.webp",
       },
       initial: "sad",
       byNode: {
@@ -602,11 +602,11 @@ const THEME = {
   },
   radar: {
     states: {
-      p25: A + "/device/radar_25.png",
-      p50: A + "/device/radar_50.png",
-      p75: A + "/device/radar_75.png",
-      p100: A + "/device/radar_100.png",
-      active: A + "/device/radar_active.png",
+      p25: A + "/device/radar_25.webp",
+      p50: A + "/device/radar_50.webp",
+      p75: A + "/device/radar_75.webp",
+      p100: A + "/device/radar_100.webp",
+      active: A + "/device/radar_active.webp",
     },
     initial: "p100",
     byNode: {

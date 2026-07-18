@@ -67,7 +67,7 @@ button {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: url("../../assets/bg/light-planet-stage1.png") center / cover no-repeat;
+  background: url("../../assets/bg/light-planet-stage1.webp") center / cover no-repeat;
 }
 
 /* ① 타이틀 배너 */
