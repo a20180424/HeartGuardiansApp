@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하트가디언즈 — 빛의 행성 프롤로그</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- #stage: 1280×800 좌표계, px 절대배치 (R1) -->
+    <div id="stage">
+      <!-- 프롤로그 — 정적 레이아웃(PrologueTemplate.tsx 이식, planet1 값 인라인).
+           원본은 9개 요소 공용 템플릿이지만 planet1은 색이 기본값이라 modifier 없이 사용. -->
+      <div class="prologue">
+        <!-- ① 타이틀 배너 -->
+        <div class="prologue__title">
+          <img class="prologue__title-star" src="../../assets/icon/star.png" alt="" />
+          <span class="prologue__title-text">빛의 행성</span>
+        </div>
+
+        <!-- ③ 하티 + 말풍선 -->
+        <div class="prologue__hati">
+          <img
+            class="prologue__hati-img"
+            src="../../assets/char/Hati/hati_robot_worried.png"
+            alt="하티"
+          />
+          <div class="prologue__bubble">
+            <span class="prologue__nametag">하티</span>
+            <p class="prologue__bubble-text">
+              빛의 행성이 어두워졌어!<br />주민들이 서로의 마음 신호를<br />알아채지 못해 '이해의 빛'이<br />점점 사라지고 있어. 친구의<br />마음을 이해하는 방법을 배우고,<br />미션을 해결해서 빛의 행성의<br />밝은 빛을 되찾아 보자!
+            </p>
+          </div>
+        </div>
+
+        <!-- ② 학습 목표 -->
+        <section class="info-panel prologue__goals">
+          <header class="info-panel__head">🎯 학습 목표</header>
+          <ul class="prologue__goal-list">
+            <li>
+              <span class="prologue__goal-star">⭐</span>
+              <span>공감의 뜻과 공감이 필요한 까닭을 이해한다.</span>
+            </li>
+            <li>
+              <span class="prologue__goal-star">⭐</span>
+              <span>공감하는 말과 행동이 상황에 따라 다르게 받아들여질 수도 있음을 이해한다.</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ⑤ 획득 가능한 보상 -->
+        <section class="info-panel prologue__rewards">
+          <header class="info-panel__head">✨ 획득 가능한 보상</header>
+          <ul class="prologue__reward-list">
+            <li>
+              <img class="prologue__reward-icon-img" src="../../assets/reward/gem-planet1-sapphire.png" alt="" />
+              <div class="prologue__reward-text">
+                <strong>이해의 사파이어</strong>
+                <span>빛의 행성에서 얻는 첫 번째 원석이에요.</span>
+              </div>
+            </li>
+            <li>
+              <img class="prologue__reward-icon-img" src="../../assets/reward/tool-planet1-mirror.png" alt="" />
+              <div class="prologue__reward-text">
+                <strong>공감 거울</strong>
+                <span>친구의 마음을 비추어 공감의 말을 만들어줘요.</span>
+              </div>
+            </li>
+            <li>
+              <img class="prologue__reward-icon-img" src="../../assets/reward/energy.png" alt="" />
+              <div class="prologue__reward-text">
+                <strong>공감 에너지 경험치</strong>
+                <span>공감 에너지를 모아 레벨을 올릴 수 있어요.</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ⑥ 오늘의 탐험 패널 (+ ⑦ 시작 버튼) -->
+        <section class="prologue__quest">
+          <span class="prologue__quest-tab">오늘의 탐험</span>
+          <img class="prologue__quest-mascot" src="../../assets/char/planet1-lumi.png" alt="루미" />
+          <div class="prologue__quest-body">
+            <h2 class="prologue__quest-title">사라진 이해의 빛을 찾아라!</h2>
+            <p class="prologue__quest-sub">친구의 마음을 이해하며 공감의 첫걸음을 시작해 보세요!</p>
+            <button type="button" class="btn prologue__start" id="prologue-start">탐험 시작!</button>
+          </div>
+        </section>
+
+        <!-- ⑨ 우주선으로 이동 (홈 복귀) -->
+        <button type="button" class="prologue__home" id="prologue-home">
+          <img class="prologue__home-icon" src="../../assets/char/SpaceshipIcon.png" alt="" />
+          <span>우주선으로 이동</span>
+        </button>
+
+        <!-- ⑧ 미션 흐름(스텝) 인디케이터 -->
+        <ol class="prologue__steps">
+          <li class="prologue__step">
+            <span class="prologue__step-num">1</span>
+            <span class="prologue__step-label">마음 신호 탐색하기</span>
+            <span class="prologue__step-arrow" aria-hidden="true">➔</span>
+          </li>
+          <li class="prologue__step">
+            <span class="prologue__step-num">2</span>
+            <span class="prologue__step-label">얼어붙은 공감 거울 깨우기</span>
+            <span class="prologue__step-arrow" aria-hidden="true">➔</span>
+          </li>
+          <li class="prologue__step">
+            <span class="prologue__step-num">3</span>
+            <span class="prologue__step-label">공감없는 세상으로</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- DEV 전용 테스트 계정. gitignore된 www/dev-config.js가 있을 때만 로드(없으면 무시). -->
+    <script src="../../dev-config.js" onerror="this.remove()"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
