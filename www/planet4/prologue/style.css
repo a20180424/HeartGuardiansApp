@@ -1,0 +1,638 @@
+/* ==========================================================================
+   R1 공통 뼈대 (페이지마다 복사) — FixedStage 인라인 (1280×800 씬)
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* hidden 속성이 author display 규칙을 확실히 이기게 한다. */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1280px;
+  height: 800px;
+  transform-origin: center;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   공통 폰트/버튼 (React 앱 global.css 이식) — 씬 텍스트·버튼 룩
+   ========================================================================== */
+@font-face {
+  font-family: "BMJUA";
+  src: url("../../assets/font/BMJUA.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  color: #fff;
+  font-family: "BMJUA", "Pretendard", system-ui, -apple-system, sans-serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   프롤로그 씬 (src/scenes/planet/prologue/Prologue.css 이식, planet1 검증본 복사)
+   경로: /assets/... → ../../assets/...
+   기본 변수는 planet1(골드/오렌지) 값 — 아래 .prologue--planet4 가 그림자 행성 색/배경으로 덮는다.
+   ========================================================================== */
+.prologue {
+  /* 행성색 — 기본값(planet1): 따뜻한 골드/오렌지. .prologue--planet4 가 덮어씀. */
+  --planet-accent: #ef8b2c;
+  --planet-accent-deep: #c2410c;
+  --planet-panel-bg: #fff7ec;
+  --planet-tab: #ef4444; /* '오늘의 탐험' 탭 */
+
+  /* 무대(1280×800)를 채운다. 절대배치 자식들의 기준 컨테이너. */
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: url("../../assets/bg/light-planet-stage1.png") center / cover no-repeat;
+}
+
+/* ① 타이틀 배너 */
+.prologue__title {
+  position: absolute;
+  top: 28px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 3px solid var(--planet-accent);
+  border-radius: 40px;
+  padding: 14px 26px 14px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+  font-size: 36px;
+  color: var(--planet-accent-deep);
+  white-space: nowrap;
+}
+/* BMJUA는 글리프가 라인박스 위쪽에 치우쳐 그려짐 → line-height를 줄여 광학적 중앙 정렬.
+   남는 미세 오차는 translateY로 보정. */
+.prologue__title-text {
+  line-height: 1;
+  transform: translateY(2px);
+}
+
+/* 입체 별 아이콘 (행성 공통 골드 별) */
+.prologue__title-star {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+/* ③ 하티 + 말풍선 (좌측 중앙) */
+.prologue__hati {
+  position: absolute;
+  left: -50px;
+  top: 140px;
+  display: flex;
+  align-items: flex-start;
+}
+.prologue__hati-img {
+  width: 400px;
+  height: auto;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.3));
+}
+.prologue__bubble {
+  position: relative;
+  margin-top: 66px;
+  margin-left: -78px;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 22px 18px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+}
+.prologue__bubble::after {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 40px;
+  border: 10px solid transparent;
+  border-right-color: #fff;
+}
+/* 이름표 — 색 고정(하티 브랜드 그린)이지만 CSS로 구성 */
+.prologue__nametag {
+  position: absolute;
+  top: -16px;
+  left: 18px;
+  background: #3a9d4a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 4px 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.prologue__bubble-text {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #2b2b2b;
+}
+
+/* ②⑤ 공용 정보 패널 (우측) */
+.info-panel {
+  position: absolute;
+  width: 360px;
+  background: var(--planet-panel-bg);
+  border: 3px solid var(--planet-accent);
+  border-radius: 22px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+.info-panel__head {
+  /* 행성색 위에 위쪽 하이라이트 + 아래쪽 음영 → 광택 있는 입체 헤더 */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0) 45%,
+      rgba(0, 0, 0, 0.12)
+    ),
+    var(--planet-accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 32px;
+  text-align: left;
+  padding: 8px 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ② 학습 목표 */
+.prologue__goals {
+  top: 40px;
+  right: 44px;
+  box-shadow:
+    0 0 0 2px #fff7ec,
+    0 6px 18px rgba(0, 0, 0, 0.18);
+}
+.prologue__goal-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+.prologue__goal-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #3a2b1a;
+}
+.prologue__goal-star {
+  flex: none;
+}
+
+/* ⑤ 획득 가능한 보상 */
+.prologue__rewards {
+  top: 300px;
+  right: 44px;
+  box-shadow:
+    0 0 0 2px #fff7ec,
+    0 6px 18px rgba(0, 0, 0, 0.18);
+}
+.prologue__reward-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.prologue__reward-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.prologue__reward-icon {
+  flex: none;
+  font-size: 34px;
+  line-height: 1.1;
+}
+.prologue__reward-icon-img {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+.prologue__reward-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.prologue__reward-text strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--planet-accent-deep);
+}
+.prologue__reward-text span {
+  font-size: 14px;
+  line-height: 1.35;
+  color: #5b4a38;
+}
+
+/* ⑥ 오늘의 탐험 패널 (좌하단) */
+.prologue__quest {
+  position: absolute;
+  left: 36px;
+  bottom: 74px;
+  width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--planet-panel-bg);
+  border: 3px solid var(--planet-accent);
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  padding: 22px 24px 20px;
+}
+/* 탭 라벨 — 행성색 */
+.prologue__quest-tab {
+  position: absolute;
+  top: -18px;
+  left: 26px;
+  background: var(--planet-accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 6px 18px;
+  border-radius: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
+}
+.prologue__quest-mascot {
+  flex: none;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+}
+.prologue__quest-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.prologue__quest-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--planet-accent-deep);
+}
+.prologue__quest-sub {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #5b4a38;
+}
+
+/* ⑦ 시작 버튼 (⑥ 패널 안, .btn 재사용) */
+.prologue__start {
+  font-size: 26px;
+  padding: 14px 40px;
+}
+
+/* ⑨ 우주선으로 이동 (우하단) */
+.prologue__home {
+  position: absolute;
+  right: 36px;
+  bottom: 86px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: none;
+  border-radius: 40px;
+  padding: 10px 22px 10px 12px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1f2937;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+.prologue__home:active {
+  transform: translateY(2px);
+}
+.prologue__home-icon {
+  width: 78px;
+  height: 58px;
+  object-fit: contain;
+}
+
+/* ⑧ 미션 흐름(스텝) 인디케이터 (하단 가로 띠) */
+.prologue__steps {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 54px;
+  margin: 0;
+  padding: 0 24px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(28, 22, 14, 0.55);
+  backdrop-filter: blur(2px);
+}
+.prologue__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+}
+.prologue__step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--planet-accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+}
+.prologue__step-arrow {
+  margin-left: 8px;
+  color: var(--planet-accent);
+  font-size: 18px;
+}
+
+/* ==========================================================================
+   Planet4(그림자 행성) 오버라이드 (src/scenes/planet/planet4/Prologue.css 이식)
+   레이아웃은 위 기본 .prologue 규칙을 그대로 쓰고, 포인트 색과 배경만 바꾼다.
+   .prologue.prologue--planet4 로 specificity(0,2,0)를 높여 기본값을 확실히 이긴다.
+   ========================================================================== */
+.prologue.prologue--planet4 {
+  --planet-accent: #7c3aed;
+  --planet-accent-deep: #4c1d95;
+  --planet-panel-bg: #f3f0fb;
+  --planet-tab: #a855f7;
+  background: url("../../assets/planet4/shadow-planet-bg.png") center / cover no-repeat;
+}
+
+/* 공용 버튼(.btn) — global.css 이식. 탐험 시작 버튼(.prologue__start)이 재사용한다.
+   원본 React는 global.css를 Prologue.css보다 뒤에 로드해, 동일 특이도인 .btn 이
+   .prologue__start 의 font-size/padding 오버라이드를 이긴다(22px/16px 28px 적용).
+   그 로드 순서를 재현하려고 .btn 을 프롤로그 규칙 '뒤'에 둔다 — 원본과 픽셀 동일
+   (planet1 Task 5에서 확정한 규율 — 이후 모든 planetN 프롤로그가 이 순서를 유지한다). */
+.btn {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  font-size: 22px;
+  box-shadow: 0 6px 0 #5b21b6;
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #5b21b6;
+}
+
+/* ==========================================================================
+   공통 블록 A — 씬 전환 페이드 오버레이 (script.js fadeNav 가 토글) — 검증본 복사
+   ========================================================================== */
+#scene-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* 히든 메뉴(10001)보다 아래, 그 외 모두 위 */
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease; /* FADE_MS = 160 (원본과 동일) */
+}
+#scene-fade.is-on {
+  opacity: 1;
+  pointer-events: auto; /* 전환 중 입력 차단 */
+}
+
+/* ==========================================================================
+   공통 블록 B — 음소거 버튼 (src/lib/mute-button.css 이식) — 검증본 복사
+   ========================================================================== */
+.mute-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 9000;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.mute-btn:hover,
+.mute-btn:focus-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   공통 블록 C — 교사용 히든 점프 메뉴 (src/lib/hidden-menu.css 이식) — 검증본 복사
+   앱 루트(무대 바깥)에 뜨는 전역 오버레이라 #stage 좌표계와 무관하다.
+   ========================================================================== */
+.hidden-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: system-ui, sans-serif;
+}
+
+.hidden-menu__panel {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #12161f;
+  color: #e8eef8;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hidden-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.hidden-menu__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hidden-menu__pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+}
+
+.hidden-menu__dots {
+  display: flex;
+  gap: 12px;
+}
+
+.hidden-menu__dots span {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #4a5a70;
+  border-radius: 50%;
+}
+
+.hidden-menu__dots span.on {
+  background: #e8eef8;
+  border-color: #e8eef8;
+}
+
+.hidden-menu__wrong {
+  margin: 0;
+  color: #ff8a8a;
+  font-size: 14px;
+}
+
+.hidden-menu__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+}
+
+.hidden-menu__keys button {
+  height: 56px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.hidden-menu__keys button:active {
+  background: #36435c;
+}
+
+.hidden-menu__warn {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #7a5a20;
+  border-radius: 8px;
+  background: #3a2a10;
+  color: #ffd479;
+  font-size: 14px;
+}
+
+.hidden-menu__grid {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.hidden-menu__col,
+.hidden-menu__row {
+  font-size: 13px;
+  color: #9fb0c8;
+}
+
+.hidden-menu__col {
+  text-align: center;
+}
+
+.hidden-menu__grid button {
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hidden-menu__grid button:active {
+  background: #36435c;
+}
+
+.hidden-menu__grid .hidden-menu__empty {
+  height: 48px;
+}
+
+.hidden-menu__common {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hidden-menu__common button {
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__common button:active {
+  background: #36435c;
+}
+
+.hidden-menu__home {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f5d3a;
+  color: #e8eef8;
+  font-size: 15px;
+  cursor: pointer;
+}
