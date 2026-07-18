@@ -1,17 +1,21 @@
 // Build a debug APK and install it on the connected device.
 //   npm run apk              sync www/ -> assembleDebug -> adb install -> launch
 //   npm run apk -- --no-launch   install but don't auto-launch
+//   npm run apk -- --release     배포용: sync 후 dev-config.js(테스트 계정)를 제외하고 빌드
 //
 // 무빌드: www/ 의 정적 파일이 곧 앱이다 (webDir: "www"). 웹 빌드 단계 없음.
+// ⚠ cap sync 는 gitignore 를 무시하고 www/ 전체를 복사하므로, gitignore 된
+//   www/dev-config.js(테스트 계정)가 APK 에 딸려 들어간다. --release 로 제거한다.
 //
 // JAVA_HOME: uses the env var if set, else auto-detects Android Studio's bundled JDK.
 // Windows-focused (matches this project's dev setup) but falls back sensibly elsewhere.
 import { execSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const args = process.argv.slice(2);
 const noLaunch = args.includes("--no-launch");
+const release = args.includes("--release");
 
 const APP_ID = "com.heartguardians.app";
 const APK = join("android", "app", "build", "outputs", "apk", "debug", "app-debug.apk");
@@ -70,6 +74,18 @@ const run = (cmd, opts = {}) => {
 console.log(`JAVA_HOME    = ${javaHome}`);
 console.log(`ANDROID_HOME = ${androidHome}`);
 run("npx cap sync android");
+
+// 배포용 빌드: sync 가 복사해 넣은 테스트 계정 파일을 gradle 전에 제거한다.
+if (release) {
+  const devConfig = join("android", "app", "src", "main", "assets", "public", "dev-config.js");
+  if (existsSync(devConfig)) {
+    rmSync(devConfig);
+    console.log(`\n✔ release: removed ${devConfig} (테스트 계정 제외)`);
+  } else {
+    console.log(`\n(release: dev-config.js not present after sync — 제외할 것 없음)`);
+  }
+}
+
 run(gradlew + " assembleDebug", { cwd: "android" });
 
 if (!existsSync(APK)) {
