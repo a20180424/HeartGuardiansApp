@@ -640,8 +640,8 @@ const MISSION = {
       noAuto: true,
       text: "진짜 공감은 끝까지 들어주고, 함께 기뻐해 주는 거야.",
       cards: [
-        { image: A + "/planet3/ice-planet-empathy-card-4.png" },
-        { image: A + "/planet3/ice-planet-empathy-card-5.png" },
+        { image: A + "/planet3/ice-planet-empathy-card-4.webp" },
+        { image: A + "/planet3/ice-planet-empathy-card-5.webp" },
       ],
       next: "p3_m2_end",
     },
@@ -652,8 +652,8 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "축하해! 대원은 이제 세 번째 공감 원석인 경청의 토파즈와 표현의 루비를 얻었어! 이 원석은 친구의 마음을 귀 기울여 듣고, 따듯한 마음을 말과 행동으로 표현하는 힘을 담고 있단다.",
-      image: A + "/ui/explore-success.png",
-      cards: [{ image: A + "/ui/planet3-reward-card.png" }],
+      image: A + "/ui/explore-success.webp",
+      cards: [{ image: A + "/ui/planet3-reward-card.webp" }],
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -668,27 +668,27 @@ const THEME = {
   bannerNode: "", // 미션2는 미니게임으로 바로 시작 — 인트로 타이틀 배너 없음
   initialFriend: "placeholder",
   bg: {
-    states: { main: A + "/planet3/ice-planet-bg.png" },
+    states: { main: A + "/planet3/ice-planet-bg.webp" },
     initial: "main",
     byNode: {},
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {},
   },
   friends: {
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -1048,7 +1048,7 @@ const devStage2 = PARAMS.has("stage2");
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

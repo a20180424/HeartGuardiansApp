@@ -470,7 +470,7 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "얼음행성 친구들의 마음은 얼어붙어 있어. 공감 송신기를 사용해서 마음을 녹이려면 올바른 사용법을 알아야 해!",
-      image: A + "/planet3/empathy-transmitter.png",
+      image: A + "/planet3/empathy-transmitter.webp",
       next: "p3_m1_play",
     },
     { id: "p3_m1_play", type: "minigame", noAuto: true, game: "empathyManual", next: "p3_m1_postplay" },
@@ -481,7 +481,7 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "공감 송신기 사용 설명서가 완성 되었어!!!",
-      image: A + "/planet3/empathy-transmitter-manual.png",
+      image: A + "/planet3/empathy-transmitter-manual.webp",
       next: "p3_m1_cards",
     },
     {
@@ -492,9 +492,9 @@ const MISSION = {
       noAuto: true,
       text: "공감하는 방법은 3단계로 기억하면 돼!",
       cards: [
-        { image: A + "/planet3/ice-planet-empathy-card-1.png" },
-        { image: A + "/planet3/ice-planet-empathy-card-2.png" },
-        { image: A + "/planet3/ice-planet-empathy-card-3.png" },
+        { image: A + "/planet3/ice-planet-empathy-card-1.webp" },
+        { image: A + "/planet3/ice-planet-empathy-card-2.webp" },
+        { image: A + "/planet3/ice-planet-empathy-card-3.webp" },
       ],
       next: "p3_m1_end",
     },
@@ -505,7 +505,7 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: '좋아! 이제 공감 송신기를 사용할 준비가 되었어. 하지만 공감 송신기를 작동하려면 "따듯한 말" 연료가 필요해!',
-      image: A + "/planet3/empathy-transmitter-manual.png",
+      image: A + "/planet3/empathy-transmitter-manual.webp",
       completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
@@ -523,27 +523,27 @@ const THEME = {
   bannerNode: "p3_m1_intro",
   initialFriend: "placeholder",
   bg: {
-    states: { main: A + "/planet3/prologue-bg.png" },
+    states: { main: A + "/planet3/prologue-bg.webp" },
     initial: "main",
     byNode: { p3_m1_intro: "main" },
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {},
   },
   friends: {
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -1124,7 +1124,7 @@ const EmpathyManualGame = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

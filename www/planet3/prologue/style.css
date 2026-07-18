@@ -67,7 +67,7 @@ button {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: url("../../assets/bg/light-planet-stage1.png") center / cover no-repeat;
+  background: url("../../assets/bg/light-planet-stage1.webp") center / cover no-repeat;
 }
 
 /* ① 타이틀 배너 */
@@ -400,7 +400,7 @@ button {
   --planet-accent-deep: #0369a1;
   --planet-panel-bg: #eef7ff;
   --planet-tab: #0ea5e9;
-  background: url("../../assets/planet3/ice-planet-bg.png") center / cover no-repeat;
+  background: url("../../assets/planet3/ice-planet-bg.webp") center / cover no-repeat;
 }
 
 /* 공용 버튼(.btn) — global.css 이식. 탐험 시작 버튼(.prologue__start)이 재사용한다.

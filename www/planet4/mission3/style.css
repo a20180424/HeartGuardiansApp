@@ -208,7 +208,7 @@ button {
   width: 100%;
 }
 
-/* ---------- 좌측 가운데 장식 이미지(노드 sideImageLeft = 하트 커넥트 우주.png) ----------
+/* ---------- 좌측 가운데 장식 이미지(노드 sideImageLeft = 하트 커넥트 우주.webp) ----------
    base(player/mission.css): left:40px; top:50%; transform:translateY(-50%); height:92%.
    planet4/Mission.css .p4_m3 오버라이드 최종값(left/top/height + scaleX(-1) 좌우반전)을
    그대로 반영. 인트로(p4_m3_intro) 에서만 표시. */
@@ -405,7 +405,7 @@ button {
    미니게임: 하트 커넥트 : 마지막 연결 (HeartConnectStage.css 이식, 원본 그대로).
    #minigameLayer(#stage 자식) 안에 .hc-root 를 마운트한다.
    원본: #stage(1920×1200) 위 1280×800 프레임을 scale(1.5)로 정확히 채운다(원본 px 좌표 재사용).
-   퀴즈 배경은 깔지 않는다 — 엔진 #bg(heart-connect-interior-bg.png)가 비쳐야 한다.
+   퀴즈 배경은 깔지 않는다 — 엔진 #bg(heart-connect-interior-bg.webp)가 비쳐야 한다.
    ========================================================================== */
 .hc-root {
   position: absolute;
@@ -616,7 +616,7 @@ button {
   display: grid;
   place-items: center;
   padding: 24px;
-  /* 배경을 칠하지 않는다 — 엔진 #bg(heart-connect-interior-bg.png)와 상단 스테퍼가 비쳐야 한다. */
+  /* 배경을 칠하지 않는다 — 엔진 #bg(heart-connect-interior-bg.webp)와 상단 스테퍼가 비쳐야 한다. */
   --hc-green: #64f6ad;
   --hc-mint: #caffdf;
   --hc-blue: #58b9ff;

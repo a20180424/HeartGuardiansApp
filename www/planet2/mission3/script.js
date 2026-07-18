@@ -640,8 +640,8 @@ const MISSION = {
       noAuto: true,
       text: "같은 감정도 사람마다 표현하는 방법은 달라. 그래서 우리는 겉모습만 보고 판단하면 안돼!",
       cards: [
-        { image: A + "/planet2/fog-planet-empathy-card-5.png" },
-        { image: A + "/planet2/fog-planet-empathy-card-6.png" },
+        { image: A + "/planet2/fog-planet-empathy-card-5.webp" },
+        { image: A + "/planet2/fog-planet-empathy-card-6.webp" },
       ],
       next: "p2_m3_result",
     },
@@ -671,8 +671,8 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "축하해! 대원은 이제 두 번째 공감 원석인 관찰의 호박석을 얻었어! 이 원석은 다른 사람들의 숨겨진 감정 신호를 찾아주는 힘을 담고 있단다.",
-      image: A + "/ui/explore-success.png",
-      cards: [{ image: A + "/ui/planet2-reward-card.png" }],
+      image: A + "/ui/explore-success.webp",
+      cards: [{ image: A + "/ui/planet2-reward-card.webp" }],
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -687,27 +687,27 @@ const THEME = {
   bannerNode: "p2_m3_intro",
   initialFriend: "placeholder",
   bg: {
-    states: { main: A + "/bg/fog-planet-stage1.png" },
+    states: { main: A + "/bg/fog-planet-stage1.webp" },
     initial: "main",
     byNode: {},
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {},
   },
   friends: {
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -715,14 +715,14 @@ const THEME = {
   // 무대(플레이트) 위 캐릭터 세트 — 미션3 전 구간 상시 표시. p2_m3_result 부터 3명 개별
   // 무표정을 웃는 3인 1장으로 교체(sparse — 이후 result2·end 에서도 유지).
   cast: {
-    platform: A + "/planet2/cast-platform.png",
+    platform: A + "/planet2/cast-platform.webp",
     members: [
-      { img: A + "/planet2/cast-mira-blank.png", name: "미라" },
-      { img: A + "/planet2/cast-arji-blank.png", name: "아르지" },
-      { img: A + "/planet2/cast-nubi-blank.png", name: "누비" },
+      { img: A + "/planet2/cast-mira-blank.webp", name: "미라" },
+      { img: A + "/planet2/cast-arji-blank.webp", name: "아르지" },
+      { img: A + "/planet2/cast-nubi-blank.webp", name: "누비" },
     ],
     byNode: {
-      p2_m3_result: [{ img: A + "/planet2/cast-trio-smile.png" }],
+      p2_m3_result: [{ img: A + "/planet2/cast-trio-smile.webp" }],
     },
   },
   fx: { fx_light_return: "lightReturn" },
@@ -775,15 +775,15 @@ const HE_MISSIONS = [
     answer: "속상함",
     feedback:
       "겉으로는 웃는 얼굴만 보면 아르지가 기쁘다고 생각하기 쉬워. 하지만 행동과 상황을 함께 보면, 사실은 속상한 마음을 숨기고 있다는 걸 알 수 있어.",
-    resultImage: HE_ASSET + "/arji-feeling.png",
+    resultImage: HE_ASSET + "/arji-feeling.webp",
     resultFeedback:
       "기대했던 것보다 시험 결과가 좋지 못해서 속상했어. 하지만 친구들에게 나의 마음을 이야기하기가 싫었어. 내 마음을 알아줘서 고마워!",
     cards: [
-      { text: "아르지는 기대하는 눈빛으로 시험 결과를 확인하고 있어요.", art: HE_ASSET + "/arji-card-1.png" },
-      { text: "친구에게 시험을 잘 봤다고 얘기하고 있어요.", art: HE_ASSET + "/arji-card-2.png" },
-      { text: "시험지를 금방 접었어요.", art: HE_ASSET + "/arji-card-3.png" },
-      { text: "시험지를 가방 맨 밑에 넣었어요.", art: HE_ASSET + "/arji-card-4.png" },
-      { text: "쉬는 시간 내내 창밖만 바라봤어요.", art: HE_ASSET + "/arji-card-5.png" },
+      { text: "아르지는 기대하는 눈빛으로 시험 결과를 확인하고 있어요.", art: HE_ASSET + "/arji-card-1.webp" },
+      { text: "친구에게 시험을 잘 봤다고 얘기하고 있어요.", art: HE_ASSET + "/arji-card-2.webp" },
+      { text: "시험지를 금방 접었어요.", art: HE_ASSET + "/arji-card-3.webp" },
+      { text: "시험지를 가방 맨 밑에 넣었어요.", art: HE_ASSET + "/arji-card-4.webp" },
+      { text: "쉬는 시간 내내 창밖만 바라봤어요.", art: HE_ASSET + "/arji-card-5.webp" },
     ],
     emotions: ["기쁨", "속상함", "아무렇지 않음", "신남"],
   },
@@ -793,15 +793,15 @@ const HE_MISSIONS = [
     answer: "외로움",
     feedback:
       "\"안 가도 돼”라는 말만 들으면 정말 괜찮은 줄 알 수 있어. 하지만 손을 만지작거리는 행동과, 혼자만 초대받지 못한 상황을 보면 서운하고 외로운 마음이 숨어있다는 걸 알 수 있어.",
-    resultImage: HE_ASSET + "/nubi-feeling.png",
+    resultImage: HE_ASSET + "/nubi-feeling.webp",
     resultFeedback:
       "사실은... 다들 파티 얘기하니까 나만 쏙 빠진 것 같아서 조금 외로웠거든. 그런데 네가 내 마음 알아채고 먼저 말 걸어줘서 정말 고마워. 마음이 되게 편해졌어!",
     cards: [
-      { text: "친구들이 생일파티 이야기를 하는 걸 들었어요.", art: HE_ASSET + "/nubi-card-1.png" },
-      { text: "누비는 웃으며 이야기했어요.", art: HE_ASSET + "/nubi-card-2.png" },
-      { text: "손가락으로 옷자락을 만지작거렸어요.", art: HE_ASSET + "/nubi-card-3.png" },
-      { text: "친구들이 떠난 뒤에도 한참 그 자리에 있었어요.", art: HE_ASSET + "/nubi-card-4.png" },
-      { text: "자신만 초대받지 못했다고 느끼고 있어요", art: HE_ASSET + "/nubi-card-5.png" },
+      { text: "친구들이 생일파티 이야기를 하는 걸 들었어요.", art: HE_ASSET + "/nubi-card-1.webp" },
+      { text: "누비는 웃으며 이야기했어요.", art: HE_ASSET + "/nubi-card-2.webp" },
+      { text: "손가락으로 옷자락을 만지작거렸어요.", art: HE_ASSET + "/nubi-card-3.webp" },
+      { text: "친구들이 떠난 뒤에도 한참 그 자리에 있었어요.", art: HE_ASSET + "/nubi-card-4.webp" },
+      { text: "자신만 초대받지 못했다고 느끼고 있어요", art: HE_ASSET + "/nubi-card-5.webp" },
     ],
     emotions: ["외로움", "신남", "화남", "편안함"],
   },
@@ -811,15 +811,15 @@ const HE_MISSIONS = [
     answer: "미안함",
     feedback:
       "겉으로는 화를 내는 모습만 보면 미라가 짜증난다고 생각하기 쉬워. 하지만 실수한 상황과 눈을 마주치지 못하는 행동을 함께 보면, 사실은 미안한 마음을 숨기고 있다는 걸 알 수 있어.",
-    resultImage: HE_ASSET + "/mira-feeling.png",
+    resultImage: HE_ASSET + "/mira-feeling.webp",
     resultFeedback:
       "내 마음을 알아줘서 고마워! 사실은 친구한테 너무 미안했는데, 친구가 나를 싫어하게 될까 봐 겁이 났어!",
     cards: [
-      { text: "미라는 실수로 친구의 필통을 바닥에 떨궜어요.", art: HE_ASSET + "/mira-card-1.png" },
-      { text: "필통이 부서져서 친구가 깜짝 놀랐어요.", art: HE_ASSET + "/mira-card-2.png" },
-      { text: "미라는 큰소리로 화를 냈어요.", art: HE_ASSET + "/mira-card-3.png" },
-      { text: "짝꿍과 눈을 마주치지 못하고 손을 꼼지락거렸어요.", art: HE_ASSET + "/mira-card-4.png" },
-      { text: "부서진 필통을 보며 고개를 숙이고 아무말도 하지 않아요.", art: HE_ASSET + "/mira-card-5.png" },
+      { text: "미라는 실수로 친구의 필통을 바닥에 떨궜어요.", art: HE_ASSET + "/mira-card-1.webp" },
+      { text: "필통이 부서져서 친구가 깜짝 놀랐어요.", art: HE_ASSET + "/mira-card-2.webp" },
+      { text: "미라는 큰소리로 화를 냈어요.", art: HE_ASSET + "/mira-card-3.webp" },
+      { text: "짝꿍과 눈을 마주치지 못하고 손을 꼼지락거렸어요.", art: HE_ASSET + "/mira-card-4.webp" },
+      { text: "부서진 필통을 보며 고개를 숙이고 아무말도 하지 않아요.", art: HE_ASSET + "/mira-card-5.webp" },
     ],
     emotions: ["미안함", "기쁨", "자랑스러움", "심심함"],
   },
@@ -1067,7 +1067,7 @@ const HiddenEmotionStage = (function () {
     radarBtn.addEventListener("click", handleUseRadar);
     const radarBox = el("div", { class: "radar-box" }, [
       el("div", { class: "radar-image-wrap" + (scanUsed ? " scanning" : "") }, [
-        el("img", { class: "radar-image", src: HE_ASSET + "/radar.png", alt: "공감 레이더" }),
+        el("img", { class: "radar-image", src: HE_ASSET + "/radar.webp", alt: "공감 레이더" }),
       ]),
       el("div", {}, [radarBtn]),
     ]);
@@ -1110,7 +1110,7 @@ const HiddenEmotionStage = (function () {
 
     // 하티 가이드(부분 갱신 대상 — 참조 저장)
     const guideWrap = el("div", { class: "game-guide" + (hatiHidden ? " is-hidden" : "") }, [
-      el("img", { src: HE_ASSET + "/hati.png", alt: "하티" }),
+      el("img", { src: HE_ASSET + "/hati.webp", alt: "하티" }),
       el("div", { class: "game-guide-bubble", text: hatiText }),
     ]);
     screenEl.appendChild(guideWrap);
@@ -1546,7 +1546,7 @@ const HiddenEmotionStage = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

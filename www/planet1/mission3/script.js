@@ -632,7 +632,7 @@ const MISSION = {
       id: "m3_q1_choice", type: "choice", speaker: "hati",
       text: "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
       hideFriend: true,
-      image: A + "/char/Luna/luna_unheard1.png",
+      image: A + "/char/Luna/luna_unheard1.webp",
       choices: [
         { text: "슬픔", next: "m3_q2_choice" },
         { text: "화남", next: "m3_q2_choice" },
@@ -646,7 +646,7 @@ const MISSION = {
     {
       id: "m3_q2_choice", type: "choice",
       hideFriend: true,
-      image: A + "/char/Luna/luna_unheard2.png",
+      image: A + "/char/Luna/luna_unheard2.webp",
       choices: [
         { text: "슬픔", next: "m3_mirror1" },
         { text: "화남", next: "m3_mirror1" },
@@ -662,23 +662,23 @@ const MISSION = {
       id: "m3_mirror1", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
       text: "대원! 공감 없는 이 세상에서 행복할 수 있을까요?",
-      images: [A + "/char/Luna/luna_unheard1.png", A + "/char/Luna/luna_unheard2.png"],
+      images: [A + "/char/Luna/luna_unheard1.webp", A + "/char/Luna/luna_unheard2.webp"],
       next: "m3_mirror2",
     },
     {
       id: "m3_mirror2", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
       text: "공감 거울을 이용하여 루나의 마음을 이해해보자!",
-      images: [A + "/char/Luna/luna_unheard1.png", A + "/char/Luna/luna_unheard2.png"],
+      images: [A + "/char/Luna/luna_unheard1.webp", A + "/char/Luna/luna_unheard2.webp"],
       next: "m3_mirror3",
     },
     {
       id: "m3_mirror3", type: "reveal",
       text: "공감 거울을 터치해서 이 차가운 화면 위로 슥슥 문질러봐!",
-      mirrorImage: A + "/ui/empathy-mirror2.png",
+      mirrorImage: A + "/ui/empathy-mirror2.webp",
       pairs: [
-        { before: A + "/char/Luna/luna_unheard1.png", after: A + "/char/Luna/luna_heard1.png" },
-        { before: A + "/char/Luna/luna_unheard2.png", after: A + "/char/Luna/luna_heard2.png" },
+        { before: A + "/char/Luna/luna_unheard1.webp", after: A + "/char/Luna/luna_heard1.webp" },
+        { before: A + "/char/Luna/luna_unheard2.webp", after: A + "/char/Luna/luna_heard2.webp" },
       ],
       threshold: 0.97,
       next: "m3_lesson",
@@ -688,7 +688,7 @@ const MISSION = {
       id: "m3_lesson", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
       text: "루나의 마음을 완전히 공감 했구나!!!",
-      images: [A + "/char/Luna/luna_heard1.png", A + "/char/Luna/luna_heard2.png"],
+      images: [A + "/char/Luna/luna_heard1.webp", A + "/char/Luna/luna_heard2.webp"],
       next: "m3_card",
     },
     {
@@ -696,8 +696,8 @@ const MISSION = {
       hideFriend: true,
       text: "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
       cards: [
-        { image: A + "/planet1/light-planet-empathy-card-5.png" },
-        { image: A + "/planet1/light-planet-empathy-card-6.png" },
+        { image: A + "/planet1/light-planet-empathy-card-5.webp" },
+        { image: A + "/planet1/light-planet-empathy-card-6.webp" },
       ],
       next: "m3_complete",
     },
@@ -713,8 +713,8 @@ const MISSION = {
       id: "m3_end", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
       text: "축하해! 이제 첫 번째 공감 원석인 이해의 사파이어를 얻었어! 이 원석은 다른 사람의 마음을 이해하려는 힘을 담고 있어.",
-      image: A + "/ui/explore-success.png",
-      cards: [{ image: A + "/ui/planet1-reward-card.png" }],
+      image: A + "/ui/explore-success.webp",
+      cards: [{ image: A + "/ui/planet1-reward-card.webp" }],
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -834,8 +834,8 @@ const THEME = {
   showRadar: false,
   bg: {
     states: {
-      main: A + "/bg/mission3-main-bg.png",
-      stage4: A + "/bg/light-planet-stage4.png",
+      main: A + "/bg/mission3-main-bg.webp",
+      stage4: A + "/bg/light-planet-stage4.webp",
       black: "", // 까만 화면(동영상/거울 구간): #bg 숨김 + #stage.blackbg(#000)
     },
     initial: "main",
@@ -849,14 +849,14 @@ const THEME = {
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {
@@ -869,7 +869,7 @@ const THEME = {
   friends: {
     // 루나 아트 미확정 → 루미 스프라이트 placeholder(모든 노드 hideFriend 라 화면엔 안 보임).
     luna: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -1558,7 +1558,7 @@ function blipSound(speaker) {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

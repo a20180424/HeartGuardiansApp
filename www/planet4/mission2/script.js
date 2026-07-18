@@ -488,8 +488,8 @@ const MISSION = {
       noAuto: true,
       text: "공감하기 어려운 상황도 있어.\n지혜롭게 공감하기를 실천하자!",
       cards: [
-        { image: A + "/planet4/shadow-planet-empathy-card-3.png" },
-        { image: A + "/planet4/shadow-planet-empathy-card-4.png" },
+        { image: A + "/planet4/shadow-planet-empathy-card-3.webp" },
+        { image: A + "/planet4/shadow-planet-empathy-card-4.webp" },
       ],
       next: "p4_m2_postplay",
     },
@@ -510,8 +510,8 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "축하해! 대원은 용기의 에메랄드와 공감 나침반을 얻었어! 이제 먼저 다가갈 용기를 낼 수 있을 거야.",
-      image: A + "/ui/explore-success.png",
-      cards: [{ image: A + "/ui/planet4-reward-card.png" }],
+      image: A + "/ui/explore-success.webp",
+      cards: [{ image: A + "/ui/planet4-reward-card.webp" }],
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -529,30 +529,30 @@ const THEME = {
   bg: {
     // main = 인트로 / stage2 = 미니게임 무대 / stage3 = 공감카드·보상(엔딩까지 유지, sparse)
     states: {
-      main: A + "/planet4/shadow-mission2-bg1.png",
-      stage2: A + "/planet4/shadow-mission2-bg2.png",
-      stage3: A + "/planet4/shadow-mission2-bg3.png",
+      main: A + "/planet4/shadow-mission2-bg1.webp",
+      stage2: A + "/planet4/shadow-mission2-bg2.webp",
+      stage3: A + "/planet4/shadow-mission2-bg3.webp",
     },
     initial: "main",
     byNode: { p4_m2_intro: "main", p4_m2_play: "stage2", p4_m2_cards: "stage3" },
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {},
   },
   friends: {
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -603,11 +603,11 @@ const CC_STAGES = [
   {
     title: "다가갈 용기",
     learn: "친구의 마음은 이해해 주었지만 잘못된 행동까지 함께하지는 않았구나!",
-    shard: CC_ASSET + "/courage-shard1.png",
+    shard: CC_ASSET + "/courage-shard1.webp",
     scenarios: [
       {
         situation: "친구가 경기에서 져서 화가 났습니다.",
-        image: CC_ASSET + "/situation-1-1.png",
+        image: CC_ASSET + "/situation-1-1.webp",
         good: "괜찮은지 조심스럽게 말을 건다.",
         bad: "괜히 어색하니까 그냥 지나간다.",
         reply: "“다음에는 반칙을 해서라도 이길 거야.”",
@@ -616,7 +616,7 @@ const CC_STAGES = [
       },
       {
         situation: "친구가 놀림을 당해서 울고 있습니다.",
-        image: CC_ASSET + "/situation-1-2.png",
+        image: CC_ASSET + "/situation-1-2.webp",
         good: "무슨 일인지 차분히 들어본다.",
         bad: "모른 척 지나간다.",
         reply: "“나도 더 심하게 놀릴 거야.”",
@@ -628,11 +628,11 @@ const CC_STAGES = [
   {
     title: "존중할 용기",
     learn: "친구가 원하는 방법을 존중해 주었구나!",
-    shard: CC_ASSET + "/courage-shard2.png",
+    shard: CC_ASSET + "/courage-shard2.webp",
     scenarios: [
       {
         situation: "친구가 쉬는 시간에 혼자 창밖을 바라보고 있습니다.",
-        image: CC_ASSET + "/situation-2-1.png",
+        image: CC_ASSET + "/situation-2-1.webp",
         good: "친구 곁으로 가서 괜찮은지 물어본다.",
         bad: "“괜히 방해될 거야.” 하며 돌아선다.",
         reply: "“괜찮아. 조금만 혼자 있을게.”",
@@ -641,7 +641,7 @@ const CC_STAGES = [
       },
       {
         situation: "친구가 점심시간에 혼자서 앉아 밥을 먹고 있습니다.",
-        image: CC_ASSET + "/situation-2-2.png",
+        image: CC_ASSET + "/situation-2-2.webp",
         good: "같이 있어도 괜찮은지 물어본다.",
         bad: "모른 척 다른 자리로 간다.",
         reply: "“오늘은 혼자 먹고 싶어.”",
@@ -653,11 +653,11 @@ const CC_STAGES = [
   {
     title: "함께 해결할 용기",
     learn: "혼자 해결하기 어려울 때는 함께 도움을 요청하는 것도 용기란다.",
-    shard: CC_ASSET + "/courage-shard3.png",
+    shard: CC_ASSET + "/courage-shard3.webp",
     scenarios: [
       {
         situation: "친구가 계속 괴롭힘을 당하고 있습니다.",
-        image: CC_ASSET + "/situation-3-1.png",
+        image: CC_ASSET + "/situation-3-1.webp",
         good: "친구에게 다가가 무슨 일이 있었는지 들어본다.",
         bad: "괜히 나까지 피해를 볼까 봐 지나간다.",
         reply: "“혼자 해결하기 어려워.”",
@@ -666,7 +666,7 @@ const CC_STAGES = [
       },
       {
         situation: "친구가 물건을 잃어버려 울고 있습니다.",
-        image: CC_ASSET + "/situation-3-2.png",
+        image: CC_ASSET + "/situation-3-2.webp",
         good: "친구의 이야기를 끝까지 들어준다.",
         bad: "그냥 다시 찾으라고 한다.",
         reply: "“어떻게 해야 할지 모르겠어.”",
@@ -678,11 +678,11 @@ const CC_STAGES = [
   {
     title: "나를 지킬 용기",
     learn: "친구를 아끼는 만큼 나의 마음도 소중하단다.",
-    shard: CC_ASSET + "/courage-shard4.png",
+    shard: CC_ASSET + "/courage-shard4.webp",
     scenarios: [
       {
         situation: "친구가 매일 고민을 이야기합니다.",
-        image: CC_ASSET + "/situation-4-1.png",
+        image: CC_ASSET + "/situation-4-1.webp",
         good: "친구 이야기를 차분히 들어준다.",
         bad: "귀찮아서 피한다.",
         reply: "“앞으로도 계속 너만 내 이야기를 들어줘.”",
@@ -694,7 +694,7 @@ const CC_STAGES = [
       },
       {
         situation: "다른 친구와 다투고 화가 난 친구가 “나 쟤랑 이제 안 놀 거야!”라고 말합니다.",
-        image: CC_ASSET + "/situation-4-2.png",
+        image: CC_ASSET + "/situation-4-2.webp",
         good: "친구의 이야기를 끝까지 들어준다.",
         bad: "“그만 좀 해.” 하며 자리를 떠난다.",
         reply: "“너도 쟤랑 놀면 안 돼! 너는 내 편이야, 그렇지?”",
@@ -704,10 +704,10 @@ const CC_STAGES = [
     ],
   },
 ];
-const CC_SIGN_LEFT = { back: CC_ASSET + "/sign1-back.png", front: CC_ASSET + "/sign1-front.png" };
-const CC_SIGN_RIGHT = { back: CC_ASSET + "/sign2-back.png", front: CC_ASSET + "/sign2-front.png" };
-const CC_HATI_DEFAULT = CC_ASSET + "/hati-default.png";
-const CC_HATI_HAPPY = CC_ASSET + "/hati-clap.png";
+const CC_SIGN_LEFT = { back: CC_ASSET + "/sign1-back.webp", front: CC_ASSET + "/sign1-front.webp" };
+const CC_SIGN_RIGHT = { back: CC_ASSET + "/sign2-back.webp", front: CC_ASSET + "/sign2-front.webp" };
+const CC_HATI_DEFAULT = CC_ASSET + "/hati-default.webp";
+const CC_HATI_HAPPY = CC_ASSET + "/hati-clap.webp";
 const CC_NEEDLE_END_LEFT = 1035; // 공감의 길이 왼쪽
 const CC_NEEDLE_END_RIGHT = 1125; // 공감의 길이 오른쪽
 
@@ -1380,7 +1380,7 @@ const CourageCompassStage = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");

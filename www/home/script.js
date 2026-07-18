@@ -646,16 +646,16 @@ function devProgressOverride(progress) {
   root.appendChild(
     el("img", {
       class: "home-title",
-      src: A + "ui/TitleBanner.png",
+      src: A + "ui/TitleBanner.webp",
       alt: "하트 가디언즈: 우주 공감 탐험대",
     }),
   );
 
   /* ---- 프로필 카드 (ProfileCard.tsx) ---- */
   const gender = profile.gender === "female" ? "female" : "male";
-  const faceSrc = gender === "female" ? "AvatarFaceFemale.png" : "AvatarFaceMale.png";
+  const faceSrc = gender === "female" ? "AvatarFaceFemale.webp" : "AvatarFaceMale.webp";
   root.appendChild(
-    el("div", { class: "home-profile", style: `background-image:url(${A}home/PlayerButton.png)` }, [
+    el("div", { class: "home-profile", style: `background-image:url(${A}home/PlayerButton.webp)` }, [
       el("img", { class: "home-profile__face", src: A + "home/" + faceSrc, alt: "" }),
       el("div", { class: "home-profile__info" }, [
         el("span", { class: "home-profile__level", text: "Lv" + (progress + 1) + " " + nicknameFor(progress) }),
@@ -671,14 +671,14 @@ function devProgressOverride(progress) {
       type: "button",
       class: "home-goal",
       "data-sfx": "pop",
-      style: `background-image:url(${A}home/BannerPlate03.png)`,
+      style: `background-image:url(${A}home/BannerPlate03.webp)`,
     },
     [
-      el("img", { class: "home-goal__star", src: A + "home/PurposeStart.png", alt: "" }),
+      el("img", { class: "home-goal__star", src: A + "home/PurposeStart.webp", alt: "" }),
       el("span", { class: "home-goal__text", html: "학습 목표<br><small>클릭해서 목표를 확인하세요</small>" }),
     ],
   );
-  goalBtn.addEventListener("click", () => openBookPopup([A + "home/LearningGoal.png"], 0, "학습 로드맵"));
+  goalBtn.addEventListener("click", () => openBookPopup([A + "home/LearningGoal.webp"], 0, "학습 로드맵"));
   root.appendChild(goalBtn);
 
   /* ---- 공감 에너지 게이지 (EnergyGauge.tsx) ---- */
@@ -688,14 +688,14 @@ function devProgressOverride(progress) {
     hearts.appendChild(
       el("img", {
         class: "home-energy__heart",
-        src: A + "home/" + (i < progress ? "HeartFull.png" : "HeartEmpty.png"),
+        src: A + "home/" + (i < progress ? "HeartFull.webp" : "HeartEmpty.webp"),
         alt: "",
       }),
     );
   }
   hearts.appendChild(el("span", { class: "home-energy__percent", text: percent + "%" }));
   root.appendChild(
-    el("div", { class: "home-energy", style: `background-image:url(${A}home/HeartScorePlate.png)` }, [
+    el("div", { class: "home-energy", style: `background-image:url(${A}home/HeartScorePlate.webp)` }, [
       el("span", { class: "home-energy__label", text: "공감 에너지" }),
       hearts,
       el("span", { class: "home-energy__next", text: energyNoteFor(progress) }),
@@ -703,7 +703,7 @@ function devProgressOverride(progress) {
   );
 
   /* ---- 모선 (Mothership.tsx) ---- */
-  root.appendChild(el("img", { class: "home-mothership", src: A + "home/HeartConnect.png", alt: "" }));
+  root.appendChild(el("img", { class: "home-mothership", src: A + "home/HeartConnect.webp", alt: "" }));
 
   /* ---- 행성 버튼 4개 (PlanetButton.tsx) ---- */
   const planetsWrap = el("div", { class: "home-planets" });
@@ -725,15 +725,15 @@ function devProgressOverride(progress) {
       btn.appendChild(
         el("span", {
           class: "home-planet__rocket",
-          style: `background-image:url(${A}home/RocketButton.png)`,
+          style: `background-image:url(${A}home/RocketButton.webp)`,
           text: "탐험 시작!",
         }),
       );
     }
     if (status === "locked") {
-      btn.appendChild(el("img", { class: "home-planet__lock", src: A + "home/Lock.png", alt: "잠김" }));
+      btn.appendChild(el("img", { class: "home-planet__lock", src: A + "home/Lock.webp", alt: "잠김" }));
     }
-    btn.appendChild(el("img", { class: "home-planet__char", src: A + "home/Alien0" + img + ".png", alt: "" }));
+    btn.appendChild(el("img", { class: "home-planet__char", src: A + "home/Alien0" + img + ".webp", alt: "" }));
     if (playable) {
       btn.addEventListener("click", () => fadeNav(ROOT + "planet" + id + "/prologue/index.html"));
     }
@@ -743,10 +743,10 @@ function devProgressOverride(progress) {
 
   /* ---- 하단 메뉴 (MenuBar.tsx) ---- */
   const MENU = [
-    { key: "mission", img: "MissionButton.png", label: "미션" },
-    { key: "gem", img: "GemBookButton.png", label: "원석 도감" },
-    { key: "inventory", img: "InventoryButton.png", label: "가디언즈 가방" },
-    { key: "history", img: "HistoryButton.png", label: "탐험 일지" },
+    { key: "mission", img: "MissionButton.webp", label: "미션" },
+    { key: "gem", img: "GemBookButton.webp", label: "원석 도감" },
+    { key: "inventory", img: "InventoryButton.webp", label: "가디언즈 가방" },
+    { key: "history", img: "HistoryButton.webp", label: "탐험 일지" },
   ];
   const menuWrap = el("div", { class: "home-menu" });
   MENU.forEach((it) => {
@@ -759,7 +759,7 @@ function devProgressOverride(progress) {
   root.appendChild(menuWrap);
 
   /* ---- 하티 + 말풍선 타이핑 (HatiHelper.tsx) ---- */
-  const hatiSrc = progress === 0 ? "hati_signal_detector.png" : "hati_default.png";
+  const hatiSrc = progress === 0 ? "hati_signal_detector.webp" : "hati_default.webp";
   const hatiText = el("p", { class: "home-hati__text" });
   root.appendChild(
     el("div", { class: "home-hati" }, [
@@ -864,21 +864,21 @@ function devProgressOverride(progress) {
   function openMenu(key) {
     if (key === "inventory") {
       openBookPopup(
-        [0, 1, 2, 3, 4].map((i) => A + "home/EmpathyTool" + i + ".png"),
+        [0, 1, 2, 3, 4].map((i) => A + "home/EmpathyTool" + i + ".webp"),
         progress,
         "공감 도구 도감",
       );
     } else if (key === "gem") {
       openBookPopup(
-        [0, 1, 2, 3, 4].map((i) => A + "home/GemBook" + i + ".png"),
+        [0, 1, 2, 3, 4].map((i) => A + "home/GemBook" + i + ".webp"),
         progress,
         "원석 도감",
       );
     } else if (key === "history") {
-      openModal(A + "home/plateHistory.png", buildHistoryBoard());
+      openModal(A + "home/plateHistory.webp", buildHistoryBoard());
     } else {
       // mission: 내용 미정 — 빈 모달 (원본과 동일).
-      openModal(A + "home/plateMission.png", null);
+      openModal(A + "home/plateMission.webp", null);
     }
   }
 })();

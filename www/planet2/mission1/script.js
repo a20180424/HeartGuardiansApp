@@ -555,7 +555,7 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "가디언즈 감정 설명서를 완성해보자",
-      image: A + "/planet2/guardians-emotion-guide-cover.png",
+      image: A + "/planet2/guardians-emotion-guide-cover.webp",
       next: "p2_m1_play",
     },
     { id: "p2_m1_play", type: "minigame", game: "emotionGuide", next: "p2_m1_result" },
@@ -566,7 +566,7 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "가디언즈 감정 설명서가 완성되었어. 공감 카드를 확인해보자!",
-      image: A + "/planet2/guardians-emotion-guide-complete.png",
+      image: A + "/planet2/guardians-emotion-guide-complete.webp",
       onEnter: [{ cmd: "fx", value: "fx_result_glow" }],
       next: "p2_m1_cards",
     },
@@ -578,8 +578,8 @@ const MISSION = {
       noAuto: true,
       text: "사람마다 감정과 공감 방식이 다르다는 걸 이해하는 것이 중요해",
       cards: [
-        { image: A + "/planet2/fog-planet-empathy-card-1.png" },
-        { image: A + "/planet2/fog-planet-empathy-card-2.png" },
+        { image: A + "/planet2/fog-planet-empathy-card-1.webp" },
+        { image: A + "/planet2/fog-planet-empathy-card-2.webp" },
       ],
       next: "p2_m1_end",
     },
@@ -604,20 +604,20 @@ const THEME = {
   bannerNode: "p2_m1_intro",
   initialFriend: "placeholder",
   bg: {
-    states: { main: A + "/bg/fog-planet-stage1.png" },
+    states: { main: A + "/bg/fog-planet-stage1.webp" },
     initial: "main",
     byNode: {},
   },
   hatiSprites: {
     char: {
-      thinking: A + "/char/Hati/hati_thinking.png",
-      explaining: A + "/char/Hati/hati_explaining.png",
-      suggesting: A + "/char/Hati/hati_suggesting.png",
-      worried: A + "/char/Hati/hati_worried.png",
-      praising: A + "/char/Hati/hati_praising.png",
-      cheering: A + "/char/Hati/hati_cheering.png",
-      proud: A + "/char/Hati/hati_proud.png",
-      celebrating: A + "/char/Hati/hati_celebrating.png",
+      thinking: A + "/char/Hati/hati_thinking.webp",
+      explaining: A + "/char/Hati/hati_explaining.webp",
+      suggesting: A + "/char/Hati/hati_suggesting.webp",
+      worried: A + "/char/Hati/hati_worried.webp",
+      praising: A + "/char/Hati/hati_praising.webp",
+      cheering: A + "/char/Hati/hati_cheering.webp",
+      proud: A + "/char/Hati/hati_proud.webp",
+      celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
     byNode: {}, // MISSION01_THEME.hatiSprites.byNode 는 원본도 빈 객체 — 전 구간 "thinking" 고정
@@ -625,7 +625,7 @@ const THEME = {
   friends: {
     // placeholder 친구 — 안개 행성 아트 미확정, 전 노드 hideFriend:true 라 화면엔 안 보인다.
     placeholder: {
-      char: { sad: A + "/char/Lumi/lumi_sad.png" },
+      char: { sad: A + "/char/Lumi/lumi_sad.webp" },
       initial: "sad",
       byNode: {},
     },
@@ -1660,7 +1660,7 @@ const EmotionGuideStage = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.png";
+        star.src = A + "/ui/star_gold.webp";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");
