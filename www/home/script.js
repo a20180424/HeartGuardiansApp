@@ -230,6 +230,16 @@ window.addEventListener(
   true,
 );
 
+/* APK(WebView)는 mediaPlaybackRequiresUserGesture=false 라 제스처 없이도 AudioContext 를
+   열 수 있다. 네이티브면 로딩 즉시 언락을 시도해, 첫 탭 전에도(홈 인사말·미션 첫 대사 등)
+   소리가 나게 한다. 웹 브라우저는 자동재생 정책상 resume() 이 무시될 뿐 — 회귀 없음.
+   컨텍스트 준비 타이밍 대비로 몇 번 재시도. */
+if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+  audio.unlock();
+  document.addEventListener("DOMContentLoaded", () => audio.unlock());
+  window.setTimeout(() => audio.unlock(), 300);
+}
+
 /* ==========================================================================
    공통 블록 3-② 음소거 버튼 (MuteButton.tsx + mute-button.css 이식) — intro 검증본 복사
    ========================================================================== */
@@ -276,7 +286,7 @@ document.body.appendChild(muteBtn);
   const PLANETS = [
     { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
     { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
-    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", "planet3/mission23/index.html?stage2=1"] },
     { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
@@ -396,7 +406,7 @@ document.body.appendChild(muteBtn);
             grid.appendChild(el("span", { class: "hidden-menu__empty" }));
             return;
           }
-          const label = href.indexOf("mission23") !== -1 ? "미션2·3" : COL_HEAD[i];
+          const label = COL_HEAD[i];
           const b = el("button", { type: "button", text: label });
           b.addEventListener("click", () => go(ROOT + href));
           grid.appendChild(b);
@@ -770,9 +780,20 @@ function devProgressOverride(progress) {
   // 타이핑 효과 (45ms/글자, 원본과 동일).
   (function typeHati() {
     const full = commentFor(progress);
+    // 타이핑 중 발화음(blip) — 미션 페이지 typeInto 와 같은 관례:
+    // 발화 문자(공백·문장부호 제외) 4개마다 한 번 blipHati.
+    const SILENT_CHAR = /[\s.,!?…·'"“”‘’\-—~()[\]{}:;]/;
     let count = 0;
+    let speak = 0; // 연속 발화 문자 카운터
     const id = setInterval(() => {
       count += 1;
+      const ch = full[count - 1];
+      if (ch !== undefined && !SILENT_CHAR.test(ch)) {
+        speak += 1;
+        if (speak % 4 === 1) audio.play("blipHati");
+      } else {
+        speak = 0;
+      }
       hatiText.textContent = full.slice(0, count);
       if (count >= full.length) clearInterval(id);
     }, 45);

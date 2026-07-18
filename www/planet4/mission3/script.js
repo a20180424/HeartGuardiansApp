@@ -209,6 +209,16 @@ window.addEventListener(
   true,
 );
 
+/* APK(WebView)는 mediaPlaybackRequiresUserGesture=false 라 제스처 없이도 AudioContext 를
+   열 수 있다. 네이티브면 로딩 즉시 언락을 시도해, 첫 탭 전에도(홈 인사말·미션 첫 대사 등)
+   소리가 나게 한다. 웹 브라우저는 자동재생 정책상 resume() 이 무시될 뿐 — 회귀 없음.
+   컨텍스트 준비 타이밍 대비로 몇 번 재시도. */
+if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+  audio.unlock();
+  document.addEventListener("DOMContentLoaded", () => audio.unlock());
+  window.setTimeout(() => audio.unlock(), 300);
+}
+
 /* ==========================================================================
    공통 블록 3-② 음소거 버튼 (MuteButton.tsx + mute-button.css 이식) — 검증본 복사
    ========================================================================== */
@@ -255,7 +265,7 @@ document.body.appendChild(muteBtn);
   const PLANETS = [
     { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
     { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
-    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", "planet3/mission23/index.html?stage2=1"] },
     { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
@@ -375,7 +385,7 @@ document.body.appendChild(muteBtn);
             grid.appendChild(el("span", { class: "hidden-menu__empty" }));
             return;
           }
-          const label = href.indexOf("mission23") !== -1 ? "미션2·3" : COL_HEAD[i];
+          const label = COL_HEAD[i];
           const b = el("button", { type: "button", text: label });
           b.addEventListener("click", () => go(ROOT + href));
           grid.appendChild(b);
@@ -1110,6 +1120,13 @@ const HeartConnectStage = (function () {
     const wrap = el("div", { class: "hc-video-root" }, [video, shade, btn]);
     frame.appendChild(wrap);
 
+    // 첫 프레임 준비 전엔 video 를 숨겨 회색 Play 플레이스홀더를 가린다(intro is-ready 패턴).
+    function markReady() {
+      video.classList.add("is-ready");
+    }
+    video.addEventListener("loadeddata", markReady);
+    video.addEventListener("playing", markReady);
+
     let cancelled = false;
     // 원본: const attempt = video.play(); if(attempt) attempt.catch(()=>{video.muted=true; video.play()})
     const attempt = video.play();
@@ -1134,6 +1151,8 @@ const HeartConnectStage = (function () {
     return function cleanup() {
       cancelled = true;
       video.removeEventListener("ended", onEnded);
+      video.removeEventListener("loadeddata", markReady);
+      video.removeEventListener("playing", markReady);
       video.pause();
     };
   }
@@ -1445,6 +1464,7 @@ const HeartConnectStage = (function () {
   function showMinigame() {
     vm.stage = "minigame";
     vm.lineActive = false;
+    vm.sideImageLeft = ""; // 인트로 장식 이미지(하트커넥트 우주)는 첫화면에서만 — 미니게임엔 남기지 않는다
     vm.mode = "idle";
     vm.tapHint = "";
     render();

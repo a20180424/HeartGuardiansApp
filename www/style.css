@@ -109,36 +109,6 @@ button {
   cursor: pointer;
 }
 
-/* 소리 켜기 힌트 (하단 중앙) */
-.intro__sound-hint {
-  position: absolute;
-  left: 50%;
-  bottom: calc(24px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: rgba(11, 16, 32, 0.7);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-  pointer-events: none;
-  animation: intro-pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes intro-pulse {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 /* 건너뛰기 (우상단) — .btn.ghost 확장 */
 .intro__skip {
   position: absolute;

@@ -254,6 +254,16 @@ window.addEventListener(
   true,
 );
 
+/* APK(WebView)는 mediaPlaybackRequiresUserGesture=false 라 제스처 없이도 AudioContext 를
+   열 수 있다. 네이티브면 로딩 즉시 언락을 시도해, 첫 탭 전에도(홈 인사말·미션 첫 대사 등)
+   소리가 나게 한다. 웹 브라우저는 자동재생 정책상 resume() 이 무시될 뿐 — 회귀 없음.
+   컨텍스트 준비 타이밍 대비로 몇 번 재시도. */
+if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+  audio.unlock();
+  document.addEventListener("DOMContentLoaded", () => audio.unlock());
+  window.setTimeout(() => audio.unlock(), 300);
+}
+
 /* ==========================================================================
    공통 블록 3-② 음소거 버튼 (MuteButton.tsx + mute-button.css 이식)
    --------------------------------------------------------------------------
@@ -318,7 +328,7 @@ document.body.appendChild(muteBtn);
   const PLANETS = [
     { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
     { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
-    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", "planet3/mission23/index.html?stage2=1"] },
     { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
@@ -440,7 +450,7 @@ document.body.appendChild(muteBtn);
             grid.appendChild(el("span", { class: "hidden-menu__empty" }));
             return;
           }
-          const label = href.indexOf("mission23") !== -1 ? "미션2·3" : COL_HEAD[i];
+          const label = COL_HEAD[i];
           const b = el("button", { type: "button", text: label });
           b.addEventListener("click", () => go(ROOT + href));
           grid.appendChild(b);
@@ -528,13 +538,17 @@ document.body.appendChild(muteBtn);
 (function intro() {
   const video = document.getElementById("intro-video");
   const playing = document.getElementById("intro-playing");
-  const soundHint = document.getElementById("intro-sound-hint");
   const startBtn = document.getElementById("intro-start");
   const skipBtn = document.getElementById("intro-skip");
   const tapLayer = document.getElementById("intro-tap");
 
+  // APK(WebView)는 MainActivity 에서 mediaPlaybackRequiresUserGesture=false 로 열어
+  // 처음부터 유음 자동재생이 된다 → 무음 시작이 필요 없다.
+  // 웹(브라우저·Cloudflare Pages)은 자동재생 정책상 여전히 muted 로만 재생되므로,
+  // muted 로 시작하고 화면 탭으로 소리를 켜는 폴백을 남긴다(힌트 UI는 제거됨).
+  const isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
   // 로컬 muted(자동재생 정책용) + 앱 음소거(hg_muted) 중 하나라도 켜져 있으면 실제 무음.
-  let localMuted = true;
+  let localMuted = !isNative;
   let appMuted = audio.isMuted();
   let status = "playing"; // playing | ended
 
@@ -556,21 +570,14 @@ document.body.appendChild(muteBtn);
   video.addEventListener("loadeddata", markReady);
   video.addEventListener("playing", markReady);
 
-  // 힌트는 로컬 muted 인 동안만 보인다.
-  function updateHint() {
-    soundHint.style.display = status === "playing" && localMuted ? "" : "none";
-  }
-  updateHint();
-
-  // 영상 탭: 소리 켜기 (+ 자동재생이 막혀 멈춰 있으면 재생도 시도).
-  // muted 를 DOM 에 직접 쓰는 이유: WebView 자동재생 정책상 제스처 핸들러 안에서
+  // 영상 탭: 소리 켜기 (웹 폴백 — 자동재생이 막혀 멈춰 있으면 재생도 시도).
+  // muted 를 DOM 에 직접 쓰는 이유: 브라우저 자동재생 정책상 제스처 핸들러 안에서
   // 바로 풀어야 소리가 붙는다. 다만 그 값은 appMuted 와 같아야 한다 — false 를
   // 박아버리면 앱이 이미 음소거일 때 교사의 🔇를 이긴다.
   tapLayer.addEventListener("click", () => {
     if (video.paused) video.play().catch(() => {});
     video.muted = appMuted; // 앱이 음소거면 탭해도 무음 유지
     localMuted = false;
-    updateHint();
   });
 
   // 건너뛰기: 마지막 프레임 근처(끝에서 0.1초 전)로 보내 정지 → ended.
@@ -592,7 +599,6 @@ document.body.appendChild(muteBtn);
     status = "ended";
     playing.hidden = true;
     startBtn.hidden = false;
-    updateHint();
   }
 
   // 시작하기 → auth 로 이동(페이드 아웃).

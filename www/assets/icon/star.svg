@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 98" role="img" aria-label="">
+  <!-- 하단 입체감 (검정 대신 어두운 골드 별을 아래로 살짝 밀어 뒤에 깔기) -->
+  <path d="M50,4 L64.1,30.6 L93.8,35.8 L72.8,57.4 L77,87.2 L50,74 L23,87.2 L27.2,57.4 L6.2,35.8 L35.9,30.6 Z"
+        transform="translate(0,3)" fill="#b9640b"/>
+  <!-- 삼각 패싯 (중심에서 방사, 좌상단이 밝고 우하단이 어두운 탑라이트 음영).
+       얇은 앰버 seam(stroke)이 패싯 경계와 외곽 가장자리를 정의 — 검정 외곽선 없음. -->
+  <g stroke="#c1650a" stroke-width="0.6" stroke-linejoin="round">
+    <path d="M50,50 L50,4 L64.1,30.6 Z"    fill="#ffda1f"/>
+    <path d="M50,50 L64.1,30.6 L93.8,35.8 Z" fill="#ffc61b"/>
+    <path d="M50,50 L93.8,35.8 L72.8,57.4 Z" fill="#fca80f"/>
+    <path d="M50,50 L72.8,57.4 L77,87.2 Z"  fill="#ee7d0c"/>
+    <path d="M50,50 L77,87.2 L50,74 Z"      fill="#e4660a"/>
+    <path d="M50,50 L50,74 L23,87.2 Z"      fill="#ea6d0a"/>
+    <path d="M50,50 L23,87.2 L27.2,57.4 Z"  fill="#f4920f"/>
+    <path d="M50,50 L27.2,57.4 L6.2,35.8 Z" fill="#ffe08a"/>
+    <path d="M50,50 L6.2,35.8 L35.9,30.6 Z" fill="#fef6dc"/>
+    <path d="M50,50 L35.9,30.6 L50,4 Z"     fill="#fffceb"/>
+  </g>
+</svg>

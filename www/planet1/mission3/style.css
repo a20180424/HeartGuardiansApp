@@ -784,6 +784,10 @@ button {
   height: auto;
   z-index: 5;
   background: #000;
+  /* 첫 프레임 디코드 전엔 숨겨 WebView 회색 Play 플레이스홀더를 가리고(까만 배경만
+     보임), 준비되면 페이드 인. (intro is-ready 패턴) */
+  opacity: 0;
+  transition: opacity 0.4s ease;
   /* 가장자리 페더 — 네 변을 까만 배경에 부드럽게 녹인다(q1 이미지와 동일 방식) */
   -webkit-mask-image:
     linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
@@ -793,6 +797,9 @@ button {
     linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
     linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
   mask-composite: intersect;
+}
+#missionVideo.is-ready {
+  opacity: 1;
 }
 /* 동영상 '재생 시작' 버튼(화면 하단 중앙) — 누르면 재생 + 버튼 사라짐 */
 #videoPlayBtn {

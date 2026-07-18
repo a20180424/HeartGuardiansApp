@@ -959,6 +959,13 @@ button {
   height: 100%;
   object-fit: contain;
   background: #000;
+  /* 첫 프레임 디코드 전엔 숨겨 WebView 회색 Play 플레이스홀더를 가리고
+     (아래 .hc-video-root 의 검정 배경이 보임), 준비되면 페이드 인. (intro is-ready 패턴) */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.hc-ending-video.is-ready {
+  opacity: 1;
 }
 .hc-video-shade {
   position: absolute;

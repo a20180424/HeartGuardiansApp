@@ -213,6 +213,16 @@ window.addEventListener(
   true,
 );
 
+/* APK(WebView)는 mediaPlaybackRequiresUserGesture=false 라 제스처 없이도 AudioContext 를
+   열 수 있다. 네이티브면 로딩 즉시 언락을 시도해, 첫 탭 전에도(홈 인사말·미션 첫 대사 등)
+   소리가 나게 한다. 웹 브라우저는 자동재생 정책상 resume() 이 무시될 뿐 — 회귀 없음.
+   컨텍스트 준비 타이밍 대비로 몇 번 재시도. */
+if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+  audio.unlock();
+  document.addEventListener("DOMContentLoaded", () => audio.unlock());
+  window.setTimeout(() => audio.unlock(), 300);
+}
+
 /* ==========================================================================
    공통 블록 3-② 음소거 버튼 (MuteButton.tsx + mute-button.css 이식) — 검증본 복사
    ========================================================================== */
@@ -259,7 +269,7 @@ document.body.appendChild(muteBtn);
   const PLANETS = [
     { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
     { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
-    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", "planet3/mission23/index.html?stage2=1"] },
     { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
@@ -379,7 +389,7 @@ document.body.appendChild(muteBtn);
             grid.appendChild(el("span", { class: "hidden-menu__empty" }));
             return;
           }
-          const label = href.indexOf("mission23") !== -1 ? "미션2·3" : COL_HEAD[i];
+          const label = COL_HEAD[i];
           const b = el("button", { type: "button", text: label });
           b.addEventListener("click", () => go(ROOT + href));
           grid.appendChild(b);
@@ -1660,7 +1670,7 @@ const EmotionGuideStage = (function () {
         wrap.dataset.text = vm.completeBanner;
         const star = document.createElement("img");
         star.className = "cb-star";
-        star.src = A + "/ui/star_gold.webp";
+        star.src = A + "/icon/star.svg";
         star.alt = "";
         star.addEventListener("error", () => (star.style.visibility = "hidden"));
         const plaque = document.createElement("div");
