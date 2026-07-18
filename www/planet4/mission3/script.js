@@ -896,6 +896,8 @@ const HeartConnectStage = (function () {
       typeTimer = window.setInterval(() => {
         i += 1;
         typed = chars.slice(0, i).join("");
+        // 타이핑 발화음 — 미션 엔진 typeInto 와 같은 관례(4글자마다, 이 미션은 하티만 말함).
+        if (blipAt(HC_STORY_LINES[index].text, i - 1)) audio.play("blipHati");
         updateDialogue();
         if (i >= chars.length) {
           window.clearInterval(typeTimer);
@@ -1057,6 +1059,7 @@ const HeartConnectStage = (function () {
       const mission = HC_MISSIONS[missionIndex];
       if (i !== mission.correct) {
         // 오답: 해당 버튼만 흔들고 650ms 후 해제, 페널티 없이 같은 문제 유지.
+        audio.play("wrong");
         wrongIndex = i;
         feedback = HC_WRONG_FEEDBACK;
         window.clearTimeout(wrongTimer);
@@ -1075,6 +1078,7 @@ const HeartConnectStage = (function () {
       locked = true;
       connected[missionIndex] = true;
       feedback = HC_CORRECT_FEEDBACK;
+      audio.play("correct");
       render();
       advanceTimer = window.setTimeout(() => {
         advanceTimer = 0;
@@ -1089,6 +1093,7 @@ const HeartConnectStage = (function () {
           // video phase 로 전환한다.
           coreOn = true;
           flashing = true;
+          audio.play("fanfare"); // 5원석 전부 연결 — 다이아몬드 완성 축하(sparkle 포함)
           render();
           finishTimer = window.setTimeout(() => {
             finishTimer = 0;
@@ -1235,6 +1240,7 @@ const HeartConnectStage = (function () {
       typeTimer = window.setInterval(() => {
         i += 1;
         typed = chars.slice(0, i).join("");
+        if (blipAt(text, i - 1)) audio.play("blipHati"); // 타이핑 발화음(하티)
         updateText();
         if (i >= chars.length) {
           window.clearInterval(typeTimer);
