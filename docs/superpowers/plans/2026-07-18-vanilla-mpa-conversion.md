@@ -62,7 +62,12 @@ html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 ```js
 // script.js 상단 공통(페이지마다 복사)
 function fitStage() {
-  const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 800);
+  // clientWidth 사용: DevTools DPR 에뮬레이션·OS 배율 환경에서 innerWidth가 CSS 뷰포트와
+  // 어긋나는 간헐 버그 회피 (2026-07-19 발견·전 페이지 수정). 실기기에선 두 값이 같다.
+  const scale = Math.min(
+    document.documentElement.clientWidth / 1280,
+    document.documentElement.clientHeight / 800,
+  );
   document.getElementById("stage").style.transform =
     `translate(-50%, -50%) scale(${scale})`;
 }
@@ -77,9 +82,11 @@ fitStage();
 | `hg_session` | `{ token, name, classBoard: [url,url,url], ... }` JSON | auth 로그인 성공 시 | 전 페이지 (세션 가드) |
 | `hg_progress` | `{ planet1: true, ... }` JSON | 각 행성 마지막 미션 완료 시 | home (진도 표시) |
 | `hg_muted` | `"1"` / 없음 | 음소거 버튼 | 전 페이지 |
+| `hg_pending_sync` | `{ planetN: true }` JSON | completePlanet PUT 실패 시 | auth (로그인 때 재전송 후 성공분 삭제) |
 
 - intro(`www/index.html`)는 **앱 시작 초기화 지점**: 세션 관련 임시 키를 여기서 정리한다 (진도는 유지 — 기존 동작과 동일하게 서버/로컬 병합).
-- **표시 진도 = `max(hg_session.progress, hg_progress)`** (Task 4 확정): home은 두 키를 병합해 표시하므로 행성 완료 태스크가 어느 키를 갱신하든 반영된다. `hg_progress` 형식은 auth의 mergeProgress가 확정한 `{ planetN: true }` — 소비처는 이 형식을 따를 것.
+- **표시 진도 = `max(hg_session.progress, hg_progress)`** (Task 4 확정): home은 두 키를 병합해 표시하므로 행성 완료 태스크가 어느 키를 갱신하든 반영된다. `hg_progress` 형식은 `{ planetN: true }` — 소비처는 이 형식을 따를 것.
+- **로그인 시 진도는 서버 권위** (2026-07-19 사용자 결정): auth가 로그인 때 `hg_progress`를 서버값으로 **덮어쓴다**(상향 병합 아님) — 교사의 서버 리셋이 기기에 반영되게. 단 completePlanet PUT이 실패했던 행성은 `hg_pending_sync`에 기록돼 로그인 직전에 재전송되므로 학생이 번 진도는 유실되지 않는다. 플레이 중에는 completePlanet의 상향 병합만 있어 세션 중 진도가 깎이지 않는다.
 - intro·auth 이외 페이지는 최상단에 세션 가드: `if (!localStorage.getItem("hg_session")) location.href = "<상대경로>/auth/";`
 - 정확한 필드 구성은 각 태스크에서 [src/lib/session.ts](../../../src/lib/session.ts), [src/lib/progress.ts](../../../src/lib/progress.ts), [src/lib/classBoard.ts](../../../src/lib/classBoard.ts)를 읽고 맞춘다.
 
