@@ -19,6 +19,19 @@
       "noAuto": true,
       "text": "수고했어. 대원의 따듯한 말이 친구들을 웃게 만들었어.",
       "completeBanner": "미션 완료!",
+      "next": "p3_m2_cards"
+    },
+    {
+      "id": "p3_m2_cards",
+      "type": "line",
+      "speaker": "hati",
+      "hideFriend": true,
+      "noAuto": true,
+      "text": "진짜 공감은 끝까지 들어주고, 함께 기뻐해 주는 거야.",
+      "cards": [
+        { "image": "/assets/planet3/ice-planet-empathy-card-4.png" },
+        { "image": "/assets/planet3/ice-planet-empathy-card-5.png" }
+      ],
       "next": "p3_m2_end"
     },
     {
