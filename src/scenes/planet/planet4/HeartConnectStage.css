@@ -519,3 +519,126 @@
   transform: translateX(-50%) translateY(-4px);
   box-shadow: 0 0 34px #76ecff;
 }
+
+/* ── epilogue phase: 원본 #postRecoveryScreen(.post-bg/.post-dialogue/.post-blackout) 이식 ──
+   전체화면 불투명(z-index 110) — 엔진 스테퍼까지 덮는다(video phase 와 동일한 관례). */
+.hc-epilogue-root {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  cursor: pointer;
+  overflow: hidden;
+  background: #01030b;
+}
+
+.hc-post-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transform: scale(1.035);
+  transition: opacity 3.2s ease, transform 7s ease;
+}
+.hc-post-bg.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.hc-post-bg:after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.54), transparent 55%);
+}
+
+.hc-post-blackout {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: #000;
+  opacity: 1;
+}
+.hc-post-blackout.go {
+  animation: hc-blackReveal 1.5s ease forwards;
+}
+@keyframes hc-blackReveal {
+  0%,
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.hc-post-dialogue {
+  position: absolute;
+  left: 145px;
+  right: 145px;
+  bottom: 42px;
+  z-index: 6;
+  min-height: 210px;
+  padding: 70px 55px 30px;
+  border: 2px solid rgba(111, 238, 255, 0.76);
+  border-radius: 30px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(8, 26, 61, 0.96), rgba(13, 13, 48, 0.96));
+  box-shadow: 0 0 30px rgba(49, 150, 255, 0.45);
+}
+.hc-post-hati {
+  position: absolute;
+  left: 50%;
+  top: -160px;
+  width: 210px;
+  height: 210px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 13px #000b);
+  transform: translateX(-50%);
+}
+.hc-post-speaker {
+  position: absolute;
+  left: 35px;
+  top: 22px;
+  padding: 7px 22px;
+  border: 2px solid #7af8d1;
+  border-radius: 99px;
+  color: #062319;
+  font-weight: 950;
+  background: linear-gradient(#d9fff2, #65e8bc);
+}
+.hc-post-text {
+  min-height: 58px;
+  margin: 0;
+  color: #fff;
+  font-size: 27px;
+  font-weight: 850;
+  line-height: 1.6;
+  text-shadow: 0 2px 4px #000;
+}
+.hc-post-text.typing:after {
+  content: "▌";
+  margin-left: 3px;
+  color: #78f3ff;
+  animation: hc-cursorBlink 0.6s step-end infinite;
+}
+.hc-post-next {
+  position: absolute;
+  right: 27px;
+  bottom: 18px;
+  color: #7cf2ff;
+  font-size: 20px;
+  animation: hc-nextPulse 1s infinite;
+}
+.hc-post-emphasis {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 18px;
+  border-radius: 10px;
+  color: #91ffdc;
+  font-size: 29px;
+  font-weight: 950;
+  text-shadow: 0 0 12px rgba(76, 255, 196, 0.9);
+  background: rgba(73, 235, 182, 0.1);
+}

@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { HATI_DEFAULT, IMG_DIAMOND, IMG_VIDEO, MISSIONS, STORY_LINES } from "./heartConnect.data";
+import {
+  EPILOGUE_BG,
+  HATI_DEFAULT,
+  IMG_DIAMOND,
+  IMG_VIDEO,
+  MISSIONS,
+  POST_LINES,
+  STORY_LINES,
+} from "./heartConnect.data";
 import "./HeartConnectStage.css";
 
 // 미션3 "하트 커넥트 : 마지막 연결" 미니게임.
@@ -18,7 +26,7 @@ export default function HeartConnectStage({ onDone }: { onDone: () => void }) {
         {phase === "story" && <StoryPhase onDone={() => setPhase("quiz")} />}
         {phase === "quiz" && <QuizPhase onDone={() => setPhase("video")} />}
         {phase === "video" && <VideoPhase onDone={() => setPhase("epilogue")} />}
-        {/* Task 7 에서 epilogue 브랜치 추가 */}
+        {phase === "epilogue" && <EpiloguePhase onDone={() => setPhase("success")} />}
         {/* 임시 success 배선(Task 8에서 <SuccessPhase onDone={onDone} /> 로 교체).
             지금은 onDone 을 소비해 noUnusedParameters 오류를 막고, phase 가 success 로 갈 때 홈 이동을 검증한다. */}
         {phase === "success" && (
@@ -291,6 +299,161 @@ function VideoPhase({ onDone }: { onDone: () => void }) {
       >
         복원 완료 확인
       </button>
+    </div>
+  );
+}
+
+const POST_TYPE_MS = 55; // 원본 typePostLine() 타자 속도
+type EpilogueBgKey = keyof typeof EPILOGUE_BG;
+const EPILOGUE_BG_ORDER: EpilogueBgKey[] = ["earth1", "earth2", "earth3", "school", "classroom"];
+
+// 원본 startPostRecovery()/typePostLine()/completePostTyping()/advancePost() 이식.
+// 전체화면 불투명(z-index 110)으로 엔진 스테퍼까지 덮는다(video phase 와 동일한 관례).
+function EpiloguePhase({ onDone }: { onDone: () => void }) {
+  const [postIndex, setPostIndex] = useState(0);
+  const [typed, setTyped] = useState("");
+  // 원본 postTyping 초기값은 false — 진입 900ms 지연 동안은 타이핑 중이 아니라
+  // advancePost() 의 typing 완성 분기가 아닌 배경 가드 분기를 타야 한다(조기 클릭 시 즉시완성 방지).
+  const [typing, setTyping] = useState(false);
+  const [bgActive, setBgActive] = useState<EpilogueBgKey>("earth1");
+  const [blackoutGo, setBlackoutGo] = useState(false);
+
+  // 배경 타임라인 setTimeout들 + 진입 900ms 지연 타이머를 함께 추적한다.
+  const bgTimersRef = useRef<number[]>([]);
+  const typeIntervalRef = useRef<number | null>(null);
+
+  const clearBgTimers = () => {
+    bgTimersRef.current.forEach((id) => window.clearTimeout(id));
+    bgTimersRef.current = [];
+  };
+
+  // blackout 리빌: 마운트 시 1회(원본: go 클래스 제거→강제 reflow→go 클래스 추가).
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setBlackoutGo(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // postIndex 가 바뀔 때마다: 배경 타임라인 재설정 + 해당 줄 타이핑 시작.
+  useEffect(() => {
+    clearBgTimers();
+    if (typeIntervalRef.current !== null) {
+      window.clearInterval(typeIntervalRef.current);
+      typeIntervalRef.current = null;
+    }
+
+    const runLine = () => {
+      if (postIndex === 0) {
+        setBgActive("earth1");
+        bgTimersRef.current.push(
+          window.setTimeout(() => setBgActive("earth2"), 2800),
+          window.setTimeout(() => setBgActive("earth3"), 5600),
+        );
+      } else if (postIndex === 1) {
+        setBgActive("school");
+        bgTimersRef.current.push(window.setTimeout(() => setBgActive("classroom"), 4800));
+      } else {
+        setBgActive("classroom");
+      }
+
+      const text = POST_LINES[postIndex];
+      setTyped("");
+      setTyping(true);
+      const chars = Array.from(text);
+      let i = 0;
+      const id = window.setInterval(() => {
+        i += 1;
+        setTyped(chars.slice(0, i).join(""));
+        if (i >= chars.length) {
+          window.clearInterval(id);
+          typeIntervalRef.current = null;
+          setTyping(false);
+        }
+      }, POST_TYPE_MS);
+      typeIntervalRef.current = id;
+    };
+
+    // 원본 startPostRecovery(): 900ms 지연은 첫 줄(index0)에만 걸리고, advancePost() 이후
+    // 줄 전환(index1 이상)은 즉시 시작한다. ref 로 "이미 한 번 지연했다"를 추적하지 않는다 —
+    // React StrictMode 의 effect 이중 실행(mount→cleanup→mount) 에서 ref 가 phantom 첫 실행에
+    // 소비돼 실제 마운트에서 지연이 스킵되는 문제가 있었다. postIndex 자체로 판단하면 안전하다.
+    if (postIndex === 0) {
+      setBgActive("earth1");
+      const t = window.setTimeout(runLine, 900);
+      bgTimersRef.current.push(t);
+    } else {
+      runLine();
+    }
+
+    return () => {
+      clearBgTimers();
+      if (typeIntervalRef.current !== null) {
+        window.clearInterval(typeIntervalRef.current);
+        typeIntervalRef.current = null;
+      }
+    };
+  }, [postIndex]);
+
+  const advance = () => {
+    if (typing) {
+      if (typeIntervalRef.current !== null) {
+        window.clearInterval(typeIntervalRef.current);
+        typeIntervalRef.current = null;
+      }
+      setTyped(POST_LINES[postIndex]);
+      setTyping(false);
+      return;
+    }
+    // 가드: index0은 earth3, index1은 classroom 배경이 활성화된 뒤에만 진행(원본과 동일).
+    if (postIndex === 0 && bgActive !== "earth3") return;
+    if (postIndex === 1 && bgActive !== "classroom") return;
+    if (postIndex < POST_LINES.length - 1) {
+      setPostIndex(postIndex + 1);
+    } else {
+      onDone();
+    }
+  };
+
+  // 클릭/Enter/Space 로 진행. advance() 가 참조하는 상태를 의존성으로 둬 재렌더마다 리바인딩되지 않게 한다.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") advance();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [typing, postIndex, bgActive]);
+
+  // 마지막 줄은 완성 시 '\n' 뒤를 강조 span 으로(원본 completePostTyping()).
+  const renderText = () => {
+    const text = POST_LINES[postIndex];
+    if (!typing && postIndex === POST_LINES.length - 1 && text.includes("\n")) {
+      const [first, last] = text.split("\n");
+      return (
+        <>
+          {first}
+          <br />
+          <span className="hc-post-emphasis">{last}</span>
+        </>
+      );
+    }
+    return typed;
+  };
+
+  return (
+    <div className="hc-epilogue-root" onClick={advance}>
+      {EPILOGUE_BG_ORDER.map((key) => (
+        <div
+          key={key}
+          className={`hc-post-bg${bgActive === key ? " active" : ""}`}
+          style={{ backgroundImage: `url(${EPILOGUE_BG[key]})` }}
+        />
+      ))}
+      <div className={`hc-post-blackout${blackoutGo ? " go" : ""}`} />
+      <div className="hc-post-dialogue">
+        <img className="hc-post-hati" src={HATI_DEFAULT} alt="기본 하티" />
+        <span className="hc-post-speaker">하티</span>
+        <p className={`hc-post-text${typing ? " typing" : ""}`}>{renderText()}</p>
+        <span className="hc-post-next">▶</span>
+      </div>
     </div>
   );
 }
