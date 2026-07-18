@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하트가디언즈 — 안개 행성 미션1</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- #stage: 미션 무대는 1920×1200 좌표계(원본 useFitStage 기본값과 동일), px 절대배치.
+         player/ 엔진 관례를 그대로 따른다(R1 뼈대의 숫자만 1280×800 → 1920×1200 교체).
+         ⚠ 이 미션은 mission01.json 이 line/minigame 노드만 쓴다(choice/branch/radar 없음)
+         → mission1(planet1) 템플릿보다 가벼운 부분집합. -->
+    <div id="stage">
+      <!-- 배경(안개 행성 — 전 구간 동일 이미지) -->
+      <img id="bg" src="" alt="" />
+      <div id="lightOverlay"></div>
+
+      <!-- 진행 스테퍼(좌상단) — 정적 3단계, 라벨은 MISSION_STEPS(theme.ts) 그대로 -->
+      <div id="progress">
+        <div class="prog-title">
+          <span class="star">⭐</span>
+          <span>탐험 진행도</span>
+        </div>
+        <div class="stepper">
+          <div class="pnode" id="mission1">
+            <div class="circle"><span class="num">1</span></div>
+            <div class="label">감정 설명서</div>
+          </div>
+          <div class="connector" id="conn1"></div>
+          <div class="pnode" id="mission2">
+            <div class="circle"><span class="num">2</span></div>
+            <div class="label">공감 레이더 만들기</div>
+          </div>
+          <div class="connector" id="conn2"></div>
+          <div class="pnode" id="mission3">
+            <div class="circle"><span class="num">3</span></div>
+            <div class="label">숨은 감정 찾기</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 인트로 타이틀 배너 -->
+      <div id="titleBanner">
+        <div class="tb-badge">
+          <span class="tb-star">★</span>
+          <span class="tb-pill">미션 1</span>
+          <span class="tb-star">★</span>
+        </div>
+        <div class="tb-title">감정 설명서</div>
+        <div class="tb-ribbon">
+          <span class="tb-spark">✦</span>
+          <span>마음의 차이를 발견하라!</span>
+          <span class="tb-spark">✦</span>
+        </div>
+      </div>
+
+      <!-- 인트로 전신 하티 -->
+      <img id="hatiFull" src="../../assets/char/Hati/hati_robot_explaining.png" alt="하티" />
+
+      <!-- 인트로 하티 말풍선 -->
+      <div id="hatiBubble" class="bubble">
+        <div class="bubble-name">하티</div>
+        <span></span>
+      </div>
+
+      <!-- 친구(placeholder) — mission01.json 전 노드가 hideFriend:true 라 실제로는 안 보인다. -->
+      <div id="friendWrap">
+        <img id="friend" class="pop" src="" alt="루미" />
+      </div>
+      <div id="friendBubble" class="bubble"><span></span></div>
+
+      <!-- 완성 이미지 뒤 금빛 후광(fx_result_glow) -->
+      <div id="choiceGlow"></div>
+      <!-- 화면 가운데 큰 이미지(노드 image) — preplay(표지)/result(완성) -->
+      <img id="choiceImage" src="" alt="" />
+
+      <!-- 화면 가운데 카드들(공감 카드) -->
+      <div id="cardStage"></div>
+
+      <!-- 미니게임(감정 설명서) 마운트 지점 — EmotionGuideStage.tsx 이식 -->
+      <div id="minigameLayer"></div>
+
+      <!-- 하티 가이드 박스 -->
+      <div id="hatiBox">
+        <img id="hatiAvatar" class="pop" src="" alt="하티" />
+        <div>
+          <div id="hatiName">하티</div>
+          <div id="hatiText"></div>
+        </div>
+      </div>
+
+      <!-- 다음 미션으로 버튼(엔딩) -->
+      <button id="nextBtn" type="button" data-sfx="none">다음 미션으로 <span>➜</span></button>
+
+      <!-- 탭 힌트 -->
+      <div id="tapHint"></div>
+
+      <!-- 반짝임 fx 레이어 -->
+      <div id="fxLayer"></div>
+    </div>
+
+    <!-- DEV 전용 테스트 계정. gitignore된 www/dev-config.js가 있을 때만 로드(없으면 무시). -->
+    <script src="../../dev-config.js" onerror="this.remove()"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
