@@ -585,8 +585,9 @@ function classifyVerifyError(err) {
    이 API 는 토큰이 없으므로 R2 표의 `token` 자리에 자격증명(creds)을 둔다 —
    보호된 페이지가 hg_session 하나만 읽어도 API 호출용 x-* 헤더를 만들 수 있게.
    classBoard 는 [planet1_url, planet2_url, planet3_url] 배열(없으면 각 null).
-   progress(0~4)는 서버 권위값을 담고, 동시에 hg_progress(행성 불리언)에 병합해
-   home 의 진도 표시가 서버/로컬 합집합을 읽게 한다(R2 "서버/로컬 병합").
+   progress(0~4)는 서버 권위값을 담고, 동시에 hg_progress(행성 불리언)를 이 값으로
+   덮어쓴다 — 로그인 시점엔 서버가 권위라 교사의 서버 리셋이 기기에 반영된다.
+   (PUT 실패로 서버가 못 받은 진도는 hg_pending_sync 재전송이 로그인 직전에 복구.)
    ========================================================================== */
 function saveSession(creds, profile, progress, board) {
   const classBoard = board
@@ -604,23 +605,53 @@ function saveSession(creds, profile, progress, board) {
   } catch (_) {
     /* 무시 */
   }
-  mergeProgress(progress);
+  overwriteProgress(progress);
   return session;
 }
 
-/** 서버 progress(숫자 0~4)를 hg_progress(행성 불리언)에 합집합으로 병합. */
-function mergeProgress(progress) {
-  let cur = {};
+/** 서버 progress(숫자 0~4)로 hg_progress(행성 불리언)를 **덮어쓴다** — 로그인 시점은 서버가 권위.
+ *  상향 병합이 아니라 덮어쓰기인 이유: 교사가 서버에서 진도를 리셋하면 다음 로그인에 기기에도
+ *  반영돼야 한다. PUT 실패로 서버가 못 받은 진도는 syncPendingProgress 가 로그인 직전에 재전송해
+ *  여기서 받는 서버값에 이미 포함된다. (플레이 중에는 completePlanet 이 상향 병합만 하므로
+ *  세션 중 진도가 깎이는 일은 없다.) */
+function overwriteProgress(progress) {
+  const next = {};
+  for (let n = 1; n <= 4; n++) {
+    if (n <= progress) next["planet" + n] = true;
+  }
   try {
-    cur = JSON.parse(localStorage.getItem("hg_progress") || "{}") || {};
+    localStorage.setItem("hg_progress", JSON.stringify(next));
   } catch (_) {
-    cur = {};
+    /* 무시 */
+  }
+}
+
+/** 행성 완료 PUT 이 실패했던 기록(hg_pending_sync)을 로그인 때 재전송한다.
+ *  성공한 행성만 기록에서 지운다 — 곧이어 받는 서버 progress 에 반영되게 하기 위함.
+ *  재전송이 실패해도 로그인은 막지 않는다(기록이 남아 다음 로그인에 재시도). */
+async function syncPendingProgress(creds) {
+  let pending = {};
+  try {
+    pending = JSON.parse(localStorage.getItem("hg_pending_sync") || "{}") || {};
+  } catch (_) {
+    pending = {};
   }
   for (let n = 1; n <= 4; n++) {
-    if (n <= progress) cur["planet" + n] = true;
+    if (!pending["planet" + n]) continue;
+    try {
+      await apiRequest("/api/progress/" + n, {
+        method: "PUT",
+        headers: authHeaders(creds),
+        body: { review: "행성 " + n + " 클리어" },
+      });
+      delete pending["planet" + n];
+      console.log("[progress] 보류 진도 재전송 성공: 행성", n);
+    } catch (e) {
+      console.warn("[progress] 보류 진도 재전송 실패 — 다음 로그인에 재시도: 행성", n, e);
+    }
   }
   try {
-    localStorage.setItem("hg_progress", JSON.stringify(cur));
+    localStorage.setItem("hg_pending_sync", JSON.stringify(pending));
   } catch (_) {
     /* 무시 */
   }
@@ -692,6 +723,8 @@ function pickDefaultSchool(schools, lastId) {
   /* ---- 로그인 성공 공통 처리: 세션 채우고 Home 으로 (index.tsx enter()) ---- */
   async function enter(creds) {
     const profile = await verify(creds); // 성공 시 자격증명 저장
+    // PUT 실패로 서버가 못 받은 진도가 있으면 먼저 재전송 — 아래 getProgress 가 반영된 값을 받는다.
+    await syncPendingProgress(creds);
     // progress 는 필수, board 는 부가정보라 실패해도 null 로 진행.
     const [prog, board] = await Promise.all([getProgress(), getClassBoard().catch(() => null)]);
     const progress = prog && typeof prog.progress === "number" ? prog.progress : 0;
