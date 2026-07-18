@@ -69,7 +69,12 @@ p4_m3_play    (minigame: heartConnect, next: null)
 - 원본 **스토리 화면(하티 대사 3줄)은 엔진 노드가 아니라 미니게임 `story` phase**가 원본 룩 그대로 그린다(아래 phase 머신 참고).
 - `p4_m3_play`가 종착점(`next: null`). 미니게임이 성공 화면·"우주선으로 이동" 버튼까지 소유하므로
   mission2에 있던 `completeBanner`/보상카드 엔진 end 노드는 두지 않는다 — 원본 성공 배너가 그 역할.
-- 원본 성공 화면 버튼 = 미니게임 `onDone` → 미션 시나리오 종료 → `MissionPlayer onExit` 발화.
+- **엔진 완료 버튼 우회(중요)**: 엔진의 `showNext`(완료 버튼)는 `fx_light_return` 커맨드에서만 켜진다
+  (`MissionPlayer.tsx` `lightReturn` case). 미니게임이 종착 노드면 `onDone`→`finishMinigame`→`end()`는
+  `showNext`를 켜지 않아 엔진 완료 버튼이 뜨지 않고 `onExit`도 발화하지 못한다. 따라서 원본 성공 화면의
+  "우주선으로 이동" 버튼은 엔진 완료 버튼을 거치지 않고 **직접 홈으로** 보낸다 — `index.tsx`에서 미니게임에
+  홈 이동 콜백(`completePlanet(4)` + `nav("/home")`)을 `onDone`으로 직접 넘긴다(엔진 `finishMinigame`은
+  쓰지 않음. 미션이 미니게임에서 끝나 이후 엔진 화면이 없으므로 안전). `p4_m3_play`에는 `fx_light_return`을 넣지 않는다.
 - `index.tsx`의 기존 `finish={{ label: "우주선으로 이동" }}`는 미니게임 성공 화면과 중복이므로 제거.
 
 ## `HeartConnectStage` phase 머신
