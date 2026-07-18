@@ -309,17 +309,17 @@ document.body.appendChild(muteBtn);
      MPA는 프롤로그·미션마다 별도 페이지다. 아직 없는 페이지를 가리켜도 된다.
      경로는 ROOT(이 페이지→루트 접두어) 기준. */
   const COMMON = [
-    { label: "로그인(auth)", href: ROOT + "auth/" },
-    { label: "홈(home)", href: ROOT + "home/" },
+    { label: "로그인(auth)", href: ROOT + "auth/index.html" },
+    { label: "홈(home)", href: ROOT + "home/index.html" },
   ];
   const COL_HEAD = ["프롤로그", "미션1", "미션2", "미션3"];
   // 각 행성의 4칸(프롤로그, 미션1, 미션2, 미션3). 없는 칸은 null.
   // 행성3은 미션2·3이 한 미니게임(stage2)이라 mission23 한 칸으로 합치고 미션3 칸은 비운다.
   const PLANETS = [
-    { n: 1, cells: ["planet1/prologue/", "planet1/mission1/", "planet1/mission2/", "planet1/mission3/"] },
-    { n: 2, cells: ["planet2/prologue/", "planet2/mission1/", "planet2/mission2/", "planet2/mission3/"] },
-    { n: 3, cells: ["planet3/prologue/", "planet3/mission1/", "planet3/mission23/", null] },
-    { n: 4, cells: ["planet4/prologue/", "planet4/mission1/", "planet4/mission2/", "planet4/mission3/"] },
+    { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
+    { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
   const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "clear", "0", "back"];
@@ -452,7 +452,7 @@ document.body.appendChild(muteBtn);
         text: "⚠️ 엔딩에서 진도가 자동 저장됩니다",
       });
       const home = el("button", { type: "button", class: "hidden-menu__home", text: "홈으로" });
-      home.addEventListener("click", () => go(ROOT + "home/"));
+      home.addEventListener("click", () => go(ROOT + "home/index.html"));
       bodyEl = el("div", { class: "hidden-menu__grid-wrap" }, [warn, common, grid, home]);
     }
 
@@ -596,5 +596,5 @@ document.body.appendChild(muteBtn);
   }
 
   // 시작하기 → auth 로 이동(페이드 아웃).
-  startBtn.addEventListener("click", () => fadeNav(ROOT + "auth/"));
+  startBtn.addEventListener("click", () => fadeNav(ROOT + "auth/index.html"));
 })();

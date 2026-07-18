@@ -11,7 +11,7 @@ const ASSETS = ROOT + "assets"; // 미션 데이터의 "/assets/..." → 이 접
    R2 세션 가드 — hg_session 없으면 로그인으로. (intro·auth 이외 전 페이지)
    ========================================================================== */
 if (!localStorage.getItem("hg_session")) {
-  location.href = ROOT + "auth/";
+  location.href = ROOT + "auth/index.html";
 }
 
 /* ==========================================================================
@@ -249,15 +249,15 @@ document.body.appendChild(muteBtn);
   }
 
   const COMMON = [
-    { label: "로그인(auth)", href: ROOT + "auth/" },
-    { label: "홈(home)", href: ROOT + "home/" },
+    { label: "로그인(auth)", href: ROOT + "auth/index.html" },
+    { label: "홈(home)", href: ROOT + "home/index.html" },
   ];
   const COL_HEAD = ["프롤로그", "미션1", "미션2", "미션3"];
   const PLANETS = [
-    { n: 1, cells: ["planet1/prologue/", "planet1/mission1/", "planet1/mission2/", "planet1/mission3/"] },
-    { n: 2, cells: ["planet2/prologue/", "planet2/mission1/", "planet2/mission2/", "planet2/mission3/"] },
-    { n: 3, cells: ["planet3/prologue/", "planet3/mission1/", "planet3/mission23/", null] },
-    { n: 4, cells: ["planet4/prologue/", "planet4/mission1/", "planet4/mission2/", "planet4/mission3/"] },
+    { n: 1, cells: ["planet1/prologue/index.html", "planet1/mission1/index.html", "planet1/mission2/index.html", "planet1/mission3/index.html"] },
+    { n: 2, cells: ["planet2/prologue/index.html", "planet2/mission1/index.html", "planet2/mission2/index.html", "planet2/mission3/index.html"] },
+    { n: 3, cells: ["planet3/prologue/index.html", "planet3/mission1/index.html", "planet3/mission23/index.html", null] },
+    { n: 4, cells: ["planet4/prologue/index.html", "planet4/mission1/index.html", "planet4/mission2/index.html", "planet4/mission3/index.html"] },
   ];
 
   const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "clear", "0", "back"];
@@ -388,7 +388,7 @@ document.body.appendChild(muteBtn);
         text: "⚠️ 엔딩에서 진도가 자동 저장됩니다",
       });
       const home = el("button", { type: "button", class: "hidden-menu__home", text: "홈으로" });
-      home.addEventListener("click", () => go(ROOT + "home/"));
+      home.addEventListener("click", () => go(ROOT + "home/index.html"));
       bodyEl = el("div", { class: "hidden-menu__grid-wrap" }, [warn, common, grid, home]);
     }
 
@@ -1018,7 +1018,7 @@ const devStage2 = PARAMS.has("stage2");
     exiting = true;
     els.nextBtn.disabled = true;
     completePlanet(3); // 낙관적 로컬 갱신 + 백그라운드 서버 저장(논블로킹)
-    fadeNav(ROOT + "home/"); // 저장을 기다리지 않고 즉시 전환
+    fadeNav(ROOT + "home/index.html"); // 저장을 기다리지 않고 즉시 전환
   });
 
   // ---------- 렌더 ----------
