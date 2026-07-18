@@ -1,7 +1,16 @@
+/* ==========================================================================
+   R1 공통 뼈대 (페이지마다 복사) — FixedStage 인라인
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* hidden 속성이 author display 규칙(예: .intro__start{display:inline-flex})을
+   확실히 이기게 한다 — 안 그러면 UA의 [hidden]{display:none}이 밀려 안 숨는다. */
+[hidden] {
+  display: none !important;
 }
 
 html,
@@ -20,4 +29,389 @@ body {
   height: 800px;
   transform-origin: center;
   overflow: hidden;
+}
+
+/* ==========================================================================
+   공통 폰트/버튼 (React 앱 global.css 이식) — 씬 텍스트·버튼 룩
+   ========================================================================== */
+@font-face {
+  font-family: "BMJUA";
+  src: url("assets/font/BMJUA.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  color: #fff;
+  font-family: "BMJUA", "Pretendard", system-ui, -apple-system, sans-serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  font-size: 22px;
+  box-shadow: 0 6px 0 #5b21b6;
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #5b21b6;
+}
+.btn.ghost {
+  background: #1e293b;
+  box-shadow: 0 6px 0 #0f172a;
+}
+
+/* ==========================================================================
+   intro 씬 (src/scenes/intro/Intro.css 이식)
+   ========================================================================== */
+.intro {
+  /* #stage(1280×800) 안을 채운다. 무대 밖 뷰포트 단위(100vw/dvh) 대신 무대 100%. */
+  position: absolute;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+.intro__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  /* 첫 프레임 준비 전엔 숨겨 WebView 기본 회색 플레이스홀더를 가린다.
+     뒤의 .intro 검은 배경만 보이다가, 준비되면 페이드 인. */
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.intro__video.is-ready {
+  opacity: 1;
+}
+
+/* 영상 위를 덮는 투명 탭 레이어 (탭하면 소리 켜기) */
+.intro__tap-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* 소리 켜기 힌트 (하단 중앙) */
+.intro__sound-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(11, 16, 32, 0.7);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  pointer-events: none;
+  animation: intro-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes intro-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 건너뛰기 (우상단) — .btn.ghost 확장 */
+.intro__skip {
+  position: absolute;
+  top: calc(56px + env(safe-area-inset-top));
+  right: calc(16px + env(safe-area-inset-right));
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 18px;
+}
+
+/* 시작하기 (중앙 하단, 만화풍 캔디 버튼) — .btn 확장.
+   중앙 정렬은 margin auto로 처리하여 transform을 애니메이션/active에 양보한다. */
+.intro__start {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  bottom: calc(205px + env(safe-area-inset-bottom));
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 44px;
+  font-size: 30px;
+  font-weight: 800;
+  border-radius: 999px;
+  animation:
+    intro-fade-in 0.4s ease-out both,
+    intro-bounce 2s ease-in-out 0.4s infinite;
+}
+
+@keyframes intro-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ==========================================================================
+   공통 블록 A — 씬 전환 페이드 오버레이 (script.js fadeNav 가 토글)
+   무대 밖 앱 크롬. sceneTransition.tsx 의 fade-to-black 이식.
+   ========================================================================== */
+#scene-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* 히든 메뉴(10001)보다 아래, 그 외 모두 위 */
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease; /* FADE_MS = 160 (원본과 동일) */
+}
+#scene-fade.is-on {
+  opacity: 1;
+  pointer-events: auto; /* 전환 중 입력 차단 */
+}
+
+/* ==========================================================================
+   공통 블록 B — 음소거 버튼 (src/lib/mute-button.css 이식)
+   우상단. 좌상단은 히든 메뉴 진입 제스처(200×200)가 쓴다.
+   ========================================================================== */
+.mute-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 9000; /* 전환 오버레이(10000)·히든 메뉴보다 아래 */
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.5; /* 아이의 주의를 끌지 않게 — 필요할 때만 보이면 된다 */
+}
+
+.mute-btn:hover,
+.mute-btn:focus-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   공통 블록 C — 교사용 히든 점프 메뉴 (src/lib/hidden-menu.css 이식)
+   앱 루트(무대 바깥)에 뜨는 전역 오버레이라 #stage(1280×800) 좌표계와 무관하다.
+   여기서는 vw/vh를 쓴다 — CLAUDE.md의 vh/vw 금지는 무대 안 씬 규칙이고
+   이 오버레이는 무대 밖 앱 크롬이다.
+   ========================================================================== */
+.hidden-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10001; /* 전환 페이드(10000)보다 위 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: system-ui, sans-serif;
+}
+
+.hidden-menu__panel {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #12161f;
+  color: #e8eef8;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hidden-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.hidden-menu__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hidden-menu__pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+}
+
+.hidden-menu__dots {
+  display: flex;
+  gap: 12px;
+}
+
+.hidden-menu__dots span {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #4a5a70;
+  border-radius: 50%;
+}
+
+.hidden-menu__dots span.on {
+  background: #e8eef8;
+  border-color: #e8eef8;
+}
+
+.hidden-menu__wrong {
+  margin: 0;
+  color: #ff8a8a;
+  font-size: 14px;
+}
+
+.hidden-menu__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+}
+
+.hidden-menu__keys button {
+  height: 56px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.hidden-menu__keys button:active {
+  background: #36435c;
+}
+
+.hidden-menu__warn {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #7a5a20;
+  border-radius: 8px;
+  background: #3a2a10;
+  color: #ffd479;
+  font-size: 14px;
+}
+
+/* MPA 이식: 열은 [행성, 프롤로그, 미션1, 미션2, 미션3] 5칸으로 넓혔다
+   (React SPA는 미션1~3+엔딩 4칸이었으나, vanilla MPA는 프롤로그·미션을 별도 페이지로 나눈다). */
+.hidden-menu__grid {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.hidden-menu__col,
+.hidden-menu__row {
+  font-size: 13px;
+  color: #9fb0c8;
+}
+
+.hidden-menu__col {
+  text-align: center;
+}
+
+.hidden-menu__grid button {
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hidden-menu__grid button:active {
+  background: #36435c;
+}
+
+/* 빈 칸(행성3 미션3 자리 등) 표시용 — 링크 없는 자리 */
+.hidden-menu__grid .hidden-menu__empty {
+  height: 48px;
+}
+
+/* 공통 링크(auth/home) 줄 */
+.hidden-menu__common {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hidden-menu__common button {
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__common button:active {
+  background: #36435c;
+}
+
+.hidden-menu__home {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f5d3a;
+  color: #e8eef8;
+  font-size: 15px;
+  cursor: pointer;
 }

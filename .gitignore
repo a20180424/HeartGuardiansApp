@@ -21,6 +21,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# DEV 테스트 계정 (no-build MPA 용, .env.local 의 HG_TEST_* 대체) — 커밋 금지.
+www/dev-config.js
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
