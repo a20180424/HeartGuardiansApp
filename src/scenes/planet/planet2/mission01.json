@@ -47,16 +47,8 @@
       "noAuto": true,
       "text": "사람마다 감정과 공감 방식이 다르다는 걸 이해하는 것이 중요해",
       "cards": [
-        {
-          "image": "/assets/planet2/fog-planet-empathy-card.png",
-          "top": "똑같은 상황을 겪어도 서로 다르게 생각하거나 느낄 수 있다.",
-          "bottom": ""
-        },
-        {
-          "image": "/assets/planet2/fog-planet-empathy-card.png",
-          "top": "사람마다 감정 해소 방법과 공감 방법이 다를 수 있다",
-          "bottom": ""
-        }
+        { "image": "/assets/planet2/fog-planet-empathy-card-1.png" },
+        { "image": "/assets/planet2/fog-planet-empathy-card-2.png" }
       ],
       "next": "p2_m1_end"
     },

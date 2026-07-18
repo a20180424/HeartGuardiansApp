@@ -124,16 +124,8 @@
       "id": "m2_secret_lesson", "type": "line", "noAuto": true, "speaker": "hati", "hideFriend": true,
       "text": "공감은 상대방의 마음에 먼저 집중하는 것이야. 내 생각과 판단은 잠시 접어두기로 해.",
       "cards": [
-        {
-          "image": "/assets/ui/light-planet-empathy-card.png",
-          "top": "같은 말도 친구마다 다르게 느껴질 수 있다.",
-          "bottom": "사람마다 마음의 온도는 다르답니다."
-        },
-        {
-          "image": "/assets/ui/light-planet-empathy-card.png",
-          "top": "관심과 위로도 친구가 원할 때 더 따듯한 법이다.",
-          "bottom": "때로는 묵묵히 기다려 주는 것도 공감이예요."
-        }
+        { "image": "/assets/planet1/light-planet-empathy-card-3.png" },
+        { "image": "/assets/planet1/light-planet-empathy-card-4.png" }
       ],
       "next": "m2_end1"
     },

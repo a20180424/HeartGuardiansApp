@@ -80,11 +80,8 @@
       "noAuto": true,
       "text": "내 감정을 다양한 말로 표현할수록 내 마음을 더 잘 이해하게 되고, 친구의 마음도 더 잘 알아차려 공감할 수 있어!",
       "cards": [
-        {
-          "image": "/assets/planet2/fog-planet-empathy-card.png",
-          "top": "감정을 정확하게 표현할수록 친구의 마음도 더 잘 이해할 수 있다",
-          "bottom": "내가 느끼는 감정을 솔직하고 정확하게 표현하면 친구는 내 마음을 더 잘 이해할 수 있고 서로를 더 가깝게 만들어줘요."
-        }
+        { "image": "/assets/planet2/fog-planet-empathy-card-3.png" },
+        { "image": "/assets/planet2/fog-planet-empathy-card-4.png" }
       ],
       "next": "p2_m2_end"
     },

@@ -26,16 +26,8 @@
       "noAuto": true,
       "text": "같은 감정도 사람마다 표현하는 방법은 달라. 그래서 우리는 겉모습만 보고 판단하면 안돼!",
       "cards": [
-        {
-          "image": "/assets/planet2/fog-planet-empathy-card.png",
-          "top": "같은 감정이라도 사람마다 표현하는 방법이 다르다",
-          "bottom": "같은 감정도 사람마다 표현하는 방법은 달라요."
-        },
-        {
-          "image": "/assets/planet2/fog-planet-empathy-card.png",
-          "top": "친구의 감정을 섵불리 판단하지 말고, 평소 친구의 모습과 상황을 함께 살펴본다",
-          "bottom": "그래서 우리는 겉모습만 보고 판단하면 안되요"
-        }
+        { "image": "/assets/planet2/fog-planet-empathy-card-5.png" },
+        { "image": "/assets/planet2/fog-planet-empathy-card-6.png" }
       ],
       "next": "p2_m3_result"
     },
