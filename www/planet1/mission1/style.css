@@ -1,0 +1,1129 @@
+/* ==========================================================================
+   R1 공통 뼈대 (페이지마다 복사) — FixedStage 인라인.
+   ⚠ 미션 페이지는 무대가 1920×1200(원본 useFitStage 기본값 = player/ 엔진 관례).
+      1280×800 씬 뼈대에서 숫자만 교체했다.
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+/* 미션 폰트 — mission.css #viewport 와 동일(BMJUA 아님). Pretendard 미설치 시 시스템 고딕. */
+body {
+  color: #fff;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  touch-action: manipulation;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1920px;
+  height: 1200px;
+  transform-origin: center center;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #15244a;
+  user-select: none;
+}
+
+/* ==========================================================================
+   미션 화면 (src/scenes/planet/player/mission.css 이식 — 미션1이 실제 쓰는 규칙만 추출).
+   좌표계는 #stage(1920×1200) 기준. 경로: /assets/... 는 script.js 가 ../../assets/... 로.
+   ========================================================================== */
+
+/* ---------- background ---------- */
+#bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: filter 1.2s ease;
+}
+#stage.bright #bg {
+  filter: brightness(1.18) saturate(1.12);
+}
+
+#lightOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle at 72% 46%,
+    rgba(255, 224, 150, 0.55),
+    rgba(255, 224, 150, 0) 55%
+  );
+  transition: opacity 1.4s ease;
+}
+#stage.bright #lightOverlay {
+  opacity: 1;
+}
+
+/* ---------- progress stepper (top-left) ---------- */
+#progress {
+  position: absolute;
+  top: 34px;
+  left: 44px;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  gap: 34px;
+}
+.prog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  background: #fff;
+  border-radius: 40px;
+  padding: 14px 26px 14px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+  font-size: 26px;
+  color: #1f2937;
+  white-space: nowrap;
+}
+.prog-title .star {
+  font-size: 30px;
+}
+.stepper {
+  display: flex;
+  align-items: flex-start;
+}
+.pnode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 162px;
+}
+.pnode .circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 38px;
+  line-height: 1;
+  background: #2b3550;
+  color: #aab4c8;
+  border: 4px solid #4a5570;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+.pnode .label {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  color: #cdd6e8;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.pnode.active .circle {
+  background: linear-gradient(160deg, #a3e635, #5fae00);
+  color: #1e2b00;
+  border-color: #d6ff8a;
+  box-shadow:
+    0 0 26px rgba(150, 230, 40, 0.7),
+    0 6px 14px rgba(0, 0, 0, 0.3);
+  animation: pnodePulse 1.8s ease-in-out infinite;
+}
+.pnode.active .label {
+  color: #d9ff9c;
+}
+@keyframes pnodePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+.pnode.done .circle {
+  background: linear-gradient(160deg, #7dd3fc, #2563eb);
+  color: #fff;
+  border-color: #bfdbfe;
+  box-shadow:
+    0 0 18px rgba(80, 160, 255, 0.5),
+    0 6px 14px rgba(0, 0, 0, 0.3);
+}
+.pnode.done .circle .num {
+  display: none;
+}
+.pnode.done .circle::after {
+  content: "✓";
+  font-size: 46px;
+  font-weight: 900;
+}
+.pnode.done .label {
+  color: #bfe3ff;
+}
+.pnode.locked .circle {
+  opacity: 0.55;
+}
+.pnode.locked .circle::after {
+  content: "🔒";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  font-size: 24px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+.pnode.locked .label {
+  opacity: 0.55;
+}
+.connector {
+  width: 70px;
+  height: 8px;
+  border-radius: 6px;
+  margin-top: 38px;
+  background: rgba(255, 255, 255, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+.connector::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: linear-gradient(90deg, #a3e635, #65c20a);
+  border-radius: 6px;
+  transition: width 1s ease;
+}
+.connector.filled::after {
+  width: 100%;
+}
+
+/* ---------- radar device (left) ---------- */
+#radarHud {
+  position: absolute;
+  left: 70px;
+  top: 250px;
+  z-index: 3;
+}
+#radarHud #radarPlatform {
+  position: absolute;
+  left: -210px;
+  top: 330px;
+  z-index: 1;
+  height: 650px;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+#radarHud #radar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  height: 560px;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+  transition: transform 0.4s ease;
+}
+#radar.pulse {
+  animation: radarPulse 1.1s ease 3;
+}
+@keyframes radarPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 40px rgba(120, 240, 90, 0.85));
+  }
+}
+
+/* ---------- mission title banner (intro only) ---------- */
+#titleBanner {
+  position: absolute;
+  top: 90px;
+  left: 712px;
+  width: 700px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-14px) scale(0.96);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+#titleBanner.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.tb-badge {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.tb-star {
+  color: #f7c948;
+  font-size: 36px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+.tb-pill {
+  background: linear-gradient(160deg, #7cb342, #558b2f);
+  color: #fff;
+  font-weight: 900;
+  font-size: 31px;
+  letter-spacing: 3px;
+  padding: 10px 36px;
+  border-radius: 30px;
+  border: 3px solid #aed581;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+}
+.tb-title {
+  font-size: 78px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-shadow:
+    0 3px 0 rgba(35, 50, 20, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.45),
+    0 0 32px rgba(0, 0, 0, 0.35);
+}
+.tb-ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(180deg, #f8eed4, #eed9ab);
+  color: #4a8a2e;
+  font-weight: 800;
+  font-size: 30px;
+  padding: 11px 46px;
+  clip-path: polygon(
+    22px 0,
+    calc(100% - 22px) 0,
+    100% 50%,
+    calc(100% - 22px) 100%,
+    22px 100%,
+    0 50%
+  );
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.tb-spark {
+  color: #c79a3a;
+  font-size: 24px;
+}
+
+/* ---------- full-body Hati (intro only) ---------- */
+#hatiFull {
+  position: absolute;
+  left: 510px;
+  bottom: -18px;
+  z-index: 4;
+  height: 730px;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
+  opacity: 0;
+  transform: translateY(22px) scale(0.97);
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+#hatiFull.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#hatiBubble {
+  left: 1030px;
+  bottom: 452px;
+  max-width: 600px;
+}
+#hatiBubble .bubble-name {
+  color: #3f8a2e;
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+#hatiBubble::after {
+  content: "";
+  position: absolute;
+  left: 60px;
+  bottom: -22px;
+  border: 18px solid transparent;
+  border-top-color: #fff;
+  border-bottom: 0;
+}
+
+/* ---------- Friend (right) ---------- */
+#friendWrap {
+  position: absolute;
+  right: 120px;
+  bottom: 30px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.4s ease;
+}
+#friendWrap.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+#friend {
+  height: 660px;
+  max-height: 660px;
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.4));
+  transition:
+    transform 0.35s ease,
+    filter 0.6s ease;
+}
+
+/* 루미 후광(회복 시) */
+#friendWrap.glow #friend {
+  animation: friendHalo 2.2s ease-in-out infinite;
+}
+@keyframes friendHalo {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 20px rgba(255, 238, 170, 0.85))
+      drop-shadow(0 0 48px rgba(255, 210, 120, 0.6)) drop-shadow(0 0 90px rgba(255, 190, 90, 0.4))
+      drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 34px rgba(255, 246, 205, 1))
+      drop-shadow(0 0 82px rgba(255, 216, 132, 0.92)) drop-shadow(0 0 140px rgba(255, 196, 96, 0.7))
+      drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  }
+}
+#friendWrap.glow::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  width: 780px;
+  height: 780px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 242, 185, 0.55) 0%,
+    rgba(255, 216, 124, 0.34) 32%,
+    rgba(255, 200, 92, 0.13) 55%,
+    rgba(255, 200, 92, 0) 72%
+  );
+  filter: blur(6px);
+  animation: friendAura 2.2s ease-in-out infinite;
+}
+@keyframes friendAura {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+@keyframes friendPop {
+  0% {
+    transform: scale(0.96);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+#friend.pop {
+  animation: friendPop 0.4s ease;
+}
+
+/* ---------- q4 드래그: 친구 캐릭터를 드롭 타깃으로 ---------- */
+#friendWrap.droppable #friend {
+  animation: dropReady 1.4s ease-in-out infinite;
+  cursor: pointer;
+}
+@keyframes dropReady {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.45))
+      drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(124, 58, 237, 0.8)) drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  }
+}
+#friendWrap.over #friend {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 40px rgba(124, 58, 237, 0.95)) drop-shadow(0 16px 26px rgba(0, 0, 0, 0.35));
+  animation: none;
+}
+#friendWrap.catching #friend {
+  animation: friendCatch 0.4s ease;
+}
+@keyframes friendCatch {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 드롭 힌트 */
+#dropHint {
+  position: absolute;
+  right: 280px;
+  bottom: 660px;
+  z-index: 5;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.94);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+  animation: hintBob 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+#dropHint.show {
+  display: flex;
+}
+#dropHint .dh-arrow {
+  font-size: 26px;
+}
+@keyframes hintBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* card drag states (q4) */
+.card.dragging {
+  z-index: 50;
+  cursor: grabbing;
+  transition: none;
+  box-shadow: 0 26px 54px rgba(0, 0, 0, 0.42);
+}
+.card.snapback {
+  transition: transform 0.22s cubic-bezier(0.2, 1.25, 0.4, 1);
+}
+.card.landing {
+  transition:
+    transform 0.26s ease,
+    opacity 0.26s ease;
+  pointer-events: none;
+}
+
+/* ---------- speech bubbles ---------- */
+.bubble {
+  position: absolute;
+  z-index: 4;
+  background: #fff;
+  border-radius: 28px;
+  padding: 26px 34px;
+  font-size: 34px;
+  font-weight: 700;
+  color: #283143;
+  line-height: 1.4;
+  white-space: pre-line;
+  word-break: keep-all;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+  max-width: 620px;
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: none;
+}
+.bubble.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+#friendBubble {
+  right: 600px;
+  bottom: 470px;
+}
+#friendBubble::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  bottom: 60px;
+  border: 18px solid transparent;
+  border-left-color: #fff;
+  border-right: 0;
+}
+
+/* ---------- Hati guidance box (bottom-left) ---------- */
+#hatiBox {
+  position: absolute;
+  left: 100px;
+  bottom: 40px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 34px;
+  padding: 26px 48px 26px 170px;
+  min-height: 186px;
+  width: 1040px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+#hatiBox.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+#hatiAvatar {
+  position: absolute;
+  left: -85px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 240px;
+  height: 240px;
+  object-fit: cover;
+}
+@keyframes hatiPop {
+  0% {
+    transform: translateY(-50%) scale(0.86);
+  }
+  60% {
+    transform: translateY(-50%) scale(1.06);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}
+#hatiAvatar.pop {
+  animation: hatiPop 0.35s ease;
+}
+#hatiText {
+  font-size: 36px;
+  font-weight: 700;
+  color: #222b3d;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+#hatiName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #2f6fe0;
+  margin-bottom: 4px;
+}
+
+#tapHint {
+  position: absolute;
+  right: 56px;
+  bottom: 30px;
+  z-index: 6;
+  color: #dfe7ff;
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.3s;
+  animation: bob 1.3s ease infinite;
+}
+#tapHint.show {
+  opacity: 0.9;
+}
+@keyframes bob {
+  50% {
+    transform: translateY(-6px);
+    opacity: 0.5;
+  }
+}
+
+/* ---------- choice cards ---------- */
+#choicePanel {
+  position: absolute;
+  top: 162px;
+  left: 530px;
+  right: 44px;
+  width: fit-content;
+  margin: 0 auto;
+  z-index: 4;
+  padding: 20px 30px 30px;
+  border-radius: 36px;
+  background: rgba(244, 242, 255, 0.92);
+  border: 3px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 16px 44px rgba(60, 40, 120, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: none;
+}
+#choicePanel.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+#choicePrompt {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: #2a2350;
+}
+#choicePrompt:empty {
+  display: none;
+}
+#choices {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 26px;
+}
+.card {
+  position: relative;
+  width: 300px;
+  min-height: 240px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 26px;
+  border: 4px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 30px 22px 26px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.12s;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.card:hover {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.32);
+  border-color: #c7d2fe;
+}
+.card.picked {
+  animation: cardPick 0.22s ease;
+}
+@keyframes cardPick {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-12px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+.card .badge {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 800;
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.card .icon {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 52px;
+  box-shadow:
+    inset 0 0 0 4px rgba(255, 255, 255, 0.7),
+    0 4px 12px rgba(0, 0, 0, 0.18);
+}
+.card .ctext {
+  font-size: 28px;
+  font-weight: 700;
+  color: #283143;
+  text-align: center;
+  line-height: 1.35;
+}
+.card.done {
+  opacity: 0.55;
+  cursor: default;
+  border-style: dashed;
+  border-color: #b9c2d6;
+}
+.card.done::after {
+  content: "✓";
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 34px;
+  color: #16a34a;
+  font-weight: 900;
+}
+.card.done:hover {
+  transform: none;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+.card.smaller {
+  width: 230px;
+  min-height: 214px;
+}
+
+/* 화면 가운데 카드들(엔딩 공감 카드) — 가로 나란히, 높이 기준 + 등장 애니 */
+#cardStage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 96px 40px 40px;
+  pointer-events: none;
+}
+.card-item {
+  position: relative;
+  height: 58%;
+  animation: cardIn 0.5s ease-out both;
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
+}
+.card-item:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.card-item img {
+  height: 100%;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+@keyframes cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- next mission button ---------- */
+#nextBtn {
+  position: absolute;
+  right: 120px;
+  bottom: 70px;
+  z-index: 8;
+  background: linear-gradient(160deg, #9be319, #5aa800);
+  color: #fff;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 26px;
+  padding: 26px 60px;
+  cursor: pointer;
+  box-shadow:
+    0 14px 0 #3c7400,
+    0 20px 30px rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  gap: 18px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+#nextBtn.show {
+  display: flex;
+}
+#nextBtn:active {
+  transform: translateY(6px);
+  box-shadow:
+    0 8px 0 #3c7400,
+    0 12px 20px rgba(0, 0, 0, 0.4);
+}
+#nextBtn:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.4);
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ---------- sparkle fx layer ---------- */
+#fxLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  overflow: hidden;
+}
+.spark {
+  position: absolute;
+  font-size: 40px;
+  opacity: 0;
+  animation: sparkle 1.3s ease forwards;
+}
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.2) rotate(40deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) translateY(-40px) rotate(120deg);
+  }
+}
+
+/* ==========================================================================
+   공통 블록 A — 씬 전환 페이드 오버레이 (script.js fadeNav 가 토글) — 검증본 복사
+   ========================================================================== */
+#scene-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+#scene-fade.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   공통 블록 B — 음소거 버튼 (src/lib/mute-button.css 이식) — 검증본 복사
+   ========================================================================== */
+.mute-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 9000;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.mute-btn:hover,
+.mute-btn:focus-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   공통 블록 C — 교사용 히든 점프 메뉴 (src/lib/hidden-menu.css 이식) — 검증본 복사
+   무대 바깥 전역 오버레이라 #stage 좌표계와 무관(vw/vh 예외 — 공통 블록).
+   ========================================================================== */
+.hidden-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  font-family: system-ui, sans-serif;
+}
+.hidden-menu__panel {
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #12161f;
+  color: #e8eef8;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.hidden-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+.hidden-menu__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 16px;
+  cursor: pointer;
+}
+.hidden-menu__pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+}
+.hidden-menu__dots {
+  display: flex;
+  gap: 12px;
+}
+.hidden-menu__dots span {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #4a5a70;
+  border-radius: 50%;
+}
+.hidden-menu__dots span.on {
+  background: #e8eef8;
+  border-color: #e8eef8;
+}
+.hidden-menu__wrong {
+  margin: 0;
+  color: #ff8a8a;
+  font-size: 14px;
+}
+.hidden-menu__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+}
+.hidden-menu__keys button {
+  height: 56px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 18px;
+  cursor: pointer;
+}
+.hidden-menu__keys button:active {
+  background: #36435c;
+}
+.hidden-menu__warn {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #7a5a20;
+  border-radius: 8px;
+  background: #3a2a10;
+  color: #ffd479;
+  font-size: 14px;
+}
+.hidden-menu__grid {
+  display: grid;
+  grid-template-columns: 72px repeat(4, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+.hidden-menu__col,
+.hidden-menu__row {
+  font-size: 13px;
+  color: #9fb0c8;
+}
+.hidden-menu__col {
+  text-align: center;
+}
+.hidden-menu__grid button {
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__grid button:active {
+  background: #36435c;
+}
+.hidden-menu__grid .hidden-menu__empty {
+  height: 48px;
+}
+.hidden-menu__common {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hidden-menu__common button {
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #263041;
+  color: #e8eef8;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hidden-menu__common button:active {
+  background: #36435c;
+}
+.hidden-menu__home {
+  width: 100%;
+  height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f5d3a;
+  color: #e8eef8;
+  font-size: 15px;
+  cursor: pointer;
+}
