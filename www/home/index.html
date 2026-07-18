@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하트가디언즈 — 홈</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- #stage: 1280×800 좌표계, px 절대배치 (R1) -->
+    <div id="stage">
+      <!-- 홈 화면 내용(프로필/게이지/행성/메뉴/하티/팝업)은 script.js가 그린다.
+           progress(세션)에 따라 상태가 바뀌므로 런타임 구성한다. -->
+      <div class="home" id="home"></div>
+    </div>
+
+    <!-- DEV 전용 테스트 계정. gitignore된 www/dev-config.js가 있을 때만 로드(없으면 무시). -->
+    <script src="../dev-config.js" onerror="this.remove()"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
