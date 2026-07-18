@@ -205,3 +205,70 @@
 /*
 .p4_m2 #hatiBubble::after { left: 60px; bottom: -22px; }
 */
+
+/* ═════════════════════════════════════════════════════════════
+   미션 3 "마지막 공감 연결" — .p4_m3
+   p4_m3_intro 는 theme 의 bannerNode 라 엔진이 전신 하티(#hatiFull) +
+   인트로 말풍선(#hatiBubble) 조합으로 그린다. p4_m3_play(미니게임)엔
+   #titleBanner/#hatiFull/#hatiBubble/#sideImageLeft 가 안 뜨므로 인트로 전용이다.
+   ═════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   1) 좌측 장식 이미지 (#sideImageLeft = 하트 커넥트 우주.png)
+      노드 p4_m3_intro 의 sideImageLeft 로 주입. 원본 1332×1181(거의 정사각).
+      base: left:40px; top:50%; transform:translateY(-50%); height:92%
+      - 좌우 이동:  left
+      - 상하 이동:  top  (또는 translateY -50% 조절)
+      - 크기:       height  (width 는 auto 로 비율 유지)
+      - 좌우 반전:  transform 의 scaleX(-1) (되돌리려면 scaleX(-1) 만 지운다)
+      특이도: .p4_m3 #sideImageLeft (1,1,0) 가 base #sideImageLeft (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m3 #sideImageLeft {
+  left: 60px;
+  top: 54%;
+  transform: translateY(-50%) scaleX(-1);
+  height: 56%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2) 가운데 위 타이틀 세트 (#titleBanner = "미션 3" 알약 + 제목 + 리본) → 오른쪽으로 이동
+      base: top:90px; left:712px; width:700px
+      - 좌우 이동:  left  (값이 클수록 오른쪽)
+      - 상하 이동:  top
+      - 블록 폭:    width (가운데 정렬이라 폭을 바꾸면 중심도 같이 움직인다)
+      특이도: .p4_m3 #titleBanner (1,1,0) 가 base #titleBanner (1,0,0) 를 이긴다.
+      ⚠ 이동은 left/top 으로. transform 은 등장 애니메이션이 쓴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m3 #titleBanner {
+  top: 90px;
+  left: 1000px;
+  width: 700px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3) 인트로 전신 하티 (#hatiFull) → 오른쪽으로 이동
+      base: left:510px; bottom:-18px; height:730px
+      - 좌우 이동:  left    (값이 클수록 오른쪽)
+      - 상하 이동:  bottom  (값이 클수록 위로)
+      - 크기:       height  (width 는 auto 로 비율 유지)
+      특이도: .p4_m3 #hatiFull (1,1,0) 가 base #hatiFull (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m3 #hatiFull {
+  left: 740px;
+  bottom: -18px;
+  height: 700px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4) 인트로 하티 말풍선 (#hatiBubble) → 오른쪽으로 이동
+      base: left:1030px; bottom:452px; max-width:600px
+      - 좌우 이동:  left    (값이 클수록 오른쪽)
+      - 상하 이동:  bottom  (값이 클수록 위로)
+      - 폭:         max-width
+      특이도: .p4_m3 #hatiBubble (1,1,0) 가 base #hatiBubble (1,0,0) 를 이긴다.
+   ───────────────────────────────────────────────────────────── */
+.p4_m3 #hatiBubble {
+  left: 1260px;
+  bottom: 470px;
+  max-width: 560px;
+}

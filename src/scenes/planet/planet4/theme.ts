@@ -97,7 +97,7 @@ export const MISSION02_THEME: MissionTheme = {
 
 export const MISSION03_THEME: MissionTheme = {
   speakers: { hati: { name: "하티", avatar: `${A}/char/Hati/hati_thinking.png` } },
-  banner: { pill: "미션 3", title: MISSION_STEPS[2], ribbon: "다섯 공감 원석을 이어 하트 커넥트를 복원하라!" },
+  banner: { pill: "최종 미션", title: MISSION_STEPS[2], ribbon: "하트 커넥트를 복원하라!" },
   bannerNode: "p4_m3_intro",
   bg: {
     states: { main: `${A}/planet4/heart-connect-interior-bg.png` },
