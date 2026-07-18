@@ -722,6 +722,9 @@ const CourageCompassStage = (function () {
   let root = null;
   let frame = null;
   let chromeEl = null;
+  let shardEls = []; // 용기 조각 span 들(part-update 패치 대상)
+  let pillEls = []; // 스테이지바 알약들(part-update 패치 대상)
+  let shardsAria = null; // .cc-shards (aria-label 갱신용)
   let screenEl = null; // 현재 .cc-game 또는 .cc-reward
   let hatiEl = null; // 하티 피드백 모달(있을 때만)
   let dialogEl = null; // 친구의 말 대화창(있을 때만)
@@ -768,28 +771,30 @@ const CourageCompassStage = (function () {
     goodOnLeft = Array.from({ length: 8 }, () => Math.random() >= 0.5);
   }
 
-  /* ---------- 상단 크롬(용기 조각 + 스테이지바) ---------- */
+  /* ---------- 상단 크롬(용기 조각 + 스테이지바) ----------
+     한 번만 만들고 이후엔 클래스만 패치한다(part-update). 매번 재생성하면 이미 획득한
+     조각들도 삽입 시마다 ccPop 애니메이션을 다시 재생한다 — 원본 React 는 key 안정성으로
+     "이번에 새로 켜진 조각"만 애니메이션되므로, classList.toggle 로 같은 효과를 낸다
+     (이미 .on 인 엘리먼트에 toggle(_, true)는 no-op이라 애니메이션이 재시작되지 않는다). */
   function renderChrome() {
-    if (chromeEl) chromeEl.remove();
     const shardsOn = phase === "reward" ? stageIndex + 1 : stageIndex;
-    const shards = el(
-      "div",
-      { class: "cc-shards" },
-      CC_STAGES.map((s, i) => el("span", { class: "cc-shard" + (i < shardsOn ? " on" : ""), text: "◆" })),
-    );
-    const stagebar = el(
-      "div",
-      { class: "cc-stagebar" },
-      CC_STAGES.map((s, i) =>
-        el("div", {
-          class:
-            "cc-stage-pill" + (i === stageIndex ? " active" : "") + (i < stageIndex ? " done" : ""),
-          text: i + 1 + ". " + s.title,
-        }),
-      ),
-    );
-    chromeEl = el("div", { class: "cc-chrome" }, [shards, stagebar]);
-    frame.appendChild(chromeEl);
+    if (!chromeEl) {
+      shardEls = CC_STAGES.map(() => el("span", { class: "cc-shard", text: "◆" }));
+      pillEls = CC_STAGES.map((s, i) =>
+        el("div", { class: "cc-stage-pill", text: i + 1 + ". " + s.title }),
+      );
+      const shards = el("div", { class: "cc-shards" }, shardEls);
+      shardsAria = shards;
+      const stagebar = el("div", { class: "cc-stagebar" }, pillEls);
+      chromeEl = el("div", { class: "cc-chrome" }, [shards, stagebar]);
+      frame.appendChild(chromeEl);
+    }
+    shardsAria.setAttribute("aria-label", "용기 조각 " + shardsOn + " / " + CC_STAGES.length);
+    shardEls.forEach((s, i) => s.classList.toggle("on", i < shardsOn));
+    pillEls.forEach((p, i) => {
+      p.classList.toggle("active", i === stageIndex);
+      p.classList.toggle("done", i < stageIndex);
+    });
   }
 
   /* ---------- 표지판(뒷면 → 앞면 3D 뒤집기) ---------- */
@@ -935,8 +940,11 @@ const CourageCompassStage = (function () {
   function answer(i) {
     const stage = CC_STAGES[stageIndex];
     const scenario = stage.scenarios[scenarioIndex];
+    // ⚠ 원본(React)은 오답/첫 시나리오 정답 경로에서 dialogOpen 을 유지한다 — 하티 모달만
+    // 위에 띄우고(z-index 40 > 다이얼로그 5), 모달을 닫으면 선택 다이얼로그가 그대로 열려
+    // 있어 즉시 재선택/재시도할 수 있다. 여기서 removeDialog() 를 부르면 갈림길 화면으로
+    // 떨어져 표지판을 다시 탭해야 하는 원본에 없는 추가 스텝이 생긴다.
     if (i !== scenario.answer) {
-      removeDialog();
       showHati({
         message: "친구의 마음을 이해하면서도 친구와 나, 모두를 지키는 말을 골라 보자!",
         success: false,
@@ -945,8 +953,8 @@ const CourageCompassStage = (function () {
       });
       return;
     }
-    removeDialog();
     if (scenarioIndex < stage.scenarios.length - 1) {
+      // 다이얼로그는 모달 아래 유지 — "다음 상황으로" 의 loadScenario 가 정리한다.
       showHati({
         message: "잘했어! 공감의 길을 선택했구나.",
         success: true,
@@ -955,6 +963,7 @@ const CourageCompassStage = (function () {
       });
       return;
     }
+    removeDialog(); // 원본의 setDialogOpen(false) 대응(보상 화면 진입 시에만 닫는다)
     phase = "reward";
     buildRewardScreen();
   }
@@ -1064,6 +1073,9 @@ const CourageCompassStage = (function () {
     root = null;
     frame = null;
     chromeEl = null;
+    shardEls = [];
+    pillEls = [];
+    shardsAria = null;
     screenEl = null;
     hatiEl = null;
     dialogEl = null;
