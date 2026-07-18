@@ -462,3 +462,60 @@
   background: rgba(8, 35, 43, 0.92);
   transform: rotate(45deg);
 }
+
+/* ── video phase: 원본 #videoScreen / .ending-video / .video-shade / .video-complete 이식 ──
+   전체화면 불투명(z-index 110) — 엔진 스테퍼까지 덮는다("피날레 = 스테퍼 페이드아웃" 효과). */
+.hc-video-root {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  background: #000;
+}
+.hc-ending-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+.hc-video-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.68), transparent 32%);
+  opacity: 0;
+  transition: opacity 0.7s;
+}
+.hc-video-shade.ready {
+  opacity: 1;
+}
+.hc-video-complete {
+  position: absolute;
+  left: 50%;
+  bottom: 42px;
+  z-index: 3;
+  min-width: 260px;
+  padding: 16px 30px;
+  border: 2px solid #bff8ff;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 950;
+  cursor: pointer;
+  background: linear-gradient(180deg, rgba(44, 137, 220, 0.95), rgba(18, 59, 137, 0.98));
+  box-shadow: 0 0 24px rgba(76, 211, 255, 0.8);
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+}
+.hc-video-complete.show {
+  opacity: 1;
+  visibility: visible;
+}
+.hc-video-complete:hover {
+  transform: translateX(-50%) translateY(-4px);
+  box-shadow: 0 0 34px #76ecff;
+}

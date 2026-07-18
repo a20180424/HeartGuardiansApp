@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { HATI_DEFAULT, IMG_DIAMOND, MISSIONS, STORY_LINES } from "./heartConnect.data";
+import { HATI_DEFAULT, IMG_DIAMOND, IMG_VIDEO, MISSIONS, STORY_LINES } from "./heartConnect.data";
 import "./HeartConnectStage.css";
 
 // 미션3 "하트 커넥트 : 마지막 연결" 미니게임.
@@ -17,7 +17,8 @@ export default function HeartConnectStage({ onDone }: { onDone: () => void }) {
       <div className="hc-frame">
         {phase === "story" && <StoryPhase onDone={() => setPhase("quiz")} />}
         {phase === "quiz" && <QuizPhase onDone={() => setPhase("video")} />}
-        {/* Task 6~7 에서 video / epilogue 브랜치 추가 */}
+        {phase === "video" && <VideoPhase onDone={() => setPhase("epilogue")} />}
+        {/* Task 7 에서 epilogue 브랜치 추가 */}
         {/* 임시 success 배선(Task 8에서 <SuccessPhase onDone={onDone} /> 로 교체).
             지금은 onDone 을 소비해 noUnusedParameters 오류를 막고, phase 가 success 로 갈 때 홈 이동을 검증한다. */}
         {phase === "success" && (
@@ -240,6 +241,56 @@ function QuizPhase({ onDone }: { onDone: () => void }) {
           </div>
         </aside>
       </div>
+    </div>
+  );
+}
+
+// 원본 finish()(영상 재생 + muted 폴백) + #endingVideo 의 ended 리스너 이식.
+// 전체화면 불투명(z-index 110)으로 엔진 스테퍼까지 덮는다("피날레 = 스테퍼 페이드아웃" 효과).
+function VideoPhase({ onDone }: { onDone: () => void }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [ended, setEnded] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // 원본 finish(): const attempt = video.play(); if(attempt) attempt.catch(()=>{video.muted=true; video.play()})
+    const attempt = video.play();
+    if (attempt) attempt.catch(() => {
+      video.muted = true;
+      video.play().catch(() => {});
+    });
+
+    const onEnded = () => {
+      video.pause();
+      // 원본: Number.isFinite(video.duration) 이면 마지막 프레임 근처(duration-.04)에 정지.
+      if (Number.isFinite(video.duration)) video.currentTime = Math.max(0, video.duration - 0.04);
+      setEnded(true);
+    };
+    video.addEventListener("ended", onEnded);
+    return () => {
+      video.removeEventListener("ended", onEnded);
+      video.pause();
+    };
+  }, []);
+
+  return (
+    <div className="hc-video-root">
+      <video
+        ref={videoRef}
+        className="hc-ending-video"
+        preload="auto"
+        playsInline
+        src={IMG_VIDEO}
+      />
+      <div className={`hc-video-shade${ended ? " ready" : ""}`} />
+      <button
+        type="button"
+        className={`hc-video-complete${ended ? " show" : ""}`}
+        onClick={onDone}
+      >
+        복원 완료 확인
+      </button>
     </div>
   );
 }
