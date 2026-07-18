@@ -8,7 +8,7 @@
 
 - **URL**: `/home`
 - **컴포넌트**: `src/scenes/Home.tsx`
-- **흐름상 위치**: Intro → Auth → **Home** → Planet 1~4 → Outro
+- **흐름상 위치**: Intro → Auth → **Home** → Planet 1~4
 - **레이아웃 기준**: 1280 × 800 CSS px, DPR 1.5, 가로(landscape) 고정, immersive 전체화면
   (자세한 내용은 `CLAUDE.md` 참고)
 

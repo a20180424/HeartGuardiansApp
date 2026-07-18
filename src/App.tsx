@@ -14,7 +14,6 @@ import Planet1 from "./scenes/planet/planet1";
 import Planet2 from "./scenes/planet/planet2";
 import Planet3 from "./scenes/planet/planet3";
 import Planet4 from "./scenes/planet/planet4";
-import Outro from "./scenes/outro";
 
 // 각 행성은 useState(initialStage)로 마운트 때 딱 한 번 점프 파라미터를 읽으므로,
 // 점프하려면 리마운트가 필요하다. key 하나만으로는 두 진입 경로 중 하나가 새는데,
@@ -119,7 +118,6 @@ export default function App() {
               </Keyed>
             }
           />
-          <Route path="/outro" element={<Outro />} />
         </Routes>
         {/* 교사용 히든 점프 메뉴. Routes 바깥 = 어느 씬에서도 뜬다.
             SceneTransitionProvider 안이라 useFadeNav를 쓸 수 있다. */}

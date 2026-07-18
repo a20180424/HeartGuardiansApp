@@ -11,7 +11,7 @@ import { zoneForPath, type Zone } from "./zone";
 //  - hub  (/auth, /home)  : bgm-hub.ogg 단일 곡 루프
 //  - planet (/planet/*)   : 5곡 플레이리스트(긴 곡부터), 곡끼리 크로스페이드,
 //                           마지막 곡 뒤 첫 곡으로 루프. 행성 이동해도 이어서 재생.
-//  - silent (/intro, /outro, 그 외) : 무음(동영상은 자체 사운드)
+//  - silent (/intro, 그 외) : 무음(동영상은 자체 사운드)
 //
 // 크로스페이드는 <audio> 2개(deck)를 번갈아 쓰며 볼륨을 램프하는 단순 방식.
 
