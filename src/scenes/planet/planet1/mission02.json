@@ -133,7 +133,7 @@
     {
       "id": "m2_end1", "type": "line", "noAuto": true, "speaker": "hati", "hideFriend": true,
       "text": "대원들 덕분에 행성에 따듯한 온기가 돌기 시작했어. 하지만 빛의 행성에 빛이 완전히 돌아온 건 아니야.",
-      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" }, { "cmd": "fx", "value": "fx_empathy_card_hide" } ],
+      "onEnter": [ { "cmd": "fx", "value": "fx_mirror_wake" } ],
       "next": "m2_end2"
     },
     {

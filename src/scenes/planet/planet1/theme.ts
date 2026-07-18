@@ -123,7 +123,6 @@ export const MISSION01_THEME: MissionTheme = {
   fx: {
     fx_ending_1: "sparkle",
     fx_signal_recover: "signalRecover",
-    fx_ending_2: "empathyCard",
     fx_light_return: "lightReturn",
   },
   // 반응 노드 진입 시 감정 피드백음(정답 차임 / 부드러운 오답음). 다른 일회성 소리
@@ -289,8 +288,6 @@ export const MISSION02_THEME: MissionTheme = {
   // 엔딩 연출(mission1과 동일 구성): 공감 거울 회복 후광 → 공감 카드 → 빛 복귀+"다음 미션으로" 버튼.
   fx: {
     fx_mirror_wake: "signalRecover",
-    fx_empathy_card: "empathyCard",
-    fx_empathy_card_hide: "empathyCardHide",
     fx_light_return: "lightReturn",
   },
   sfx: {
@@ -475,8 +472,6 @@ export const MISSION03_THEME: MissionTheme = {
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
   choiceIcons: M3_CHOICE_ICONS,
   fx: {
-    fx_empathy_card: "empathyCard",
-    fx_empathy_card_hide: "empathyCardHide",
     fx_light_return: "lightReturn",
   },
   sfx: { byNode: {} },

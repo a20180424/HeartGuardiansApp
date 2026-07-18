@@ -58,7 +58,6 @@ interface VM {
   completeBanner: string; // 화면 가운데 "미션 완료!" 배너 문구(node.completeBanner, 없으면 "")
   friendGlow: boolean;
   bright: boolean;
-  empathy: boolean;
   bookGlow: boolean; // 완성 이미지(node.image) 뒤 금빛 후광(fx로 켬, choiceImage 있을 때만 표시)
   progress: "start" | "done";
   tapHint: string;
@@ -192,7 +191,6 @@ export default function MissionPlayer(props: {
     completeBanner: "",
     friendGlow: false,
     bright: false,
-    empathy: false,
     bookGlow: false,
     progress: "start",
     tapHint: "",
@@ -372,16 +370,6 @@ export default function MissionPlayer(props: {
           sparkleBurst();
           render();
           break;
-        case "empathyCard":
-          audio.play("reveal");
-          vm.empathy = true;
-          sparkleBurst();
-          render();
-          break;
-        case "empathyCardHide":
-          vm.empathy = false;
-          render();
-          break;
         case "resultGlow":
           // 완성 이미지(감정 설명서) 뒤 금빛 후광 + 반짝임 버스트(완료 축하).
           audio.play("reveal");
@@ -469,7 +457,6 @@ export default function MissionPlayer(props: {
           completeBanner: "",
           friendGlow: false,
           bright: false,
-          empathy: false,
           bookGlow: false,
           progress: "start",
           tapHint: "",
@@ -1454,14 +1441,6 @@ export default function MissionPlayer(props: {
             }}
           />
         )}
-
-        {/* 공감 카드 (엔딩) */}
-        <img
-          id="empathyCard"
-          className={vm.empathy ? "show" : ""}
-          src="/assets/ui/empathy_card.png"
-          alt="공감 카드"
-        />
 
         {/* 하티 가이드 박스 */}
         <div id="hatiBox" className={vm.bubbleKind === "hatiBox" ? "show" : ""}>
