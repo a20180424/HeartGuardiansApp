@@ -20,7 +20,12 @@ if (!localStorage.getItem("hg_session")) {
    ========================================================================== */
 function fitStage() {
   const stage = document.getElementById("stage");
-  const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1200);
+  // clientWidth 사용: DevTools DPR 에뮬레이션·OS 배율 환경에서 innerWidth가 CSS 뷰포트와 어긋나는
+  // 간헐 버그(로드 직후 1.25~1.5배 보고) 회피. 실기기에선 두 값이 같다.
+  const scale = Math.min(
+    document.documentElement.clientWidth / 1920,
+    document.documentElement.clientHeight / 1200,
+  );
   stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
 window.addEventListener("resize", fitStage);

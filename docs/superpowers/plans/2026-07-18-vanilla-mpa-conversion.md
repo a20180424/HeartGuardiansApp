@@ -62,7 +62,12 @@ html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 ```js
 // script.js 상단 공통(페이지마다 복사)
 function fitStage() {
-  const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 800);
+  // clientWidth 사용: DevTools DPR 에뮬레이션·OS 배율 환경에서 innerWidth가 CSS 뷰포트와
+  // 어긋나는 간헐 버그 회피 (2026-07-19 발견·전 페이지 수정). 실기기에선 두 값이 같다.
+  const scale = Math.min(
+    document.documentElement.clientWidth / 1280,
+    document.documentElement.clientHeight / 800,
+  );
   document.getElementById("stage").style.transform =
     `translate(-50%, -50%) scale(${scale})`;
 }
