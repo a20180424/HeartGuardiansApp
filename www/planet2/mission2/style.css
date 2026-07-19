@@ -260,9 +260,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -270,6 +274,8 @@ button {
   align-items: center;
   gap: 16px;
   text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-14px) scale(0.96);
@@ -339,11 +345,15 @@ button {
 
 /* ---------- full-body Hati (intro only) — planet2/Mission.css .planet2 #hatiFull 최종값 ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 1160px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
-  height: 570px;
+  height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
   opacity: 0;
   transform: translateY(22px) scale(0.97);
@@ -359,9 +369,14 @@ button {
 
 /* #hatiBubble — planet2/Mission.css .planet2 #hatiBubble 최종값 */
 #hatiBubble {
-  left: 1280px;
-  bottom: 572px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 270px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
+  /* pre-line·keep-all 은 .bubble 에서 상속 */
 }
 #hatiBubble .bubble-name {
   color: #3f8a2e;
