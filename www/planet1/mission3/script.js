@@ -727,7 +727,7 @@ const MISSION = {
     {
       id: "m3_card", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
-      text: "공감은 사람들의 마음을 이어주는 힘이야. 그래서 친구들과 행복하게 지낼 수 있단다.",
+      text: "공감은 사람들의 마음을 이어주는 힘이야.\n그래서 친구들과 행복하게 지낼 수 있단다.",
       cards: [
         { image: A + "/planet1/light-planet-empathy-card-5.webp" },
         { image: A + "/planet1/light-planet-empathy-card-6.webp" },
@@ -875,7 +875,7 @@ const THEME = {
     byNode: {
       m3_intro: "main",
       m3_video: "black", // 동영상 구간부터 까만 화면(reveal 까지 유지)
-      m3_card: "main", // 공감 카드 등장: main 배경 복귀
+      m3_card: "stage4", // 공감 카드 등장부터 엔딩 배경(stage4) 표시
       m3_complete: "stage4", // "빛이 돌아왔어"부터 엔딩 배경
       m3_end: "stage4",
     },

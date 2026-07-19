@@ -235,9 +235,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -314,9 +318,13 @@ button {
 
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 510px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
   height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
@@ -333,8 +341,12 @@ button {
 }
 
 #hatiBubble {
-  left: 1030px;
-  bottom: 452px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 260px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
 }
 #hatiBubble .bubble-name {
@@ -375,6 +387,35 @@ button {
   transition:
     transform 0.35s ease,
     filter 0.6s ease;
+}
+
+/* 배경에 박힌 루나 위 이름표 (m1/m2 이름표 룩) — m3_intro 에서만 표시.
+   루나가 배경 이미지에 그려져 있어 #friend 대신 무대 절대좌표로 얹는다. */
+#lunaName {
+  /* ▼▼▼ 위치·크기 노브 — 이 3개만 바꾸면 됨 (배경 속 루나 머리 위로) ▼▼▼ */
+  --luna-x: 330px; /* 무대(1920) 가로: 클수록 오른쪽 */
+  --luna-y: 420px; /* 무대(1200) 세로: 클수록 아래 */
+  --luna-size: 30px; /* 글자 크기 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  position: absolute;
+  left: var(--luna-x);
+  top: var(--luna-y);
+  z-index: 4;
+  display: none; /* 기본 숨김 — 아래 node-m3_intro 에서만 표시 */
+  padding: 6px 22px;
+  border-radius: 999px;
+  background: #3f9b3f;
+  border: 3px solid #ecd98a;
+  color: #fff;
+  font-weight: 800;
+  font-size: var(--luna-size);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+#stage.node-m3_intro #lunaName {
+  display: block;
 }
 @keyframes friendPop {
   0% {
