@@ -663,7 +663,7 @@ const MISSION = {
 
     {
       id: "m3_q1_choice", type: "choice", speaker: "hati",
-      text: "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
+      text: "대원이 루나와 같은 상황이라면 어떤 기분일까?",
       hideFriend: true,
       image: A + "/char/Luna/luna_unheard1.webp",
       choices: [
@@ -694,7 +694,7 @@ const MISSION = {
     {
       id: "m3_mirror1", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
-      text: "대원! 공감 없는 이 세상에서 행복할 수 있을까요?",
+      text: "대원! 공감 없는 이 세상에서 행복할 수 있을까?",
       images: [A + "/char/Luna/luna_unheard1.webp", A + "/char/Luna/luna_unheard2.webp"],
       next: "m3_mirror2",
     },

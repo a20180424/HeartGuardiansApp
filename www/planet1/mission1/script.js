@@ -477,7 +477,7 @@ const A = ASSETS;
 const MISSION = {
   start: "m1_intro",
   nodes: [
-    { id: "m1_intro", type: "line", noAuto: true, speaker: "hati", text: "친구의 마음은 보이지 않아. 하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어! 친구의 마음 신호를 찾아보자", next: "m1_lumi_intro" },
+    { id: "m1_intro", type: "line", noAuto: true, speaker: "hati", text: "친구의 마음은 보이지 않아. 하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어! 친구의 마음 신호를 찾아보자.", next: "m1_lumi_intro" },
     { id: "m1_lumi_intro", type: "line", noAuto: true, speaker: "lumi", text: "오늘은 놀기 싫어", hold: true, next: "m1_q1_prompt" },
     { id: "m1_q1_prompt", type: "line", noAuto: true, speaker: "hati", text: "루미의 마음 신호가 흐릿해. 어떤 마음일까?", next: "m1_q1_choice" },
     {
@@ -502,12 +502,12 @@ const MISSION = {
     },
     { id: "m1_q2_wrongA", type: "line", noAuto: true, speaker: "hati", text: '"왜 그래?"는 좋은 질문이 아닌 것 같아', next: "m1_q2_retry" },
     { id: "m1_q2_wrongC", type: "line", noAuto: true, speaker: "hati", text: '"나랑 놀기 싫어?"는 좋은 질문이 아닌 것 같아', next: "m1_q2_retry" },
-    { id: "m1_q2_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐", next: "m1_q2_choice" },
+    { id: "m1_q2_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m1_q2_choice" },
     { id: "m1_q2_correct", type: "line", noAuto: true, speaker: "hati", text: '"무슨 일 있어?"는 열린 질문이야. 상대가 편하게 말할 수 있게 도와줘.', next: "m1_lumi_answer" },
 
     { id: "m1_lumi_answer", type: "line", noAuto: true, speaker: "lumi", text: "사실 감기에 걸려서 너무 힘들어", hold: true, next: "m1_q3_prompt" },
 
-    { id: "m1_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "너는 감기에 걸렸을 때 어떤 감정이었어? 내 마음을 클릭해봐", next: "m1_q3_choice" },
+    { id: "m1_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원은 감기에 걸렸을 때 어떤 감정이었어? 그때의 마음을 클릭해봐.", next: "m1_q3_choice" },
     {
       id: "m1_q3_choice", type: "choice",
       choices: [
@@ -530,7 +530,7 @@ const MISSION = {
     },
     { id: "m1_q4_wrongA_lumi", type: "line", noAuto: true, speaker: "lumi", text: "그건 도움이 안됐어...", next: "m1_q4_retry" },
     { id: "m1_q4_wrongB_lumi", type: "line", noAuto: true, speaker: "lumi", text: "지금은 쉬고 싶어...", next: "m1_q4_retry" },
-    { id: "m1_q4_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐", next: "m1_q4_choice" },
+    { id: "m1_q4_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m1_q4_choice" },
     { id: "m1_q4_correct_lumi", type: "line", noAuto: true, speaker: "lumi", text: "고마워!", next: "m1_end1" },
 
     { id: "m1_end1", type: "line", noAuto: true, speaker: "hati", text: "맞아! 공감은 친구의 마음을 알고 끝나는 것이 아니라, 그 마음을 이해해주는거야.", hold: false, onComplete: [{ cmd: "fx", value: "fx_ending_1" }], next: "m1_end_recover" },
