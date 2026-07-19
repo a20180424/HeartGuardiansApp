@@ -239,9 +239,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -249,6 +253,8 @@ button {
   align-items: center;
   gap: 16px;
   text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-14px) scale(0.96);
@@ -316,11 +322,15 @@ button {
   font-size: 24px;
 }
 
-/* ---------- full-body Hati (intro only) ---------- */
+/* ---------- full-body Hati (intro only) — planet2/Mission.css .planet2 #hatiFull 최종값 ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 510px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
   height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
@@ -335,24 +345,17 @@ button {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
-/* planet3/Mission.css 이식 — 인트로 전신 하티 위치·크기(오른쪽으로 옮기고 작게).
-   base(#hatiFull, 특이도 1,0,0)와 동일 선택자라 이후 선언이 이긴다. */
-#hatiFull {
-  left: 1160px;
-  bottom: -18px;
-  height: 570px;
-}
 
+/* #hatiBubble — planet2/Mission.css .planet2 #hatiBubble 최종값 */
 #hatiBubble {
-  left: 1030px;
-  bottom: 452px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 270px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
-}
-/* planet3/Mission.css 이식 — 인트로 하티 말풍선 위치·너비(하티가 오른쪽으로 옮겨진 만큼). */
-#hatiBubble {
-  left: 1280px;
-  bottom: 572px;
-  max-width: 600px;
+  /* pre-line·keep-all 은 .bubble 에서 상속 */
 }
 #hatiBubble .bubble-name {
   color: #3f8a2e;
@@ -563,14 +566,15 @@ button {
 }
 /* planet3/Mission.css 이식 — 노드별 #choiceImage 미세조정.
    #stage 에 현재 노드 id 가 node-<id> 클래스로 붙는다(스크립트의 setNodeClass).
-   ① intro·play(공감 송신기 안테나 이미지) — 화면 왼쪽에 크게. */
-#stage.node-p3_m1_intro #choiceImage,
-#stage.node-p3_m1_play #choiceImage {
-  left: 90px;
+   ① intro(공감 송신기 안테나 이미지) — 화면 왼쪽에 크게.
+   ※ intro 단독 규칙 — play 노드는 image 가 없어 choiceImage 를 안 쓰므로 셀렉터에서 제외.
+     여기 값은 postplay·end(설명서, 그룹 ②)에 영향을 주지 않는다. */
+#stage.node-p3_m1_intro #choiceImage {
+  left: 150px;
   right: auto;
   margin: 0;
-  top: 330px;
-  height: 70%;
+  top: 430px;
+  height: 60%;
   -webkit-mask: none;
   mask: none;
 }
