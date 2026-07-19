@@ -292,20 +292,18 @@ button {
   left: 780px;
 }
 
-/* 웃는 3인(byNode 교체) 전용 위치·크기 — result/result2/end 3개 노드에서 계속 뜬다. */
+/* 웃는 3인(byNode 교체) 전용 위치·크기 — result/end 2개 노드에서 계속 뜬다.
+   바닥+캐릭터를 가로 중앙에 — 플랫폼 1530×0.8=1224 → (1920-1224)/2=348 */
 #stage.node-p2_m3_result #castStage,
-#stage.node-p2_m3_result2 #castStage,
 #stage.node-p2_m3_end #castStage {
-  left: 190px;
-  bottom: -350px;
+  left: 348px;
+  bottom: -150px;
 }
 #stage.node-p2_m3_result #castStage .cast-member[data-i="0"],
-#stage.node-p2_m3_result2 #castStage .cast-member[data-i="0"],
 #stage.node-p2_m3_end #castStage .cast-member[data-i="0"] {
   bottom: 550px;
 }
 #stage.node-p2_m3_result #castStage .cast-char,
-#stage.node-p2_m3_result2 #castStage .cast-char,
 #stage.node-p2_m3_end #castStage .cast-char {
   height: 760px;
 }
