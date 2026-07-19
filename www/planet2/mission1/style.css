@@ -491,6 +491,7 @@ button {
   font-weight: 700;
   color: #222b3d;
   line-height: 1.45;
+  white-space: pre-line;
   word-break: keep-all;
 }
 #hatiName {
