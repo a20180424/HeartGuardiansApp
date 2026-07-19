@@ -388,6 +388,35 @@ button {
     transform 0.35s ease,
     filter 0.6s ease;
 }
+
+/* 배경에 박힌 루나 위 이름표 (m1/m2 이름표 룩) — m3_intro 에서만 표시.
+   루나가 배경 이미지에 그려져 있어 #friend 대신 무대 절대좌표로 얹는다. */
+#lunaName {
+  /* ▼▼▼ 위치·크기 노브 — 이 3개만 바꾸면 됨 (배경 속 루나 머리 위로) ▼▼▼ */
+  --luna-x: 330px; /* 무대(1920) 가로: 클수록 오른쪽 */
+  --luna-y: 420px; /* 무대(1200) 세로: 클수록 아래 */
+  --luna-size: 30px; /* 글자 크기 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  position: absolute;
+  left: var(--luna-x);
+  top: var(--luna-y);
+  z-index: 4;
+  display: none; /* 기본 숨김 — 아래 node-m3_intro 에서만 표시 */
+  padding: 6px 22px;
+  border-radius: 999px;
+  background: #3f9b3f;
+  border: 3px solid #ecd98a;
+  color: #fff;
+  font-weight: 800;
+  font-size: var(--luna-size);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+#stage.node-m3_intro #lunaName {
+  display: block;
+}
 @keyframes friendPop {
   0% {
     transform: scale(0.96);
