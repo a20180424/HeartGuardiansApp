@@ -715,11 +715,24 @@ function devProgressOverride(progress) {
     ]),
   );
 
+  /* ---- 완료 행성 에너지 빔 SVG 오버레이 ----
+     viewBox 1280×800 = 무대 좌표계. drawBeams()가 완료 행성마다 line 2겹을 채운다.
+     el() 헬퍼는 HTML 전용이라 SVG는 createElementNS로 직접 만든다.
+     append 순서(모선 뒤·행성 앞)로 모선 위·행성 아래에 빔이 그려진다. */
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const beamSvg = document.createElementNS(SVGNS, "svg");
+  beamSvg.setAttribute("class", "home-beams");
+  beamSvg.setAttribute("viewBox", "0 0 1280 800");
+  beamSvg.setAttribute("aria-hidden", "true");
+
   /* ---- 모선 (Mothership.tsx) ---- */
-  root.appendChild(el("img", { class: "home-mothership", src: A + "home/HeartConnect.webp", alt: "" }));
+  const mothership = el("img", { class: "home-mothership", src: A + "home/HeartConnect.webp", alt: "" });
+  root.appendChild(mothership);
+  root.appendChild(beamSvg); // 모선 뒤·행성 앞에 append → 모선 위·행성 아래에 빔이 그려짐
 
   /* ---- 행성 버튼 4개 (PlanetButton.tsx) ---- */
   const planetsWrap = el("div", { class: "home-planets" });
+  const completedPlanets = []; // 에너지 빔을 그릴 완료 행성 버튼들
   [1, 2, 3, 4].forEach((id) => {
     const status = planetState(id, progress);
     // unlocked(다음 행성) + completed(이미 완료) 모두 탐험 가능. 이동 목적지는 동일한 prologue.
@@ -751,9 +764,44 @@ function devProgressOverride(progress) {
     if (playable) {
       btn.addEventListener("click", () => fadeNav(ROOT + "planet" + id + "/prologue/index.html"));
     }
+    if (status === "completed") completedPlanets.push(btn);
     planetsWrap.appendChild(btn);
   });
   root.appendChild(planetsWrap);
+
+  /* ---- 에너지 빔 그리기 ----
+     모선 하단 중앙 → 각 완료 행성 중심으로 line 2겹(베이스 글로우 + 흐르는 펄스).
+     fitStage가 무대를 transform scale로 줄이므로, getBoundingClientRect(화면 px)를
+     scale로 나눠 1280×800 viewBox 좌표로 되돌린다. resize·모선 로드 시 재계산. */
+  function drawBeams() {
+    while (beamSvg.firstChild) beamSvg.removeChild(beamSvg.firstChild);
+    if (!completedPlanets.length) return;
+    const homeRect = root.getBoundingClientRect();
+    const scale = homeRect.width / 1280 || 1;
+    const vbX = (px) => (px - homeRect.left) / scale;
+    const vbY = (px) => (px - homeRect.top) / scale;
+    const mr = mothership.getBoundingClientRect();
+    const mx = vbX(mr.left + mr.width / 2); // 모선 중심
+    const my = vbY(mr.top + mr.height / 2);
+    completedPlanets.forEach((btn) => {
+      const br = btn.getBoundingClientRect();
+      const px = vbX(br.left + br.width / 2); // 행성 중심
+      const py = vbY(br.top + br.height / 2);
+      // 대시 흐름을 행성→모선 방향으로: line 시작점=행성, 끝점=모선.
+      for (const cls of ["home-beam--base", "home-beam--pulse"]) {
+        const ln = document.createElementNS(SVGNS, "line");
+        ln.setAttribute("class", "home-beam " + cls);
+        ln.setAttribute("x1", px);
+        ln.setAttribute("y1", py);
+        ln.setAttribute("x2", mx);
+        ln.setAttribute("y2", my);
+        beamSvg.appendChild(ln);
+      }
+    });
+  }
+  requestAnimationFrame(drawBeams);
+  if (!mothership.complete) mothership.addEventListener("load", drawBeams);
+  window.addEventListener("resize", drawBeams);
 
   /* ---- 하단 메뉴 (MenuBar.tsx) ---- */
   const MENU = [

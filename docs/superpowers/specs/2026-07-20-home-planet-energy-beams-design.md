@@ -36,7 +36,7 @@ const toVB = (r) => ({
   y: (r.top  + r.height / 2 - homeRect.top ) / scale,
 });
 ```
-- **앵커:** 모선 하단 중앙 한 점(모선 rect의 center-x, bottom) → 각 완료 행성 버튼 center.
+- **앵커:** 모선 중심 한 점(모선 rect의 center-x, center-y) → 각 완료 행성 버튼 center.
   실측이라 모선 `height:auto`·flex 정렬에 영향받지 않는다.
 
 ### 비주얼 — 글로우 에너지 빔
