@@ -689,12 +689,6 @@ function toCredentials(s, schoolId) {
     pin: s.pin,
   };
 }
-/** 마지막 사용 학교를 기본 선택, 없으면 첫 번째. 목록이 비면 null. */
-function pickDefaultSchool(schools, lastId) {
-  if (schools.length === 0) return null;
-  return schools.find((s) => s.id === lastId) || schools[0];
-}
-
 /** 표기 변주(공백·특수문자·초등학교 접미사)를 흡수해 핵심 학교명만 남긴다. */
 function normalizeSchool(s) {
   return String(s ?? "")
@@ -829,34 +823,27 @@ function matchSchool(text, schools) {
     submitting = false;
     const form = { grade: 3, class: null, number: null, pin: "", pinConfirm: "", gender: null };
     let name = "";
-    let schoolId = pickDefaultSchool(schools, null) ? pickDefaultSchool(schools, null).id : null;
+    let schoolText = "";
 
     panel.innerHTML = "";
 
     const back = el("button", { type: "button", class: "btn ghost auth-back", text: "← 뒤로" });
     back.addEventListener("click", () => showChooser());
 
-    // 학교 선택 (SchoolPicker.tsx)
-    const schoolSel = el("select", { class: "field__select" });
-    function fillSchools() {
-      schoolSel.innerHTML = "";
-      if (schools.length === 0) {
-        schoolSel.appendChild(el("option", { value: "", disabled: "", text: "불러오는 중…" }));
-      }
-      schools.forEach((s) => {
-        const o = el("option", { value: s.id, text: s.name });
-        schoolSel.appendChild(o);
-      });
-      if (schoolId) schoolSel.value = schoolId;
-    }
-    fillSchools();
-    schoolSel.addEventListener("change", () => {
-      schoolId = schoolSel.value || null;
+    // 학교 직접 입력 (목록 미노출 — 제출 시 matchSchool로 대조).
+    const schoolInput = el("input", {
+      class: "field__input",
+      type: "text",
+      placeholder: "학교 이름",
+      maxlength: "30",
+    });
+    schoolInput.addEventListener("input", () => {
+      schoolText = schoolInput.value;
       updateValidity();
     });
     const schoolField = el("label", { class: "field field--school" }, [
       el("span", { class: "field__label", text: "학교" }),
-      schoolSel,
+      schoolInput,
     ]);
 
     // 이름 (signup)
@@ -991,7 +978,7 @@ function matchSchool(text, schools) {
       const mismatch =
         mode === "signup" && form.pinConfirm.length === 4 && form.pin !== form.pinConfirm;
       mismatchP.style.display = mismatch ? "" : "none";
-      const canSubmit = !submitting && schoolId !== null && isComplete(form, mode, name);
+      const canSubmit = !submitting && schoolText.trim() !== "" && isComplete(form, mode, name);
       submit.disabled = !canSubmit;
     }
 
@@ -1003,7 +990,16 @@ function matchSchool(text, schools) {
 
     submit.addEventListener("click", async () => {
       if (submit.disabled) return;
-      const creds = toCredentials(form, schoolId);
+      const school = matchSchool(schoolText, schools);
+      if (!school) {
+        setError(
+          schools.length === 0
+            ? "인터넷 연결을 확인해 주세요."
+            : "학교 이름을 찾을 수 없어요. 다시 확인해 주세요.",
+        );
+        return;
+      }
+      const creds = toCredentials(form, school.id);
       const trimmedName = name.trim();
       setError(null);
       setSubmitting(true);
