@@ -227,10 +227,18 @@ button {
 /* ---------- 공감 레이더 HUD(왼쪽) — mission.css 기본값에 planet2/Mission.css 의
    .planet2 #radarHud 오버라이드 최종값을 그대로 반영(이 페이지는 스코프 불필요·값만 적용). ---------- */
 #radarHud {
+  /* ── 튜닝 노브: 이 두 값만 바꿔서 조정 ──────────────────────────
+     --radar-scale : 크기 (1 = 원래 크기, 0.8 = 80%)
+     --radar-left  : 가로 위치 (작을수록 왼쪽, 기존값 70px)          */
+  --radar-scale: 0.8;
+  --radar-left: 20px;
+
   position: absolute;
-  left: 70px;
-  top: 250px;
+  left: var(--radar-left);
+  top: 400px;
   z-index: 3;
+  transform: scale(var(--radar-scale));
+  transform-origin: left top;
 }
 #radarHud #radarPlatform {
   position: absolute;
