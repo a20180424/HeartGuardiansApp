@@ -83,14 +83,22 @@ export async function createBubbles(scene, bubbles, { size, hexTopY = 0, floatHe
   }
 
   // (px,pz)에서 radius 이내 가장 가까운 미소비 말풍선 데이터, 없으면 null.
-  function nearest(px, pz, radius) {
+  // forward({x,z}, 정규화)와 minDot를 주면 "정면 판정"도 건다: 플레이어→말풍선
+  // 방향과 forward의 내적이 minDot 미만이면(=옆·뒤쪽) 제외. 뒤로 가다 닿는 오접촉 방지.
+  function nearest(px, pz, radius, forward = null, minDot = -1) {
     let best = null;
     let bestD2 = radius * radius;
     for (const it of items.values()) {
       const dx = it.x - px;
       const dz = it.z - pz;
       const d2 = dx * dx + dz * dz;
-      if (d2 < bestD2) { bestD2 = d2; best = it.data; }
+      if (d2 >= bestD2) continue;
+      if (forward) {
+        const len = Math.hypot(dx, dz);
+        // 거의 겹칠 땐 방향이 불안정 → 정면 판정 생략하고 인정.
+        if (len > 0.001 && (dx * forward.x + dz * forward.z) / len < minDot) continue;
+      }
+      bestD2 = d2; best = it.data;
     }
     return best;
   }
