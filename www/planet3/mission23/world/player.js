@@ -46,5 +46,15 @@ export function createPlayer(camera, { size, hexTopY, eyeHeight, walkable, start
     yaw = 0; // 0 = -Z(월드 중심)를 바라봄 — 초기 스폰과 동일한 방향
   }
 
-  return { update, resetTo };
+  // (tx,tz)를 정면으로 바라보도록 즉시 회전. 팝업으로 입력이 잠겨 update가 멈춘
+  // 동안에도 반영되도록 카메라 회전을 바로 적용한다.
+  function faceToward(tx, tz) {
+    const dx = pos.x - tx;
+    const dz = pos.z - tz;
+    if (dx === 0 && dz === 0) return; // 완전히 겹치면 방향 불명 → 현재 시선 유지
+    yaw = Math.atan2(dx, dz); // forward=(-sin,-cos) 규약에서 (tx,tz)를 향하는 yaw
+    camera.rotation.set(0, yaw, 0, 'YXZ');
+  }
+
+  return { update, resetTo, faceToward };
 }

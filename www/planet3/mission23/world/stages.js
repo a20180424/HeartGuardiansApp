@@ -1,6 +1,6 @@
 // 단계 매니저: 월드는 계속 유지하고 콘텐츠(1단계 말풍선 → 2단계 NPC)를 갈아끼운다.
 // src/scenes/planet/planet3/world/stages.ts 이식 — 타입만 제거, 로직 동일.
-import { hexKey } from './hexgrid.js';
+import { hexKey, axialToWorld } from './hexgrid.js';
 import { parseStage1Data, createCollectGame } from './collectgame.js';
 import { createBubbles } from './bubbles.js';
 import { createScoreHud } from './scorehud.js';
@@ -123,6 +123,9 @@ export function createStageManager(ctx) {
   function openNpcDialogue(def) {
     const round = npcGame.currentRound(def.id);
     if (!round) return;
+    // 대화를 열 때 주인공이 NPC를 정면으로 바라보게 회전(뒤/옆에서 닿아도 마주보게).
+    const w = axialToWorld(def.q, def.r, ctx.size);
+    ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
     const buttons = round.choices.length > 0 ? round.choices : ["닫기"];
@@ -168,6 +171,7 @@ export function createStageManager(ctx) {
       npcs.update(dt, ctx.camera);
       if (popupOpen || elapsed < npcCooldown) return;
       const p = ctx.camera.position;
+      // NPC는 방향 무관 거리로 접촉 인정(뒤로 가다 지나치는 문제 방지) — 대신 접촉 시 정면을 향해 회전.
       const near = npcs.nearest(p.x, p.z, PROXIMITY, (d) => !npcGame.isDone(d.id));
       if (near) { openNpcDialogue(near); return; }
       const doneNear = npcs.nearest(p.x, p.z, PROXIMITY, (d) => npcGame.isDone(d.id));
