@@ -1324,9 +1324,37 @@ const CourageCompassStage = (function () {
   function typeOf(n) {
     return n.type || "line";
   }
+  // ---- DEV 노드 표시(디버그) — HG_NODE_DEBUG ----
+  // 화면 우측 상단에 현재 노드 id 표시. 기본값 보임(SHOW_DEFAULT).
+  // 작업 다 끝나면 SHOW_DEFAULT 를 false 로 바꿀 것. 키보드 n 으로 토글.
+  function hgNodeDebug(id) {
+    var SHOW_DEFAULT = true;
+    var el = document.getElementById("hg-node-debug");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "hg-node-debug";
+      el.style.cssText =
+        "position:fixed;top:8px;right:8px;z-index:99999;padding:6px 10px;" +
+        "font:700 15px/1.3 ui-monospace,monospace;color:#39ff14;" +
+        "background:rgba(0,0,0,.72);border:1px solid #39ff14;border-radius:6px;" +
+        "pointer-events:none;white-space:nowrap;";
+      el.dataset.show = SHOW_DEFAULT ? "1" : "0";
+      el.style.display = SHOW_DEFAULT ? "block" : "none";
+      (document.body || document.documentElement).appendChild(el);
+      window.addEventListener("keydown", function (e) {
+        if (e.code === "KeyN" || e.key === "n" || e.key === "N" || e.key === "ㅜ") {
+          var on = el.dataset.show === "1";
+          el.dataset.show = on ? "0" : "1";
+          el.style.display = on ? "none" : "block";
+        }
+      });
+    }
+    el.textContent = "▶ " + (id == null ? "(end)" : id);
+  }
   function go(id) {
     if (id == null) return endMission();
     current = id;
+    hgNodeDebug(id);
     const node = nodes[id];
     setNodeClass(id);
     execCommands(node.onEnter);
