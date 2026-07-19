@@ -1,7 +1,8 @@
 // 화면 가상 조이스틱: 터치·마우스 공용(Pointer 이벤트).
 // src/scenes/planet/planet3/world/joystick.ts 이식 — 타입만 제거, 로직 동일.
 
-// knob 오프셋(dx,dy px, y는 아래가 +)을 { throttle 0..1, turn -1..1 }로 변환.
+// knob 오프셋(dx,dy px, y는 아래가 +)을 { throttle -1..1, turn -1..1 }로 변환.
+// throttle 양수 = 전진(위), 음수 = 후진(아래).
 export function joystickVector(dx, dy, radius, deadzone = 0.12) {
   const dist = Math.hypot(dx, dy);
   if (dist < radius * deadzone) return { throttle: 0, turn: 0 };
@@ -10,7 +11,7 @@ export function joystickVector(dx, dy, radius, deadzone = 0.12) {
   const cy = dy * s;
   return {
     turn: cx / radius,
-    throttle: Math.max(0, -cy / radius),
+    throttle: -cy / radius,
   };
 }
 
