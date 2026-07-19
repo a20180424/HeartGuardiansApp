@@ -691,6 +691,8 @@ button {
   color: #283143;
   text-align: center;
   line-height: 1.35;
+  white-space: pre-line; /* 선택지 텍스트 안 줄바꿈을 그대로 표시 */
+  word-break: keep-all; /* 자동 줄바꿈 시 한글 어절 안 자름 */
 }
 .card.smaller {
   width: 230px;
