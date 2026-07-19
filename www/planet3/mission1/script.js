@@ -548,7 +548,11 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    byNode: {
+      p3_m1_postplay: "celebrating", // 설명서 완성 — 기뻐함
+      p3_m1_cards: "explaining", // 3단계 설명
+      p3_m1_end: "proud", // 준비 완료 격려
+    },
   },
   friends: {
     placeholder: {
