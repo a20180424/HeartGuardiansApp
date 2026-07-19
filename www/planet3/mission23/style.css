@@ -878,8 +878,8 @@ button {
    stage2 NPC 대화 팝업(.popup-overlay--dialogue)과 같은 크기로 맞춘다.
    .info 뒤에 두어 max-width 를 이 규칙이 이긴다. */
 .efg-overlay .popup-card.big {
-  max-width: 690px;
-  padding: 51px 39px 39px;
+  max-width: 880px; /* 글씨 확대로 문장(\n 구간)이 접히지 않게 폭 확장 */
+  padding: 51px 48px 39px;
   border-radius: 42px;
   margin-top: 39px;
 }
