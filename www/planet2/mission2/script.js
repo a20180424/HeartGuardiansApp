@@ -534,7 +534,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "이제 어떤 감정도 놓치지 않고 찾을 수 있어! 친구들에게 따듯한 공감을 전하러 가보자!",
+      text: "이제 어떤 감정도 놓치지 않고 찾을 수 있어! 친구들에게 따뜻한 공감을 전하러 가보자!",
       next: "p2_m2_cards",
     },
     {

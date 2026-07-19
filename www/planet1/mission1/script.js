@@ -511,7 +511,7 @@ const MISSION = {
     {
       id: "m1_q3_choice", type: "choice",
       choices: [
-        { text: "따듯함", next: "m1_q4_prompt" },
+        { text: "따뜻함", next: "m1_q4_prompt" },
         { text: "불안함", next: "m1_q4_prompt" },
         { text: "지침", next: "m1_q4_prompt" },
         { text: "짜증남", next: "m1_q4_prompt" },
@@ -523,9 +523,9 @@ const MISSION = {
     {
       id: "m1_q4_choice", type: "choice",
       choices: [
-        { text: "감기 정도는 참아", next: "m1_q4_wrongA_lumi" },
-        { text: "그래도 나랑 놀자", next: "m1_q4_wrongB_lumi" },
-        { text: "많이 힘들었겠구나", next: "m1_q4_correct_lumi" },
+        { text: "감기 정도는 참아.", next: "m1_q4_wrongA_lumi" },
+        { text: "그래도 나랑 놀자.", next: "m1_q4_wrongB_lumi" },
+        { text: "많이 힘들었겠구나.", next: "m1_q4_correct_lumi" },
       ],
     },
     { id: "m1_q4_wrongA_lumi", type: "line", noAuto: true, speaker: "lumi", text: "그건 도움이 안됐어...", next: "m1_q4_retry" },
@@ -537,7 +537,7 @@ const MISSION = {
     { id: "m1_end_recover", type: "line", noAuto: true, speaker: "hati", text: "좋아! 루미의 마음 신호가 회복 되었어!", onEnter: [{ cmd: "fx", value: "fx_signal_recover" }], next: "m1_end2" },
     {
       id: "m1_end2", type: "line", noAuto: true, speaker: "hati", hideFriend: true,
-      text: "공감은 친구의 마음을 함부로 판단하지 않고, 알려고 노력하고, 그 마음을 이해해 주는 것이란다",
+      text: "공감은 친구의 마음을 함부로 판단하지 않고, 알려고 노력하고, 그 마음을 이해해 주는 것이란다.",
       cards: [
         { image: A + "/planet1/light-planet-empathy-card-1.webp" },
         { image: A + "/planet1/light-planet-empathy-card-2.webp" },
@@ -636,7 +636,7 @@ const THEME = {
     "왜그래?": { emoji: "❓", bg: "#fef3c7" },
     "무슨 일 있어?": { emoji: "💬", bg: "#dcfce7" },
     "나랑 놀기 싫어?": { emoji: "🙅", bg: "#fee2e2" },
-    따듯함: { emoji: "🤗", bg: "#ffedd5" },
+    따뜻함: { emoji: "🤗", bg: "#ffedd5" },
     불안함: { emoji: "😰", bg: "#e0f2fe" },
     지침: { emoji: "😩", bg: "#eef2f7" },
     짜증남: { emoji: "😤", bg: "#fee2e2" },

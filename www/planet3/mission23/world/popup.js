@@ -67,7 +67,7 @@ export function showFeedback(parent, positive, text) {
   parent.querySelectorAll('.feedback').forEach((e) => e.remove()); // 중첩 방지
   const el = document.createElement('div');
   el.className = `feedback ${positive ? 'pos' : 'neg'}`;
-  el.textContent = text ?? (positive ? '⚡ 따듯한 말로 충전!' : '🥶 앗, 차가운 말이야…');
+  el.textContent = text ?? (positive ? '⚡ 따뜻한 말로 충전!' : '🥶 앗, 차가운 말이야…');
   parent.appendChild(el);
   el.addEventListener('animationend', () => el.remove());
   setTimeout(() => el.remove(), 1600); // 애니메이션 미지원 대비 보험
