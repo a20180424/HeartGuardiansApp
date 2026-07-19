@@ -719,7 +719,8 @@ function devProgressOverride(progress) {
   const planetsWrap = el("div", { class: "home-planets" });
   [1, 2, 3, 4].forEach((id) => {
     const status = planetState(id, progress);
-    const playable = status === "unlocked";
+    // unlocked(다음 행성) + completed(이미 완료) 모두 탐험 가능. 이동 목적지는 동일한 prologue.
+    const playable = status === "unlocked" || status === "completed";
     const img = status === "completed" ? id + "_Happy" : id + "_Sad";
     const btn = el(
       "button",

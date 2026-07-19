@@ -302,7 +302,7 @@ button {
   cursor: default;
 }
 .home-planet--completed {
-  cursor: default;
+  cursor: pointer;
 }
 .home-planet--unlocked {
   cursor: pointer;
