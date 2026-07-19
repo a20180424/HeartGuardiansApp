@@ -664,7 +664,7 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       sideImageLeft: A + "/planet4/heart-connect-space.webp",
-      text: "하트 커넥트를 복원하라!다섯 공감 원석을 깨워서 공감 다이아몬드를 완성하자!\n누군가의 마음과 또 다른 마음이 연결될 때 비로소 하트 커넥트는 빛날 수 있어!",
+      text: "하트 커넥트를 복원하라!\n다섯 공감 원석을 깨워서\n공감 다이아몬드를 완성하자!\n누군가의 마음과 또 다른 마음이 연결될 때 비로소 하트 커넥트는 빛날 수 있어!",
       next: "p4_m3_play",
     },
     {
