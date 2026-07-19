@@ -254,7 +254,7 @@ button {
 /* 모선 (중앙 상단) — 상하 부유 + 발광 펄스 */
 .home-mothership {
   position: absolute;
-  top: 150px;
+  top: 145px;
   left: 50%;
   width: 230px;
   height: auto;
@@ -265,6 +265,36 @@ button {
 @keyframes home-bob {
   0%, 100% { transform: translate(-50%, 0); }
   50% { transform: translate(-50%, -10px); }
+}
+
+/* 완료 행성 에너지 빔 오버레이 (모선/행성 뒤) */
+.home-beams {
+  position: absolute;
+  inset: 0;
+  width: 1280px;
+  height: 800px;
+  pointer-events: none;
+  overflow: visible;
+}
+.home-beam {
+  fill: none;
+  stroke-linecap: round;
+}
+/* 베이스 글로우: 굵고 은은 — 연속감 담당 */
+.home-beam--base {
+  stroke: rgba(120, 200, 255, 0.32);
+  stroke-width: 6;
+  filter: drop-shadow(0 0 6px rgba(90, 175, 255, 0.85));
+}
+/* 흐르는 펄스: 가늘고 밝은 대시가 행성→모선으로 흘러감 */
+.home-beam--pulse {
+  stroke: rgba(200, 238, 255, 0.95);
+  stroke-width: 3;
+  stroke-dasharray: 14 26; /* 대시+갭 = 40 (flow 키프레임과 맞춤) */
+  animation: home-beam-flow 1.4s linear infinite;
+}
+@keyframes home-beam-flow {
+  to { stroke-dashoffset: -40; } /* line 끝점(모선) 방향으로 이동 */
 }
 
 /* 행성 버튼 */
