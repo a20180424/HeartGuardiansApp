@@ -503,7 +503,7 @@ const MISSION = {
     { id: "m1_q2_wrongA", type: "line", noAuto: true, speaker: "hati", text: '"왜 그래?"는 좋은 질문이 아닌 것 같아.', next: "m1_q2_retry" },
     { id: "m1_q2_wrongC", type: "line", noAuto: true, speaker: "hati", text: '"나랑 놀기 싫어?"는 좋은 질문이 아닌 것 같아.', next: "m1_q2_retry" },
     { id: "m1_q2_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m1_q2_choice" },
-    { id: "m1_q2_correct", type: "line", noAuto: true, speaker: "hati", text: '"무슨 일 있어?"는 열린 질문이야. 상대가 편하게 말할 수 있게 도와줘.', next: "m1_lumi_answer" },
+    { id: "m1_q2_correct", type: "line", noAuto: true, speaker: "hati", text: '"무슨 일 있어?"는 열린 질문이야.\n상대가 편하게 말할 수 있게 도와줘.', next: "m1_lumi_answer" },
 
     { id: "m1_lumi_answer", type: "line", noAuto: true, speaker: "lumi", text: "사실 감기에 걸려서 너무 힘들어.", hold: true, next: "m1_q3_prompt" },
 
@@ -544,7 +544,7 @@ const MISSION = {
       ],
       next: "m1_end3",
     },
-    { id: "m1_end3", type: "line", noAuto: true, speaker: "hati", text: "빛이 조금씩 돌아오기 시작했어! 다음 미션도 계속해보자!", onEnter: [{ cmd: "fx", value: "fx_light_return" }], next: null },
+    { id: "m1_end3", type: "line", noAuto: true, speaker: "hati", text: "빛이 조금씩 돌아오기 시작했어!\n다음 미션도 계속해보자!", onEnter: [{ cmd: "fx", value: "fx_light_return" }], next: null },
   ],
 };
 
