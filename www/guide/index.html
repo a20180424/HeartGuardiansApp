@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17165a">
-  <title>가디언즈 탐험 안내서</title>
+  <title>하트가디언즈 — 탐험 안내서</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <style>
     @font-face {
       font-family: "BMJUA";
@@ -897,6 +898,21 @@
     .dot { width: clamp(10px, .85cqw, 13px); height: clamp(10px, .85cqw, 13px); background: #a8c987; box-shadow: inset 0 .08cqw .12cqw rgba(44,91,19,.25); }
     .dot.active { width: clamp(32px, 2.8cqw, 43px); background: linear-gradient(90deg, #7bdf2d, #21820d); box-shadow: 0 0 .45cqw rgba(77,188,27,.55), inset 0 .1cqw .12cqw rgba(255,255,255,.45); }
 
+    .guide-home {
+      position: absolute;
+      z-index: 6;
+      top: 6.5%;
+      right: 3.4%;
+      width: 6.2%;
+      aspect-ratio: 1;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+    .guide-home:active { transform: scale(.94); }
+
     @media (max-aspect-ratio: 3 / 2) {
       .app { width: 100vw; height: auto; }
     }
@@ -907,6 +923,7 @@
 </head>
 <body>
   <main class="app" aria-label="가디언즈 탐험 안내서">
+    <button type="button" class="guide-home" aria-label="홈으로"></button>
     <header class="topbar">
       <div class="brand"><span class="brand-mark">♥</span> 가디언즈 탐험 안내서</div>
       <div class="counter"><span id="current">1</span> / 6</div>
@@ -1045,6 +1062,228 @@
     </nav>
   </main>
 
+  <script>
+"use strict";
+const ROOT = "../";
+
+/* ==========================================================================
+   R2 세션 가드 — hg_session 없으면 로그인으로. (intro·auth 이외 전 페이지)
+   ========================================================================== */
+if (!localStorage.getItem("hg_session")) {
+  location.href = ROOT + "auth/index.html";
+}
+
+/* ==========================================================================
+   R5 하드웨어 뒤로가기 무시 (전 페이지) — Capacitor WebView에서만 동작, 브라우저 no-op
+   ========================================================================== */
+if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+  window.Capacitor.Plugins.App.addListener("backButton", () => {
+    /* 의도적으로 무시 — 키오스크형 온-레일 앱 (App.tsx 정책 유지) */
+  });
+}
+
+/* ==========================================================================
+   공통 블록: 씬 전환 페이드 (sceneTransition.tsx 이식) — intro 검증본 복사
+   ========================================================================== */
+const FADE_MS = 160; // 원본과 동일
+const sceneFade = document.createElement("div");
+sceneFade.id = "scene-fade";
+sceneFade.setAttribute("aria-hidden", "true");
+document.body.appendChild(sceneFade);
+
+let fadeBusy = false;
+function fadeNav(href) {
+  if (fadeBusy) return; // 전환 중 중복 이동 방지
+  fadeBusy = true;
+  sceneFade.classList.add("is-on"); // 0 → 1 (fade to black)
+  window.setTimeout(() => {
+    window.location.href = href;
+  }, FADE_MS);
+}
+
+/* ==========================================================================
+   공통 블록 3-① 효과음 — audio (src/lib/audio.ts 이식) — intro 검증본 복사
+   ========================================================================== */
+const audio = (function createAudio() {
+  const VOL = 0.5; // 음소거 아닐 때 master 볼륨
+  let ctx = null;
+  let master = null;
+  let unlocked = false;
+  let muted = false;
+  try {
+    muted = localStorage.getItem("hg_muted") === "1";
+  } catch (_) {
+    muted = false;
+  }
+  const muteListeners = new Set();
+
+  function ensure() {
+    if (ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    master = ctx.createGain();
+    master.gain.value = muted ? 0 : VOL;
+    master.connect(ctx.destination);
+  }
+
+  function unlock() {
+    ensure();
+    if (ctx && ctx.state === "suspended") ctx.resume();
+    unlocked = true;
+  }
+
+  function setMuted(m) {
+    muted = m;
+    try {
+      localStorage.setItem("hg_muted", m ? "1" : "0");
+    } catch (_) {
+      /* 무시 */
+    }
+    if (master) master.gain.value = m ? 0 : VOL;
+    muteListeners.forEach((fn) => fn(m));
+  }
+
+  function toggleMute() {
+    setMuted(!muted);
+    return muted;
+  }
+
+  function onMuteChange(fn) {
+    muteListeners.add(fn);
+    return () => muteListeners.delete(fn);
+  }
+
+  /* 한 음: 빠른 attack + 지수 release */
+  function tone(o) {
+    if (!ctx || !master) return;
+    const t0 = ctx.currentTime + (o.start || 0);
+    const dur = o.dur || 0.15;
+    const rel = o.release || 0.08;
+    const gain = o.gain || 0.15;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = o.type || "sine";
+    osc.frequency.setValueAtTime(o.freq, t0);
+    if (o.glideTo) osc.frequency.exponentialRampToValueAtTime(o.glideTo, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(gain, t0 + (o.attack || 0.005));
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + rel);
+    osc.connect(g).connect(master);
+    osc.start(t0);
+    osc.stop(t0 + dur + rel + 0.02);
+  }
+
+  const SOUNDS = {
+    tap: () => tone({ freq: 520, type: "sine", dur: 0.05, gain: 0.16, release: 0.05 }),
+    pop: () => tone({ freq: 400, type: "triangle", dur: 0.07, gain: 0.16, glideTo: 680, release: 0.06 }),
+    select: () => {
+      tone({ freq: 600, type: "triangle", dur: 0.06, gain: 0.14 });
+      tone({ freq: 900, type: "triangle", start: 0.05, dur: 0.07, gain: 0.12 });
+    },
+    drop: () => {
+      tone({ freq: 880, type: "sine", dur: 0.08, gain: 0.16 });
+      tone({ freq: 1320, type: "sine", start: 0.06, dur: 0.14, gain: 0.13, release: 0.12 });
+    },
+    whoosh: () => tone({ freq: 520, type: "sawtooth", dur: 0.14, gain: 0.06, glideTo: 150, release: 0.06 }),
+    correct: () =>
+      [660, 880, 1175].forEach((f, i) =>
+        tone({ freq: f, type: "triangle", start: i * 0.1, dur: 0.12, gain: 0.15, release: 0.12 }),
+      ),
+    wrong: () => tone({ freq: 320, type: "sine", dur: 0.16, gain: 0.15, glideTo: 200, release: 0.1 }),
+    stage: () => {
+      tone({ freq: 600, type: "triangle", dur: 0.08, gain: 0.12 });
+      tone({ freq: 900, type: "triangle", start: 0.08, dur: 0.1, gain: 0.12 });
+    },
+    sparkle: () => {
+      for (let i = 0; i < 6; i++)
+        tone({
+          freq: 1600 + Math.random() * 1100,
+          type: "triangle",
+          start: i * 0.05,
+          dur: 0.1,
+          gain: 0.07,
+          release: 0.12,
+        });
+    },
+    recover: () => {
+      tone({ freq: 200, type: "sawtooth", dur: 0.4, gain: 0.11, glideTo: 900, release: 0.15 });
+      SOUNDS.sparkle();
+    },
+    reveal: () =>
+      [784, 988, 1318].forEach((f) =>
+        tone({ freq: f, type: "triangle", dur: 0.3, gain: 0.1, release: 0.25 }),
+      ),
+    fanfare: () => {
+      [523, 659, 784, 1047].forEach((f, i) =>
+        tone({ freq: f, type: "triangle", start: i * 0.1, dur: 0.16, gain: 0.14, release: 0.14 }),
+      );
+      SOUNDS.sparkle();
+    },
+    title: () =>
+      [523, 659, 784, 1047].forEach((f, i) =>
+        tone({ freq: f, type: "triangle", start: i * 0.07, dur: 0.14, gain: 0.13, release: 0.12 }),
+      ),
+    blipHati: () =>
+      tone({ freq: 500, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
+    blipFriend: () =>
+      tone({ freq: 600, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
+  };
+
+  function play(name) {
+    if (muted || !unlocked) return;
+    ensure();
+    const fn = SOUNDS[name];
+    if (fn) fn();
+  }
+
+  return {
+    unlock,
+    play,
+    setMuted,
+    toggleMute,
+    onMuteChange,
+    isMuted: () => muted,
+  };
+})();
+
+/* uiSfx.ts 이식 — data-sfx 속성 → 효과음 이름 */
+function sfxNameFor(dataSfx) {
+  if (dataSfx === "none") return null;
+  if (dataSfx === "pop") return "pop";
+  return "tap"; // 오타가 무음으로 새지 않게 기본은 tap
+}
+
+/* App.tsx 의 전역 리스너 이식: 첫 제스처에서 unlock + 버튼 data-sfx 효과음. */
+window.addEventListener(
+  "pointerdown",
+  (e) => {
+    audio.unlock(); // play() 보다 먼저 — 첫 탭부터 소리가 나야 한다
+    const target = e.target;
+    const btn = target && target.closest ? target.closest("button") : null;
+    if (!btn) return;
+    if (btn.disabled) return;
+    const name = sfxNameFor(btn.dataset.sfx);
+    if (name) audio.play(name);
+  },
+  true,
+);
+
+/* APK(WebView)는 mediaPlaybackRequiresUserGesture=false 라 제스처 없이도 AudioContext 를
+   열 수 있다. 네이티브면 로딩 즉시 언락을 시도해, 첫 탭 전에도(홈 인사말·미션 첫 대사 등)
+   소리가 나게 한다. 웹 브라우저는 자동재생 정책상 resume() 이 무시될 뿐 — 회귀 없음.
+   컨텍스트 준비 타이밍 대비로 몇 번 재시도. */
+if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+  audio.unlock();
+  document.addEventListener("DOMContentLoaded", () => audio.unlock());
+  window.setTimeout(() => audio.unlock(), 300);
+}
+
+/* 홈 복귀: 프레임 우측 상단 X 투명 버튼 → 홈으로 페이드 이동 */
+document.querySelector(".guide-home").addEventListener("click", () => {
+  fadeNav(ROOT + "home/index.html");
+});
+  </script>
   <script>
     const track = document.querySelector('#track');
     const slides = [...document.querySelectorAll('.slide')];
