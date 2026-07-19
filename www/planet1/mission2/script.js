@@ -511,7 +511,7 @@ const MISSION = {
     { id: "m2_q2_wrongB_lala", type: "line", noAuto: true, speaker: "lala", text: "응 그랬으면 좋겠어.", next: "m2_q2_wrongB_hati" },
     { id: "m2_q2_wrongB_hati", type: "line", noAuto: true, speaker: "hati", text: "응원하는 말도 좋은 말이야. 하지만 친구는 지금 확신보다 걱정되는 마음을 이해받고 싶어 할 수 있어. 먼저 마음을 알아주는 것이 더 따뜻한 공감이야.", next: "m2_q2_retry" },
     { id: "m2_q2_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m2_q2_choice" },
-    { id: "m2_q2_correct_lala", type: "line", noAuto: true, speaker: "lala", text: "응. 계속 그 생각이 나.", next: "m2_q2_correct_hati" },
+    { id: "m2_q2_correct_lala", type: "line", noAuto: true, speaker: "lala", text: "응. 계속 그 생각이 나.", hold: true, next: "m2_q2_correct_hati" },
     { id: "m2_q2_correct_hati", type: "line", noAuto: true, speaker: "hati", text: "좋아! 친구의 걱정되는 마음을 먼저 알아주었구나.\n공감은 감정을 먼저 이해하는 것에서 시작해.", next: "m2_sola_intro" },
 
     { id: "m2_sola_intro", type: "line", noAuto: true, speaker: "sola", text: "내가 아끼던 장난감이 망가졌어.", hold: true, next: "m2_q3_prompt" },
@@ -531,7 +531,7 @@ const MISSION = {
     { id: "m2_q3_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m2_q3_choice" },
     { id: "m2_q3_correct", type: "line", noAuto: true, speaker: "hati", text: "맞아! 솔라는 지금 망가진 장난감 때문에 속상한 마음이 가장 커.", next: "m2_q4_prompt" },
 
-    { id: "m2_q4_prompt", type: "line", noAuto: true, speaker: "hati", text: "내 생각보다 친구 마음에 먼저 집중해 보자. 어떤 행동이 더 도움이 될까?", next: "m2_q4_choice" },
+    { id: "m2_q4_prompt", type: "line", noAuto: true, speaker: "hati", text: "내 생각보다 친구 마음에 먼저 집중해 보자.", next: "m2_q4_choice" },
     {
       id: "m2_q4_choice", type: "choice",
       prompt: "어떤 행동이 더 도움이 될까?",
@@ -546,11 +546,11 @@ const MISSION = {
     { id: "m2_q4_wrongB_sola", type: "line", noAuto: true, speaker: "sola", text: "응. 그런데 지금은 좀 속상해.", next: "m2_q4_wrongB_hati" },
     { id: "m2_q4_wrongB_hati", type: "line", noAuto: true, speaker: "hati", text: "고쳐주려는 마음은 정말 따뜻해. 하지만 솔라는 아직 속상한 마음을 다 표현하지 못했어. 마음을 먼저 알아준 뒤에 도와주면 더 좋아.", next: "m2_q4_retry" },
     { id: "m2_q4_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m2_q4_choice" },
-    { id: "m2_q4_correct_sola", type: "line", noAuto: true, speaker: "sola", text: "고마워.", next: "m2_q4_correct_hati" },
-    { id: "m2_q4_correct_hati", type: "line", noAuto: true, speaker: "hati", text: "좋아! 친구는 지금 속상한 마음이 커. 함께 있어주는 것만으로도 큰 힘이 될 수 있어.", hold: false, next: "m2_secret_intro1" },
+    { id: "m2_q4_correct_sola", type: "line", noAuto: true, speaker: "sola", text: "고마워.", hold: true, next: "m2_q4_correct_hati" },
+    { id: "m2_q4_correct_hati", type: "line", noAuto: true, speaker: "hati", text: "좋아! 친구는 지금 속상한 마음이 커.\n함께 있어주는 것만으로도 큰 힘이 될 수 있어.", hold: false, next: "m2_secret_intro1" },
 
     { id: "m2_secret_intro1", type: "line", noAuto: true, speaker: "hati", hideFriend: true, text: "좋아, 이제 공감은 좋은 말이나 행동을 하는 것이 아니라 상대방에게 필요한 말과 행동을 선택하는 것이라는 걸 알게 되었어.", next: "m2_secret_intro2" },
-    { id: "m2_secret_intro2", type: "line", noAuto: true, speaker: "hati", hideFriend: true, text: "앗, 공감 거울이 깨어나려고 해! 하지만 아직 완전히 깨어나지는 않았어.", next: "m2_secret_intro3" },
+    { id: "m2_secret_intro2", type: "line", noAuto: true, speaker: "hati", hideFriend: true, text: "앗, 공감 거울이 깨어나려고 해!\n하지만 아직 완전히 깨어나지는 않았어.", next: "m2_secret_intro3" },
     { id: "m2_secret_intro3", type: "line", noAuto: true, speaker: "hati", hideFriend: true, text: "거울 속에 숨겨진 마지막 비밀을 알아내야 해!", next: "m2_mirror_ab" },
 
     {
