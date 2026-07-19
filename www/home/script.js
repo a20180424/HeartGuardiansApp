@@ -534,11 +534,11 @@ const NICKNAMES = [
 
 /** progress 0~4에 대응하는 하티 멘트. */
 const COMMENTS = [
-  "가디언즈가 되려면 가장 먼저 필요한 것이 있어! 바로 '마음 신호 탐색기'야. 이 도구는 친구의 마음에 관심을 갖게 해 주는 특별한 장비란다. 이제 이 탐색기와 함께 빛의 행성으로 떠나 보자!",
-  "빛의 행성을 멋지게 해냈구나! 이번엔 안개 행성이 너를 기다리고 있어.",
-  "안개 행성도 통과! 다음은 차가운 얼음 행성이야. 준비됐지?",
-  "얼음 행성까지 클리어하다니 대단해! 마지막은 그림자 행성이야. 끝까지 가보자!",
-  "우와, 네 개의 행성을 모두 구했어! 진짜 멋진 가디언이야. 정말 고마워!",
+  "가디언즈가 되려면 가장 먼저 필요한 것이 있어!\n바로 '마음 신호 탐색기'야.\n이 도구는 친구의 마음에 관심을 갖게 해 주는 특별한 장비란다.\n이제 이 탐색기와 함께 빛의 행성으로 떠나 보자!",
+  "빛의 행성을 멋지게 해냈구나!\n이번엔 안개 행성이 너를 기다리고 있어.",
+  "안개 행성도 통과!\n다음은 차가운 얼음 행성이야.\n준비됐지?",
+  "얼음 행성까지 클리어하다니 대단해!\n마지막은 그림자 행성이야.\n끝까지 가보자!",
+  "우리는 다음 탐험에서 다시 만나자!\n안녕",
 ];
 
 /** progress 0~4에 대응하는 공감 에너지 게이지 하단 안내 문구. */
@@ -821,7 +821,12 @@ function devProgressOverride(progress) {
   root.appendChild(menuWrap);
 
   /* ---- 하티 + 말풍선 타이핑 (HatiHelper.tsx) ---- */
-  const hatiSrc = progress === 0 ? "hati_signal_detector.webp" : "hati_default.webp";
+  const hatiSrc =
+    progress === 0
+      ? "hati_signal_detector.webp"
+      : progress >= 4
+        ? "hati_happy.webp"
+        : "hati_default.webp";
   const hatiText = el("p", { class: "home-hati__text" });
   root.appendChild(
     el("div", { class: "home-hati" }, [

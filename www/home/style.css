@@ -424,6 +424,8 @@ button {
   font-size: 19px;
   line-height: 1.4;
   font-weight: 600;
+  white-space: pre-line;
+  word-break: keep-all;
 }
 .home-hati__robot {
   width: 200px;
