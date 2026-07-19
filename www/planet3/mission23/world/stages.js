@@ -47,7 +47,7 @@ export function createStageManager(ctx) {
   function showMissionIntro() {
     popupOpen = true;
     ctx.setInputLocked(true);
-    showInfo(
+    const ov = showInfo(
       ctx.uiRoot,
       '공감 송신기를 켜려면 에너지가 필요해.\n따뜻한 말을 선택하면 에너지가 충전될거야\n차가운 말을 선택하면 에너지가 방전될거야\n신중하게 골라봐',
       '시작!',
@@ -61,6 +61,7 @@ export function createStageManager(ctx) {
         { words: ['차가운 말', '방전'], className: 'hi-cold' },
       ],
     );
+    ov.querySelector('.popup-card').classList.add('big'); // stage1 팝업 확대
   }
 
   function openPopup(bubble) {
@@ -84,9 +85,9 @@ export function createStageManager(ctx) {
   function onPass() {
     popupOpen = true;
     ctx.setInputLocked(true);
-    showInfo(
+    const ov = showInfo(
       ctx.uiRoot,
-      '충전 완료! 공감 송신기가 켜졌어요 🎉\n이제 얼어붙은 마음을 녹이러 가자!',
+      '충전 완료!\n 공감 송신기가 켜졌어요 🎉\n이제 얼어붙은 마음을 녹이러 가자!',
       '다음으로',
       () => {
         bubbles.clear();
@@ -99,6 +100,7 @@ export function createStageManager(ctx) {
       },
       '🎉',
     );
+    ov.querySelector('.popup-card').classList.add('big'); // stage1 팝업 확대
   }
 
   // Stage 2 — 얼어붙은 마음(NPC 3명)을 녹인다.
