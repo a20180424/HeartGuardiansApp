@@ -223,6 +223,13 @@ button {
   width: 100%;
 }
 
+/* 미니게임(3D 월드) 노드에서도 상단 스테퍼를 보이게 — .efg-overlay(z:100) 위로 올린다.
+   stage1→stage2 전환이 스테퍼에서 실시간으로 보인다. 탭은 3D 월드로 통과. */
+#stage.node-p3_m2_play #progress {
+  z-index: 110;
+  pointer-events: none;
+}
+
 /* ---------- mission title banner (intro only — 이 미션은 미사용) ---------- */
 #titleBanner {
   position: absolute;
