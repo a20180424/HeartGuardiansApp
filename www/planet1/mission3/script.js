@@ -738,7 +738,6 @@ const MISSION = {
       id: "m3_complete", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
       text: "드디어 사라진 빛이 돌아왔어!",
-      completeBanner: "미션 완료!",
       next: "m3_end",
     },
 

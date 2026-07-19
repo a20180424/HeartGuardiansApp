@@ -555,7 +555,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "다른 사람의 감정을 잘 이해하려면, 먼저 내 감정을 잘 알아야 해. '감정 설명서'를 통해 마음의 차이를 발견해 보자.",
+      text: "다른 사람의 감정을 잘 이해하려면,\n먼저 내 감정을 잘 알아야 해.\n'감정 설명서'를 통해 마음의 차이를 발견해 보자.",
       next: "p2_m1_preplay",
     },
     {
@@ -575,7 +575,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "가디언즈 감정 설명서가 완성되었어. 공감 카드를 확인해보자!",
+      text: "가디언즈 감정 설명서가 완성되었어.\n공감 카드를 확인해보자!",
       image: A + "/planet2/guardians-emotion-guide-complete.webp",
       onEnter: [{ cmd: "fx", value: "fx_result_glow" }],
       next: "p2_m1_cards",
@@ -600,7 +600,6 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "친구들의 감정이 조금씩 드러나기 시작했어. 다음 미션도 계속해보자",
-      completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -1420,7 +1419,6 @@ const EmotionGuideStage = (function () {
     bg: THEME.bg.initial,
     hideFriend: false,
     choiceImage: "", // 화면 가운데 큰 이미지(node.image)
-    bookGlow: false, // 완성 이미지 뒤 금빛 후광(fx resultGlow)
     cards: [],
     completeBanner: "",
     bright: false,
@@ -1456,13 +1454,11 @@ const EmotionGuideStage = (function () {
       case "resultGlow":
         // 완성 이미지(감정 설명서) 뒤 금빛 후광 + 반짝임 버스트(완료 축하).
         audio.play("reveal");
-        vm.bookGlow = true;
         sparkleBurst();
         render();
         break;
       case "lightReturn":
         audio.play("fanfare");
-        vm.bright = true;
         vm.progress = "done";
         vm.showNext = true;
         sparkleBurst();
@@ -1766,8 +1762,7 @@ const EmotionGuideStage = (function () {
     els.friendBubble.classList.toggle("show", !!friendBubbleText && vm.stage === "none");
     els.friendBubbleText.textContent = friendBubbleText;
 
-    // 완성 이미지 후광(fx resultGlow) — choiceImage 있을 때만
-    els.choiceGlow.classList.toggle("show", vm.bookGlow && !!vm.choiceImage);
+    // 완성 이미지 후광(choiceGlow)은 CSS 가 #stage.node-p2_m1_result 로 직접 판단.
 
     // 가운데 큰 이미지(node.image)
     if (vm.choiceImage) {
