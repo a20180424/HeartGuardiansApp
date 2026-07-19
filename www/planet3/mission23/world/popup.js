@@ -34,6 +34,7 @@ function makeOverlay(badgeEmoji) {
 // 문장 + [🔋 충전하기][건너뛰기]. onChoose(take)는 정확히 한 번 호출된다(take=충전하기).
 export function showChoice(parent, text, onChoose) {
   const { ov, card } = makeOverlay('💬');
+  card.classList.add('big'); // 화면 대비 크게(1.5배) — stage1 팝업 공통 확대
   const msg = document.createElement('p');
   msg.className = 'popup-text';
   msg.textContent = text;

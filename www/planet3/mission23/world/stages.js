@@ -8,6 +8,7 @@ import { showChoice, showInfo, showFeedback, showDialogue } from './popup.js';
 import { STAGE1_DATA, STAGE2_DATA } from './assets.js';
 import { parseStage2Data, createNpcGame } from './npcgame.js';
 import { createNpcs } from './npcs.js';
+import { createTransmitterHud } from './transmitterHud.js';
 
 const PROXIMITY = 6; // 팝업이 뜨는 근접 거리(월드 단위)
 
@@ -23,6 +24,7 @@ export function createStageManager(ctx) {
   let npcCooldown = 0; // 이 시각(elapsed) 이전엔 대화를 다시 열지 않음(피드백 노출용)
   // 이미 끝낸 NPC에게 "다 녹았어" 피드백을 이번 접근에서 이미 보여준 NPC id.
   let doneGreetedId = null;
+  let transmitter = null; // stage2 공감 송신기 HUD
 
   async function start(opts) {
     // DEV 편의: stage1을 건너뛰고 stage2로 바로 진입(?stage2=1).
@@ -47,7 +49,7 @@ export function createStageManager(ctx) {
   function showMissionIntro() {
     popupOpen = true;
     ctx.setInputLocked(true);
-    showInfo(
+    const ov = showInfo(
       ctx.uiRoot,
       '공감 송신기를 켜려면 에너지가 필요해.\n따뜻한 말을 선택하면 에너지가 충전될거야\n차가운 말을 선택하면 에너지가 방전될거야\n신중하게 골라봐',
       '시작!',
@@ -61,6 +63,7 @@ export function createStageManager(ctx) {
         { words: ['차가운 말', '방전'], className: 'hi-cold' },
       ],
     );
+    ov.querySelector('.popup-card').classList.add('big'); // stage1 팝업 확대
   }
 
   function openPopup(bubble) {
@@ -84,9 +87,9 @@ export function createStageManager(ctx) {
   function onPass() {
     popupOpen = true;
     ctx.setInputLocked(true);
-    showInfo(
+    const ov = showInfo(
       ctx.uiRoot,
-      '충전 완료! 공감 송신기가 켜졌어요 🎉\n이제 얼어붙은 마음을 녹이러 가자!',
+      '충전 완료!\n 공감 송신기가 켜졌어요 🎉\n이제 얼어붙은 마음을 녹이러 가자!',
       '다음으로',
       () => {
         bubbles.clear();
@@ -99,9 +102,10 @@ export function createStageManager(ctx) {
       },
       '🎉',
     );
+    ov.querySelector('.popup-card').classList.add('big'); // stage1 팝업 확대
   }
 
-  // Stage 2 — 얼어붙은 마음(NPC 3명)을 녹인다.
+  // Stage 2 — 얼어붙은 마음(NPC 4명)을 녹인다.
   async function startStage2() {
     ctx.onStage2Enter();
     try {
@@ -113,6 +117,9 @@ export function createStageManager(ctx) {
       // 로드 도중 언마운트됐다면(dispose 선행) 방금 만든 NPC 리소스를 정리하고 중단 — GPU 누수 방지.
       if (ctx.isDisposed()) { loaded.clear(); return; }
       npcs = loaded;
+      // stage2 내내 하단 가운데에 공감 송신기 HUD 상시 표시(대화 중 active).
+      transmitter = createTransmitterHud();
+      ctx.uiRoot.appendChild(transmitter.element);
     } catch (err) {
       console.error('[stage2] NPC 로드 실패:', err);
       showInfo(ctx.uiRoot, '앗, 친구들을 불러오지 못했어요.\n잠시 후 다시 시도해 주세요.', '확인', null, '😢');
@@ -128,11 +135,13 @@ export function createStageManager(ctx) {
     ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
+    transmitter?.setActive(true); // 대화 중 송신기 작동 강조
     const buttons = round.choices.length > 0 ? round.choices : ["닫기"];
     showDialogue(ctx.uiRoot, round.prompt, buttons, (index) => {
       const r = npcGame.choose(def.id, index);
       popupOpen = false;
       ctx.setInputLocked(false);
+      transmitter?.setActive(false);
       npcCooldown = elapsed + 1.2; // 피드백이 보이도록 잠시 재오픈 지연
       if (r.accepted) {
         if (r.npcDone) doneGreetedId = def.id;
@@ -145,23 +154,26 @@ export function createStageManager(ctx) {
     }, def.emoji);
   }
 
-  // 세 NPC 모두 lv3 → 축하 후 미션3(=행성3 최종) 완료.
+  // NPC 4명 모두 lv3 → 축하 후 미션3(=행성3 최종) 완료.
   function onAllNpcsDone() {
     popupOpen = true;
     ctx.setInputLocked(true);
-    showInfo(
+    const ov = showInfo(
       ctx.uiRoot,
       '모두의 얼어붙은 마음이 녹았어요! 🎉\n얼음 행성의 친구들이 다시 웃어요!',
       '미션 완료',
       () => {
         npcs.clear();
         npcs = null;
+        transmitter?.remove();
+        transmitter = null;
         popupOpen = false;
         ctx.setInputLocked(false);
         ctx.onComplete();
       },
       '🎉',
     );
+    ov.querySelector('.popup-card').classList.add('big'); // stage1 엔딩과 동일 크기로 확대
   }
 
   function update(dt) {

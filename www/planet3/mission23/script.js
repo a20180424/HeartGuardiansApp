@@ -662,7 +662,6 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "수고했어. 대원의 따뜻한 말이 친구들을 웃게 만들었어.",
-      completeBanner: "미션 완료!",
       next: "p3_m2_cards",
     },
     {

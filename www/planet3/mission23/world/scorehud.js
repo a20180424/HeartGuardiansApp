@@ -4,6 +4,7 @@ export function createScoreHud(passScore) {
   const el = document.createElement('div');
   el.className = 'score-hud';
 
+  // 왼쪽: 배터리 이모지.
   const icon = document.createElement('span');
   icon.className = 'fuel-icon';
   icon.textContent = '🔋';
@@ -19,6 +20,13 @@ export function createScoreHud(passScore) {
     cells.push(c);
   }
   el.appendChild(gauge);
+
+  // 오른쪽: 공감 송신기 아이콘 — "송신기를 충전한다"는 의미를 준다.
+  const transmitter = document.createElement('img');
+  transmitter.className = 'fuel-transmitter';
+  transmitter.src = '../../assets/planet3/empathy-transmitter-icon.webp';
+  transmitter.alt = '';
+  el.appendChild(transmitter);
 
   function set(score) {
     cells.forEach((c, i) => c.classList.toggle('filled', i < score));

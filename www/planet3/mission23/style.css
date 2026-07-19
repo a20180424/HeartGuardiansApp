@@ -223,6 +223,13 @@ button {
   width: 100%;
 }
 
+/* 미니게임(3D 월드) 노드에서도 상단 스테퍼를 보이게 — .efg-overlay(z:100) 위로 올린다.
+   stage1→stage2 전환이 스테퍼에서 실시간으로 보인다. 탭은 3D 월드로 통과. */
+#stage.node-p3_m2_play #progress {
+  z-index: 110;
+  pointer-events: none;
+}
+
 /* ---------- mission title banner (intro only — 이 미션은 미사용) ---------- */
 #titleBanner {
   position: absolute;
@@ -811,6 +818,35 @@ button {
   pointer-events: none;
 }
 
+/* --- 위젯 안내 라벨(미니맵/리모콘) — 각 위젯 바로 위에 중앙 정렬 --- */
+.efg-overlay .hud-label {
+  position: absolute;
+  z-index: 7;
+  color: #1e2b45; /* 짙은 남색 — 밝은 눈밭에서 흰색보다 잘 보인다 */
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+  /* 흰 외곽선(halo) — 어두운 영역 위에서도 글자가 뜨게 한다 */
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.95),
+    0 1px 2px rgba(255, 255, 255, 0.95),
+    0 2px 6px rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  user-select: none;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.efg-overlay .hud-label--minimap {
+  left: 16px; /* .minimap 과 동일 */
+  bottom: 247px; /* 16(minimap bottom) + 225(minimap 높이) + 6 */
+  width: 225px; /* .minimap 폭 */
+}
+.efg-overlay .hud-label--joystick {
+  right: 28px; /* .joystick 과 동일 */
+  bottom: 244px; /* 28(joystick bottom) + 210(joystick 높이) + 6 */
+  width: 210px; /* .joystick 폭 */
+}
+
 /* --- 시나리오 팝업 (아이 친화·통통 튀는 스타일) --- */
 .efg-overlay .popup-overlay {
   position: absolute;
@@ -844,6 +880,34 @@ button {
 }
 .efg-overlay .popup-card.info {
   max-width: 640px;
+}
+/* stage1 팝업 공통 확대(1.5배) — 시작·접촉·완료 팝업이 화면 대비 작아서 키움.
+   stage2 NPC 대화 팝업(.popup-overlay--dialogue)과 같은 크기로 맞춘다.
+   .info 뒤에 두어 max-width 를 이 규칙이 이긴다. */
+.efg-overlay .popup-card.big {
+  max-width: 880px; /* 글씨 확대로 문장(\n 구간)이 접히지 않게 폭 확장 */
+  padding: 51px 48px 39px;
+  border-radius: 42px;
+  margin-top: 39px;
+}
+.efg-overlay .popup-card.big .popup-badge {
+  top: -45px;
+  width: 90px;
+  height: 90px;
+  font-size: 48px;
+  border-width: 6px;
+}
+.efg-overlay .popup-card.big .popup-text {
+  font-size: 37px;
+  margin: 6px 0 36px;
+}
+.efg-overlay .popup-card.big .popup-buttons {
+  gap: 21px;
+}
+.efg-overlay .popup-card.big .popup-btn {
+  font-size: 30px;
+  padding: 24px 39px;
+  border-radius: 27px;
 }
 @keyframes efg-popup-pop {
   0% { transform: scale(0.7); opacity: 0; }
@@ -993,6 +1057,7 @@ button {
   z-index: 7;
   user-select: none;
 }
+.efg-overlay .score-hud .fuel-transmitter { height: 42px; width: auto; display: block; }
 .efg-overlay .score-hud .fuel-icon { font-size: 30px; line-height: 1; }
 .efg-overlay .fuel-gauge { display: flex; gap: 6px; }
 .efg-overlay .fuel-cell {
@@ -1007,6 +1072,99 @@ button {
   background: linear-gradient(180deg, #ffd24d, #ff9d2e);
   box-shadow: 0 0 8px rgba(255, 170, 60, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
   transform: scale(1.06);
+}
+
+/* ==========================================================================
+   stage2 공감 송신기 HUD — 하단 가운데 상시 표시(idle) + 대화 중(.active) 강화.
+   신호파는 안테나 위쪽(=NPC 방향)으로 방사. 좌표계는 .efg-overlay(1920×1200) 기준.
+   ========================================================================== */
+.efg-overlay .transmitter-hud {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8; /* 캔버스 위, 대화 팝업(z:20) 아래 */
+  pointer-events: none;
+  user-select: none;
+  transition: transform 0.35s ease; /* active 시 살짝 커지는 걸 완충 */
+  --wave-op: 0.4; /* idle 신호파 최대 opacity */
+  --wave-dur: 2.8s; /* idle 신호파 주기 */
+}
+/* active: 대화 중 — 기기가 살짝 커지며 존재감 강조 */
+.efg-overlay .transmitter-hud.active {
+  transform: translateX(-50%) scale(1.1);
+  --wave-op: 1; /* 신호파 완전 불투명 */
+  --wave-dur: 1.05s; /* 더 빠르게 방사 */
+}
+.efg-overlay .transmitter-hud__img {
+  position: relative;
+  display: block;
+  height: 150px;
+  width: auto;
+  filter:
+    drop-shadow(0 0 10px rgba(255, 120, 165, 0.35))
+    drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  transition: filter 0.45s ease; /* idle→active 진입 완충(빠져나올 때도) */
+  animation: transmitter-bob 3.4s ease-in-out infinite;
+}
+/* active 글로우는 정적 강화 대신 맥박(pulse)으로 — 확실히 눈에 띄게 */
+.efg-overlay .transmitter-hud.active .transmitter-hud__img {
+  animation:
+    transmitter-bob 3.4s ease-in-out infinite,
+    transmitter-glow-pulse 1.05s ease-in-out infinite;
+}
+@keyframes transmitter-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes transmitter-glow-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 20px rgba(255, 110, 160, 0.75))
+      drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 40px rgba(255, 80, 145, 1))
+      drop-shadow(0 0 14px rgba(255, 200, 80, 0.8))
+      drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  }
+}
+
+.efg-overlay .transmitter-hud__waves {
+  position: absolute;
+  left: 50%;
+  top: 2px; /* 안테나 끝 근처 */
+  width: 44px;
+  height: 44px;
+  transform: translateX(-50%);
+}
+.efg-overlay .transmitter-hud__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px; /* transform 은 keyframe 전용이라 margin 으로 중앙정렬 */
+  border-radius: 50%;
+  border: 3px solid rgba(255, 120, 165, 0.9);
+  opacity: 0;
+  animation: transmitter-wave var(--wave-dur) ease-out infinite;
+}
+.efg-overlay .transmitter-hud__ring:nth-child(2) {
+  animation-delay: calc(var(--wave-dur) / 3);
+}
+.efg-overlay .transmitter-hud__ring:nth-child(3) {
+  animation-delay: calc(var(--wave-dur) / 3 * 2);
+}
+@keyframes transmitter-wave {
+  0% { opacity: var(--wave-op); transform: scale(0.4) translateY(0); }
+  100% { opacity: 0; transform: scale(2.4) translateY(-34px); } /* 위로 드리프트 = NPC 방향 */
+}
+/* active: 링을 더 굵고 진하게 + 더 멀리 방사해 확실히 티나게 */
+.efg-overlay .transmitter-hud.active .transmitter-hud__ring {
+  border-width: 4px;
+  border-color: rgba(255, 85, 150, 1);
 }
 
 /* ==========================================================================
