@@ -406,6 +406,26 @@ button {
     filter 0.6s ease;
 }
 
+/* 루미 머리 위 이름표 (planet2/mission3 .cast-name 이식) */
+#friendName {
+  position: absolute;
+  left: 50%;
+  top: 60px;
+  transform: translateX(-50%);
+  z-index: 4;
+  padding: 6px 22px;
+  border-radius: 999px;
+  background: #3f9b3f;
+  border: 3px solid #ecd98a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
 /* 루미 후광(회복 시) */
 #friendWrap.glow #friend {
   animation: friendHalo 2.2s ease-in-out infinite;
