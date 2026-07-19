@@ -21,6 +21,10 @@
   `document.documentElement.clientWidth`** — `window.innerWidth`는 DevTools DPR 에뮬레이션에서
   간헐적으로 어긋난다(전 페이지 수정 완료, 재도입 금지).
 - 무대 내부는 px 절대배치. **`vw/vh/dvh/svh` 금지** (예외: 공통 블록의 히든 메뉴 오버레이만).
+- **텍스트가 들어가는 모든 요소는 기본적으로 `white-space: pre-line` + `word-break: keep-all`**
+  (특별한 지시가 없는 한). `pre-line`은 대사·문구의 `\n`을 줄바꿈으로 표시하고,
+  `keep-all`은 자동 줄바꿈 시 한글 어절을 중간에서 안 자른다. 새 텍스트 요소를 만들거나
+  기존 요소를 손볼 때 둘 다 적용할 것.
 
 ## localStorage 계약
 

@@ -1014,7 +1014,7 @@ function blipSound(speaker) {
       typeInto(node.text || "", isHati ? "hati" : "friend", () => {
         vm.mode = "await";
         if (onTyped) onTyped();
-        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
+        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : ""; // 마지막 노드는 완료 힌트 표시 안 함
         render();
         window.clearTimeout(timers.auto);
         // 미션2는 모든 라인이 noAuto — 자동 진행 없음(탭으로만).
@@ -1530,11 +1530,18 @@ function blipSound(speaker) {
 
   // ---------- 렌더 ----------
   // 선택지 카드는 상태가 바뀔 때만 다시 그린다.
+  // 선택지 아이콘 조회 — 공백·줄바꿈·끝문장부호 차이를 무시(선택지 텍스트에 줄바꿈 넣어도 fallback 안 나게).
+  function choiceIcon(text) {
+    const norm = (s) => s.replace(/\s+/g, "").replace(/[.!?…]+$/, "");
+    const want = norm(text);
+    for (const k in THEME.choiceIcons) if (norm(k) === want) return THEME.choiceIcons[k];
+    return { emoji: "💭", bg: "#eef2f7" };
+  }
   function renderChoices() {
     els.choices.innerHTML = "";
     const many = vm.choices.length >= 4;
     vm.choices.forEach((c, idx) => {
-      const deco = THEME.choiceIcons[c.text] || { emoji: "💭", bg: "#eef2f7" };
+      const deco = choiceIcon(c.text);
       const btn = document.createElement("button");
       btn.type = "button";
       btn.dataset.sfx = "none";

@@ -674,6 +674,9 @@ function devProgressOverride(progress) {
     ]),
   );
 
+  /* ---- 과목·학년 표기 (home-profile 아래) ---- */
+  root.appendChild(el("div", { class: "home-subject", text: "도덕 3학년" }));
+
   /* ---- 학습 목표 버튼 (index.tsx home-goal → GoalBook 팝업) ---- */
   const goalBtn = el(
     "button",

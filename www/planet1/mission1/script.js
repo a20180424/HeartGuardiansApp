@@ -477,21 +477,21 @@ const A = ASSETS;
 const MISSION = {
   start: "m1_intro",
   nodes: [
-    { id: "m1_intro", type: "line", noAuto: true, speaker: "hati", text: "친구의 마음은 보이지 않아. 하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어! 친구의 마음 신호를 찾아보자.", next: "m1_lumi_intro" },
-    { id: "m1_lumi_intro", type: "line", noAuto: true, speaker: "lumi", text: "오늘은 놀기 싫어", hold: true, next: "m1_q1_prompt" },
-    { id: "m1_q1_prompt", type: "line", noAuto: true, speaker: "hati", text: "루미의 마음 신호가 흐릿해. 어떤 마음일까?", next: "m1_q1_choice" },
+    { id: "m1_intro", type: "line", noAuto: true, speaker: "hati", text: "친구의 마음은 보이지 않아.\n하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어!\n친구의 마음 신호를 찾아보자.", next: "m1_lumi_intro" },
+    { id: "m1_lumi_intro", type: "line", noAuto: true, speaker: "lumi", text: "오늘은 놀기 싫어.", hold: true, next: "m1_q1_prompt" },
+    { id: "m1_q1_prompt", type: "line", noAuto: true, speaker: "hati", text: "루미의 마음 신호가 흐릿해.\n어떤 마음일까?", next: "m1_q1_choice" },
     {
       id: "m1_q1_choice", type: "choice", prompt: "루미는 어떤 마음일까?", requireAll: true,
       choices: [
-        { text: "나를 싫어하게 된 것 같아", next: "m1_q1_react" },
-        { text: "무슨 힘든 일이 있는 것 같아", next: "m1_q1_react" },
-        { text: "그냥 혼자 있고 싶은가 봐", next: "m1_q1_react" },
+        { text: "나를 싫어하게\n 된 것 같아.", next: "m1_q1_react" },
+        { text: "무슨 힘든 일이 있는 것 같아.", next: "m1_q1_react" },
+        { text: "그냥 혼자 있고 싶은가 봐.", next: "m1_q1_react" },
       ],
     },
-    { id: "m1_q1_react", type: "line", noAuto: true, speaker: "hati", text: "음.. 그럴 수도 있겠네. 하지만 아직 루미의 마음을 정확히는 알 수 없어", next: "m1_q1_gate" },
+    { id: "m1_q1_react", type: "line", noAuto: true, speaker: "hati", text: "음.. 그럴 수도 있겠네.\n하지만 아직 루미의 마음을 정확히는 알 수 없어.", next: "m1_q1_gate" },
     { id: "m1_q1_gate", type: "branch", condition: "allExplored", watch: "m1_q1_choice", ifTrue: "m1_q2_prompt", ifFalse: "m1_q1_choice" },
 
-    { id: "m1_q2_prompt", type: "line", noAuto: true, speaker: "hati", text: "마음을 알려면 어떻게 해야 할까? 친구에게 직접 물어보자!", next: "m1_q2_choice" },
+    { id: "m1_q2_prompt", type: "line", noAuto: true, speaker: "hati", text: "마음을 알려면 어떻게 해야 할까?\n친구에게 직접 물어보자!", next: "m1_q2_choice" },
     {
       id: "m1_q2_choice", type: "choice", prompt: "어떻게 물어볼까?",
       choices: [
@@ -500,14 +500,14 @@ const MISSION = {
         { text: "나랑 놀기 싫어?", next: "m1_q2_wrongC" },
       ],
     },
-    { id: "m1_q2_wrongA", type: "line", noAuto: true, speaker: "hati", text: '"왜 그래?"는 좋은 질문이 아닌 것 같아', next: "m1_q2_retry" },
-    { id: "m1_q2_wrongC", type: "line", noAuto: true, speaker: "hati", text: '"나랑 놀기 싫어?"는 좋은 질문이 아닌 것 같아', next: "m1_q2_retry" },
+    { id: "m1_q2_wrongA", type: "line", noAuto: true, speaker: "hati", text: '"왜 그래?"는 좋은 질문이 아닌 것 같아.', next: "m1_q2_retry" },
+    { id: "m1_q2_wrongC", type: "line", noAuto: true, speaker: "hati", text: '"나랑 놀기 싫어?"는 좋은 질문이 아닌 것 같아.', next: "m1_q2_retry" },
     { id: "m1_q2_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m1_q2_choice" },
-    { id: "m1_q2_correct", type: "line", noAuto: true, speaker: "hati", text: '"무슨 일 있어?"는 열린 질문이야. 상대가 편하게 말할 수 있게 도와줘.', next: "m1_lumi_answer" },
+    { id: "m1_q2_correct", type: "line", noAuto: true, speaker: "hati", text: '"무슨 일 있어?"는 열린 질문이야.\n상대가 편하게 말할 수 있게 도와줘.', next: "m1_lumi_answer" },
 
-    { id: "m1_lumi_answer", type: "line", noAuto: true, speaker: "lumi", text: "사실 감기에 걸려서 너무 힘들어", hold: true, next: "m1_q3_prompt" },
+    { id: "m1_lumi_answer", type: "line", noAuto: true, speaker: "lumi", text: "사실 감기에 걸려서 너무 힘들어.", hold: true, next: "m1_q3_prompt" },
 
-    { id: "m1_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원은 감기에 걸렸을 때 어떤 감정이었어? 그때의 마음을 클릭해봐.", next: "m1_q3_choice" },
+    { id: "m1_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원은 감기에 걸렸을 때 어떤 감정이었어?\n그때의 마음을 클릭해봐.", next: "m1_q3_choice" },
     {
       id: "m1_q3_choice", type: "choice",
       choices: [
@@ -528,8 +528,8 @@ const MISSION = {
         { text: "많이 힘들었겠구나.", next: "m1_q4_correct_lumi" },
       ],
     },
-    { id: "m1_q4_wrongA_lumi", type: "line", noAuto: true, speaker: "lumi", text: "그건 도움이 안됐어...", next: "m1_q4_retry" },
-    { id: "m1_q4_wrongB_lumi", type: "line", noAuto: true, speaker: "lumi", text: "지금은 쉬고 싶어...", next: "m1_q4_retry" },
+    { id: "m1_q4_wrongA_lumi", type: "line", noAuto: true, speaker: "lumi", text: "그건 도움이 안됐어.", next: "m1_q4_retry" },
+    { id: "m1_q4_wrongB_lumi", type: "line", noAuto: true, speaker: "lumi", text: "지금은 쉬고 싶어.", next: "m1_q4_retry" },
     { id: "m1_q4_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m1_q4_choice" },
     { id: "m1_q4_correct_lumi", type: "line", noAuto: true, speaker: "lumi", text: "고마워!", next: "m1_end1" },
 
@@ -544,7 +544,7 @@ const MISSION = {
       ],
       next: "m1_end3",
     },
-    { id: "m1_end3", type: "line", noAuto: true, speaker: "hati", text: "빛이 조금씩 돌아오기 시작했어! 다음 미션도 계속해보자!", onEnter: [{ cmd: "fx", value: "fx_light_return" }], next: null },
+    { id: "m1_end3", type: "line", noAuto: true, speaker: "hati", text: "빛이 조금씩 돌아오기 시작했어!\n다음 미션도 계속해보자!", onEnter: [{ cmd: "fx", value: "fx_light_return" }], next: null },
   ],
 };
 
@@ -630,9 +630,9 @@ const THEME = {
   },
   badgeColors: ["#7c3aed", "#2563eb", "#16a34a", "#e11d48", "#0ea5a3"],
   choiceIcons: {
-    "나를 싫어하게 된 것 같아": { emoji: "💔", bg: "#f3e8ff" },
-    "무슨 힘든 일이 있는 것 같아": { emoji: "🌧️", bg: "#e0f2fe" },
-    "그냥 혼자 있고 싶은가 봐": { emoji: "🧍", bg: "#eef2f7" },
+    "나를 싫어하게 된 것 같아.": { emoji: "💔", bg: "#f3e8ff" },
+    "무슨 힘든 일이 있는 것 같아.": { emoji: "🌧️", bg: "#e0f2fe" },
+    "그냥 혼자 있고 싶은가 봐.": { emoji: "🧍", bg: "#eef2f7" },
     "왜그래?": { emoji: "❓", bg: "#fef3c7" },
     "무슨 일 있어?": { emoji: "💬", bg: "#dcfce7" },
     "나랑 놀기 싫어?": { emoji: "🙅", bg: "#fee2e2" },
@@ -886,7 +886,7 @@ function blipSound(speaker) {
       typeInto(node.text || "", isHati ? "hati" : "friend", () => {
         vm.mode = "await";
         if (onTyped) onTyped();
-        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
+        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : ""; // 마지막 노드(m1_end3)는 완료 힌트 표시 안 함
         render();
         window.clearTimeout(timers.auto);
         // 미션1은 모든 라인이 noAuto — 자동 진행 없음(탭으로만).
@@ -1106,11 +1106,18 @@ function blipSound(speaker) {
 
   // ---------- 렌더 ----------
   // 선택지 카드는 상태가 바뀔 때만 다시 그린다(드래그 도중 재생성 방지).
+  // 선택지 아이콘 조회 — 공백·줄바꿈·끝문장부호 차이를 무시(선택지 텍스트에 줄바꿈 넣어도 fallback 안 나게).
+  function choiceIcon(text) {
+    const norm = (s) => s.replace(/\s+/g, "").replace(/[.!?…]+$/, "");
+    const want = norm(text);
+    for (const k in THEME.choiceIcons) if (norm(k) === want) return THEME.choiceIcons[k];
+    return { emoji: "💭", bg: "#eef2f7" };
+  }
   function renderChoices() {
     els.choices.innerHTML = "";
     const many = vm.choices.length >= 4;
     vm.choices.forEach((c, idx) => {
-      const deco = THEME.choiceIcons[c.text] || { emoji: "💭", bg: "#eef2f7" };
+      const deco = choiceIcon(c.text);
       const explored = vm.exploredSet && vm.exploredSet.has(idx);
       const dragCard = vm.dragNode && !explored;
       const btn = document.createElement("button");

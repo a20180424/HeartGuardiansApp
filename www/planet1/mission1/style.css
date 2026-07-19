@@ -264,9 +264,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -343,9 +347,13 @@ button {
 
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 510px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
   height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
@@ -362,8 +370,12 @@ button {
 }
 
 #hatiBubble {
-  left: 1030px;
-  bottom: 452px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 260px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
 }
 #hatiBubble .bubble-name {
@@ -676,6 +688,7 @@ button {
   color: #222b3d;
   line-height: 1.45;
   word-break: keep-all;
+  white-space: pre-line; /* 대사 텍스트의 \n 을 줄바꿈으로 표시 */
 }
 #hatiName {
   font-size: 22px;
@@ -827,6 +840,8 @@ button {
   color: #283143;
   text-align: center;
   line-height: 1.35;
+  white-space: pre-line; /* 선택지 텍스트 안 줄바꿈을 그대로 표시 */
+  word-break: keep-all; /* 자동 줄바꿈 시 한글 어절 안 자름 */
 }
 .card.done {
   opacity: 0.55;
@@ -854,6 +869,9 @@ button {
 
 /* 화면 가운데 카드들(엔딩 공감 카드) — 가로 나란히, 높이 기준 + 등장 애니 */
 #cardStage {
+  /* ▼▼▼ 카드 묶음 가로 위치 노브 — 무대(1920px) 기준, +오른쪽 / -왼쪽 ▼▼▼ */
+  --cards-x: 300px; /* 무대(1920px) 기준 오른쪽 이동량 */
+  /* ▲▲▲ ------------------------------------------------ ▲▲▲ */
   position: absolute;
   inset: 0;
   z-index: 5;
@@ -863,6 +881,7 @@ button {
   justify-content: center;
   gap: 60px;
   padding: 96px 40px 40px;
+  transform: translateX(var(--cards-x));
   pointer-events: none;
 }
 .card-item {

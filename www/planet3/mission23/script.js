@@ -923,7 +923,7 @@ const devStage2 = PARAMS.has("stage2");
       typeInto(node.text || "", isHati ? "hati" : "friend", () => {
         vm.mode = "await";
         if (onTyped) onTyped();
-        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
+        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : ""; // 마지막 노드는 완료 힌트 표시 안 함
         render();
         window.clearTimeout(timers.auto);
         // 이 미션의 모든 라인은 noAuto — 자동 진행 없음(탭으로만).
