@@ -1079,8 +1079,15 @@ button {
   z-index: 8; /* 캔버스 위, 대화 팝업(z:20) 아래 */
   pointer-events: none;
   user-select: none;
+  transition: transform 0.35s ease; /* active 시 살짝 커지는 걸 완충 */
   --wave-op: 0.4; /* idle 신호파 최대 opacity */
   --wave-dur: 2.8s; /* idle 신호파 주기 */
+}
+/* active: 대화 중 — 기기가 살짝 커지며 존재감 강조 */
+.efg-overlay .transmitter-hud.active {
+  transform: translateX(-50%) scale(1.1);
+  --wave-op: 1; /* 신호파 완전 불투명 */
+  --wave-dur: 1.05s; /* 더 빠르게 방사 */
 }
 .efg-overlay .transmitter-hud__img {
   position: relative;
@@ -1090,17 +1097,31 @@ button {
   filter:
     drop-shadow(0 0 10px rgba(255, 120, 165, 0.35))
     drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
-  transition: filter 0.45s ease; /* idle↔active 글로우 완충 */
+  transition: filter 0.45s ease; /* idle→active 진입 완충(빠져나올 때도) */
   animation: transmitter-bob 3.4s ease-in-out infinite;
 }
+/* active 글로우는 정적 강화 대신 맥박(pulse)으로 — 확실히 눈에 띄게 */
 .efg-overlay .transmitter-hud.active .transmitter-hud__img {
-  filter:
-    drop-shadow(0 0 24px rgba(255, 120, 165, 0.85))
-    drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  animation:
+    transmitter-bob 3.4s ease-in-out infinite,
+    transmitter-glow-pulse 1.05s ease-in-out infinite;
 }
 @keyframes transmitter-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
+}
+@keyframes transmitter-glow-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 20px rgba(255, 110, 160, 0.75))
+      drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 40px rgba(255, 80, 145, 1))
+      drop-shadow(0 0 14px rgba(255, 200, 80, 0.8))
+      drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  }
 }
 
 .efg-overlay .transmitter-hud__waves {
@@ -1133,10 +1154,10 @@ button {
   0% { opacity: var(--wave-op); transform: scale(0.4) translateY(0); }
   100% { opacity: 0; transform: scale(2.4) translateY(-34px); } /* 위로 드리프트 = NPC 방향 */
 }
-
-.efg-overlay .transmitter-hud.active {
-  --wave-op: 0.85;
-  --wave-dur: 1.4s; /* 대화 중 더 빠르게 방사 */
+/* active: 링을 더 굵고 진하게 + 더 멀리 방사해 확실히 티나게 */
+.efg-overlay .transmitter-hud.active .transmitter-hud__ring {
+  border-width: 4px;
+  border-color: rgba(255, 85, 150, 1);
 }
 
 /* ==========================================================================
