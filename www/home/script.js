@@ -899,8 +899,8 @@ function devProgressOverride(progress) {
     } else if (key === "history") {
       openModal(A + "home/plateHistory.webp", buildHistoryBoard());
     } else {
-      // mission: 내용 미정 — 빈 모달 (원본과 동일).
-      openModal(A + "home/plateMission.webp", null);
+      // mission: 탐험 안내서 씬으로 전환 (guide/index.html).
+      fadeNav(ROOT + "guide/index.html");
     }
   }
 })();
