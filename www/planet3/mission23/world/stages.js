@@ -158,7 +158,7 @@ export function createStageManager(ctx) {
   function onAllNpcsDone() {
     popupOpen = true;
     ctx.setInputLocked(true);
-    showInfo(
+    const ov = showInfo(
       ctx.uiRoot,
       '모두의 얼어붙은 마음이 녹았어요! 🎉\n얼음 행성의 친구들이 다시 웃어요!',
       '미션 완료',
@@ -173,6 +173,7 @@ export function createStageManager(ctx) {
       },
       '🎉',
     );
+    ov.querySelector('.popup-card').classList.add('big'); // stage1 엔딩과 동일 크기로 확대
   }
 
   function update(dt) {
