@@ -629,7 +629,13 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {}, // MISSION01_THEME.hatiSprites.byNode 는 원본도 빈 객체 — 전 구간 "thinking" 고정
+    byNode: {
+      p2_m1_intro: "explaining",
+      p2_m1_preplay: "suggesting",
+      p2_m1_result: "cheering", // 설명서 완성
+      p2_m1_cards: "explaining",
+      p2_m1_end: "celebrating", // 감정이 드러나기 시작 — 미션 마무리
+    },
   },
   friends: {
     // placeholder 친구 — 안개 행성 아트 미확정, 전 노드 hideFriend:true 라 화면엔 안 보인다.

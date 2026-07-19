@@ -716,7 +716,11 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    byNode: {
+      p3_m2_postplay: "praising", // 수고했어 — 대원 칭찬
+      p3_m2_cards: "explaining",
+      p3_m2_end: "celebrating", // 경청의 토파즈·표현의 루비 획득
+    },
   },
   friends: {
     placeholder: {
