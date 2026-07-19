@@ -143,7 +143,8 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage })
   function keyboardInput() {
     let throttle = 0;
     let turn = 0;
-    if (keys.has('arrowup') || keys.has('w')) throttle = 1;
+    if (keys.has('arrowup') || keys.has('w')) throttle += 1;
+    if (keys.has('arrowdown') || keys.has('s')) throttle -= 1; // 후진
     if (keys.has('arrowleft') || keys.has('a')) turn -= 1;
     if (keys.has('arrowright') || keys.has('d')) turn += 1;
     return { throttle, turn };
@@ -207,7 +208,7 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage })
         const j = joystick.value;
         const k = keyboardInput();
         return {
-          throttle: Math.max(j.throttle, k.throttle),
+          throttle: largerMag(j.throttle, k.throttle),
           turn: largerMag(j.turn, k.turn),
         };
       }

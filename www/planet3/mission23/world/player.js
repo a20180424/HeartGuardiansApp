@@ -3,6 +3,7 @@ import { worldToAxial, hexKey, axialToWorld } from './hexgrid.js';
 import { stepForward, resolveSlide } from './playermove.js';
 
 const WALK_SPEED = 6;    // units/sec
+const REVERSE_SPEED = 3; // 후진 속도 — 1인칭에서 뒤가 안 보이므로 전진의 절반으로 천천히
 const TURN_SPEED = 2.5;  // radians/sec (약 140°/s)
 
 // 1인칭 컨트롤러: 시선은 yaw(좌우)만, 이동은 시선 전방으로만.
@@ -23,8 +24,10 @@ export function createPlayer(camera, { size, hexTopY, eyeHeight, walkable, start
     // 좌우 회전(제자리 회전 = 360° 둘러보기 포함). turn 양수 = 우회전.
     yaw -= turn * TURN_SPEED * dt;
 
-    if (throttle > 0) {
-      const dist = throttle * WALK_SPEED * dt;
+    if (throttle !== 0) {
+      // throttle 부호가 방향(양수 전진·음수 후진), 후진은 더 느린 속도를 쓴다.
+      const speed = throttle > 0 ? WALK_SPEED : REVERSE_SPEED;
+      const dist = throttle * speed * dt;
       const cand = stepForward(pos.x, pos.z, yaw, dist);
       const next = resolveSlide(pos.x, pos.z, cand.x, cand.z, isWalkableAt);
       pos.x = next.x;
