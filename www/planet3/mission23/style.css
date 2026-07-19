@@ -874,6 +874,33 @@ button {
 .efg-overlay .popup-card.info {
   max-width: 640px;
 }
+/* 말풍선 접촉 선택 팝업(🔋 충전하기 / 건너뛰기) — 화면 대비 1.5배 확대.
+   stage2 NPC 대화 팝업(.popup-overlay--dialogue)과 같은 크기로 맞춘다. */
+.efg-overlay .popup-card.choice {
+  max-width: 690px;
+  padding: 51px 39px 39px;
+  border-radius: 42px;
+  margin-top: 39px;
+}
+.efg-overlay .popup-card.choice .popup-badge {
+  top: -45px;
+  width: 90px;
+  height: 90px;
+  font-size: 48px;
+  border-width: 6px;
+}
+.efg-overlay .popup-card.choice .popup-text {
+  font-size: 37px;
+  margin: 6px 0 36px;
+}
+.efg-overlay .popup-card.choice .popup-buttons {
+  gap: 21px;
+}
+.efg-overlay .popup-card.choice .popup-btn {
+  font-size: 30px;
+  padding: 24px 39px;
+  border-radius: 27px;
+}
 @keyframes efg-popup-pop {
   0% { transform: scale(0.7); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
