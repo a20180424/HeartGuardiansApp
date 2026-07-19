@@ -237,7 +237,7 @@ button {
   --cast-scale: 0.8;
   position: absolute;
   left: -190px;
-  bottom: -180px;
+  bottom: -140px;
   z-index: 3;
   transform: scale(var(--cast-scale));
   transform-origin: left bottom;
@@ -667,6 +667,15 @@ button {
   height: 58%;
   animation: cardIn 0.5s ease-out both;
   filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
+}
+/* 공감 카드(p2_m3_cards 노드)만 화면 오른쪽 절반(x960~1920) 중앙에 — 미션2와 동일 배치.
+   end 노드 리워드 카드는 정중앙 유지(스코프 밖). */
+#stage.node-p2_m3_cards #cardStage {
+  left: 960px;
+  transform: translateX(20px); /* 오른쪽 절반 안에서 살짝 더 오른쪽으로 */
+}
+#stage.node-p2_m3_cards .card-item {
+  height: 54%; /* 오른쪽 절반 폭에 2장(2:3 세로형)이 잘리지 않게 */
 }
 .card-item:nth-child(2) {
   animation-delay: 0.12s;
