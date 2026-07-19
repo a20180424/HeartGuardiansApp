@@ -581,7 +581,7 @@ button {
 /* ② postplay·end(사용 설명서 이미지) — 가운데, 조금 더 크게. */
 #stage.node-p3_m1_postplay #choiceImage,
 #stage.node-p3_m1_end #choiceImage {
-  height: 75%;
+  height: 67.5%; /* 기존 75% 의 약 90% */
   top: 150px;
   transform: translateX(0px);
   -webkit-mask: none;
