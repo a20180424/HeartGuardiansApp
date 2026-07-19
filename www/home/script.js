@@ -538,7 +538,7 @@ const COMMENTS = [
   "빛의 행성을 멋지게 해냈구나! 이번엔 안개 행성이 너를 기다리고 있어.",
   "안개 행성도 통과! 다음은 차가운 얼음 행성이야. 준비됐지?",
   "얼음 행성까지 클리어하다니 대단해! 마지막은 그림자 행성이야. 끝까지 가보자!",
-  "우와, 네 개의 행성을 모두 구했어! 진짜 멋진 가디언이야. 정말 고마워!",
+  "우리는 다음 탐험에서 다시 만나자! 안녕",
 ];
 
 /** progress 0~4에 대응하는 공감 에너지 게이지 하단 안내 문구. */
@@ -773,7 +773,12 @@ function devProgressOverride(progress) {
   root.appendChild(menuWrap);
 
   /* ---- 하티 + 말풍선 타이핑 (HatiHelper.tsx) ---- */
-  const hatiSrc = progress === 0 ? "hati_signal_detector.webp" : "hati_default.webp";
+  const hatiSrc =
+    progress === 0
+      ? "hati_signal_detector.webp"
+      : progress >= 4
+        ? "hati_happy.webp"
+        : "hati_default.webp";
   const hatiText = el("p", { class: "home-hati__text" });
   root.appendChild(
     el("div", { class: "home-hati" }, [
