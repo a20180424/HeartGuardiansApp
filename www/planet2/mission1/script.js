@@ -1420,7 +1420,6 @@ const EmotionGuideStage = (function () {
     bg: THEME.bg.initial,
     hideFriend: false,
     choiceImage: "", // 화면 가운데 큰 이미지(node.image)
-    bookGlow: false, // 완성 이미지 뒤 금빛 후광(fx resultGlow)
     cards: [],
     completeBanner: "",
     bright: false,
@@ -1456,7 +1455,6 @@ const EmotionGuideStage = (function () {
       case "resultGlow":
         // 완성 이미지(감정 설명서) 뒤 금빛 후광 + 반짝임 버스트(완료 축하).
         audio.play("reveal");
-        vm.bookGlow = true;
         sparkleBurst();
         render();
         break;
@@ -1766,8 +1764,7 @@ const EmotionGuideStage = (function () {
     els.friendBubble.classList.toggle("show", !!friendBubbleText && vm.stage === "none");
     els.friendBubbleText.textContent = friendBubbleText;
 
-    // 완성 이미지 후광(fx resultGlow) — choiceImage 있을 때만
-    els.choiceGlow.classList.toggle("show", vm.bookGlow && !!vm.choiceImage);
+    // 완성 이미지 후광(choiceGlow)은 CSS 가 #stage.node-p2_m1_result 로 직접 판단.
 
     // 가운데 큰 이미지(node.image)
     if (vm.choiceImage) {

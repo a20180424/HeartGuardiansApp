@@ -531,10 +531,13 @@ button {
   );
   filter: blur(46px);
   opacity: 0;
-  animation: choiceGlowPulse 2.4s ease-in-out infinite;
 }
-#choiceGlow.show {
+/* 후광은 감정 설명서 완성 노드(p2_m1_result)에서만 — 노드 클래스로 직접 판단.
+   base 에 animation 을 걸면 keyframe 이 opacity:0 을 덮어써 전 노드에서 보이므로
+   반드시 이 셀렉터 안에서만 애니메이션을 켠다. */
+#stage.node-p2_m1_result #choiceGlow {
   opacity: 1;
+  animation: choiceGlowPulse 2.4s ease-in-out infinite;
 }
 @keyframes choiceGlowPulse {
   0%,
