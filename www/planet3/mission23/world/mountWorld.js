@@ -200,9 +200,20 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage })
       const minimap = createMinimap({ worldExtent: Math.sqrt(3) * SIZE * RADIUS });
       container.appendChild(minimap.element);
 
+      // 위젯 위에 붙는 안내 라벨(미니맵/리모콘) — CSS 로 각 위젯 바로 위에 배치.
+      const minimapLabel = document.createElement('div');
+      minimapLabel.className = 'hud-label hud-label--minimap';
+      minimapLabel.textContent = '미니맵';
+      container.appendChild(minimapLabel);
+
       // Input: 가상 조이스틱(터치·마우스 공용) + 키보드.
       const joystick = createJoystick({ radius: 75 }); // CSS 210px(반경 105) 위젯에 맞춘 입력 반경
       container.appendChild(joystick.element);
+
+      const joystickLabel = document.createElement('div');
+      joystickLabel.className = 'hud-label hud-label--joystick';
+      joystickLabel.textContent = '리모콘';
+      container.appendChild(joystickLabel);
 
       function readInput() {
         const j = joystick.value;
