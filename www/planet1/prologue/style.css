@@ -261,7 +261,7 @@ button {
   color: var(--planet-accent-deep);
 }
 .prologue__reward-text span {
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1.35;
   color: #5b4a38;
 }
