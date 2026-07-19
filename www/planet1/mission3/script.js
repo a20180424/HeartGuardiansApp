@@ -575,6 +575,24 @@ function bumpSessionProgress(value) {
   }
 }
 
+/** 현재 완료 진도(0~4) — 홈 표시 진도와 동일: max(hg_session.progress, hg_progress 최고 행성). */
+function currentProgress() {
+  let p = 0;
+  try {
+    const s = JSON.parse(localStorage.getItem("hg_session") || "null");
+    if (s && typeof s.progress === "number") p = s.progress;
+  } catch (_) {
+    /* 무시 */
+  }
+  try {
+    const obj = JSON.parse(localStorage.getItem("hg_progress") || "{}") || {};
+    for (let n = 1; n <= 4; n++) if (obj["planet" + n]) p = Math.max(p, n);
+  } catch (_) {
+    /* 무시 */
+  }
+  return p;
+}
+
 /**
  * 행성(1-4) 완료 저장 — 논블로킹 (src/lib/session.ts completePlanet 이식).
  *   1) 낙관적 로컬 갱신: hg_progress 에 {planetN:true} 병합 + hg_session.progress = max(현재, planet).
@@ -585,6 +603,11 @@ function bumpSessionProgress(value) {
  *      → 서버 실패해도 로컬은 저장되고 진행이 막히지 않는다(원본 에러 처리와 동일).
  */
 function completePlanet(planet) {
+  // 재완료 스킵: 이미 완료한(진도 이하) 행성은 로컬 병합·서버 PUT을 모두 건너뛴다.
+  // 서버가 progress를 max로 처리하지 않을 수 있어, 재완료가 서버 진도를 다운그레이드하고
+  // 게시판 review를 중복 저장하는 것을 클라이언트에서 원천 차단한다.
+  if (planet <= currentProgress()) return;
+
   // 1) 낙관적 로컬 갱신 (네트워크와 무관하게 홈 잠금 해제 즉시 반영)
   mergeProgress(planet);
   bumpSessionProgress(planet);
