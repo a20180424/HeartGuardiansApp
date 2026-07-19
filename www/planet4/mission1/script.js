@@ -515,7 +515,6 @@ const MISSION = {
       sideImageLeft: A + "/planet4/empathy-showroom-complete.webp",
       noAuto: true,
       text: "이제 그림자 행성으로 첫 걸음을 내디뎌 보자!",
-      completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -550,7 +549,9 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    // 하티 박스(전신 하티 아닌 노드)의 표정. p4_m1_cards 는 "용기 내어 실천해 보자!" 격려
+    // 톤이라 thinking(고민 포즈) 대신 cheering(응원)으로 맞춘다.
+    byNode: { p4_m1_cards: "cheering" },
   },
   friends: {
     placeholder: {
