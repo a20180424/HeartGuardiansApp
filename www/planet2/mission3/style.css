@@ -232,10 +232,15 @@ button {
 /* ---------- cast stage (플레이트 위 캐릭터 세트) — mission.css 기본값에
    planet2/Mission.css 의 .planet2 #castStage 오버라이드 최종값을 그대로 반영. ---------- */
 #castStage {
+  /* ── 튜닝 노브: 이 값만 바꿔서 크기 조정 ──────────────
+     --cast-scale : 크기 (1 = 원래 크기, 0.8 = 80%) */
+  --cast-scale: 0.8;
   position: absolute;
   left: -190px;
-  bottom: -350px;
+  bottom: -140px;
   z-index: 3;
+  transform: scale(var(--cast-scale));
+  transform-origin: left bottom;
 }
 #castStage #castPlatform {
   position: absolute;
@@ -287,29 +292,31 @@ button {
   left: 780px;
 }
 
-/* 웃는 3인(byNode 교체) 전용 위치·크기 — result/result2/end 3개 노드에서 계속 뜬다. */
+/* 웃는 3인(byNode 교체) 전용 위치·크기 — result/end 2개 노드에서 계속 뜬다.
+   바닥+캐릭터를 가로 중앙에 — 플랫폼 1530×0.8=1224 → (1920-1224)/2=348 */
 #stage.node-p2_m3_result #castStage,
-#stage.node-p2_m3_result2 #castStage,
 #stage.node-p2_m3_end #castStage {
-  left: 190px;
-  bottom: -350px;
+  left: 348px;
+  bottom: -150px;
 }
 #stage.node-p2_m3_result #castStage .cast-member[data-i="0"],
-#stage.node-p2_m3_result2 #castStage .cast-member[data-i="0"],
 #stage.node-p2_m3_end #castStage .cast-member[data-i="0"] {
   bottom: 550px;
 }
 #stage.node-p2_m3_result #castStage .cast-char,
-#stage.node-p2_m3_result2 #castStage .cast-char,
 #stage.node-p2_m3_end #castStage .cast-char {
   height: 760px;
 }
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -317,6 +324,8 @@ button {
   align-items: center;
   gap: 16px;
   text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-14px) scale(0.96);
@@ -386,11 +395,15 @@ button {
 
 /* ---------- full-body Hati (intro only) — planet2/Mission.css .planet2 #hatiFull 최종값 ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 1160px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
-  height: 570px;
+  height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
   opacity: 0;
   transform: translateY(22px) scale(0.97);
@@ -406,9 +419,14 @@ button {
 
 /* #hatiBubble — planet2/Mission.css .planet2 #hatiBubble 최종값 */
 #hatiBubble {
-  left: 1280px;
-  bottom: 572px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 270px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
+  /* pre-line·keep-all 은 .bubble 에서 상속 */
 }
 #hatiBubble .bubble-name {
   color: #3f8a2e;
@@ -647,6 +665,15 @@ button {
   height: 58%;
   animation: cardIn 0.5s ease-out both;
   filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
+}
+/* 공감 카드(p2_m3_cards 노드)만 화면 오른쪽 절반(x960~1920) 중앙에 — 미션2와 동일 배치.
+   end 노드 리워드 카드는 정중앙 유지(스코프 밖). */
+#stage.node-p2_m3_cards #cardStage {
+  left: 960px;
+  transform: translateX(20px); /* 오른쪽 절반 안에서 살짝 더 오른쪽으로 */
+}
+#stage.node-p2_m3_cards .card-item {
+  height: 54%; /* 오른쪽 절반 폭에 2장(2:3 세로형)이 잘리지 않게 */
 }
 .card-item:nth-child(2) {
   animation-delay: 0.12s;
@@ -1147,7 +1174,7 @@ button {
   display: grid;
   place-items: start center;
   padding: 18px;
-  padding-top: 46px;
+  padding-top: 5px;
   pointer-events: none;
 }
 

@@ -661,7 +661,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "공감 레이더 가동 완료! 친구들의 감정이 조금씩 드러나기 시작했어. 공감 레이더로 안개 속 단서들을 찾고 숨은 감정을 찾아보자",
+      text: "공감 레이더 가동 완료!\n친구들의 감정이 조금씩 드러나기 시작했어.\n공감 레이더로 안개 속 단서들을 찾고 숨은 감정을 찾아보자",
       next: "p2_m3_play",
     },
     { id: "p2_m3_play", type: "minigame", game: "hiddenEmotion", next: "p2_m3_cards" },
@@ -684,17 +684,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "잘 했어! 주민들이 서로의 감정을 이해하게 되었어!",
-      next: "p2_m3_result2",
-    },
-    {
-      id: "p2_m3_result2",
-      type: "line",
-      speaker: "hati",
-      hideFriend: true,
-      noAuto: true,
-      text: "축하해! 안개 행성의 모든 미션을 완료했어!",
-      completeBanner: "미션 완료!",
+      text: "잘 했어! 주민들이 서로의 감정을 이해하게 되었어!\n축하해! 안개 행성의 모든 미션을 완료했어!",
       next: "p2_m3_end",
     },
     {
@@ -746,7 +736,7 @@ const THEME = {
     },
   },
   // 무대(플레이트) 위 캐릭터 세트 — 미션3 전 구간 상시 표시. p2_m3_result 부터 3명 개별
-  // 무표정을 웃는 3인 1장으로 교체(sparse — 이후 result2·end 에서도 유지).
+  // 무표정을 웃는 3인 1장으로 교체(sparse — 이후 end 에서도 유지).
   cast: {
     platform: A + "/planet2/cast-platform.webp",
     members: [
