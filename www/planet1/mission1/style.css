@@ -406,6 +406,31 @@ button {
     filter 0.6s ease;
 }
 
+/* 루미 머리 위 이름표 (planet2/mission3 .cast-name 이식) */
+#friendName {
+  /* ▼▼▼ 이름표 위치·크기 노브 — 이 3개만 바꾸면 됨 ▼▼▼ */
+  --name-top: 50px; /* 세로 위치: 작을수록 위로, 클수록 머리쪽 아래로 */
+  --name-x: 0px; /* 가로 미세조정: +오른쪽 / -왼쪽 */
+  --name-size: 30px; /* 글자 크기 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  position: absolute;
+  left: 70%;
+  top: var(--name-top);
+  transform: translateX(calc(-50% + var(--name-x)));
+  z-index: 4;
+  padding: 6px 22px;
+  border-radius: 999px;
+  background: #3f9b3f;
+  border: 3px solid #ecd98a;
+  color: #fff;
+  font-weight: 800;
+  font-size: var(--name-size);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
 /* 루미 후광(회복 시) */
 #friendWrap.glow #friend {
   animation: friendHalo 2.2s ease-in-out infinite;
@@ -714,7 +739,7 @@ button {
 }
 #choicePrompt {
   text-align: center;
-  font-size: 34px;
+  font-size: 46px;
   font-weight: 800;
   color: #2a2350;
 }

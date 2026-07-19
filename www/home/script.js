@@ -685,7 +685,7 @@ function devProgressOverride(progress) {
     },
     [
       el("img", { class: "home-goal__star", src: A + "home/PurposeStart.webp", alt: "" }),
-      el("span", { class: "home-goal__text", html: "학습 목표<br><small>클릭해서 목표를 확인하세요</small>" }),
+      el("span", { class: "home-goal__text", html: "학습 로드맵<br><small>클릭해서 학습 단계를 확인하세요</small>" }),
     ],
   );
   goalBtn.addEventListener("click", () => openBookPopup([A + "home/LearningGoal.webp"], 0, "학습 로드맵"));

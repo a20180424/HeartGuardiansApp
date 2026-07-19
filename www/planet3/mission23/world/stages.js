@@ -49,7 +49,7 @@ export function createStageManager(ctx) {
     ctx.setInputLocked(true);
     showInfo(
       ctx.uiRoot,
-      '공감 송신기를 켜려면 에너지가 필요해.\n따듯한 말을 선택하면 에너지가 충전될거야\n차가운 말을 선택하면 에너지가 방전될거야\n신중하게 골라봐',
+      '공감 송신기를 켜려면 에너지가 필요해.\n따뜻한 말을 선택하면 에너지가 충전될거야\n차가운 말을 선택하면 에너지가 방전될거야\n신중하게 골라봐',
       '시작!',
       () => {
         popupOpen = false;
@@ -57,7 +57,7 @@ export function createStageManager(ctx) {
       },
       '🔋',
       [
-        { words: ['따듯한 말', '충전'], className: 'hi-warm' },
+        { words: ['따뜻한 말', '충전'], className: 'hi-warm' },
         { words: ['차가운 말', '방전'], className: 'hi-cold' },
       ],
     );

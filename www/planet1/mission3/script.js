@@ -657,13 +657,13 @@ const A = ASSETS;
 const MISSION = {
   start: "m3_intro",
   nodes: [
-    { id: "m3_intro", type: "line", noAuto: true, speaker: "hati", text: "루나가 걱정돼. 루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!", next: "m3_video" },
+    { id: "m3_intro", type: "line", noAuto: true, speaker: "hati", text: "루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!", next: "m3_video" },
 
     { id: "m3_video", type: "video", src: VIDEO + "/Planet1_Mission3.mp4", holdAfter: 800, hideFriend: true, next: "m3_q1_choice" },
 
     {
       id: "m3_q1_choice", type: "choice", speaker: "hati",
-      text: "대원들이 루나와 같은 상황이라면 어떤 기분이 들까요?",
+      text: "대원이 루나와 같은 상황이라면 어떤 기분일까?",
       hideFriend: true,
       image: A + "/char/Luna/luna_unheard1.webp",
       choices: [
@@ -694,7 +694,7 @@ const MISSION = {
     {
       id: "m3_mirror1", type: "line", noAuto: true, speaker: "hati",
       hideFriend: true,
-      text: "대원! 공감 없는 이 세상에서 행복할 수 있을까요?",
+      text: "대원! 공감 없는 이 세상에서 행복할 수 있을까?",
       images: [A + "/char/Luna/luna_unheard1.webp", A + "/char/Luna/luna_unheard2.webp"],
       next: "m3_mirror2",
     },
