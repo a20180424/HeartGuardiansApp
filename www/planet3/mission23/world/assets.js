@@ -22,6 +22,7 @@ export const MODEL_URLS = {
   npc1: M + "NPCs/npcA1.glb",
   npc2: M + "NPCs/npcB2.glb",
   npc3: M + "NPCs/npcC2.glb",
+  npc4: M + "NPCs/npcB1.glb",
 };
 
 export const STAGE1_DATA = stage1;

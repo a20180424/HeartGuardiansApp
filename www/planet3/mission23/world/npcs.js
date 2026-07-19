@@ -10,7 +10,7 @@ const FADE = 1.2;             // 감정 전환 crossfade(초)
 const TARGET_HEIGHT = 3.6;    // NPC 키(월드 단위) — bbox 높이 기준 정규화
 const FACE_OFFSET = 0;         // 정면이 카메라를 향하게 하는 Y축 보정
 
-const NPC_URLS = [MODEL_URLS.npc1, MODEL_URLS.npc2, MODEL_URLS.npc3];
+const NPC_URLS = [MODEL_URLS.npc1, MODEL_URLS.npc2, MODEL_URLS.npc3, MODEL_URLS.npc4];
 
 export async function createNpcs(scene, defs, { size, hexTopY = 0 }) {
   const loader = new GLTFLoader();
