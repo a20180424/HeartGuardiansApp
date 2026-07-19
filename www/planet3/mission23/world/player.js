@@ -35,5 +35,13 @@ export function createPlayer(camera, { size, hexTopY, eyeHeight, walkable, start
     camera.rotation.set(0, yaw, 0, 'YXZ'); // pitch/roll 0 — 수평 시선 고정
   }
 
-  return { update };
+  // 지정 hex로 순간이동(+ 정면 초기화). stage1→stage2 전환 시 시작 위치 고정에 사용.
+  function resetTo(hex) {
+    const p = axialToWorld(hex.q, hex.r, size);
+    pos.x = p.x;
+    pos.z = p.z;
+    yaw = 0; // 0 = -Z(월드 중심)를 바라봄 — 초기 스폰과 동일한 방향
+  }
+
+  return { update, resetTo };
 }

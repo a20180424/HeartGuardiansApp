@@ -223,7 +223,11 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage })
         isDisposed: () => disposed,
         uiRoot: container,
         setInputLocked: (locked) => { inputLocked = locked; },
-        onStage2Enter,
+        onStage2Enter: () => {
+          // 미션3(stage2)은 미션2 종료 위치가 아니라 항상 지정된 시작 위치에서 시작한다.
+          player.resetTo(START_HEX);
+          onStage2Enter?.();
+        },
         onComplete,
       });
       await stages.start({ startStage });
