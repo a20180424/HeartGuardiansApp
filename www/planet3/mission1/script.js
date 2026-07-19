@@ -479,7 +479,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "얼음행성 친구들의 마음은 얼어붙어 있어. 공감 송신기를 사용해서 마음을 녹이려면 올바른 사용법을 알아야 해!",
+      text: "얼음 행성 친구들의 마음은 얼어붙어 있어.\n공감 송신기를 사용해서\n마음을 녹이려면\n올바른 사용법을 알아야 해!",
       image: A + "/planet3/empathy-transmitter.webp",
       next: "p3_m1_play",
     },
@@ -786,7 +786,9 @@ const EmpathyManualGame = (function () {
     ]);
 
     const speech = el("div", { class: "speech" }, [
-      el("div", { class: "alien", "aria-hidden": "true", text: "👽" }),
+      el("div", { class: "alien", "aria-hidden": "true" }, [
+        el("img", { src: A + "/guide/coco.webp", alt: "" }),
+      ]),
       el("div", { class: "speech-text", text: step.situation }),
     ]);
 
