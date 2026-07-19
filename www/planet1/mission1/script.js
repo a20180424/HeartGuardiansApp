@@ -477,7 +477,7 @@ const A = ASSETS;
 const MISSION = {
   start: "m1_intro",
   nodes: [
-    { id: "m1_intro", type: "line", noAuto: true, speaker: "hati", text: "친구의 마음은 보이지 않아. 하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어! 친구의 마음 신호를 찾아보자.", next: "m1_lumi_intro" },
+    { id: "m1_intro", type: "line", noAuto: true, speaker: "hati", text: "친구의 마음은 보이지 않아.\n하지만 마음 신호 탐색기로 친구의 마음을 찾을 수 있어!\n친구의 마음 신호를 찾아보자.", next: "m1_lumi_intro" },
     { id: "m1_lumi_intro", type: "line", noAuto: true, speaker: "lumi", text: "오늘은 놀기 싫어", hold: true, next: "m1_q1_prompt" },
     { id: "m1_q1_prompt", type: "line", noAuto: true, speaker: "hati", text: "루미의 마음 신호가 흐릿해. 어떤 마음일까?", next: "m1_q1_choice" },
     {
