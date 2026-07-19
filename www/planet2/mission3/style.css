@@ -1167,7 +1167,7 @@ button {
   display: grid;
   place-items: start center;
   padding: 18px;
-  padding-top: 46px;
+  padding-top: 5px;
   pointer-events: none;
 }
 
