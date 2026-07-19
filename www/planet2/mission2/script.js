@@ -587,7 +587,17 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    byNode: {
+      p2_m2_intro: "explaining",
+      p2_m2_brief1: "explaining",
+      p2_m2_brief2: "suggesting",
+      p2_m2_preplay1: "suggesting",
+      p2_m2_preplay2: "suggesting",
+      p2_m2_complete: "celebrating", // 레이더 완성 — 멋지다!
+      p2_m2_outro: "cheering",
+      p2_m2_cards: "explaining",
+      p2_m2_end: "cheering", // 새 친구 만나러 가자
+    },
   },
   friends: {
     placeholder: {

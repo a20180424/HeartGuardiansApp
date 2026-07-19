@@ -726,7 +726,12 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    byNode: {
+      p2_m3_intro: "explaining",
+      p2_m3_cards: "explaining",
+      p2_m3_result: "cheering", // 잘 했어! 안개 행성 미션 완료
+      p2_m3_end: "celebrating", // 관찰의 호박석 획득
+    },
   },
   friends: {
     placeholder: {
