@@ -608,7 +608,7 @@ function devProgressOverride(progress) {
   }
 
   const profile = session.profile;
-  // classBoard: [planet1_url, planet2_url, planet3_url] 배열 (Task 3 형식).
+  // classBoard: [planet1_url, planet2_url, planet3_url, planet4_url] 배열 (Task 3 형식).
   const classBoard = Array.isArray(session.classBoard) ? session.classBoard : [];
 
   /* hg_progress(행성 불리언 — auth의 mergeProgress가 쓰는 형식 그대로) → 0~4 숫자.
@@ -830,59 +830,50 @@ function devProgressOverride(progress) {
     root.appendChild(popupEl);
   }
 
-  /** 공용 Modal(Modal.tsx) — plate 프레임 팝업. children 없으면 빈 모달. */
-  function openModal(plateImg, body) {
+  /** 탐험 일지 팝업 — 이미지(HistoryBoard.webp) 자체가 완성된 보드.
+     제목·행성 라벨·X는 이미지에 그려져 있고, 오른쪽 4개 점선칸 위에 게시판 URL(행성1~4)을
+     절대배치로 얹는다. 각 칸의 세로 중심(%)은 SLOT_TOP, X 클릭영역은 CSS. */
+  function openHistoryBoard() {
     closePopup();
-    const closeBtn = el("button", { type: "button", class: "home-modal__close", "aria-label": "닫기", text: "✕" });
+    const SLOT_TOP = [38.8, 56.2, 73.6, 91.0]; // 4개 점선칸의 세로 중심(%)
+    const closeBtn = el("button", {
+      type: "button",
+      class: "history-board__close",
+      "aria-label": "닫기",
+    });
     closeBtn.addEventListener("click", closePopup);
-    const panel = el(
-      "div",
-      {
-        class: "home-modal__panel",
-        style: `border-image:url(${plateImg}) 44 fill / 28px / 0 stretch`,
-      },
-      [closeBtn, el("div", { class: "home-modal__body" }, body ? [body] : [])],
-    );
-    panel.addEventListener("click", (e) => e.stopPropagation());
-    popupEl = el("div", { class: "home-modal" }, [panel]);
-    popupEl.addEventListener("click", closePopup);
-    root.appendChild(popupEl);
-  }
-
-  /** 탐험 일지 내용(HistoryBoard.tsx) — 학급 게시판(행성1~3) 링크. */
-  function buildHistoryBoard() {
-    const labels = ["행성 1", "행성 2", "행성 3"];
-    const list = el("ul", { class: "home-history__list" });
-    for (let i = 0; i < 3; i++) {
+    const children = [
+      el("img", { class: "history-board__img", src: A + "home/HistoryBoard.webp", alt: "탐험 일지" }),
+      closeBtn,
+    ];
+    for (let i = 0; i < 4; i++) {
       const url = classBoard[i] || null;
-      let right;
+      let inner;
       if (url) {
-        right = el("a", {
-          class: "home-history__link",
+        inner = el("a", {
+          class: "history-board__link",
           href: url,
           target: "_blank",
           rel: "noreferrer",
           text: url,
         });
         // APK(WebView)에서는 target=_blank가 무시되므로 클릭을 가로채 외부로 연다.
-        right.addEventListener("click", (e) => {
+        inner.addEventListener("click", (e) => {
           e.preventDefault();
           openExternal(url);
         });
       } else {
-        right = el("span", { class: "home-history__empty", text: "등록된 게시판이 없어요" });
+        inner = el("span", { class: "history-board__empty", text: "등록된 게시판이 없어요" });
       }
-      list.appendChild(
-        el("li", { class: "home-history__item" }, [
-          el("span", { class: "home-history__label", text: labels[i] }),
-          right,
-        ]),
+      children.push(
+        el("div", { class: "history-board__slot", style: `top:${SLOT_TOP[i]}%` }, [inner]),
       );
     }
-    return el("div", { class: "home-history" }, [
-      el("h2", { class: "home-history__title", text: "탐험 일지" }),
-      list,
-    ]);
+    const panel = el("div", { class: "history-board__panel" }, children);
+    panel.addEventListener("click", (e) => e.stopPropagation());
+    popupEl = el("div", { class: "history-board" }, [panel]);
+    popupEl.addEventListener("click", closePopup); // 딤 배경 클릭으로 닫힘
+    root.appendChild(popupEl);
   }
 
   /** 하단 메뉴 클릭 → 해당 팝업. */
@@ -900,7 +891,7 @@ function devProgressOverride(progress) {
         "원석 도감",
       );
     } else if (key === "history") {
-      openModal(A + "home/plateHistory.webp", buildHistoryBoard());
+      openHistoryBoard();
     } else {
       // mission: 탐험 안내서 씬으로 전환 (guide/index.html).
       fadeNav(ROOT + "guide/index.html");
