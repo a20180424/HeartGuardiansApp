@@ -507,7 +507,7 @@ const MISSION = {
 
     { id: "m1_lumi_answer", type: "line", noAuto: true, speaker: "lumi", text: "사실 감기에 걸려서 너무 힘들어.", hold: true, next: "m1_q3_prompt" },
 
-    { id: "m1_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원은 감기에 걸렸을 때 어떤 감정이었어? 그때의 마음을 클릭해봐.", next: "m1_q3_choice" },
+    { id: "m1_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원은 감기에 걸렸을 때 어떤 감정이었어?\n그때의 마음을 클릭해봐.", next: "m1_q3_choice" },
     {
       id: "m1_q3_choice", type: "choice",
       choices: [
@@ -886,7 +886,7 @@ function blipSound(speaker) {
       typeInto(node.text || "", isHati ? "hati" : "friend", () => {
         vm.mode = "await";
         if (onTyped) onTyped();
-        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
+        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : ""; // 마지막 노드(m1_end3)는 완료 힌트 표시 안 함
         render();
         window.clearTimeout(timers.auto);
         // 미션1은 모든 라인이 noAuto — 자동 진행 없음(탭으로만).

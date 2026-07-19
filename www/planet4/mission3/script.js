@@ -1483,7 +1483,7 @@ const HeartConnectStage = (function () {
       render();
       typeInto(node.text || "", () => {
         vm.mode = "await";
-        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : "🎉 미션 완료!";
+        vm.tapHint = node.next ? "▼ 화면을 탭하면 계속" : ""; // 마지막 노드는 완료 힌트 표시 안 함
         render();
         // 이 미션의 유일한 라인 노드는 noAuto:true — 자동 진행 없음(탭으로만).
       });
