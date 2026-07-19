@@ -657,7 +657,7 @@ const A = ASSETS;
 const MISSION = {
   start: "m3_intro",
   nodes: [
-    { id: "m3_intro", type: "line", noAuto: true, speaker: "hati", text: "루나가 걱정돼. 루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!", next: "m3_video" },
+    { id: "m3_intro", type: "line", noAuto: true, speaker: "hati", text: "루나는 지금 어떤 마음일까? 친구의 마음을 이해하고 사라진 이해의 빛을 되찾아보자!", next: "m3_video" },
 
     { id: "m3_video", type: "video", src: VIDEO + "/Planet1_Mission3.mp4", holdAfter: 800, hideFriend: true, next: "m3_q1_choice" },
 

@@ -491,7 +491,7 @@ const MISSION = {
     { id: "m1_q1_react", type: "line", noAuto: true, speaker: "hati", text: "음.. 그럴 수도 있겠네. 하지만 아직 루미의 마음을 정확히는 알 수 없어", next: "m1_q1_gate" },
     { id: "m1_q1_gate", type: "branch", condition: "allExplored", watch: "m1_q1_choice", ifTrue: "m1_q2_prompt", ifFalse: "m1_q1_choice" },
 
-    { id: "m1_q2_prompt", type: "line", noAuto: true, speaker: "hati", text: "마음을 알려면 어떻게 해야 할까?", next: "m1_q2_choice" },
+    { id: "m1_q2_prompt", type: "line", noAuto: true, speaker: "hati", text: "마음을 알려면 어떻게 해야 할까? 친구에게 직접 물어보자!", next: "m1_q2_choice" },
     {
       id: "m1_q2_choice", type: "choice", prompt: "어떻게 물어볼까?",
       choices: [
