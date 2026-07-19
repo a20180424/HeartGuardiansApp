@@ -594,21 +594,26 @@ function classifyVerifyError(err) {
    --------------------------------------------------------------------------
    이 API 는 토큰이 없으므로 R2 표의 `token` 자리에 자격증명(creds)을 둔다 —
    보호된 페이지가 hg_session 하나만 읽어도 API 호출용 x-* 헤더를 만들 수 있게.
-   classBoard 는 [planet1_url, planet2_url, planet3_url] 배열(없으면 각 null).
+   classBoard 는 [planet1_url, planet2_url, planet3_url, planet4_url] 배열(없으면 각 null).
    progress(0~4)는 서버 권위값을 담고, 동시에 hg_progress(행성 불리언)를 이 값으로
    덮어쓴다 — 로그인 시점엔 서버가 권위라 교사의 서버 리셋이 기기에 반영된다.
    (PUT 실패로 서버가 못 받은 진도는 hg_pending_sync 재전송이 로그인 직전에 복구.)
    ========================================================================== */
 function saveSession(creds, profile, progress, board) {
   const classBoard = board
-    ? [board.planet1_url || null, board.planet2_url || null, board.planet3_url || null]
-    : [null, null, null];
+    ? [
+        board.planet1_url || null,
+        board.planet2_url || null,
+        board.planet3_url || null,
+        board.planet4_url || null,
+      ]
+    : [null, null, null, null];
   const session = {
     creds: creds, // 토큰 대체 — 보호된 페이지의 x-* 헤더 재료
     profile: profile, // { id, name, grade, class, number, gender, school }
     name: profile.name, // R2 표의 top-level name (편의 미러)
     progress: progress, // 0~4, 서버 권위값
-    classBoard: classBoard, // [url|null, url|null, url|null] = planet1~3
+    classBoard: classBoard, // [url|null × 4] = planet1~4
   };
   try {
     localStorage.setItem("hg_session", JSON.stringify(session));
