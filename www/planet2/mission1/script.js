@@ -575,7 +575,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "가디언즈 감정 설명서가 완성되었어. 공감 카드를 확인해보자!",
+      text: "가디언즈 감정 설명서가 완성되었어.\n공감 카드를 확인해보자!",
       image: A + "/planet2/guardians-emotion-guide-complete.webp",
       onEnter: [{ cmd: "fx", value: "fx_result_glow" }],
       next: "p2_m1_cards",
@@ -600,7 +600,6 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "친구들의 감정이 조금씩 드러나기 시작했어. 다음 미션도 계속해보자",
-      completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -1460,7 +1459,6 @@ const EmotionGuideStage = (function () {
         break;
       case "lightReturn":
         audio.play("fanfare");
-        vm.bright = true;
         vm.progress = "done";
         vm.showNext = true;
         sparkleBurst();
