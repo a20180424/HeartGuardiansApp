@@ -65,23 +65,6 @@ button {
   filter: brightness(1.18) saturate(1.12);
 }
 
-#lightOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(
-    circle at 72% 46%,
-    rgba(255, 224, 150, 0.55),
-    rgba(255, 224, 150, 0) 55%
-  );
-  transition: opacity 1.4s ease;
-}
-#stage.bright #lightOverlay {
-  opacity: 1;
-}
-
 /* ---------- progress stepper (top-left) ---------- */
 #progress {
   position: absolute;
@@ -227,10 +210,18 @@ button {
 /* ---------- 공감 레이더 HUD(왼쪽) — mission.css 기본값에 planet2/Mission.css 의
    .planet2 #radarHud 오버라이드 최종값을 그대로 반영(이 페이지는 스코프 불필요·값만 적용). ---------- */
 #radarHud {
+  /* ── 튜닝 노브: 이 두 값만 바꿔서 조정 ──────────────────────────
+     --radar-scale : 크기 (1 = 원래 크기, 0.8 = 80%)
+     --radar-left  : 가로 위치 (작을수록 왼쪽, 기존값 70px)          */
+  --radar-scale: 0.8;
+  --radar-left: 20px;
+
   position: absolute;
-  left: 70px;
-  top: 250px;
+  left: var(--radar-left);
+  top: 400px;
   z-index: 3;
+  transform: scale(var(--radar-scale));
+  transform-origin: left top;
 }
 #radarHud #radarPlatform {
   position: absolute;
@@ -252,9 +243,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -262,6 +257,8 @@ button {
   align-items: center;
   gap: 16px;
   text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-14px) scale(0.96);
@@ -331,11 +328,15 @@ button {
 
 /* ---------- full-body Hati (intro only) — planet2/Mission.css .planet2 #hatiFull 최종값 ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 1160px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
-  height: 570px;
+  height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
   opacity: 0;
   transform: translateY(22px) scale(0.97);
@@ -351,9 +352,14 @@ button {
 
 /* #hatiBubble — planet2/Mission.css .planet2 #hatiBubble 최종값 */
 #hatiBubble {
-  left: 1280px;
-  bottom: 572px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 270px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
+  /* pre-line·keep-all 은 .bubble 에서 상속 */
 }
 #hatiBubble .bubble-name {
   color: #3f8a2e;
@@ -538,7 +544,11 @@ button {
 /* 화면 가운데 카드들(공감 카드) — 가로로 나란히, 높이 기준 + 등장 애니 */
 #cardStage {
   position: absolute;
-  inset: 0;
+  /* 화면 오른쪽 절반(x 960~1920) 영역 — 그 안에서 카드 중앙 정렬 */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 960px;
   z-index: 5;
   display: flex;
   flex-direction: row;
@@ -550,7 +560,7 @@ button {
 }
 .card-item {
   position: relative;
-  height: 58%;
+  height: 54%; /* 오른쪽 절반 폭에 2장(2:3 세로형)이 잘리지 않게 */
   animation: cardIn 0.5s ease-out both;
   filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
 }
@@ -823,11 +833,15 @@ button {
   background: linear-gradient(180deg, #9be9c6, #52c793);
   border-radius: 999px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  white-space: pre-line;
+  word-break: keep-all;
 }
 .er-progress {
   font-size: 26px;
   font-weight: 800;
   color: #b3701d;
+  white-space: pre-line;
+  word-break: keep-all;
 }
 .er-instruction {
   margin-top: 18px;
@@ -836,6 +850,8 @@ button {
   text-align: center;
   color: #4f3f28;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  white-space: pre-line;
+  word-break: keep-all;
 }
 
 /* 감정 상자 3개: 감정 이름이 들어간 레이더 글라스 원형 드롭존 */
@@ -898,6 +914,8 @@ button {
   letter-spacing: 1px;
   color: rgba(205, 255, 214, 0.95);
   text-shadow: 0 0 10px rgba(120, 220, 150, 0.85), 0 2px 4px rgba(0, 0, 0, 0.7);
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
 }
 .er-box:hover .er-box-radar {
@@ -938,6 +956,8 @@ button {
   border: 4px solid #ecfff9;
   border-radius: 999px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  white-space: pre-line;
+  word-break: keep-all;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -971,6 +991,8 @@ button {
   background: linear-gradient(180deg, #ffe89b, #ffcf52);
   border-radius: 24px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
 }
 

@@ -479,7 +479,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "안개 행성의 짙은 안개를 꿰뚫고 주민들의 진짜 감정을 찾으려면 공감 레이더가 필요해. 하지만 지금 레이더의 코어 설계도만 있고, 가동할 수 있는 감정 에너지가 흩어져있어. 우리가 감정 단어들을 성격에 맞게 쏙쏙 분류 할 때마다, 레이더의 핵심 부품들이 하나씩 만들어져 조립돼!",
+      text: "안개 행성의 짙은 안개를 꿰뚫고 주민들의 진짜 감정을 찾으려면 공감 레이더가 필요해.",
       next: "p2_m2_brief1",
     },
     {
@@ -497,7 +497,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "감정 단어들을 성격에 맞게 분류하면, 레이더 부품이 하나씩 만들어질거야!",
+      text: "감정 단어들을 성격에 맞게 분류하면,\n레이더 부품이 하나씩 만들어질거야!",
       next: "p2_m2_preplay1",
     },
     {
@@ -557,7 +557,6 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "새로운 친구를 만나러 가보자!",
-      completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
