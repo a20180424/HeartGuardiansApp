@@ -757,6 +757,9 @@ button {
 
 /* 화면 가운데 카드들(엔딩 공감 카드) — 가로 나란히, 높이 기준 + 등장 애니 */
 #cardStage {
+  /* ▼▼▼ 카드 묶음 가로 위치 노브 — 무대(1920px) 기준, +오른쪽 / -왼쪽 ▼▼▼ */
+  --cards-x: 480px; /* 화면 우측 절반 가운데(중앙 960 + 480 = 1440) */
+  /* ▲▲▲ ------------------------------------------------ ▲▲▲ */
   position: absolute;
   inset: 0;
   z-index: 5;
@@ -766,6 +769,7 @@ button {
   justify-content: center;
   gap: 60px;
   padding: 96px 40px 40px;
+  transform: translateX(var(--cards-x));
   pointer-events: none;
 }
 .card-item {
