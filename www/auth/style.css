@@ -112,6 +112,17 @@ button {
   justify-content: center;
 }
 
+/* 과목·학년 표기 (우측 하단) — home 의 .home-subject 참고. 위치는 right/bottom 로 미세조정 */
+.auth-subject {
+  position: absolute;
+  right: 40px;
+  bottom: 24px;
+  color: #fff;
+  font-size: 40px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
 .auth-panel__title {
   font-size: 51px;
   font-weight: 800;

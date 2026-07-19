@@ -219,6 +219,17 @@ button {
   opacity: 0.9;
 }
 
+/* 과목·학년 표기 (프로필 카드 아래) — 위치는 top/left 로 미세조정 */
+.home-subject {
+  position: absolute;
+  top: 140px;
+  left: 40px;
+  color: #fff;
+  font-size: 40px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
 /* 공감 에너지 게이지 (우상단) */
 .home-energy {
   position: absolute;
