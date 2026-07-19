@@ -688,6 +688,7 @@ button {
   color: #222b3d;
   line-height: 1.45;
   word-break: keep-all;
+  white-space: pre-line; /* 대사 텍스트의 \n 을 줄바꿈으로 표시 */
 }
 #hatiName {
   font-size: 22px;
