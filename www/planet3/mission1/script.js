@@ -479,7 +479,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "얼음행성 친구들의 마음은 얼어붙어 있어. 공감 송신기를 사용해서 마음을 녹이려면 올바른 사용법을 알아야 해!",
+      text: "얼음 행성 친구들의 마음은 얼어붙어 있어.\n공감 송신기를 사용해서\n마음을 녹이려면\n올바른 사용법을 알아야 해!",
       image: A + "/planet3/empathy-transmitter.webp",
       next: "p3_m1_play",
     },
@@ -516,7 +516,6 @@ const MISSION = {
       noAuto: true,
       text: '좋아! 이제 공감 송신기를 사용할 준비가 되었어. 하지만 공감 송신기를 작동하려면 "따뜻한 말" 연료가 필요해!',
       image: A + "/planet3/empathy-transmitter-manual.webp",
-      completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
@@ -549,7 +548,11 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    byNode: {
+      p3_m1_postplay: "celebrating", // 설명서 완성 — 기뻐함
+      p3_m1_cards: "explaining", // 3단계 설명
+      p3_m1_end: "proud", // 준비 완료 격려
+    },
   },
   friends: {
     placeholder: {
@@ -786,7 +789,9 @@ const EmpathyManualGame = (function () {
     ]);
 
     const speech = el("div", { class: "speech" }, [
-      el("div", { class: "alien", "aria-hidden": "true", text: "👽" }),
+      el("div", { class: "alien", "aria-hidden": "true" }, [
+        el("img", { src: A + "/guide/coco.webp", alt: "" }),
+      ]),
       el("div", { class: "speech-text", text: step.situation }),
     ]);
 
