@@ -893,6 +893,7 @@ const CourageCompassStage = (function () {
   function reveal() {
     if (spinning || revealed) return;
     spinning = true;
+    audio.play("whoosh"); // 나침반 바늘 회전
     compassBtn.classList.add("spinning");
     compassBtn.disabled = true;
     after(REVEAL_MS, () => {
@@ -911,6 +912,7 @@ const CourageCompassStage = (function () {
   function choosePath(kind) {
     if (!revealed) return;
     if (kind === "bad") {
+      audio.play("wrong");
       showHati({
         message: "그림자의 길보다 친구의 마음을 살피는 공감의 길을 선택해 볼까?",
         success: false,
@@ -960,6 +962,7 @@ const CourageCompassStage = (function () {
     // 있어 즉시 재선택/재시도할 수 있다. 여기서 removeDialog() 를 부르면 갈림길 화면으로
     // 떨어져 표지판을 다시 탭해야 하는 원본에 없는 추가 스텝이 생긴다.
     if (i !== scenario.answer) {
+      audio.play("wrong");
       showHati({
         message: "친구의 마음을 이해하면서도 친구와 나, 모두를 지키는 말을 골라 보자!",
         success: false,
@@ -968,6 +971,7 @@ const CourageCompassStage = (function () {
       });
       return;
     }
+    audio.play("correct"); // 공감의 말 정답
     if (scenarioIndex < stage.scenarios.length - 1) {
       // 다이얼로그는 모달 아래 유지 — "다음 상황으로" 의 loadScenario 가 정리한다.
       showHati({
@@ -1013,6 +1017,7 @@ const CourageCompassStage = (function () {
   /* ---------- 보상 화면 ---------- */
   function buildRewardScreen() {
     clearTimers();
+    audio.play("fanfare"); // 용기 조각 획득 축하
     if (screenEl) screenEl.remove();
     renderChrome();
 

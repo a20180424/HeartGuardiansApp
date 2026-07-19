@@ -1232,6 +1232,7 @@ const EmotionGuideStage = (function () {
         [el("span", { class: "em", text: e.emoji }), el("span", { text: e.name })],
       );
       btn.addEventListener("click", () => {
+        audio.play("select");
         state = egPickEmotion(state, e.id);
         render();
       });
@@ -1290,6 +1291,7 @@ const EmotionGuideStage = (function () {
           el("span", { class: "eg-badge " + (isSelf ? "self" : "wish"), text: isSelf ? "스스로 해소" : "바라는 공감" }),
         ]);
         btn.addEventListener("click", () => {
+          audio.play("select");
           state = egPickAction(state, a.id);
           render();
         });
@@ -1337,6 +1339,7 @@ const EmotionGuideStage = (function () {
       if (submitted) return; // 재진입 가드 — 이미 제출·전환된 done 을 다시 처리하지 않는다.
       submitted = true;
       finalResults = r.results;
+      audio.play("fanfare"); // 감정 설명서 10문항 완성
       // 10문항 완료 → 반 결과 대시보드로 전환(아직 미션 진행 아님).
       // 서버에 내 답 제출(upsert). 실패해도 대시보드는 진행 — 다음 폴링에 내 표가 합류한다.
       submitEmotionGuideAnswers(r.results).catch((e) => {
@@ -1345,6 +1348,7 @@ const EmotionGuideStage = (function () {
       phase = "board";
       render();
     } else {
+      audio.play("stage"); // 다음 감정 상황으로
       state = r.state;
       render();
     }

@@ -694,9 +694,11 @@ const EmpathyCompassStage = (function () {
     if (locked) return;
     locked = true;
     if (answer === "o") {
+      audio.play("correct"); // 자기점검이라 정오답은 아니지만 "잘하고 있어" 긍정 피드백
       clap = true;
       feedback = { text: "정말 멋져! 그 마음을 이어가자!", tone: "good" };
     } else {
+      audio.play("pop"); // 중립 확인음 (오답 아님)
       clap = false;
       feedback = { text: "괜찮아! 지금부터 한 걸음씩 실천하면 돼!", tone: "try" };
     }
@@ -716,6 +718,7 @@ const EmpathyCompassStage = (function () {
     }
     if (toolIndex + 1 < EC_TOOLS.length) {
       toolIndex += 1;
+      audio.play("stage"); // 다음 공감 도구 섹션으로
       itemIndex = 0;
       locked = false;
       render();

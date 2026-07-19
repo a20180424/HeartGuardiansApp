@@ -954,6 +954,7 @@ const HiddenEmotionStage = (function () {
     if (heAllRevealed(state) || state.feedbackShown) return;
     scanUsed = true;
     state = heUseRadar(state);
+    audio.play("sparkle"); // 숨은 공감 카드 공개
     render(); // 구조 갱신(카드 공개·진행도·단서 목록) — 부분 갱신 대상 아님(빈도 낮음)
     if (state.revealedCount >= 5) {
       window.clearTimeout(puzzleTimer);
@@ -981,10 +982,12 @@ const HiddenEmotionStage = (function () {
       return;
     }
     if (r.kind === "wrong") {
+      audio.play("wrong");
       sayHati(WRONG_LINE);
       return;
     }
     state = r.state;
+    audio.play("correct"); // 숨은 감정 정답
     render(); // 결과 패널(컨페티) 등장 — 이후 하티 대사는 updateGuide 로만 갱신
     hatiHidden = true;
     updateGuide();
@@ -1006,6 +1009,7 @@ const HiddenEmotionStage = (function () {
     resultTimer = 0;
     if (heIsLastMission(state)) return; // 방어 — 버튼 분기가 보장
     state = heNextMission(state);
+    audio.play("stage"); // 다음 감정 상황으로
     puzzleReady = false;
     resultNextReady = false;
     render();
