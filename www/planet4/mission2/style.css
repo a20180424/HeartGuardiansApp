@@ -1232,15 +1232,6 @@ button {
   color: #172036;
   box-shadow: 0 0 8px #fff, 0 0 30px #72ff43;
 }
-.cc-reward-hati-panel:before {
-  content: "";
-  position: absolute;
-  left: -22px;
-  top: 76px;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-  border-right: 23px solid #9cff61;
-}
 .cc-reward-hati {
   width: 145px;
   height: 145px;

@@ -510,7 +510,6 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "공감은 특별한 능력이 아니야.\n매 순간 '공감의 길'을 선택하는 작은 용기야.",
-      completeBanner: "미션 완료!",
       next: "p4_m2_end",
     },
     {
