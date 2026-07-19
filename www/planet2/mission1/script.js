@@ -555,7 +555,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "다른 사람의 감정을 잘 이해하려면, 먼저 내 감정을 잘 알아야 해. '감정 설명서'를 통해 마음의 차이를 발견해 보자.",
+      text: "다른 사람의 감정을 잘 이해하려면,\n먼저 내 감정을 잘 알아야 해.\n'감정 설명서'를 통해 마음의 차이를 발견해 보자.",
       next: "p2_m1_preplay",
     },
     {
