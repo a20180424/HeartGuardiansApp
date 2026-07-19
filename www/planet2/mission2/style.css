@@ -65,23 +65,6 @@ button {
   filter: brightness(1.18) saturate(1.12);
 }
 
-#lightOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(
-    circle at 72% 46%,
-    rgba(255, 224, 150, 0.55),
-    rgba(255, 224, 150, 0) 55%
-  );
-  transition: opacity 1.4s ease;
-}
-#stage.bright #lightOverlay {
-  opacity: 1;
-}
-
 /* ---------- progress stepper (top-left) ---------- */
 #progress {
   position: absolute;
