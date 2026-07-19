@@ -827,7 +827,7 @@ function matchSchool(text, schools) {
 
   function renderForm(mode, errorMsg) {
     submitting = false;
-    const form = { grade: null, class: null, number: null, pin: "", pinConfirm: "", gender: null };
+    const form = { grade: 3, class: null, number: null, pin: "", pinConfirm: "", gender: null };
     let name = "";
     let schoolId = pickDefaultSchool(schools, null) ? pickDefaultSchool(schools, null).id : null;
 
@@ -908,12 +908,18 @@ function matchSchool(text, schools) {
       ]);
     }
 
-    // 숫자 select (학년/반/번호)
-    function numSelect(key, label, options) {
+    // 숫자 select (학년/반/번호). defaultValue 주면 그 값을 미리 선택.
+    function numSelect(key, label, options, defaultValue) {
       const sel = el("select", { class: "field__select" });
-      sel.appendChild(el("option", { value: "", disabled: "", selected: "", text: "선택" }));
-      options.forEach((n) => sel.appendChild(el("option", { value: String(n), text: String(n) })));
-      sel.value = "";
+      const placeholder = el("option", { value: "", disabled: "", text: "선택" });
+      if (defaultValue == null) placeholder.setAttribute("selected", "");
+      sel.appendChild(placeholder);
+      options.forEach((n) => {
+        const o = el("option", { value: String(n), text: String(n) });
+        if (defaultValue != null && n === defaultValue) o.setAttribute("selected", "");
+        sel.appendChild(o);
+      });
+      sel.value = defaultValue == null ? "" : String(defaultValue);
       sel.addEventListener("change", () => {
         form[key] = sel.value === "" ? null : Number(sel.value);
         updateValidity();
@@ -953,7 +959,7 @@ function matchSchool(text, schools) {
     }
     const row1 = el("div", { class: "field-row" }, row1Kids);
     const row2 = el("div", { class: "field-row" }, [
-      numSelect("grade", "학년", GRADES),
+      numSelect("grade", "학년", GRADES, 3),
       numSelect("class", "반", CLASSES),
       numSelect("number", "번호", NUMBERS),
     ]);
