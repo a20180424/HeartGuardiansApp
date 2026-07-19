@@ -10,9 +10,6 @@ import { parseStage2Data, createNpcGame } from './npcgame.js';
 import { createNpcs } from './npcs.js';
 
 const PROXIMITY = 6; // 팝업이 뜨는 근접 거리(월드 단위)
-// stage1 말풍선 정면 판정: 시선 정면 기준 이 반각 안쪽에 있는 말풍선만 접촉 인정.
-// 뒤로 가다가 등 뒤 말풍선에 닿는 오접촉 방지(내적 >= FRONT_MIN_DOT).
-const FRONT_MIN_DOT = Math.cos((75 * Math.PI) / 180); // ±75°
 
 // 이 월드는 stage1(연료 채우기=미션2)과 stage2(NPC=미션3)를 한 번에 살려두고 이어서 진행한다.
 export function createStageManager(ctx) {
@@ -67,6 +64,9 @@ export function createStageManager(ctx) {
   }
 
   function openPopup(bubble) {
+    // 접촉 시 주인공이 말풍선을 정면으로 바라보게 회전(뒤/옆에서 닿아도 마주보게).
+    const w = axialToWorld(bubble.q, bubble.r, ctx.size);
+    ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
     showChoice(ctx.uiRoot, bubble.text, (take) => {
@@ -186,9 +186,7 @@ export function createStageManager(ctx) {
     bubbles.update(dt, elapsed, ctx.camera);
     if (popupOpen) return;
     const p = ctx.camera.position;
-    const yaw = ctx.camera.rotation.y;
-    const forward = { x: -Math.sin(yaw), z: -Math.cos(yaw) }; // playermove와 동일한 전방 규약
-    const near = bubbles.nearest(p.x, p.z, PROXIMITY, forward, FRONT_MIN_DOT);
+    const near = bubbles.nearest(p.x, p.z, PROXIMITY);
     if (near) openPopup(near);
   }
 
