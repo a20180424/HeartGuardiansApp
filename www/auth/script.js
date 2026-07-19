@@ -695,6 +695,23 @@ function pickDefaultSchool(schools, lastId) {
   return schools.find((s) => s.id === lastId) || schools[0];
 }
 
+/** 표기 변주(공백·특수문자·초등학교 접미사)를 흡수해 핵심 학교명만 남긴다. */
+function normalizeSchool(s) {
+  return String(s ?? "")
+    .replace(/\s+/g, "")               // 공백 전부 제거
+    .replace(/[^가-힣a-zA-Z0-9]/g, "") // 한글·영숫자 외 특수문자 제거
+    .replace(/초등학교$/, "")
+    .replace(/초등$/, "")
+    .replace(/초$/, "");
+}
+/** 정규화 정확 일치가 딱 하나면 그 학교, 아니면 null(0개=없음, 2개↑=모호). */
+function matchSchool(text, schools) {
+  const key = normalizeSchool(text);
+  if (!key) return null;
+  const hits = schools.filter((s) => normalizeSchool(s.name) === key);
+  return hits.length === 1 ? hits[0] : null;
+}
+
 /* ==========================================================================
    auth 씬 렌더링 (src/scenes/auth/index.tsx + 컴포넌트 이식)
    ========================================================================== */
