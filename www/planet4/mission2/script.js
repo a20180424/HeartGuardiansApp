@@ -510,7 +510,6 @@ const MISSION = {
       hideFriend: true,
       noAuto: true,
       text: "공감은 특별한 능력이 아니야.\n매 순간 '공감의 길'을 선택하는 작은 용기야.",
-      completeBanner: "미션 완료!",
       next: "p4_m2_end",
     },
     {
@@ -558,7 +557,9 @@ const THEME = {
       celebrating: A + "/char/Hati/hati_celebrating.webp",
     },
     initial: "thinking",
-    byNode: {},
+    // 대사 톤에 맞춘 하티 표정. cards="실천하자!"(격려)→cheering,
+    // postplay=공감 정의를 가르치는 톤→explaining, end=축하+보상→celebrating.
+    byNode: { p4_m2_cards: "cheering", p4_m2_postplay: "explaining", p4_m2_end: "celebrating" },
   },
   friends: {
     placeholder: {
