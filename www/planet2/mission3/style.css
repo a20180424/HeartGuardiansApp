@@ -232,10 +232,15 @@ button {
 /* ---------- cast stage (플레이트 위 캐릭터 세트) — mission.css 기본값에
    planet2/Mission.css 의 .planet2 #castStage 오버라이드 최종값을 그대로 반영. ---------- */
 #castStage {
+  /* ── 튜닝 노브: 이 값만 바꿔서 크기 조정 ──────────────
+     --cast-scale : 크기 (1 = 원래 크기, 0.8 = 80%) */
+  --cast-scale: 0.8;
   position: absolute;
   left: -190px;
-  bottom: -350px;
+  bottom: -180px;
   z-index: 3;
+  transform: scale(var(--cast-scale));
+  transform-origin: left bottom;
 }
 #castStage #castPlatform {
   position: absolute;
@@ -307,9 +312,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -317,6 +326,8 @@ button {
   align-items: center;
   gap: 16px;
   text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-14px) scale(0.96);
@@ -386,11 +397,15 @@ button {
 
 /* ---------- full-body Hati (intro only) — planet2/Mission.css .planet2 #hatiFull 최종값 ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 1160px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
-  height: 570px;
+  height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
   opacity: 0;
   transform: translateY(22px) scale(0.97);
@@ -406,9 +421,14 @@ button {
 
 /* #hatiBubble — planet2/Mission.css .planet2 #hatiBubble 최종값 */
 #hatiBubble {
-  left: 1280px;
-  bottom: 572px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 270px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
+  /* pre-line·keep-all 은 .bubble 에서 상속 */
 }
 #hatiBubble .bubble-name {
   color: #3f8a2e;

@@ -661,7 +661,7 @@ const MISSION = {
       speaker: "hati",
       hideFriend: true,
       noAuto: true,
-      text: "공감 레이더 가동 완료! 친구들의 감정이 조금씩 드러나기 시작했어. 공감 레이더로 안개 속 단서들을 찾고 숨은 감정을 찾아보자",
+      text: "공감 레이더 가동 완료!\n친구들의 감정이 조금씩 드러나기 시작했어.\n공감 레이더로 안개 속 단서들을 찾고 숨은 감정을 찾아보자",
       next: "p2_m3_play",
     },
     { id: "p2_m3_play", type: "minigame", game: "hiddenEmotion", next: "p2_m3_cards" },
