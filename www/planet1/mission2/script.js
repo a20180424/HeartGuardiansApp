@@ -725,7 +725,7 @@ const THEME = {
       byNode: {
         m2_sola_intro: "sad",
         m2_q4_wrongA_sola: "sad2",
-        m2_q4_wrongB_sola: "sad",
+        m2_q4_wrongB_sola: "sad2",
         m2_q4_correct_sola: "thankful",
         m2_end1: "thankful",
       },
