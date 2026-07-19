@@ -477,9 +477,9 @@ const A = ASSETS;
 const MISSION = {
   start: "m2_intro",
   nodes: [
-    { id: "m2_intro", type: "line", noAuto: true, speaker: "hati", text: "공감 거울이 얼음 속에 갇혀 버렸어. 친구들의 마음에 맞는 말과 행동을 찾으면 거울을 깨울 수 있어!", next: "m2_lala_intro" },
+    { id: "m2_intro", type: "line", noAuto: true, speaker: "hati", text: "공감 거울이 얼음에 갇혀 버렸어.\n친구들의 마음에 맞는 말과 행동을 찾으면 거울을 깨울 수 있어!", next: "m2_lala_intro" },
 
-    { id: "m2_lala_intro", type: "line", noAuto: true, speaker: "lala", text: "친한 친구랑 싸웠어... 다시 예전처럼 친해질 수 있을까?", hold: true, next: "m2_q1_prompt" },
+    { id: "m2_lala_intro", type: "line", noAuto: true, speaker: "lala", text: "친한 친구랑 싸웠어.\n다시 예전처럼 친해질 수 있을까?", hold: true, next: "m2_q1_prompt" },
 
     { id: "m2_q1_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원들, 친구의 마음 신호를 탐색해 보자.", next: "m2_q1_choice" },
     {
@@ -491,8 +491,8 @@ const MISSION = {
         { text: "걱정됨", next: "m2_q1_correct" },
       ],
     },
-    { id: "m2_q1_wrong_angry", type: "line", noAuto: true, speaker: "hati", text: "화난 마음도 조금 있을 수 있어. 하지만 친구는 '다시 친해질 수 있을까?'라고 말했어. 걱정하는 마음에 더 집중해 보자!", next: "m2_q1_retry" },
-    { id: "m2_q1_wrong_upset", type: "line", noAuto: true, speaker: "hati", text: "속상한 마음도 맞아. 하지만 지금 친구는 앞으로 어떻게 될지 걱정하는 마음이 더 커 보여.", next: "m2_q1_retry" },
+    { id: "m2_q1_wrong_angry", type: "line", noAuto: true, speaker: "hati", text: "화난 마음도 조금 있을 수 있어.\n하지만 친구는 '다시 친해질 수 있을까?'라고 말했어. 걱정하는 마음에 더 집중해 보자!", next: "m2_q1_retry" },
+    { id: "m2_q1_wrong_upset", type: "line", noAuto: true, speaker: "hati", text: "속상한 마음도 맞아.\n하지만 지금 친구는 앞으로 어떻게 될지 걱정하는 마음이 더 커 보여.", next: "m2_q1_retry" },
     { id: "m2_q1_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m2_q1_choice" },
     { id: "m2_q1_correct", type: "line", noAuto: true, speaker: "hati", text: "맞아! 친구와 싸운 것도 속상하지만 다시 친해질 수 있을지 걱정하는 마음이 더 커 보여.", next: "m2_q2_prompt" },
 
@@ -501,9 +501,9 @@ const MISSION = {
       id: "m2_q2_choice", type: "choice",
       prompt: "어떤 말을 먼저 해줄까?",
       choices: [
-        { text: "같이 화해할 방법을 생각해보자", next: "m2_q2_wrongA_lala" },
-        { text: "금방 다시 친해질 거야", next: "m2_q2_wrongB_lala" },
-        { text: "많이 걱정됐겠다", next: "m2_q2_correct_lala" },
+        { text: "같이 화해할 방법을 생각해보자.", next: "m2_q2_wrongA_lala" },
+        { text: "금방 다시 친해질 거야.", next: "m2_q2_wrongB_lala" },
+        { text: "많이 걱정됐겠다.", next: "m2_q2_correct_lala" },
       ],
     },
     { id: "m2_q2_wrongA_lala", type: "line", noAuto: true, speaker: "lala", text: "응 어떻게 하면 좋을까?", next: "m2_q2_wrongA_hati" },
@@ -512,11 +512,11 @@ const MISSION = {
     { id: "m2_q2_wrongB_hati", type: "line", noAuto: true, speaker: "hati", text: "응원하는 말도 좋은 말이야. 하지만 친구는 지금 확신보다 걱정되는 마음을 이해받고 싶어 할 수 있어. 먼저 마음을 알아주는 것이 더 따뜻한 공감이야.", next: "m2_q2_retry" },
     { id: "m2_q2_retry", type: "line", noAuto: true, speaker: "hati", text: "다시 선택해봐.", next: "m2_q2_choice" },
     { id: "m2_q2_correct_lala", type: "line", noAuto: true, speaker: "lala", text: "응. 계속 그 생각이 나.", next: "m2_q2_correct_hati" },
-    { id: "m2_q2_correct_hati", type: "line", noAuto: true, speaker: "hati", text: "좋아! 친구의 걱정되는 마음을 먼저 알아주었구나. 공감은 감정을 먼저 이해하는 것에서 시작해.", next: "m2_sola_intro" },
+    { id: "m2_q2_correct_hati", type: "line", noAuto: true, speaker: "hati", text: "좋아! 친구의 걱정되는 마음을 먼저 알아주었구나.\n공감은 감정을 먼저 이해하는 것에서 시작해.", next: "m2_sola_intro" },
 
-    { id: "m2_sola_intro", type: "line", noAuto: true, speaker: "sola", text: "내가 아끼던 장난감이 망가졌어...", hold: true, next: "m2_q3_prompt" },
+    { id: "m2_sola_intro", type: "line", noAuto: true, speaker: "sola", text: "내가 아끼던 장난감이 망가졌어.", hold: true, next: "m2_q3_prompt" },
 
-    { id: "m2_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원들, 친구의 마음 신호를 탐색해 보자. 솔라의 마음은 어떨까?", next: "m2_q3_choice" },
+    { id: "m2_q3_prompt", type: "line", noAuto: true, speaker: "hati", text: "대원들, 친구의 마음 신호를 탐색해 보자.\n 솔라의 마음은 어떨까?", next: "m2_q3_choice" },
     {
       id: "m2_q3_choice", type: "choice",
       prompt: "솔라의 마음은 어떨까?",
@@ -536,9 +536,9 @@ const MISSION = {
       id: "m2_q4_choice", type: "choice",
       prompt: "어떤 행동이 더 도움이 될까?",
       choices: [
-        { text: "왜 그렇게 소중했는지 이야기를 들어준다", next: "m2_q4_wrongA_sola" },
-        { text: "장난감을 고칠 방법을 찾아본다", next: "m2_q4_wrongB_sola" },
-        { text: "옆에 가서 함께 있어 준다", next: "m2_q4_correct_sola" },
+        { text: "왜 그렇게 소중했는지 이야기를 들어준다.", next: "m2_q4_wrongA_sola" },
+        { text: "장난감을 고칠 방법을 찾아본다.", next: "m2_q4_wrongB_sola" },
+        { text: "옆에 가서 함께 있어 준다.", next: "m2_q4_correct_sola" },
       ],
     },
     { id: "m2_q4_wrongA_sola", type: "line", noAuto: true, speaker: "sola", text: "할머니가 사주신 거였어.", next: "m2_q4_wrongA_hati" },
@@ -698,6 +698,7 @@ const THEME = {
   },
   friends: {
     lala: {
+      name: "라라",
       char: {
         anxious: A + "/char/Lala/lala_anxious.webp",
         thinking: A + "/char/Lala/lala_thinking.webp",
@@ -713,6 +714,7 @@ const THEME = {
       },
     },
     sola: {
+      name: "솔라",
       char: {
         sad: A + "/char/Sola/sola_sad.webp",
         sad2: A + "/char/Sola/sola_sad2.webp",
@@ -729,6 +731,7 @@ const THEME = {
       },
     },
     lumi: {
+      name: "루미",
       char: {
         sad: A + "/char/Lumi/lumi_sad.webp",
         confused: A + "/char/Lumi/lumi_confused.webp",
@@ -813,6 +816,7 @@ function blipSound(speaker) {
     hatiBubbleText: $("hatiBubble").querySelector("span"),
     friendWrap: $("friendWrap"),
     friend: $("friend"),
+    friendName: $("friendName"),
     friendBubble: $("friendBubble"),
     friendBubbleText: $("friendBubble").querySelector("span"),
     choicePanel: $("choicePanel"),
@@ -1639,6 +1643,7 @@ function blipSound(speaker) {
     const friendBubbleText = reverting ? vm.heldText : vm.bubbleKind === "friendBubble" ? vm.text : "";
     const friendSprite = reverting && vm.heldSprite ? vm.heldSprite : vm.friend;
     els.friend.src = THEME.friends[vm.friendId].char[friendSprite] || "";
+    els.friendName.textContent = (THEME.friends[vm.friendId] && THEME.friends[vm.friendId].name) || ""; // 현재 친구 이름표
     // 스테이지(mirrors/gauge)가 뜨면 친구 레이어를 숨긴다(스테이지가 화면을 덮음).
     els.friendWrap.classList.toggle("hide", vm.fullHati || vm.stage !== "none" || vm.hideFriend);
     els.friendWrap.classList.toggle("glow", vm.friendGlow);

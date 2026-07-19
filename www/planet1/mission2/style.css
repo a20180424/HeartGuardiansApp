@@ -226,9 +226,13 @@ button {
 
 /* ---------- mission title banner (intro only) ---------- */
 #titleBanner {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --tb-x: 350px; /* 가로: +오른쪽 / -왼쪽 */
+  --tb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  top: 90px;
-  left: 712px;
+  top: calc(90px + var(--tb-y));
+  left: calc(712px + var(--tb-x));
   width: 700px;
   z-index: 6;
   display: flex;
@@ -267,6 +271,8 @@ button {
   border-radius: 30px;
   border: 3px solid #aed581;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+  white-space: pre-line; /* 텍스트 안 줄바꿈을 그대로 표시 */
+  word-break: keep-all; /* 자동 줄바꿈 시 한글 어절 안 자름 */
 }
 .tb-title {
   font-size: 78px;
@@ -274,6 +280,8 @@ button {
   color: #fff;
   letter-spacing: 1px;
   line-height: 1;
+  white-space: pre-line; /* 텍스트 안 줄바꿈을 그대로 표시 */
+  word-break: keep-all; /* 자동 줄바꿈 시 한글 어절 안 자름 */
   text-shadow:
     0 3px 0 rgba(35, 50, 20, 0.3),
     0 4px 10px rgba(0, 0, 0, 0.45),
@@ -288,6 +296,8 @@ button {
   font-weight: 800;
   font-size: 30px;
   padding: 11px 46px;
+  white-space: pre-line; /* 텍스트 안 줄바꿈을 그대로 표시 */
+  word-break: keep-all; /* 자동 줄바꿈 시 한글 어절 안 자름 */
   clip-path: polygon(
     22px 0,
     calc(100% - 22px) 0,
@@ -305,9 +315,13 @@ button {
 
 /* ---------- full-body Hati (intro only) ---------- */
 #hatiFull {
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hati-x: 250px; /* 가로: +오른쪽 / -왼쪽 */
+  --hati-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
   position: absolute;
-  left: 510px;
-  bottom: -18px;
+  left: calc(510px + var(--hati-x));
+  bottom: calc(-18px - var(--hati-y));
   z-index: 4;
   height: 730px;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
@@ -324,8 +338,12 @@ button {
 }
 
 #hatiBubble {
-  left: 1030px;
-  bottom: 452px;
+  /* ▼▼▼ 위치 노브 — 이 2개만 바꾸면 됨 (크기 불변) ▼▼▼ */
+  --hb-x: 260px; /* 가로: +오른쪽 / -왼쪽 */
+  --hb-y: 0px; /* 세로: +아래 / -위 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  left: calc(1030px + var(--hb-x));
+  bottom: calc(452px - var(--hb-y));
   max-width: 600px;
 }
 #hatiBubble .bubble-name {
@@ -366,6 +384,35 @@ button {
   transition:
     transform 0.35s ease,
     filter 0.6s ease;
+}
+
+/* 친구 머리 위 이름표 (m1 루미 이름표 이식) — 텍스트는 친구별로 script.js 가 갱신 */
+#friendName {
+  /* ▼▼▼ 이름표 위치·크기 노브 — 이 3개만 바꾸면 됨 ▼▼▼ */
+  --name-top: 50px; /* 세로 위치: 작을수록 위로, 클수록 머리쪽 아래로 */
+  --name-x: 0px; /* 가로 미세조정: +오른쪽 / -왼쪽 */
+  --name-size: 30px; /* 글자 크기 */
+  /* ▲▲▲ ---------------------------------------- ▲▲▲ */
+  position: absolute;
+  left: 70%;
+  top: var(--name-top);
+  transform: translateX(calc(-50% + var(--name-x)));
+  z-index: 4;
+  padding: 6px 22px;
+  border-radius: 999px;
+  background: #3f9b3f;
+  border: 3px solid #ecd98a;
+  color: #fff;
+  font-weight: 800;
+  font-size: var(--name-size);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+/* 이름표 비었을 때(친구 없음) 숨김 — 빈 pill 배경 안 뜨게 */
+#friendName:empty {
+  display: none;
 }
 
 /* 루미 후광(회복 시) */
@@ -529,6 +576,7 @@ button {
   color: #222b3d;
   line-height: 1.45;
   word-break: keep-all;
+  white-space: pre-line; /* 대사 텍스트의 \n 을 줄바꿈으로 표시 */
 }
 #hatiName {
   font-size: 22px;
