@@ -516,7 +516,6 @@ const MISSION = {
       noAuto: true,
       text: '좋아! 이제 공감 송신기를 사용할 준비가 되었어. 하지만 공감 송신기를 작동하려면 "따뜻한 말" 연료가 필요해!',
       image: A + "/planet3/empathy-transmitter-manual.webp",
-      completeBanner: "미션 완료!",
       onEnter: [{ cmd: "fx", value: "fx_light_return" }],
       next: null,
     },
