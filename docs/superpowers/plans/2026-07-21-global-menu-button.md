@@ -232,6 +232,8 @@ document.body.appendChild(muteBtn);
   word-break: keep-all;
 }
 .hg-menu-close {
+  /* × 글리프가 없는 페이지 폰트(BMJUA 등) 대비 시스템 폰트 강제 */
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   position: absolute;
   top: 15px;
   right: 20px;
@@ -441,6 +443,8 @@ EOF
   word-break: keep-all;
 }
 .hg-menu-close {
+  /* × 글리프가 없는 페이지 폰트(BMJUA 등) 대비 시스템 폰트 강제 */
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   position: absolute;
   top: 10px;
   right: 14px;
@@ -582,6 +586,7 @@ EOF
       word-break: keep-all;
     }
     .hg-menu-close {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
       position: absolute;
       top: 10px;
       right: 14px;

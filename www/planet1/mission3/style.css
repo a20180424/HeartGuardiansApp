@@ -1306,6 +1306,7 @@ button {
   word-break: keep-all;
 }
 .hg-menu-close {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   position: absolute;
   top: 15px;
   right: 20px;
