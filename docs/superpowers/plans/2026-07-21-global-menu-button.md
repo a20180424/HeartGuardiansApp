@@ -29,7 +29,7 @@ Phase 1 (기준 구현):
 Phase 2 (확산) — 같은 두 블록을 아래 페이지에 복사:
 - 1920 무대 (10개 남음): `www/planet1/mission2`, `www/planet1/mission3`, `www/planet2/mission1`, `www/planet2/mission2`, `www/planet2/mission3`, `www/planet3/mission1`, `www/planet3/mission23`, `www/planet4/mission1`, `www/planet4/mission2`, `www/planet4/mission3` (각 `script.js`+`style.css`)
 - 1280 무대 (7개): `www/`(intro), `www/auth`, `www/home`, `www/planet1/prologue`, `www/planet2/prologue`, `www/planet3/prologue`, `www/planet4/prologue` (각 `script.js`+`style.css`) — CSS만 작은 세트
-- 특수: `www/guide/index.html` — `#stage`·오디오 모듈 없음(음소거는 `hg_muted` 직접 조작, 뷰포트 고정). 별도 처리(Task 4).
+- 특수: `www/guide/index.html` — `#stage` 없음(오디오 모듈은 있음). 뷰포트 고정 + body append, audio.* 재사용. 별도 처리(Task 4).
 - 제외: `www/planet1~4/index.html` (리다이렉트 스텁, UI 없음).
 
 ---
@@ -528,10 +528,10 @@ EOF
 - Modify: `www/guide/index.html` (인라인 CSS+JS 단일 파일; `#stage`·fitStage·오디오 모듈 없음)
 
 **Interfaces:**
-- Consumes: `localStorage` 키 `hg_muted`(전 페이지 공유 음소거 설정), `window.Capacitor?.Plugins?.App?.exitApp()`.
+- Consumes: guide 인라인 스크립트의 `audio.isMuted()/toggleMute()/onMuteChange(fn)`(이미 존재, line ~1107), `window.Capacitor?.Plugins?.App?.exitApp()`.
 - Produces: 없음(리프).
 
-**Note:** guide 는 `min-height:100svh` 반응형 문서형 페이지라 무대 좌표계가 없다 → 메뉴 버튼·팝업은 **뷰포트 고정(`position:fixed`)**. guide 자체엔 오디오 모듈(`audio.*`)이 없지만, 음소거 설정은 `hg_muted` localStorage 로 전 페이지가 공유한다. 각 페이지 오디오 모듈이 **로드 때 `hg_muted` 를 읽으므로**(예: `muted = localStorage.getItem("hg_muted") === "1"`), guide 에서 토글해 저장하면 다른 페이지로 이동 시 그대로 반영된다. 따라서 guide 팝업도 **음소거 + 앱 종료** 를 그대로 두되, 음소거 행은 `audio.*` 대신 `hg_muted` 를 직접 읽고 쓴다.
+**Note:** guide 는 `min-height:100svh` 반응형 문서형 페이지라 **`#stage` 무대 좌표계가 없다** → 메뉴 버튼·팝업은 **뷰포트 고정(`position:fixed`)**, `document.body` 에 append. 단, guide 도 **오디오 모듈(`audio.*`)은 이미 갖고 있다**(SFX용; 다만 지금까지 음소거 버튼이 노출돼 있지 않았을 뿐). 따라서 음소거 행은 미션 페이지와 **똑같이 `audio.toggleMute()` 등을 재사용**한다(이게 `hg_muted` 를 저장 → 전 페이지 공유). JS 블록은 미션판과 사실상 동일하고 `stage` 대신 `document.body` 에 붙이는 것만 다르다.
 
 - [ ] **Step 1: guide 인라인 `<style>` 에 메뉴 CSS 추가**
 
@@ -622,27 +622,21 @@ EOF
     }
 ```
 
-- [ ] **Step 2: guide 인라인 `<script>` 에 메뉴 JS 추가 (음소거는 `hg_muted` 직접 조작)**
+- [ ] **Step 2: guide 인라인 `<script>` 에 메뉴 JS 추가 (audio.* 재사용, body append)**
 
-`www/guide/index.html` 의 스크립트 말미에 추가:
+`www/guide/index.html` 의 첫 `<script>` 블록 안, `audio` 정의(약 line 1107) 뒤·`</script>`(약 line 1286) 앞에 추가. 미션판과 동일하되 `stage` 대신 `document.body` 에 append:
 
 ```js
+/* ==========================================================================
+   공통 블록 3-② 메뉴 버튼 + 팝업 (음소거·앱 종료) — guide 전용(무대 없음 → 뷰포트 고정)
+   ========================================================================== */
 (function menuButton() {
   const root = document.body;
-
-  // guide 는 오디오 모듈이 없으므로 hg_muted 를 직접 읽고 쓴다(전 페이지 공유 설정).
-  function isMuted() {
-    return localStorage.getItem("hg_muted") === "1";
-  }
-  function toggleMute() {
-    const next = !isMuted();
-    localStorage.setItem("hg_muted", next ? "1" : "0");
-    return next;
-  }
 
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "hg-menu-btn";
+  btn.dataset.sfx = "none";
   btn.textContent = "☰";
   btn.setAttribute("aria-label", "메뉴 열기");
   root.appendChild(btn);
@@ -661,6 +655,7 @@ EOF
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "hg-menu-close";
+  closeBtn.dataset.sfx = "none";
   closeBtn.textContent = "×";
   closeBtn.setAttribute("aria-label", "닫기");
   closeBtn.addEventListener("click", () => close());
@@ -668,18 +663,18 @@ EOF
   const muteRow = document.createElement("button");
   muteRow.type = "button";
   muteRow.className = "hg-menu-item hg-menu-mute";
-  function renderMute() {
-    muteRow.textContent = isMuted() ? "🔇 소리 켜기" : "🔊 소리 끄기";
+  muteRow.dataset.sfx = "none";
+  function renderMute(m) {
+    muteRow.textContent = m ? "🔇 소리 켜기" : "🔊 소리 끄기";
   }
-  renderMute();
-  muteRow.addEventListener("click", () => {
-    toggleMute();
-    renderMute();
-  });
+  renderMute(audio.isMuted());
+  muteRow.addEventListener("click", () => audio.toggleMute());
+  audio.onMuteChange(renderMute);
 
   const exitRow = document.createElement("button");
   exitRow.type = "button";
   exitRow.className = "hg-menu-item hg-menu-exit";
+  exitRow.dataset.sfx = "none";
   exitRow.textContent = "🚪 앱 종료";
   exitRow.addEventListener("click", () => renderConfirm());
 
@@ -690,22 +685,28 @@ EOF
     const msg = document.createElement("p");
     msg.className = "hg-menu-msg";
     msg.textContent = "앱을 종료할까요?";
+
     const yes = document.createElement("button");
     yes.type = "button";
     yes.className = "hg-menu-item hg-menu-exit";
+    yes.dataset.sfx = "none";
     yes.textContent = "종료";
     yes.addEventListener("click", () => {
       const App =
         window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
       if (App && App.exitApp) App.exitApp();
     });
+
     const no = document.createElement("button");
     no.type = "button";
     no.className = "hg-menu-item hg-menu-cancel";
+    no.dataset.sfx = "none";
     no.textContent = "취소";
     no.addEventListener("click", () => renderMenu());
+
     panel.replaceChildren(closeBtn, msg, yes, no);
   }
+
   function open() {
     renderMenu();
     overlay.hidden = false;
@@ -713,8 +714,14 @@ EOF
   function close() {
     overlay.hidden = true;
   }
-  btn.addEventListener("click", open);
+  btn.addEventListener("pointerdown", (e) => e.stopPropagation());
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    open();
+  });
+  overlay.addEventListener("pointerdown", (e) => e.stopPropagation());
   overlay.addEventListener("click", (e) => {
+    e.stopPropagation();
     if (e.target === overlay) close();
   });
 })();
