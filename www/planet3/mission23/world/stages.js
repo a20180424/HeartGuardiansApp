@@ -80,7 +80,11 @@ export function createStageManager(ctx) {
       popupOpen = false;
       ctx.setInputLocked(false);
       if (r.passed) { onPass(); return; } // 통과 순간은 큰 축하 팝업이 대신
-      if (take) showFeedback(ctx.uiRoot, bubble.good); // 충전하기에만 피드백
+      if (take) {
+        // 충전하기 → 토스트. 따뜻한 말=긍정음 / 차가운 말=부정음(버튼 tap은 억제됨).
+        ctx.sfx?.(bubble.good ? 'warmCharge' : 'coldCharge');
+        showFeedback(ctx.uiRoot, bubble.good);
+      }
     });
   }
 

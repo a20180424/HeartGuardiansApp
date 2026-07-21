@@ -43,6 +43,7 @@ export function showChoice(parent, text, onChoose) {
   const takeBtn = document.createElement('button');
   takeBtn.className = 'popup-btn take';
   takeBtn.textContent = '🔋 충전하기';
+  takeBtn.dataset.sfx = 'none'; // 곧바로 뜨는 따뜻/차가운 토스트 소리가 대신하므로 버튼 tap 억제
   const skipBtn = document.createElement('button');
   skipBtn.className = 'popup-btn skip';
   skipBtn.textContent = '⏭️ 건너뛰기';

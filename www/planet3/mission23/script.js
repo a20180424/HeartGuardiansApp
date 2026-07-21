@@ -229,6 +229,17 @@ const audio = (function createAudio() {
         release: 0.05,
       });
     },
+    /* 따뜻한 말 충전: 밝게 상승하는 3음(C–G–C) — 긍정 피드백. */
+    warmCharge: () =>
+      [523, 784, 1047].forEach((f, i) =>
+        tone({ freq: f, type: "triangle", start: i * 0.07, dur: 0.13, gain: 0.14, release: 0.12 }),
+      ),
+    /* 차가운 말: 시리게 하강하는 음(womp) + 얇은 상위 반짝 — 부정 피드백.
+       태블릿에서도 들리도록 중역 이상에서 시작해 내려간다. */
+    coldCharge: () => {
+      tone({ freq: 466, type: "triangle", dur: 0.18, gain: 0.14, glideTo: 233, release: 0.12 });
+      tone({ freq: 622, type: "sine", start: 0.02, dur: 0.1, gain: 0.05, glideTo: 415, release: 0.08 });
+    },
   };
 
   function play(name) {
