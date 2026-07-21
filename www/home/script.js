@@ -775,6 +775,8 @@ function devProgressOverride(progress) {
      scale로 나눠 1280×800 viewBox 좌표로 되돌린다. resize·모선 로드 시 재계산. */
   function drawBeams() {
     while (beamSvg.firstChild) beamSvg.removeChild(beamSvg.firstChild);
+    // 4개 행성을 모두 완료(progress === 4)했을 때만 에너지 빔을 그린다.
+    if (progress < 4) return;
     if (!completedPlanets.length) return;
     const homeRect = root.getBoundingClientRect();
     const scale = homeRect.width / 1280 || 1;
