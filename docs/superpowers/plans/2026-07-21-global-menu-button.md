@@ -29,7 +29,7 @@ Phase 1 (기준 구현):
 Phase 2 (확산) — 같은 두 블록을 아래 페이지에 복사:
 - 1920 무대 (10개 남음): `www/planet1/mission2`, `www/planet1/mission3`, `www/planet2/mission1`, `www/planet2/mission2`, `www/planet2/mission3`, `www/planet3/mission1`, `www/planet3/mission23`, `www/planet4/mission1`, `www/planet4/mission2`, `www/planet4/mission3` (각 `script.js`+`style.css`)
 - 1280 무대 (7개): `www/`(intro), `www/auth`, `www/home`, `www/planet1/prologue`, `www/planet2/prologue`, `www/planet3/prologue`, `www/planet4/prologue` (각 `script.js`+`style.css`) — CSS만 작은 세트
-- 특수: `www/guide/index.html` — `#stage`·오디오 없음. 별도 처리(Task 5).
+- 특수: `www/guide/index.html` — `#stage`·오디오 모듈 없음(음소거는 `hg_muted` 직접 조작, 뷰포트 고정). 별도 처리(Task 4).
 - 제외: `www/planet1~4/index.html` (리다이렉트 스텁, UI 없음).
 
 ---
@@ -520,10 +520,10 @@ EOF
 - Modify: `www/guide/index.html` (인라인 CSS+JS 단일 파일; `#stage`·fitStage·오디오 모듈 없음)
 
 **Interfaces:**
-- Consumes: 없음(오디오 모듈 없어 음소거 행 불가). `window.Capacitor?.Plugins?.App?.exitApp()` 만 사용.
+- Consumes: `localStorage` 키 `hg_muted`(전 페이지 공유 음소거 설정), `window.Capacitor?.Plugins?.App?.exitApp()`.
 - Produces: 없음(리프).
 
-**Note:** guide 는 `min-height:100svh` 반응형 문서형 페이지라 무대 좌표계가 없다. 음소거 대상 오디오도 없다. 따라서 여기서는 **뷰포트 고정(`position:fixed`) 메뉴 버튼 + 팝업(앱 종료만)** 으로 축약한다. guide 는 이미 Home 으로 돌아가는 경로가 있으므로 메뉴엔 종료만 둔다.
+**Note:** guide 는 `min-height:100svh` 반응형 문서형 페이지라 무대 좌표계가 없다 → 메뉴 버튼·팝업은 **뷰포트 고정(`position:fixed`)**. guide 자체엔 오디오 모듈(`audio.*`)이 없지만, 음소거 설정은 `hg_muted` localStorage 로 전 페이지가 공유한다. 각 페이지 오디오 모듈이 **로드 때 `hg_muted` 를 읽으므로**(예: `muted = localStorage.getItem("hg_muted") === "1"`), guide 에서 토글해 저장하면 다른 페이지로 이동 시 그대로 반영된다. 따라서 guide 팝업도 **음소거 + 앱 종료** 를 그대로 두되, 음소거 행은 `audio.*` 대신 `hg_muted` 를 직접 읽고 쓴다.
 
 - [ ] **Step 1: guide 인라인 `<style>` 에 메뉴 CSS 추가**
 
@@ -601,6 +601,7 @@ EOF
       white-space: pre-line;
       word-break: keep-all;
     }
+    .hg-menu-mute { background: #3a3f86; }
     .hg-menu-exit { background: #c0413f; }
     .hg-menu-cancel { background: #4a4a5e; }
     .hg-menu-msg {
@@ -613,13 +614,23 @@ EOF
     }
 ```
 
-- [ ] **Step 2: guide 인라인 `<script>` 에 메뉴 JS 추가 (음소거 행 없음)**
+- [ ] **Step 2: guide 인라인 `<script>` 에 메뉴 JS 추가 (음소거는 `hg_muted` 직접 조작)**
 
 `www/guide/index.html` 의 스크립트 말미에 추가:
 
 ```js
 (function menuButton() {
   const root = document.body;
+
+  // guide 는 오디오 모듈이 없으므로 hg_muted 를 직접 읽고 쓴다(전 페이지 공유 설정).
+  function isMuted() {
+    return localStorage.getItem("hg_muted") === "1";
+  }
+  function toggleMute() {
+    const next = !isMuted();
+    localStorage.setItem("hg_muted", next ? "1" : "0");
+    return next;
+  }
 
   const btn = document.createElement("button");
   btn.type = "button";
@@ -646,6 +657,18 @@ EOF
   closeBtn.setAttribute("aria-label", "닫기");
   closeBtn.addEventListener("click", () => close());
 
+  const muteRow = document.createElement("button");
+  muteRow.type = "button";
+  muteRow.className = "hg-menu-item hg-menu-mute";
+  function renderMute() {
+    muteRow.textContent = isMuted() ? "🔇 소리 켜기" : "🔊 소리 끄기";
+  }
+  renderMute();
+  muteRow.addEventListener("click", () => {
+    toggleMute();
+    renderMute();
+  });
+
   const exitRow = document.createElement("button");
   exitRow.type = "button";
   exitRow.className = "hg-menu-item hg-menu-exit";
@@ -653,7 +676,7 @@ EOF
   exitRow.addEventListener("click", () => renderConfirm());
 
   function renderMenu() {
-    panel.replaceChildren(closeBtn, exitRow);
+    panel.replaceChildren(closeBtn, muteRow, exitRow);
   }
   function renderConfirm() {
     const msg = document.createElement("p");
@@ -689,20 +712,23 @@ EOF
 })();
 ```
 
-- [ ] **Step 3: playwright 검증**
+- [ ] **Step 3: playwright 검증 (음소거 크로스-페이지 지속 포함)**
 
-`http://localhost:3000/guide/index.html` 진입 → ☰ 표시(우측 상단 뷰포트 고정) / 팝업엔 `🚪 앱 종료`만 / 종료 확인창 / 닫기 / 콘솔 에러 0 / 스크린샷.
+1. `http://localhost:3000/guide/index.html` 진입 → ☰ 표시(우측 상단 뷰포트 고정) / 팝업에 `🔊 소리 끄기` + `🚪 앱 종료` / 종료 확인창 / 닫기 / 콘솔 에러 0 / 스크린샷.
+2. 음소거 행 클릭 → 라벨 `🔇 소리 켜기` 로 바뀜 + `browser_evaluate` `localStorage.getItem('hg_muted')` === `"1"` 확인.
+3. **크로스-페이지 지속 확인:** `browser_navigate` → `http://localhost:3000/home/index.html`(autologin 후) 진입 → 팝업 열어 음소거 행이 `🔇 소리 켜기`(=음소거 상태 유지) 인지 확인. 원복 위해 다시 토글.
 
-Expected: 통과.
+Expected: 통과. guide 에서 바꾼 음소거가 home 에 반영됨.
 
 - [ ] **Step 4: 커밋**
 
 ```bash
 git add www/guide/index.html
 git commit -m "$(cat <<'EOF'
-feat(menu): guide 페이지에 메뉴 버튼+팝업(종료만) 축약 적용
+feat(menu): guide 페이지에 메뉴 버튼+팝업(음소거·앱종료) 적용
 
-guide는 무대·오디오 모듈이 없어 뷰포트 고정 + 앱 종료 단독.
+guide는 무대·오디오 모듈이 없어 뷰포트 고정 + hg_muted 직접 조작.
+음소거 설정은 hg_muted 로 전 페이지 공유.
 
 Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 EOF
