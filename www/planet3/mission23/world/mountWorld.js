@@ -252,23 +252,26 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage, o
 
       // Full animation loop now that the world exists.
       const clock = new THREE.Clock();
-      // 발자국 케이던스: 이동 입력(throttle)이 있을 때 STEP_INTERVAL 마다 은은한 step SFX.
-      const STEP_INTERVAL = 0.32; // 걸음 간격(초)
+      // 발자국 케이던스: 이동 입력(throttle)이 있을 때 은은한 step SFX.
+      // 후진 속도는 전진의 절반(player.js REVERSE_SPEED)이라, 걸음당 이동거리를
+      // 일정하게 유지하려고 후진 시 간격을 2배로 늘린다.
+      const STEP_INTERVAL = 0.32; // 전진 걸음 간격(초)
       const MOVE_THRESHOLD = 0.2; // 이 이하 입력은 정지로 간주
-      let stepTimer = STEP_INTERVAL; // 움직이기 시작하면 첫 걸음이 바로 나도록 채워둠
+      let stepTimer = STEP_INTERVAL * 2; // 움직이기 시작하면 전/후진 모두 첫 걸음이 바로 나도록
       renderer.setAnimationLoop(() => {
         const dt = Math.min(clock.getDelta(), 0.1);
         if (!inputLocked) {
           const input = readInput();
           player.update(dt, input);
           if (Math.abs(input.throttle) > MOVE_THRESHOLD) {
+            const interval = input.throttle < 0 ? STEP_INTERVAL * 2 : STEP_INTERVAL; // 후진은 2배 느리게
             stepTimer += dt;
-            if (stepTimer >= STEP_INTERVAL) {
+            if (stepTimer >= interval) {
               stepTimer = 0;
               onSfx?.('step');
             }
           } else {
-            stepTimer = STEP_INTERVAL; // 멈추면 다음 이동 첫 걸음이 즉시 나게
+            stepTimer = STEP_INTERVAL * 2; // 멈추면 다음 이동 첫 걸음이 즉시 나게(전/후진 무관)
           }
         }
         stages.update(dt);
