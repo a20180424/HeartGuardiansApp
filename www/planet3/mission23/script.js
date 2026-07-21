@@ -297,20 +297,108 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
 }
 
 /* ==========================================================================
-   공통 블록 3-② 음소거 버튼 (MuteButton.tsx + mute-button.css 이식) — 검증본 복사
+   공통 블록 3-② 메뉴 버튼 + 팝업 (음소거·앱 종료) — 무대(#stage) 안 배치
+   ⚠ 무대 계열별 크기는 CSS 에서. 이 페이지는 1920 무대(큰 세트).
+   기존 독립 음소거 버튼(.mute-btn)을 이 팝업 안으로 이관.
    ========================================================================== */
-const muteBtn = document.createElement("button");
-muteBtn.type = "button";
-muteBtn.className = "mute-btn";
-muteBtn.dataset.sfx = "none";
-function renderMuteBtn(m) {
-  muteBtn.textContent = m ? "🔇" : "🔊";
-  muteBtn.setAttribute("aria-label", m ? "소리 켜기" : "소리 끄기");
-}
-renderMuteBtn(audio.isMuted());
-muteBtn.addEventListener("click", () => audio.toggleMute());
-audio.onMuteChange(renderMuteBtn);
-document.body.appendChild(muteBtn);
+(function menuButton() {
+  const stage = document.getElementById("stage");
+  if (!stage) return;
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "hg-menu-btn";
+  btn.dataset.sfx = "none";
+  btn.textContent = "☰";
+  btn.setAttribute("aria-label", "메뉴 열기");
+  stage.appendChild(btn);
+
+  const overlay = document.createElement("div");
+  overlay.className = "hg-menu-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-label", "메뉴");
+  overlay.hidden = true;
+
+  const panel = document.createElement("div");
+  panel.className = "hg-menu-panel";
+  overlay.appendChild(panel);
+  stage.appendChild(overlay);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "hg-menu-close";
+  closeBtn.dataset.sfx = "none";
+  closeBtn.textContent = "×";
+  closeBtn.setAttribute("aria-label", "닫기");
+  closeBtn.addEventListener("click", () => close());
+
+  const muteRow = document.createElement("button");
+  muteRow.type = "button";
+  muteRow.className = "hg-menu-item hg-menu-mute";
+  muteRow.dataset.sfx = "none";
+  function renderMute(m) {
+    muteRow.textContent = m ? "🔇 소리 켜기" : "🔊 소리 끄기";
+  }
+  renderMute(audio.isMuted());
+  muteRow.addEventListener("click", () => audio.toggleMute());
+  audio.onMuteChange(renderMute);
+
+  const exitRow = document.createElement("button");
+  exitRow.type = "button";
+  exitRow.className = "hg-menu-item hg-menu-exit";
+  exitRow.dataset.sfx = "none";
+  exitRow.textContent = "🚪 앱 종료";
+  exitRow.addEventListener("click", () => renderConfirm());
+
+  function renderMenu() {
+    panel.replaceChildren(closeBtn, muteRow, exitRow);
+  }
+  function renderConfirm() {
+    const msg = document.createElement("p");
+    msg.className = "hg-menu-msg";
+    msg.textContent = "앱을 종료할까요?";
+
+    const yes = document.createElement("button");
+    yes.type = "button";
+    yes.className = "hg-menu-item hg-menu-exit";
+    yes.dataset.sfx = "none";
+    yes.textContent = "종료";
+    yes.addEventListener("click", () => {
+      const App =
+        window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+      if (App && App.exitApp) App.exitApp(); // 브라우저 dev 에선 no-op
+    });
+
+    const no = document.createElement("button");
+    no.type = "button";
+    no.className = "hg-menu-item hg-menu-cancel";
+    no.dataset.sfx = "none";
+    no.textContent = "취소";
+    no.addEventListener("click", () => renderMenu());
+
+    panel.replaceChildren(closeBtn, msg, yes, no);
+  }
+
+  function open() {
+    renderMenu();
+    overlay.hidden = false;
+  }
+  function close() {
+    overlay.hidden = true;
+  }
+  // 팝업이 떠 있는 동안 무대(게임) 입력 차단: 버튼·오버레이의 클릭/포인터가
+  // stage 의 탭-진행 핸들러로 버블링되지 않게 stopPropagation.
+  btn.addEventListener("pointerdown", (e) => e.stopPropagation());
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    open();
+  });
+  overlay.addEventListener("pointerdown", (e) => e.stopPropagation());
+  overlay.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (e.target === overlay) close(); // 배경(dim) 탭 = 닫기
+  });
+})();
 
 /* ==========================================================================
    공통 블록 3-③ 교사용 히든 점프 메뉴
