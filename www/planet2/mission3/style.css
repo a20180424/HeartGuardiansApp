@@ -1495,26 +1495,102 @@ button {
 /* ==========================================================================
    공통 블록 B — 음소거 버튼 (src/lib/mute-button.css 이식) — 검증본 복사
    ========================================================================== */
-.mute-btn {
-  position: fixed;
-  top: 0px;
-  right: 0px;
+/* ==========================================================================
+   공통 블록 3-② 메뉴 버튼 + 팝업 (음소거·앱 종료) — 무대 안 배치
+   ⚠ 이 페이지는 1920 무대(큰 세트). 1280 무대 페이지는 값 ×2/3.
+   ========================================================================== */
+.hg-menu-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
   z-index: 9000;
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
-  font-size: 20px;
+  font-size: 30px;
   line-height: 1;
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0.6;
 }
-.mute-btn:hover,
-.mute-btn:focus-visible {
+.hg-menu-btn:hover,
+.hg-menu-btn:focus-visible {
   opacity: 1;
+}
+.hg-menu-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+.hg-menu-overlay[hidden] {
+  display: none;
+}
+.hg-menu-panel {
+  position: relative;
+  width: 520px;
+  max-width: 92%;
+  padding: 56px 40px 40px;
+  border-radius: 22px;
+  background: #201a4a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.hg-menu-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+.hg-menu-item {
+  width: 100%;
+  height: 96px;
+  border: none;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 34px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+.hg-menu-mute {
+  background: #3a3f86;
+}
+.hg-menu-exit {
+  background: #c0413f;
+}
+.hg-menu-cancel {
+  background: #4a4a5e;
+}
+.hg-menu-msg {
+  margin: 0;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  white-space: pre-line;
+  word-break: keep-all;
 }
 
 /* ==========================================================================
