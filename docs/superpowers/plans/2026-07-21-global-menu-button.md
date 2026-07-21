@@ -159,35 +159,43 @@ document.body.appendChild(muteBtn);
   function close() {
     overlay.hidden = true;
   }
-  btn.addEventListener("click", open);
+  // 팝업이 떠 있는 동안 무대(게임) 입력 차단: 버튼·오버레이의 클릭/포인터가
+  // stage 의 탭-진행 핸들러(stage.addEventListener("click", …))로 버블링되지 않게 stopPropagation.
+  btn.addEventListener("pointerdown", (e) => e.stopPropagation());
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    open();
+  });
+  overlay.addEventListener("pointerdown", (e) => e.stopPropagation());
   overlay.addEventListener("click", (e) => {
+    e.stopPropagation();
     if (e.target === overlay) close(); // 배경(dim) 탭 = 닫기
   });
 })();
 ```
 
-- [ ] **Step 2: 기존 `.mute-btn` CSS 교체 (1920 큰 세트)**
+- [ ] **Step 2: 기존 `.mute-btn` CSS 교체 (1920 세트)**
 
 `www/planet1/mission1/style.css` 의 현재 line 1001–1021 (`.mute-btn { … }` ~ `.mute-btn:focus-visible { opacity:1; }`)을 다음으로 **통째 교체**한다:
 
 ```css
 /* ==========================================================================
    공통 블록 3-② 메뉴 버튼 + 팝업 (음소거·앱 종료) — 무대 안 배치
-   ⚠ 이 페이지는 1920 무대(큰 세트). 1280 무대 페이지는 값 ÷1.5.
+   ⚠ 이 페이지는 1920 무대(세트). 1280 무대 페이지는 값 ×2/3.
    ========================================================================== */
 .hg-menu-btn {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 12px;
+  right: 12px;
   z-index: 9000;
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
-  font-size: 45px;
+  font-size: 30px;
   line-height: 1;
   cursor: pointer;
   opacity: 0.6;
@@ -210,41 +218,41 @@ document.body.appendChild(muteBtn);
 }
 .hg-menu-panel {
   position: relative;
-  width: 780px;
+  width: 520px;
   max-width: 92%;
-  padding: 84px 60px 60px;
-  border-radius: 32px;
+  padding: 56px 40px 40px;
+  border-radius: 22px;
   background: #201a4a;
   color: #fff;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  gap: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   white-space: pre-line;
   word-break: keep-all;
 }
 .hg-menu-close {
   position: absolute;
-  top: 22px;
-  right: 30px;
-  width: 66px;
-  height: 66px;
+  top: 15px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  font-size: 48px;
+  font-size: 32px;
   line-height: 1;
   cursor: pointer;
 }
 .hg-menu-item {
   width: 100%;
-  height: 144px;
+  height: 96px;
   border: none;
-  border-radius: 24px;
+  border-radius: 16px;
   font-family: inherit;
-  font-size: 51px;
+  font-size: 34px;
   font-weight: 700;
   color: #fff;
   cursor: pointer;
@@ -263,7 +271,7 @@ document.body.appendChild(muteBtn);
 .hg-menu-msg {
   margin: 0;
   text-align: center;
-  font-size: 54px;
+  font-size: 36px;
   font-weight: 700;
   white-space: pre-line;
   word-break: keep-all;
@@ -382,21 +390,21 @@ EOF
 ```css
 /* ==========================================================================
    공통 블록 3-② 메뉴 버튼 + 팝업 (음소거·앱 종료) — 무대 안 배치
-   ⚠ 이 페이지는 1280 무대(작은 세트 = 1920 값 ÷1.5).
+   ⚠ 이 페이지는 1280 무대(작은 세트 = 1920 값 ×2/3).
    ========================================================================== */
 .hg-menu-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 8px;
+  right: 8px;
   z-index: 9000;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
-  font-size: 30px;
+  font-size: 20px;
   line-height: 1;
   cursor: pointer;
   opacity: 0.6;
@@ -419,41 +427,41 @@ EOF
 }
 .hg-menu-panel {
   position: relative;
-  width: 520px;
+  width: 350px;
   max-width: 92%;
-  padding: 56px 40px 40px;
-  border-radius: 22px;
+  padding: 38px 28px 28px;
+  border-radius: 15px;
   background: #201a4a;
   color: #fff;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  gap: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
   white-space: pre-line;
   word-break: keep-all;
 }
 .hg-menu-close {
   position: absolute;
-  top: 15px;
-  right: 20px;
-  width: 44px;
-  height: 44px;
+  top: 10px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  font-size: 32px;
+  font-size: 22px;
   line-height: 1;
   cursor: pointer;
 }
 .hg-menu-item {
   width: 100%;
-  height: 96px;
+  height: 64px;
   border: none;
-  border-radius: 16px;
+  border-radius: 11px;
   font-family: inherit;
-  font-size: 34px;
+  font-size: 23px;
   font-weight: 700;
   color: #fff;
   cursor: pointer;
@@ -472,7 +480,7 @@ EOF
 .hg-menu-msg {
   margin: 0;
   text-align: center;
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 700;
   white-space: pre-line;
   word-break: keep-all;
@@ -532,17 +540,17 @@ EOF
 ```css
     .hg-menu-btn {
       position: fixed;
-      top: 12px;
-      right: 12px;
+      top: 8px;
+      right: 8px;
       z-index: 9000;
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       padding: 0;
       border: none;
       border-radius: 50%;
       background: rgba(0, 0, 0, 0.35);
       color: #fff;
-      font-size: 30px;
+      font-size: 20px;
       line-height: 1;
       cursor: pointer;
       opacity: 0.6;
@@ -561,40 +569,40 @@ EOF
     .hg-menu-overlay[hidden] { display: none; }
     .hg-menu-panel {
       position: relative;
-      width: min(520px, 90vw);
-      padding: 56px 40px 40px;
-      border-radius: 22px;
+      width: min(350px, 90vw);
+      padding: 38px 28px 28px;
+      border-radius: 15px;
       background: #201a4a;
       color: #fff;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      gap: 14px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
       white-space: pre-line;
       word-break: keep-all;
     }
     .hg-menu-close {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      width: 44px;
-      height: 44px;
+      top: 10px;
+      right: 14px;
+      width: 30px;
+      height: 30px;
       padding: 0;
       border: none;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.12);
       color: #fff;
-      font-size: 32px;
+      font-size: 22px;
       line-height: 1;
       cursor: pointer;
     }
     .hg-menu-item {
       width: 100%;
-      height: 96px;
+      height: 64px;
       border: none;
-      border-radius: 16px;
+      border-radius: 11px;
       font-family: inherit;
-      font-size: 34px;
+      font-size: 23px;
       font-weight: 700;
       color: #fff;
       cursor: pointer;
@@ -607,7 +615,7 @@ EOF
     .hg-menu-msg {
       margin: 0;
       text-align: center;
-      font-size: 36px;
+      font-size: 24px;
       font-weight: 700;
       white-space: pre-line;
       word-break: keep-all;
