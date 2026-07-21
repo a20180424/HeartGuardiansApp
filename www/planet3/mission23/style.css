@@ -482,12 +482,15 @@ button {
   color: #222b3d;
   line-height: 1.45;
   word-break: keep-all;
+  white-space: pre-line;
 }
 #hatiName {
   font-size: 22px;
   font-weight: 800;
   color: #2f6fe0;
   margin-bottom: 4px;
+  word-break: keep-all;
+  white-space: pre-line;
 }
 
 #tapHint {
@@ -502,6 +505,8 @@ button {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
   transition: opacity 0.3s;
   animation: bob 1.3s ease infinite;
+  word-break: keep-all;
+  white-space: pre-line;
 }
 #tapHint.show {
   opacity: 0.9;
@@ -968,6 +973,8 @@ button {
   color: #fff;
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18);
   transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.12s ease;
+  white-space: pre-line;
+  word-break: keep-all; /* 긴 선택지(예: "눈을 바라보며 끝까지 기다려 준다.")가 어절 중간에서 안 깨지게 */
 }
 .efg-overlay .popup-btn:hover { filter: brightness(1.06); }
 .efg-overlay .popup-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); }

@@ -72,6 +72,7 @@ export function createStageManager(ctx) {
     ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
+    ctx.sfx?.('pop'); // 미션2: 말풍선을 만나 팝업이 열리는 순간
     showChoice(ctx.uiRoot, bubble.text, (take) => {
       const r = game.choose(bubble, take);
       bubbles.remove(bubble.id);
@@ -79,7 +80,11 @@ export function createStageManager(ctx) {
       popupOpen = false;
       ctx.setInputLocked(false);
       if (r.passed) { onPass(); return; } // 통과 순간은 큰 축하 팝업이 대신
-      if (take) showFeedback(ctx.uiRoot, bubble.good); // 충전하기에만 피드백
+      if (take) {
+        // 충전하기 → 토스트. 따뜻한 말=긍정음 / 차가운 말=부정음(버튼 tap은 억제됨).
+        ctx.sfx?.(bubble.good ? 'warmCharge' : 'coldCharge');
+        showFeedback(ctx.uiRoot, bubble.good);
+      }
     });
   }
 
@@ -135,6 +140,7 @@ export function createStageManager(ctx) {
     ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
+    ctx.sfx?.('select'); // 미션3: NPC를 만나 대화가 열리는 순간(말풍선 pop 과 구분)
     transmitter?.setActive(true); // 대화 중 송신기 작동 강조
     const buttons = round.choices.length > 0 ? round.choices : ["닫기"];
     showDialogue(ctx.uiRoot, round.prompt, buttons, (index) => {
@@ -147,8 +153,13 @@ export function createStageManager(ctx) {
         if (r.npcDone) doneGreetedId = def.id;
         npcs.setLevel(def.id, r.level);
         if (r.feedback) showFeedback(ctx.uiRoot, true, r.feedback);
+        // 선택 결과 소리(버튼 tap은 억제됨): 전원 완료 팡파레 > NPC 완주 치유음 > 정답음.
+        if (r.allDone) ctx.sfx?.('fanfare'); // E: 4명 전원 완료
+        else if (r.npcDone) ctx.sfx?.('npcHealed'); // D: 이 NPC 마음 완주
+        else if (r.feedback) ctx.sfx?.('warmCharge'); // B: 공감 정답
         if (r.allDone) onAllNpcsDone();
       } else {
+        ctx.sfx?.('coldCharge'); // C: 공감 오답
         showFeedback(ctx.uiRoot, false, r.feedback);
       }
     }, def.emoji);
