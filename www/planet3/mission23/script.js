@@ -131,7 +131,36 @@ const audio = (function createAudio() {
     osc.stop(t0 + dur + rel + 0.02);
   }
 
-  let stepPhase = 0; // 발자국: 좌/우 두 음을 번갈아 (걷는 리듬)
+  /* 짧은 필터드 노이즈 버스트 — "눈 밟는" 발자국용. 저역 사인은 작은 스피커에서
+     사라지므로, 스피커가 잘 내는 중역 대역폭(bandpass)의 노이즈로 만든다. */
+  let noiseBuf = null;
+  function noise(o) {
+    if (!ctx || !master) return;
+    if (!noiseBuf) {
+      const n = Math.floor(ctx.sampleRate * 0.2);
+      noiseBuf = ctx.createBuffer(1, n, ctx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    }
+    const t0 = ctx.currentTime;
+    const dur = o.dur || 0.09;
+    const gain = o.gain || 0.1;
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = o.freq || 1300;
+    bp.Q.value = o.q || 0.9;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(gain, t0 + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(bp).connect(g).connect(master);
+    src.start(t0);
+    src.stop(t0 + dur + 0.02);
+  }
+
+  let stepPhase = 0; // 발자국: 좌/우 두 발을 번갈아 (걷는 리듬)
   const SOUNDS = {
     tap: () => tone({ freq: 520, type: "sine", dur: 0.05, gain: 0.16, release: 0.05 }),
     pop: () => tone({ freq: 400, type: "triangle", dur: 0.07, gain: 0.16, glideTo: 680, release: 0.06 }),
@@ -186,14 +215,16 @@ const audio = (function createAudio() {
       tone({ freq: 500, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
     blipFriend: () =>
       tone({ freq: 600, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
-    /* 은은한 발자국(눈 위 걸음): 낮은 sine 두 음을 번갈아 재생. gain 매우 작게. */
+    /* 은은한 발자국(눈 밟는 소리): 중역 노이즈 "뽀득" + 약한 저역 쿵.
+       좌/우 발을 번갈아 대역·음정만 살짝 바꿔 걷는 리듬을 준다. */
     step: () => {
       stepPhase ^= 1;
+      noise({ freq: stepPhase ? 1500 : 1150, q: 0.9, dur: 0.085, gain: 0.11 });
       tone({
-        freq: stepPhase ? 175 : 145,
+        freq: stepPhase ? 135 : 115,
         type: "sine",
-        dur: 0.06,
-        gain: 0.05,
+        dur: 0.05,
+        gain: 0.045,
         attack: 0.004,
         release: 0.05,
       });
