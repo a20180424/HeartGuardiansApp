@@ -10,7 +10,7 @@ import { createMinimap } from './minimap.js';
 import { createJoystick } from './joystick.js';
 import { createStageManager } from './stages.js';
 
-export function mountWorld(container, { onStage2Enter, onComplete, startStage }) {
+export function mountWorld(container, { onStage2Enter, onComplete, startStage, onSfx }) {
   // dispose가 비동기 초기화 완료보다 먼저 호출된 경우 완료 콜백을 막는 경쟁 조건 가드.
   let disposed = false;
 
@@ -242,6 +242,7 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage })
           onStage2Enter?.();
         },
         onComplete,
+        sfx: onSfx, // 만남 사운드(말풍선/NPC) — stages 가 팝업 열 때 호출.
       });
       await stages.start({ startStage });
       if (disposed) {
@@ -251,9 +252,25 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage })
 
       // Full animation loop now that the world exists.
       const clock = new THREE.Clock();
+      // 발자국 케이던스: 이동 입력(throttle)이 있을 때 STEP_INTERVAL 마다 은은한 step SFX.
+      const STEP_INTERVAL = 0.32; // 걸음 간격(초)
+      const MOVE_THRESHOLD = 0.2; // 이 이하 입력은 정지로 간주
+      let stepTimer = STEP_INTERVAL; // 움직이기 시작하면 첫 걸음이 바로 나도록 채워둠
       renderer.setAnimationLoop(() => {
         const dt = Math.min(clock.getDelta(), 0.1);
-        if (!inputLocked) player.update(dt, readInput());
+        if (!inputLocked) {
+          const input = readInput();
+          player.update(dt, input);
+          if (Math.abs(input.throttle) > MOVE_THRESHOLD) {
+            stepTimer += dt;
+            if (stepTimer >= STEP_INTERVAL) {
+              stepTimer = 0;
+              onSfx?.('step');
+            }
+          } else {
+            stepTimer = STEP_INTERVAL; // 멈추면 다음 이동 첫 걸음이 즉시 나게
+          }
+        }
         stages.update(dt);
         // Keep the sun's shadow box centered on the player so shadows stay crisp.
         sun.position.set(camera.position.x + 30, 45, camera.position.z + 20);

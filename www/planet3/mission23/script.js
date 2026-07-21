@@ -131,6 +131,7 @@ const audio = (function createAudio() {
     osc.stop(t0 + dur + rel + 0.02);
   }
 
+  let stepPhase = 0; // 발자국: 좌/우 두 음을 번갈아 (걷는 리듬)
   const SOUNDS = {
     tap: () => tone({ freq: 520, type: "sine", dur: 0.05, gain: 0.16, release: 0.05 }),
     pop: () => tone({ freq: 400, type: "triangle", dur: 0.07, gain: 0.16, glideTo: 680, release: 0.06 }),
@@ -185,6 +186,18 @@ const audio = (function createAudio() {
       tone({ freq: 500, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
     blipFriend: () =>
       tone({ freq: 600, type: "triangle", dur: 0.05, gain: 0.2, attack: 0.01, release: 0.04 }),
+    /* 은은한 발자국(눈 위 걸음): 낮은 sine 두 음을 번갈아 재생. gain 매우 작게. */
+    step: () => {
+      stepPhase ^= 1;
+      tone({
+        freq: stepPhase ? 175 : 145,
+        type: "sine",
+        dur: 0.06,
+        gain: 0.05,
+        attack: 0.004,
+        release: 0.05,
+      });
+    },
   };
 
   function play(name) {
@@ -198,14 +211,20 @@ const audio = (function createAudio() {
 })();
 
 /* ==========================================================================
-   공통 블록 3-① (미션 페이지 변형) — 첫 제스처에서 unlock 만.
-   ⚠ 미션 페이지 전용 조정 — 미션 엔진/월드가 자체 사운드를 내므로 공통 SFX 블록의
-   자동 data-sfx tap 재생을 억제하고 unlock 로직만 유지한다.
+   공통 블록 3-① — 첫 제스처에서 unlock + 버튼 data-sfx tap.
+   ⚠ 이 3D 월드는 자체 사운드가 없어(다른 미션 엔진과 달리) 버튼 클릭음을 복원한다.
+   말풍선/NPC 만남·발자국은 world → onSfx 콜백으로 별도 재생(엔진 tap과 겹치지 않음).
+   음소거 버튼은 data-sfx="none" 이라 무음 유지.
    ========================================================================== */
 window.addEventListener(
   "pointerdown",
-  () => {
-    audio.unlock();
+  (e) => {
+    audio.unlock(); // play() 보다 먼저 — 첫 탭부터 소리가 나야 한다
+    const target = e.target;
+    const btn = target && target.closest ? target.closest("button") : null;
+    if (!btn || btn.disabled) return;
+    if (btn.dataset.sfx === "none") return;
+    audio.play("tap");
   },
   true,
 );
@@ -982,6 +1001,8 @@ const devStage2 = PARAMS.has("stage2");
       },
       // DEV: ?stage2=1 이면 stage1 을 건너뛰고 stage2 부터 시작.
       startStage: devStage2 ? 2 : undefined,
+      // 월드(만남·발자국) → 공통 audio 합성 SFX. muted/unlock 판단은 audio.play 안에서.
+      onSfx: (name) => audio.play(name),
     });
   }
   function finishMinigame() {

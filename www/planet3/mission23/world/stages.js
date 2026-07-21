@@ -72,6 +72,7 @@ export function createStageManager(ctx) {
     ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
+    ctx.sfx?.('pop'); // 미션2: 말풍선을 만나 팝업이 열리는 순간
     showChoice(ctx.uiRoot, bubble.text, (take) => {
       const r = game.choose(bubble, take);
       bubbles.remove(bubble.id);
@@ -135,6 +136,7 @@ export function createStageManager(ctx) {
     ctx.facePlayerToward(w.x, w.z);
     popupOpen = true;
     ctx.setInputLocked(true);
+    ctx.sfx?.('select'); // 미션3: NPC를 만나 대화가 열리는 순간(말풍선 pop 과 구분)
     transmitter?.setActive(true); // 대화 중 송신기 작동 강조
     const buttons = round.choices.length > 0 ? round.choices : ["닫기"];
     showDialogue(ctx.uiRoot, round.prompt, buttons, (index) => {
