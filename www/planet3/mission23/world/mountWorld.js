@@ -119,6 +119,7 @@ export function mountWorld(container, { onStage2Enter, onComplete, startStage, o
       'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;' +
       'justify-content:center;gap:16px;color:#fff;font-family:system-ui,sans-serif;' +
       'font-size:22px;text-align:center;padding:24px;z-index:10;' +
+      'white-space:pre-line;word-break:keep-all;' +
       'background:rgba(20,30,45,0.35);';
     const msg = document.createElement('div');
     msg.textContent = text;
