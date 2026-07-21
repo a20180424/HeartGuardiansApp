@@ -153,8 +153,13 @@ export function createStageManager(ctx) {
         if (r.npcDone) doneGreetedId = def.id;
         npcs.setLevel(def.id, r.level);
         if (r.feedback) showFeedback(ctx.uiRoot, true, r.feedback);
+        // 선택 결과 소리(버튼 tap은 억제됨): 전원 완료 팡파레 > NPC 완주 치유음 > 정답음.
+        if (r.allDone) ctx.sfx?.('fanfare'); // E: 4명 전원 완료
+        else if (r.npcDone) ctx.sfx?.('npcHealed'); // D: 이 NPC 마음 완주
+        else if (r.feedback) ctx.sfx?.('warmCharge'); // B: 공감 정답
         if (r.allDone) onAllNpcsDone();
       } else {
+        ctx.sfx?.('coldCharge'); // C: 공감 오답
         showFeedback(ctx.uiRoot, false, r.feedback);
       }
     }, def.emoji);

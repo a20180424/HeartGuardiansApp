@@ -240,6 +240,21 @@ const audio = (function createAudio() {
       tone({ freq: 466, type: "triangle", dur: 0.18, gain: 0.14, glideTo: 233, release: 0.12 });
       tone({ freq: 622, type: "sine", start: 0.02, dur: 0.1, gain: 0.05, glideTo: 415, release: 0.08 });
     },
+    /* NPC 마음이 다 녹는 순간(완주): 따뜻한 상승 화음 + 반짝 — 정답음보다 크고 포근하게. */
+    npcHealed: () => {
+      [587, 880, 1175].forEach((f, i) =>
+        tone({ freq: f, type: "triangle", start: i * 0.08, dur: 0.3, gain: 0.12, release: 0.26 }),
+      );
+      for (let i = 0; i < 4; i++)
+        tone({
+          freq: 1600 + Math.random() * 900,
+          type: "triangle",
+          start: 0.18 + i * 0.05,
+          dur: 0.12,
+          gain: 0.06,
+          release: 0.12,
+        });
+    },
   };
 
   function play(name) {

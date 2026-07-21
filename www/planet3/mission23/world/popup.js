@@ -114,6 +114,7 @@ export function showDialogue(parent, prompt, choices, onChoose, badgeEmoji = '�
     const btn = document.createElement('button');
     btn.className = 'popup-btn dialogue';
     btn.textContent = label;
+    btn.dataset.sfx = 'none'; // 선택 직후 정답/오답/완주 소리가 대신하므로 버튼 tap 억제
     btn.addEventListener('click', () => finish(i));
     row.appendChild(btn);
   });
