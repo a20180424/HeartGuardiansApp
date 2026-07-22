@@ -4,7 +4,7 @@
 
 **Goal:** auth 로그인 화면 우측 상단에 "심사용 계정" 버튼을 추가해, 클릭 한 번으로 지정 심사 계정 로그인 → 홈 진입.
 
-**Architecture:** `www/auth/renderForm()`의 `뒤로` 버튼 줄을 좌우 배치 행으로 바꿔 오른쪽에 버튼을 둔다(로그인 모드 한정). 클릭 시 하드코딩 creds를 기존 `matchSchool → toCredentials → enter()` 경로에 그대로 태운다. `enter()`가 verify·진도동기화·세션저장·홈이동을 모두 처리하므로 신규 로직 최소.
+**Architecture:** `www/auth/renderForm()`의 `뒤로` 버튼 줄을 좌우 배치 행으로 바꿔 오른쪽에 버튼을 둔다(로그인 모드 한정). 클릭 시 하드코딩 creds를 **일반 로그인 submit과 동일한 경로**(`matchSchool → toCredentials → verify → 타이틀음 → showWelcome`)에 그대로 태운다. 이후 환영 화면 → 홈 진입은 기존 로직 그대로.
 
 **Tech Stack:** vanilla HTML/JS/CSS 무빌드 MPA. 검증은 `npm run dev` + playwright MCP(단위 테스트 프레임워크 없음).
 
@@ -25,7 +25,7 @@
 - Modify: `www/auth/style.css` — `.auth-form-head` / `.auth-review` 규칙 추가(`.auth-back` 규칙 부근 [www/auth/style.css:155](www/auth/style.css#L155)).
 
 **Interfaces:**
-- Consumes(기존, 시그니처 변경 없음): `matchSchool(text, schools)` → school|null; `toCredentials(formLike, schoolId)` → creds; `enter(creds)` → Promise(성공 시 홈 이동); `setError(msg)`·`setSubmitting(bool)`(renderForm 내부 함수); `classifyVerifyError(err)` → "auth"|기타.
+- Consumes(기존, 시그니처 변경 없음): `matchSchool(text, schools)` → school|null; `toCredentials(formLike, schoolId)` → creds; `verify(creds)` → Promise<profile>; `showWelcome()`(auth 스코프); `welcomeName`(auth 스코프 변수); `audio.play(name)`; `setError(msg)`·`setSubmitting(bool)`(renderForm 내부 함수); `classifyVerifyError(err)` → "auth"|기타.
 - Produces: 없음(순수 UI 추가, 외부에서 참조하는 신규 심볼 없음).
 
 - [ ] **Step 1: 심사 계정 상수 추가**
@@ -68,7 +68,11 @@
         setError(null);
         setSubmitting(true);
         try {
-          await enter(toCredentials(REVIEW_ACCOUNT, school.id)); // verify → 진도동기화 → 세션저장 → 홈
+          // 일반 로그인 submit(login 분기)과 동일 흐름 — 이후 환영 화면 → 홈.
+          const profile = await verify(toCredentials(REVIEW_ACCOUNT, school.id));
+          audio.play("title");
+          welcomeName = profile.name;
+          showWelcome();
         } catch (err) {
           audio.play("wrong");
           setSubmitting(false);
@@ -126,6 +130,6 @@ git commit -m "feat(auth): 로그인 화면에 심사용 계정 로그인 버튼
 ## Self-Review
 
 - **Spec coverage:** 배치(우측 상단, 로그인 모드 한정, 항상 표시) ✓ Step 2/3. 자격증명 하드코딩(테스트/3-3-3/3333) ✓ Step 1. 동작(matchSchool→toCredentials→로그인) ✓ Step 2. 검증(playwright) ✓ Step 4. 범위 밖(☰메뉴/전페이지/게이팅) — 계획에 포함 안 함 ✓.
-- **스펙 대비 의도적 변경:** 스펙의 "verify → showWelcome" 대신 기존 `enter()`를 재사용해 **welcome 화면을 건너뛰고 홈으로 직행**. 더 단순(DRY)하고 리뷰어 흐름이 매끄럽다. 결과(로그인 후 홈)는 동일.
+- **일반 로그인과 동일 흐름:** 심사 버튼도 `verify → 타이틀음 → showWelcome`으로, 학생 로그인과 동작 일치(환영 화면 거쳐 홈). 별도 흐름 없음.
 - **Placeholder scan:** 없음(모든 코드 완성).
-- **Type consistency:** `REVIEW_ACCOUNT`(grade/class/number:number, pin:string)는 `toCredentials`가 읽는 필드와 일치. `enter(creds)`·`matchSchool`·`setError`·`setSubmitting`·`classifyVerifyError` 모두 기존 시그니처 그대로 사용.
+- **Type consistency:** `REVIEW_ACCOUNT`(grade/class/number:number, pin:string)는 `toCredentials`가 읽는 필드와 일치. `verify`·`showWelcome`·`welcomeName`·`matchSchool`·`setError`·`setSubmitting`·`classifyVerifyError` 모두 기존 시그니처/스코프 그대로 사용.

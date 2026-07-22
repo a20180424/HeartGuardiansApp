@@ -905,6 +905,9 @@ function matchSchool(text, schools) {
   const CLASSES = Array.from({ length: 10 }, (_, i) => i + 1);
   const NUMBERS = Array.from({ length: 30 }, (_, i) => i + 1);
 
+  // 심사(스토어 리뷰)용 계정 — 로그인 폼에 입력하는 값과 동일. 전용 데모 계정이라 클라이언트 노출 허용.
+  const REVIEW_ACCOUNT = { school: "테스트", grade: 3, class: 3, number: 3, pin: "3333" };
+
   function showLogin(errorMsg) {
     renderForm("login", errorMsg);
   }
@@ -1138,7 +1141,46 @@ function matchSchool(text, schools) {
       errorP,
       submit,
     ]);
-    panel.appendChild(el("div", { class: "auth-form-wrap" }, [back, formEl]));
+    const head = el("div", { class: "auth-form-head" }, [back]);
+    if (mode === "login") {
+      const reviewBtn = el("button", {
+        type: "button",
+        class: "btn ghost auth-review",
+        text: "심사용 계정",
+      });
+      reviewBtn.dataset.sfx = "none";
+      reviewBtn.addEventListener("click", async () => {
+        if (submitting) return;
+        const school = matchSchool(REVIEW_ACCOUNT.school, schools);
+        if (!school) {
+          setError(
+            schools.length === 0
+              ? "인터넷 연결을 확인해 주세요."
+              : "심사용 계정 학교를 찾을 수 없어요.",
+          );
+          return;
+        }
+        setError(null);
+        setSubmitting(true);
+        try {
+          // 일반 로그인 submit(login 분기)과 동일 흐름 — 이후 환영 화면 → 홈.
+          const profile = await verify(toCredentials(REVIEW_ACCOUNT, school.id));
+          audio.play("title");
+          welcomeName = profile.name;
+          showWelcome();
+        } catch (err) {
+          audio.play("wrong");
+          setSubmitting(false);
+          setError(
+            classifyVerifyError(err) === "auth"
+              ? "심사용 계정 로그인에 실패했어요."
+              : "인터넷 연결을 확인해 주세요.",
+          );
+        }
+      });
+      head.appendChild(reviewBtn);
+    }
+    panel.appendChild(el("div", { class: "auth-form-wrap" }, [head, formEl]));
     updateValidity();
   }
 
