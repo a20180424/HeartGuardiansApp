@@ -325,7 +325,10 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
 
     const title = document.createElement("p");
     title.className = "copyright-popup__title";
-    title.textContent = "저작권 정보";
+    const titleEmoji = document.createElement("span");
+    titleEmoji.className = "hg-menu-emoji"; // © 를 컬러 이모지로 강제
+    titleEmoji.textContent = "©️";
+    title.append(titleEmoji, " 저작권 정보");
 
     const x = document.createElement("button");
     x.type = "button";
