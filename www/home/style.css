@@ -621,9 +621,86 @@ button {
   border-color: rgba(160, 180, 255, 0.5);
   box-shadow: 0 4px 14px rgba(60, 80, 190, 0.35);
 }
+.hg-menu-copyright {
+  background: linear-gradient(160deg, #5c6fd6, #363c82);
+  border-color: rgba(160, 180, 255, 0.5);
+  box-shadow: 0 4px 14px rgba(60, 80, 190, 0.35);
+}
+/* © 를 시스템 컬러 이모지로 강제 — BMJUA 텍스트 글리프 대신. */
+.hg-menu-emoji {
+  font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+}
 .hg-menu-cancel {
   background: linear-gradient(160deg, #565a7c, #3a3d55);
   border-color: rgba(180, 190, 220, 0.35);
+}
+
+/* 저작권 정보 팝업 — 보이는 팝업 창(프레임/여백) 안에서 이미지만 스크롤된다.
+   딤 배경 + 게임 톤 보라 프레임 패널 + 제목 + 내부 스크롤 이미지 + 우상단 고정 ×. */
+.copyright-popup {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9600; /* hg-menu-overlay(9500)보다 위 */
+}
+.copyright-popup__panel {
+  position: relative;
+  width: 640px;
+  max-width: 92%;
+  max-height: 88%; /* 창 높이 상한 — 무대 800의 88% */
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(150, 172, 255, 0.45);
+  background: linear-gradient(180deg, rgba(43, 37, 96, 0.96), rgba(26, 22, 66, 0.98));
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.55),
+    0 0 26px rgba(90, 120, 230, 0.28);
+}
+.copyright-popup__title {
+  margin: 0 0 14px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+.copyright-popup__scroll {
+  flex: 1;
+  min-height: 0; /* flex 자식이 줄어들며 스크롤되도록 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 10px;
+  background: #fff; /* 이미지 시트 배경 */
+}
+.copyright-popup__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.copyright-popup__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 1; /* 창 위에 고정 */
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .hg-menu-msg {
   margin: 0;
