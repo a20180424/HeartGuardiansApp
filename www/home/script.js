@@ -294,8 +294,69 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
   exitRow.textContent = "🚪 앱 종료";
   exitRow.addEventListener("click", () => renderConfirm());
 
+  // 저작권 정보 — 메뉴 닫고 세로 스크롤 이미지 팝업을 연다.
+  const copyRow = document.createElement("button");
+  copyRow.type = "button";
+  copyRow.className = "hg-menu-item hg-menu-copyright";
+  copyRow.dataset.sfx = "none";
+  // ©는 BMJUA에 텍스트 글리프가 있어 검게 나올 수 있다 — 이모지 폰트를 명시해 컬러 이모지로 렌더.
+  const copyEmoji = document.createElement("span");
+  copyEmoji.className = "hg-menu-emoji";
+  copyEmoji.textContent = "©️";
+  copyRow.append(copyEmoji, " 저작권 정보");
+  copyRow.addEventListener("click", () => {
+    close();
+    openCopyright();
+  });
+
+  // 세로로 긴 저작권 이미지를 스크롤로 보는 자체 완결형 팝업(딤 + 스크롤 패널 + 고정 ×).
+  let copyrightEl = null;
+  function openCopyright() {
+    if (copyrightEl) return;
+
+    const img = document.createElement("img");
+    img.className = "copyright-popup__img";
+    img.src = ROOT + "assets/home/CopyrightInfo.webp";
+    img.alt = "저작권 정보";
+
+    const scroll = document.createElement("div");
+    scroll.className = "copyright-popup__scroll";
+    scroll.appendChild(img);
+
+    const x = document.createElement("button");
+    x.type = "button";
+    x.className = "copyright-popup__close";
+    x.dataset.sfx = "none";
+    x.textContent = "×";
+    x.setAttribute("aria-label", "닫기");
+    x.addEventListener("click", closeCopyright);
+
+    const cpPanel = document.createElement("div");
+    cpPanel.className = "copyright-popup__panel";
+    cpPanel.append(scroll, x);
+
+    copyrightEl = document.createElement("div");
+    copyrightEl.className = "copyright-popup";
+    copyrightEl.setAttribute("role", "dialog");
+    copyrightEl.setAttribute("aria-label", "저작권 정보");
+    copyrightEl.appendChild(cpPanel);
+    // 무대(게임) 입력 차단 — 다른 오버레이와 동일.
+    copyrightEl.addEventListener("pointerdown", (e) => e.stopPropagation());
+    copyrightEl.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (e.target === copyrightEl) closeCopyright(); // 딤 배경 탭 = 닫기
+    });
+    stage.appendChild(copyrightEl);
+  }
+  function closeCopyright() {
+    if (copyrightEl) {
+      copyrightEl.remove();
+      copyrightEl = null;
+    }
+  }
+
   function renderMenu() {
-    panel.replaceChildren(closeBtn, muteRow, exitRow);
+    panel.replaceChildren(closeBtn, muteRow, copyRow, exitRow);
   }
   function renderConfirm() {
     const msg = document.createElement("p");
