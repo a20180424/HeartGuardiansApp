@@ -144,6 +144,23 @@ button {
     intro-bounce 2s ease-in-out 0.4s infinite;
 }
 
+/* 생성형 AI 고지 — 하단 letterbox(높이 40px) 밴드 중앙. 영상을 가리지 않고 탭도 통과. */
+.intro__ai-notice {
+  position: absolute;
+  right: 16px; /* 화면 오른쪽에 붙임 */
+  bottom: 11px; /* 40px 밴드(760~800) 안에서 세로 중앙 정렬 */
+  z-index: 2;
+  margin: 0;
+  text-align: right;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none; /* 탭 레이어(소리 켜기) 방해 금지 */
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
 @keyframes intro-fade-in {
   from {
     opacity: 0;
