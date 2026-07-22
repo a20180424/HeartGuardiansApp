@@ -323,6 +323,10 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
     scroll.className = "copyright-popup__scroll";
     scroll.appendChild(img);
 
+    const title = document.createElement("p");
+    title.className = "copyright-popup__title";
+    title.textContent = "저작권 정보";
+
     const x = document.createElement("button");
     x.type = "button";
     x.className = "copyright-popup__close";
@@ -333,7 +337,7 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
 
     const cpPanel = document.createElement("div");
     cpPanel.className = "copyright-popup__panel";
-    cpPanel.append(scroll, x);
+    cpPanel.append(title, scroll, x);
 
     copyrightEl = document.createElement("div");
     copyrightEl.className = "copyright-popup";
