@@ -158,6 +158,19 @@ button {
   padding: 8px 16px;
   border-radius: 999px;
 }
+.auth-form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.auth-review {
+  align-self: center;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  white-space: pre-line;
+  word-break: keep-all;
+}
 
 .auth-form {
   width: 100%;
